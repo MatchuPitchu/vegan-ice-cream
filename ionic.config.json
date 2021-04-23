@@ -1,0 +1,7 @@
+{
+  "name": "frontend-vegan-icecream",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
