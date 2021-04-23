@@ -16,6 +16,20 @@ const Tab1: React.FC = () => {
             <IonTitle size="large">Tab 1</IonTitle>
           </IonToolbar>
         </IonHeader>
+        <div className="rotate-text">
+          <h1>
+            Veganes Eis
+          </h1>
+          <h2>
+            <div className="rotate-text-wrapper">
+              <div className="rotate-text-words" aria-hidden="true">
+                <strong className="rotate-text-word">entdecken</strong>
+                <strong className="rotate-text-word">essen</strong>
+                <strong className="rotate-text-word">eintragen</strong>
+              </div>
+            </div>
+          </h2>
+        </div>
         <ExploreContainer name="Tab 1 page" />
       </IonContent>
     </IonPage>

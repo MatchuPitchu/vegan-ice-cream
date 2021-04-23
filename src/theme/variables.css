@@ -76,7 +76,7 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-tint: #f5f6f9;
 
   /* font family of entire app */
-  --ion-font-family: "Barlow", sans-serif;
+  --ion-font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /* @media (prefers-color-scheme: dark) { */
