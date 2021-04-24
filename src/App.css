@@ -1,3 +1,16 @@
+/* General styles */
+ion-tab-bar {
+  padding-top: 2px;
+}
+
+ion-icon {
+  font-size: 24px;
+}
+
+.title {
+  margin-top: 15px;
+}
+
 /* Header general */
 .toolbarHeader {
   height: 46px;
@@ -129,10 +142,13 @@
 .tabStart {
   --background: none;
   background-image: url(./images/Ice\ Cream\ pablo-merchan-montes-MXovqM130UI-unsplash.jpg);
+  background-size: cover;
+  background-position: top;
 }
 
 /* Rotate animation */
 .rotate-text {
+  display: flex;
   justify-content: center;
 }
 
@@ -144,88 +160,113 @@
 .rotate-text-words {
   display: inline;
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
 }
 
 .rotate-text-wrapper .rotate-text-word {
+  color: var(--ion-color-secondary);
   opacity: 0;
   overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
   font-weight: 700;
-  -webkit-animation: rollDown 9s cubic-bezier(0.18, 0.89, 0.32, 1.28) 0s
-    infinite;
-  animation: rollDown 9s cubic-bezier(0.18, 0.89, 0.32, 1.28) 0s infinite;
+  -webkit-animation: run 9s cubic-bezier(0.18, 0.89, 0.32, 1.28) 0s 1;
+  animation: run 9s cubic-bezier(0.18, 0.89, 0.32, 1.28) 0s 1;
 }
-@media (max-width: 479px) {
-  body.page-home .noncustomers-only .rotate-text-wrapper .rotate-text-word {
-    right: 0;
-  }
-}
+
 .rotate-text-wrapper .rotate-text-word:nth-child(2) {
+  color: var(--ion-color-primary);
   -webkit-animation-delay: 3s;
   animation-delay: 3s;
 }
 .rotate-text-wrapper .rotate-text-word:nth-child(3) {
+  color: var(--ion-color-warning);
   -webkit-animation-delay: 6s;
   animation-delay: 6s;
 }
-@-webkit-keyframes rollDown {
+@-webkit-keyframes run {
   0% {
     opacity: 0;
   }
   5% {
     opacity: 0;
-    -webkit-transform: translateY(-50px);
-    transform: translateY(-50px);
+    -webkit-transform: translateX(-40px);
+    transform: translateX(-40px);
   }
   10% {
     opacity: 1;
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
   }
   30% {
     opacity: 1;
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
   }
   40% {
     opacity: 0;
-    -webkit-transform: translateY(50px);
-    transform: translateY(50px);
+    -webkit-transform: translateX(40px);
+    transform: translateX(40px);
   }
   100% {
     opacity: 0;
   }
 }
-@keyframes rollDown {
+@keyframes run {
   0% {
     opacity: 0;
   }
   5% {
     opacity: 0;
-    -webkit-transform: translateY(-50px);
-    transform: translateY(-50px);
+    -webkit-transform: translateX(-40px);
+    transform: translateX(-40px);
   }
   10% {
     opacity: 1;
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
   }
   30% {
     opacity: 1;
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
   }
   40% {
     opacity: 0;
-    -webkit-transform: translateY(50px);
-    transform: translateY(50px);
+    -webkit-transform: translateX(40px);
+    transform: translateX(40px);
   }
   100% {
     opacity: 0;
+  }
+}
+
+.rotate-text-wrapper .rotate-text-final {
+  color: var(--ion-color-warning);
+  visibility: hidden;
+  animation: show ease-in 12s;
+  animation-fill-mode: forwards;
+}
+
+.rotate-text-wrapper .rotate-text-final:nth-child(2) {
+  color: var(--ion-color-secondary);
+}
+
+.rotate-text-wrapper .rotate-text-final:nth-child(3) {
+  color: var(--ion-color-primary);
+}
+
+@keyframes show {
+  70% {
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transform: translateX(-40px);
+    transform: translateX(-40px);
+  }
+  100% {
+    opacity: 1;
+    visibility: visible;
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
   }
 }

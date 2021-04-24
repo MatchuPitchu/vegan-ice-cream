@@ -19,7 +19,7 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { menuController } from '@ionic/core';
-import { alarmOutline, ellipse, menu, square, triangle } from 'ionicons/icons';
+import { alarmOutline, bookmarks, disc, discOutline, ellipse, home, homeOutline, iceCream, iceCreamSharp, menu, square, triangle } from 'ionicons/icons';
 import Menu from './components/Menu';
 import TabStart from './pages/TabStart';
 import Tab2 from './pages/Tab2';
@@ -93,19 +93,19 @@ const App: React.FC = () => {
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
             <IonTabButton tab="tab1" href="/tab1">
-              <IonIcon icon={triangle} />
+              <IonIcon icon={home} />
               <IonLabel>Startseite</IonLabel>
             </IonTabButton>
             <IonTabButton tab="tab2" href="/tab2">
-              <IonIcon icon={ellipse} />
+              <IonIcon icon={disc} />
               <IonLabel>Entdecken</IonLabel>
             </IonTabButton>
             <IonTabButton tab="tab3" href="/tab3">
-              <IonIcon icon={square} />
+              <IonIcon icon={iceCream} />
               <IonLabel>Eis eintragen</IonLabel>
             </IonTabButton>
             <IonTabButton tab="tab4" href="/tab4">
-              <IonIcon icon={square} />
+              <IonIcon icon={bookmarks} />
               <IonLabel>Meine Favoriten</IonLabel>
             </IonTabButton>
           </IonTabBar>

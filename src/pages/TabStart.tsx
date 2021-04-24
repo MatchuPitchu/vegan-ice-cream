@@ -8,20 +8,21 @@ const TabStart: React.FC = () => {
           <IonTitle>Tab 1</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen >
+      <IonContent className="tabStart" fullscreen >
         <div className="rotate-text">
-          <h1>
-            Veganes Eis
-          </h1>
-          <h2>
+          <h1 className="title">
+            veganes Eis<br />
             <div className="rotate-text-wrapper">
               <div className="rotate-text-words" aria-hidden="true">
                 <strong className="rotate-text-word">entdecken</strong>
                 <strong className="rotate-text-word">essen</strong>
                 <strong className="rotate-text-word">eintragen</strong>
               </div>
+              <div className="rotate-text-final">entdecken</div>
+              <div className="rotate-text-final">essen</div>
+              <div className="rotate-text-final">eintragen</div>
             </div>
-          </h2>
+          </h1>
         </div>
       </IonContent>
     </IonPage>
