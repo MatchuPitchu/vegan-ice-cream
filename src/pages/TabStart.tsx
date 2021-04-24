@@ -1,4 +1,5 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { iceCream } from 'ionicons/icons';
 
 const TabStart: React.FC = () => {
   return (
@@ -23,6 +24,7 @@ const TabStart: React.FC = () => {
               <div className="rotate-text-final">eintragen</div>
             </div>
           </h1>
+          <div className="overlay"><IonIcon className="startIceIcon" icon={iceCream} /></div>
         </div>
       </IonContent>
     </IonPage>
