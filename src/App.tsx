@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import {
   IonApp,
@@ -8,17 +9,22 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
-  IonTitle,
   IonToolbar,
+  IonSearchbar,
+  IonMenu,
+  IonPage,
+  IonButtons,
+  IonButton,
+  IonContent
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle } from 'ionicons/icons';
-import Toggle from './components/Toggle';
-import Tab1 from './pages/Tab1';
+import { menuController } from '@ionic/core';
+import { alarmOutline, ellipse, menu, square, triangle } from 'ionicons/icons';
+import Menu from './components/Menu';
+import TabStart from './pages/TabStart';
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
 import Tab4 from './pages/Tab4';
-import Tab5 from './pages/Tab5-Config';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -41,55 +47,73 @@ import './theme/variables.css';
 import './App.css'
 
 
-const App: React.FC = () => (
+const App: React.FC = () => {
+  const [searchText, setSearchText] = useState('');
+
+  return (
   <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path="/tab1">
-            <Tab1 />
-          </Route>
-          <Route exact path="/tab2">
-            <Tab2 />
-          </Route>
-          <Route exact path="/tab3">
-            <Tab3 />
-          </Route>
-          <Route exact path="/tab4">
-            <Tab4 />
-          </Route>
-          <Route exact path="/tab5">
-            <Tab5 />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/tab1" />
-          </Route>
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/tab1">
-            <IonIcon icon={triangle} />
-            <IonLabel>Startseite</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2">
-            <IonIcon icon={ellipse} />
-            <IonLabel>Entdecken</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3">
-            <IonIcon icon={square} />
-            <IonLabel>Eis eintragen</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab4" href="/tab4">
-            <IonIcon icon={square} />
-            <IonLabel>Meine Favoriten</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab5" href="/tab5">
-            <IonIcon icon={square} />
-            <IonLabel>Einstellungen</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
+    <IonHeader>
+      <IonToolbar className="toolbarHeader">
+        <IonSearchbar className="searchbar" type="search" value={searchText} onIonChange={e => setSearchText(e.detail.value!)} placeholder="Stadt" showCancelButton="always" 	cancel-button-text="" />
+        <IonButtons slot="primary" >
+          <IonButton fill="clear" >
+            <IonIcon icon={alarmOutline} />
+          </IonButton>
+          <IonButton fill="clear" onClick={ async () => await menuController.toggle()}>
+            <IonIcon icon={menu} />
+          </IonButton>
+        </IonButtons>
+      </IonToolbar>
+    </IonHeader>
+
+    <IonMenu content-id="settings" type="overlay">
+      <Menu />
+    </IonMenu>
+    <IonPage id="settings"></IonPage>
+    
+    <IonContent>
+      <IonReactRouter>
+        <IonTabs>
+          <IonRouterOutlet>
+            <Route exact path="/tab1">
+              <TabStart />
+            </Route>
+            <Route exact path="/tab2">
+              <Tab2 />
+            </Route>
+            <Route exact path="/tab3">
+              <Tab3 />
+            </Route>
+            <Route exact path="/tab4">
+              <Tab4 />
+            </Route>
+            <Route exact path="/">
+              <Redirect to="/tab1" />
+            </Route>
+          </IonRouterOutlet>
+          <IonTabBar slot="bottom">
+            <IonTabButton tab="tab1" href="/tab1">
+              <IonIcon icon={triangle} />
+              <IonLabel>Startseite</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="tab2" href="/tab2">
+              <IonIcon icon={ellipse} />
+              <IonLabel>Entdecken</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="tab3" href="/tab3">
+              <IonIcon icon={square} />
+              <IonLabel>Eis eintragen</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="tab4" href="/tab4">
+              <IonIcon icon={square} />
+              <IonLabel>Meine Favoriten</IonLabel>
+            </IonTabButton>
+          </IonTabBar>
+        </IonTabs>
+      </IonReactRouter>
+    </IonContent>
   </IonApp>
-);
+  )
+}
 
 export default App;

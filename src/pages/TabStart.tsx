@@ -1,8 +1,6 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-import './Tab1.css';
 
-const Tab1: React.FC = () => {
+const TabStart: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
@@ -10,12 +8,7 @@ const Tab1: React.FC = () => {
           <IonTitle>Tab 1</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Tab 1</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+      <IonContent fullscreen >
         <div className="rotate-text">
           <h1>
             Veganes Eis
@@ -30,10 +23,9 @@ const Tab1: React.FC = () => {
             </div>
           </h2>
         </div>
-        <ExploreContainer name="Tab 1 page" />
       </IonContent>
     </IonPage>
   );
 };
 
-export default Tab1;
+export default TabStart;

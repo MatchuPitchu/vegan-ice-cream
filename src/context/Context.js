@@ -3,7 +3,7 @@ import React, { useState, useEffect, createContext } from "react";
 export const Context = createContext();
 
 const AppState = ({children}) => {
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState(true);
 
   const handleToggleDN = (e) => {
     setToggle((prev) => !prev);
