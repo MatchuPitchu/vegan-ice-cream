@@ -391,3 +391,9 @@ ion-icon {
   height: 100%;
   color: var(--ion-text-color);
 }
+
+/* Entdecken & Map */
+.mapContainer {
+  width: 100%;
+  height: 500px;
+}

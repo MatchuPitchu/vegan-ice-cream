@@ -22,7 +22,7 @@ import { menuController } from '@ionic/core';
 import { alarmOutline, bookmarks, disc, discOutline, ellipse, home, homeOutline, iceCream, iceCreamSharp, menu, square, triangle } from 'ionicons/icons';
 import Menu from './components/Menu';
 import Home from './pages/Home';
-import Tab2 from './pages/Tab2';
+import Entdecken from './pages/Entdecken.js';
 import Tab3 from './pages/Tab3';
 import Tab4 from './pages/Tab4';
 
@@ -42,10 +42,10 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
-/* Theme variables & CSS */
+/* Bootstrap, Theme variables, leaflet css, custom CSS */
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './theme/variables.css';
 import './App.css'
-
 
 const App: React.FC = () => {
   const [searchText, setSearchText] = useState('');
@@ -78,8 +78,8 @@ const App: React.FC = () => {
             <Route exact path="/home">
               <Home />
             </Route>
-            <Route exact path="/tab2">
-              <Tab2 />
+            <Route exact path="/entdecken">
+              <Entdecken />
             </Route>
             <Route exact path="/tab3">
               <Tab3 />
@@ -96,7 +96,7 @@ const App: React.FC = () => {
               <IonIcon icon={home} />
               <IonLabel>Home</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="tab2" href="/tab2">
+            <IonTabButton tab="entdecken" href="/entdecken">
               <IonIcon icon={disc} />
               <IonLabel>Entdecken</IonLabel>
             </IonTabButton>
