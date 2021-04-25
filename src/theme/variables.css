@@ -154,6 +154,12 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-shade: #acacac;
   --ion-color-light-tint: #cacaca;
 
+  --ion-background-color: #ffffff;
+  --ion-background-color-rgb: 255, 255, 255;
+
+  --ion-text-color: #233033;
+  --ion-text-color-rgb: 35, 48, 51;
+
   /* font family */
   --ion-font-family: "Lato", -apple-system, BlinkMacSystemFont, Roboto,
     "Helvetica Neue", sans-serif;

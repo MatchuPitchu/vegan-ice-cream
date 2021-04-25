@@ -1,6 +1,26 @@
 /* General styles */
+
+* {
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 ion-tab-bar {
   padding-top: 2px;
+  border-top: 1px transparent solid;
+  background-clip: content-box, border-box;
+  background-image: linear-gradient(
+      var(--ion-background-color),
+      var(--ion-background-color)
+    ),
+    linear-gradient(
+      to left,
+      var(--ion-color-primary),
+      var(--ion-color-secondary)
+    );
 }
 
 ion-icon {
@@ -18,7 +38,7 @@ ion-icon {
 }
 
 .searchbar {
-  padding: 0;
+  padding: 3px 0;
   margin: 3px 0;
 }
 
@@ -140,7 +160,7 @@ ion-icon {
 }
 
 /* Tab Start */
-.tabStart {
+.home {
   --background: none;
   background-image: url(./images/Ice\ Cream\ pablo-merchan-montes-MXovqM130UI-unsplash.jpg);
   background-size: cover;
@@ -148,23 +168,23 @@ ion-icon {
 }
 
 /* Run animation and overlay effect */
-.rotate-text {
+.run-text {
   display: flex;
   justify-content: center;
   position: relative;
 }
 
-.rotate-text-wrapper {
+.run-text-wrapper {
   display: inline-block;
   position: relative;
 }
 
-.rotate-text-words {
+.run-text-words {
   display: inline;
   position: absolute;
 }
 
-.rotate-text-wrapper .rotate-text-word {
+.run-text-wrapper .run-text-word {
   color: var(--ion-color-secondary);
   font-size: 0.7em;
   opacity: 0;
@@ -177,12 +197,12 @@ ion-icon {
   animation: run 9s cubic-bezier(0.18, 0.89, 0.32, 1.28) 0s 1;
 }
 
-.rotate-text-wrapper .rotate-text-word:nth-child(2) {
+.run-text-wrapper .run-text-word:nth-child(2) {
   color: var(--ion-color-primary);
   -webkit-animation-delay: 3s;
   animation-delay: 3s;
 }
-.rotate-text-wrapper .rotate-text-word:nth-child(3) {
+.run-text-wrapper .run-text-word:nth-child(3) {
   color: var(--ion-color-warning);
   -webkit-animation-delay: 6s;
   animation-delay: 6s;
@@ -244,7 +264,7 @@ ion-icon {
   }
 }
 
-.rotate-text-wrapper .rotate-text-final {
+.run-text-wrapper .run-text-final {
   color: var(--ion-color-warning);
   font-size: 0.7em;
   visibility: hidden;
@@ -252,11 +272,11 @@ ion-icon {
   animation-fill-mode: forwards;
 }
 
-.rotate-text-wrapper .rotate-text-final:nth-child(2) {
+.run-text-wrapper .run-text-final:nth-child(2) {
   color: var(--ion-color-secondary);
 }
 
-.rotate-text-wrapper .rotate-text-final:nth-child(3) {
+.run-text-wrapper .run-text-final:nth-child(3) {
   color: var(--ion-color-primary);
 }
 
@@ -288,7 +308,86 @@ ion-icon {
 .startIceIcon {
   font-size: 11rem;
   color: var(--ion-color-dark);
-  opacity: 0.7;
-  margin-left: 330px;
+  opacity: 0.6;
   transform: rotate(30deg);
+}
+
+.start-btn-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin: 60px 0;
+}
+
+.start-btn-container a {
+  color: #fff;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+  font-size: 1.2rem;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  border-radius: 50%;
+  background-color: var(--ion-background-color);
+}
+
+.start-btn-container a .btn-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 15px var(--ion-color-primary) solid;
+  opacity: 0;
+  animation-name: scaleIn;
+  animation-delay: 3.5s;
+  animation-duration: 3.5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.36, 0.11, 0.89, 0.32);
+}
+
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.6, 0.6);
+  }
+  95% {
+    opacity: 0.4;
+    visibility: visible;
+    transform: scale(1.3, 1.3);
+  }
+  100% {
+    opacity: 0;
+    visibility: visible;
+    transform: scale(1.4, 1.4);
+  }
+}
+
+.start-btn-container a .btn-border {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px transparent solid;
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  background-image: linear-gradient(
+      var(--ion-background-color),
+      var(--ion-background-color)
+    ),
+    linear-gradient(
+      to top,
+      var(--ion-color-primary),
+      var(--ion-color-secondary)
+    );
+}
+
+.start-btn-container a .btn-text {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  color: var(--ion-text-color);
 }
