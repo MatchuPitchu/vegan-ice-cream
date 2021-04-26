@@ -23,8 +23,8 @@ import { alarmOutline, bookmarks, disc, discOutline, ellipse, home, homeOutline,
 import Menu from './components/Menu';
 import Home from './pages/Home';
 import Entdecken from './pages/Entdecken.js';
-import Tab3 from './pages/Tab3';
-import Tab4 from './pages/Tab4';
+import Eintragen from './pages/Eintragen';
+import Favoriten from './pages/Favoriten';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -81,11 +81,11 @@ const App: React.FC = () => {
             <Route exact path="/entdecken">
               <Entdecken />
             </Route>
-            <Route exact path="/tab3">
-              <Tab3 />
+            <Route exact path="/eintragen">
+              <Eintragen />
             </Route>
-            <Route exact path="/tab4">
-              <Tab4 />
+            <Route exact path="/favoriten">
+              <Favoriten />
             </Route>
             <Route exact path="/">
               <Redirect to="/home" />
@@ -100,11 +100,11 @@ const App: React.FC = () => {
               <IonIcon icon={disc} />
               <IonLabel>Entdecken</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="tab3" href="/tab3">
+            <IonTabButton tab="eintragen" href="/eintragen">
               <IonIcon icon={iceCream} />
               <IonLabel>Eis eintragen</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="tab4" href="/tab4">
+            <IonTabButton tab="favoriten" href="/favoriten">
               <IonIcon icon={bookmarks} />
               <IonLabel>Meine Favoriten</IonLabel>
             </IonTabButton>
