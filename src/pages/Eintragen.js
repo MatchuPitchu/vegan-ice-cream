@@ -1,18 +1,12 @@
 import { useContext, useState, useRef, useCallback } from "react";
 import { Context } from '../context/Context';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import { GoogleMap, useLoadScript, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
 import { formatRelative } from 'date-fns';
 
 import usePlacesAutoComplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 // import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from '@react/combobox';
 // import '@reach/combobox/styles.css';
-
-const libraries = ['places'];
-const mapContainerStyle = {
-  width: '100%',
-  height: '50%',
-}
 
 const Eintragen = () => {
   const { mapState } = useContext(Context);
@@ -26,13 +20,15 @@ const Eintragen = () => {
   const mapRef = useRef();
   const onMapLoad = useCallback((map) => {
     mapRef.current = map;
-      },
-    [],) 
+  }, []);
 
   const options = {
     styles: mapState,
     disableDefaultUI: true,
     zoomControl: true,
+    zoomControlOptions: {
+      position: window.google.maps.ControlPosition.TOP_CENTER,
+    },
     gestureHandling: "cooperative",
     minZoom: 9,
     // boundaries of germany
@@ -46,10 +42,10 @@ const Eintragen = () => {
     },
   }
   
-  const {isLoaded, loadError } = useLoadScript({
+  const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries
-  });
+    libraries: ['places']
+  })
 
   if (loadError) return <div>"Error loading maps"</div>;
   if (!isLoaded) return <div>"Loading Maps"</div>;
@@ -63,7 +59,7 @@ const Eintragen = () => {
       </IonHeader>
       <IonContent fullscreen>
         <GoogleMap 
-          mapContainerStyle={mapContainerStyle} 
+          mapContainerClassName="mapContainer" 
           zoom={11} 
           center={center}
           options={options}
@@ -77,6 +73,8 @@ const Eintragen = () => {
                 url: './assets/icons/ice-cream-filled-ionicons.svg',
                 scaledSize: new window.google.maps.Size(30, 30),
               }}
+              // label="test"
+              // title="test rollover text"
               onClick={() => setSelected(marker)}
             />
           ))}
