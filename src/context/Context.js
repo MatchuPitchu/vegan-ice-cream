@@ -5,16 +5,16 @@ export const Context = createContext();
 
 const AppState = ({children}) => {
   const [toggle, setToggle] = useState(true);
-  const [mapState, setMapState] = useState(mapDark);
+  const [mapStyles, setMapStyles] = useState(mapDark);
 
   const handleToggleDN = (e) => {
     setToggle((prev) => !prev);
     if(!toggle) {
       document.body.setAttribute('color-theme', 'dark');
-      setMapState(mapDark);
+      setMapStyles(mapDark);
     } else {
       document.body.setAttribute('color-theme', 'light');
-      setMapState(mapLight);
+      setMapStyles(mapLight);
     }
   };
 
@@ -23,7 +23,7 @@ const AppState = ({children}) => {
       value={{
         toggle,
         handleToggleDN,
-        mapState
+        mapStyles
       }}
     >
       {children}
