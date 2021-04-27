@@ -2,7 +2,7 @@ import { useContext, useState, useCallback } from "react";
 import { Context } from '../context/Context';
 import { createAnimation, IonButton, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonModal, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
-import { addCircleOutline, removeCircleOutline } from "ionicons/icons";
+import { addCircleOutline, closeCircle, closeCircleOutline, removeCircleOutline } from "ionicons/icons";
 // import { formatRelative } from 'date-fns';
 
 const Eintragen = () => {
@@ -132,7 +132,7 @@ const Eintragen = () => {
                   <IonLabel>
                     Lat: {selected.lat} Lng: {selected.lng}
                   </IonLabel>
-                  <IonButton onClick={() => setShowModal(false)}>Close</IonButton>
+                  <IonButton fill="clear" onClick={() => setShowModal(false)}><IonIcon icon={closeCircleOutline }/></IonButton>
                 </IonItem>
               </IonModal>
             </div>
