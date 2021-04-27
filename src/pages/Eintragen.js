@@ -6,6 +6,9 @@ import ReactDOMServer from 'react-dom/server';
 import { addCircleOutline, iceCream, removeCircleOutline } from "ionicons/icons";
 // import { formatRelative } from 'date-fns';
 // import Search from '../components/Search';
+import Leaflet from "leaflet";
+
+
 
 const Eintragen = () => {
   const { mapStyles } = useContext(Context);
@@ -19,20 +22,16 @@ const Eintragen = () => {
 
   // insert icon
   const iconHTML = ReactDOMServer.renderToString(<IonIcon icon={iceCream} />)
- 
-  console.log(iconHTML)
+  const icon = new Leaflet.DivIcon({
+    html: iconHTML,
+  });
 
-  // const onMapLoad = (map) => {
-  //   const bounds = new window.google.maps.latLngBounds();
-  //   map.fitBounds(bounds);
-  // }
+  console.log(iconHTML)
 
   const onMapLoad = useCallback((map) => {
     setMap(map);
     initZoomControl(map);
   }, []);
-
-  console.log(map)
 
   const options = {
     styles: mapStyles,
@@ -53,8 +52,6 @@ const Eintragen = () => {
       },
     },
   }
-  
-  console.log(window.google.maps);
 
   // Add customs zoom control https://developers.google.com/maps/documentation/javascript/examples/control-replacement#maps_control_replacement-javascript
   const initZoomControl = (map) => {

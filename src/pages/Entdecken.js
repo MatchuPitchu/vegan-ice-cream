@@ -52,6 +52,8 @@ const Entdecken = () => {
     html: iconHTML,
   });
 
+  console.log(icon)
+
   const [map, setMap] = useState(null)
 
   console.log(map)
