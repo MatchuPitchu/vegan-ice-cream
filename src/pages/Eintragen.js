@@ -1,9 +1,9 @@
 import { useContext, useState, useCallback } from "react";
 import { Context } from '../context/Context';
-import { IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
 import ReactDOMServer from 'react-dom/server';
-import { iceCream } from "ionicons/icons";
+import { addCircleOutline, iceCream, removeCircleOutline } from "ionicons/icons";
 // import { formatRelative } from 'date-fns';
 // import Search from '../components/Search';
 
@@ -28,15 +28,16 @@ const Eintragen = () => {
   // }
 
   const onMapLoad = useCallback((map) => {
-    setMap(map)
+    setMap(map);
+    initZoomControl(map);
   }, []);
 
   console.log(map)
 
   const options = {
     styles: mapStyles,
-    disableDefaultUI: false
-    ,
+    disableDefaultUI: true,
+    zoomControl: false,
     zoomControlOptions: {
       position: window.google.maps.ControlPosition.TOP_LEFT,
     },
@@ -55,6 +56,19 @@ const Eintragen = () => {
   
   console.log(window.google.maps);
 
+  // Add customs zoom control
+  const initZoomControl = (map) => {
+    document.querySelector(".zoom-control-in").onclick = () => {
+      map.setZoom(map.getZoom() + 1);
+    };
+    document.querySelector(".zoom-control-out").onclick = () => {
+      map.setZoom(map.getZoom() - 1);
+    };
+    map.controls[window.google.maps.ControlPosition.TOP].push(
+      document.querySelector(".zoom-control")
+    );
+  }
+
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: ['places']
@@ -71,6 +85,15 @@ const Eintragen = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
+        <div className="zoom-control">
+          <IonButton className="zoom-control-in zoomIcons" title="Zoom In" fill="clear" >
+            <IonIcon icon={addCircleOutline} />
+          </IonButton>
+          <IonButton className="zoom-control-out zoomIcons" title="Zoom Out" fill="clear">
+            <IonIcon icon={removeCircleOutline} />
+          </IonButton>
+        </div>
+
         <GoogleMap 
           mapContainerClassName="mapContainer" 
           zoom={11} 
