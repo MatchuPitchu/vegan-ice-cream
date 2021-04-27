@@ -56,7 +56,7 @@ const Eintragen = () => {
   
   console.log(window.google.maps);
 
-  // Add customs zoom control
+  // Add customs zoom control https://developers.google.com/maps/documentation/javascript/examples/control-replacement#maps_control_replacement-javascript
   const initZoomControl = (map) => {
     document.querySelector(".zoom-control-in").onclick = () => {
       map.setZoom(map.getZoom() + 1);
