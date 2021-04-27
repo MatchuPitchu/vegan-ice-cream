@@ -1,14 +1,9 @@
 import { useContext, useState, useCallback } from "react";
 import { Context } from '../context/Context';
-import { IonButton, IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { createAnimation, IonButton, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonModal, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
-import ReactDOMServer from 'react-dom/server';
-import { addCircleOutline, iceCream, removeCircleOutline } from "ionicons/icons";
+import { addCircleOutline, removeCircleOutline } from "ionicons/icons";
 // import { formatRelative } from 'date-fns';
-// import Search from '../components/Search';
-import Leaflet from "leaflet";
-
-
 
 const Eintragen = () => {
   const { mapStyles } = useContext(Context);
@@ -19,14 +14,7 @@ const Eintragen = () => {
     { lat: 52.424, lng: 13.310, id: 2 }
   ]);
   const [selected, setSelected] = useState(null);
-
-  // insert icon
-  const iconHTML = ReactDOMServer.renderToString(<IonIcon icon={iceCream} />)
-  const icon = new Leaflet.DivIcon({
-    html: iconHTML,
-  });
-
-  console.log(iconHTML)
+  const [showModal, setShowModal] = useState(false);
 
   const onMapLoad = useCallback((map) => {
     setMap(map);
@@ -66,6 +54,32 @@ const Eintragen = () => {
     );
   }
 
+  // animations modal
+  const enterAnimation = (modal) => {
+    // darkened background 
+    const backdropAnimation = createAnimation()
+      .addElement(modal.querySelector('ion-backdrop'))
+      .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
+
+    // animates modal
+    const wrapperAnimation = createAnimation()
+      .addElement(modal.querySelector('.modal-wrapper'))
+      .keyframes([
+        { offset: 0, opacity: '1', transform: 'translateX(200px)' },
+        { offset: 1, opacity: '1', transform: 'translate(0px)' },
+      ]);
+
+    return createAnimation()
+      .addElement(modal)
+      .easing('ease-out')
+      .duration(200)
+      .addAnimation([backdropAnimation, wrapperAnimation]);
+  }
+
+  const leaveAnimation = (modal) => {
+    return enterAnimation(modal).direction('reverse');
+  }
+
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: ['places']
@@ -103,23 +117,27 @@ const Eintragen = () => {
               key={marker.id}
               position={{lat: marker.lat, lng: marker.lng}} 
               icon={{
-                url: './assets/icons/ice-cream-filled-ionicons.svg',
+                url: './assets/icons/ice-cream-filled-fontawesome.svg',
                 scaledSize: new window.google.maps.Size(30, 30),
               }}
-              // label="test"
-              // title="test rollover text"
-              onClick={() => setSelected(marker)}
+              title="TEST TEST TEST rollover text"
+              onClick={() => { setSelected(marker); setShowModal(true) }}
             />
           ))}
 
           {selected ? (
-            <InfoWindow position={{lat: selected.lat, lng: selected.lng}} onCloseClick={() => setSelected(null)} >
-              <div style={{backgroundColor: "black"}}>
-                <h2></h2>
-                <p>Lat: {selected.lat} Lng: {selected.lng}</p>
-              </div>
-            </InfoWindow>
+            <div className="modalContainer">
+              <IonModal cssClass='mapModal' isOpen={showModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
+                <IonItem>
+                  <IonLabel>
+                    Lat: {selected.lat} Lng: {selected.lng}
+                  </IonLabel>
+                  <IonButton onClick={() => setShowModal(false)}>Close</IonButton>
+                </IonItem>
+              </IonModal>
+            </div>
           ) : null}
+
         </GoogleMap>
       </IonContent>
     </IonPage>

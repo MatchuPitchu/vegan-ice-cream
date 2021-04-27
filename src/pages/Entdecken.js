@@ -42,9 +42,6 @@ function DisplayPosition({ map }) {
   )
 }
 
-
-
-
 const Entdecken = () => {
   // insert icon
   const iconHTML = ReactDOMServer.renderToString(<IonIcon icon={iceCreamOutline} />)

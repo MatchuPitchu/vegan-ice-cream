@@ -439,3 +439,19 @@ ion-icon {
   color: var(--ion-text-color);
   background-color: var(--ion-background-color);
 }
+
+.mapModal {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.mapModal .modal-wrapper {
+  height: 60%;
+  width: 200px;
+}
+
+/* important to move modal-shadow to allow backdropDismiss on iOS  */
+.modal-shadow .sc-ion-modal-ios {
+  top: 100%;
+}
