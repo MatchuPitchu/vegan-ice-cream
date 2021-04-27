@@ -393,7 +393,32 @@ ion-icon {
 }
 
 /* Entdecken & Map */
+
+.gmnoprint {
+  top: 90%;
+  width: 0;
+}
+
+.gm-style-cc {
+  top: 85%;
+}
+
+.gmnoprint.gm-style-cc {
+  top: 80%;
+}
+
 .mapContainer {
-  width: 100%;
+  width: 95%;
   height: 500px;
+  margin: 0 auto;
+}
+
+.searchbarMap {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(50%);
+  width: 100%;
+  max-width: 400px;
+  z-index: 10;
 }

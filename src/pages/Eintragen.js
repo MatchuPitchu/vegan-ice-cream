@@ -2,11 +2,8 @@ import { useContext, useState, useRef, useCallback } from "react";
 import { Context } from '../context/Context';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
-import { formatRelative } from 'date-fns';
-
-import usePlacesAutoComplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
-// import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from '@react/combobox';
-// import '@reach/combobox/styles.css';
+// import { formatRelative } from 'date-fns';
+import Search from '../components/Search';
 
 const Eintragen = () => {
   const { mapState } = useContext(Context);
@@ -58,27 +55,37 @@ const Eintragen = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <GoogleMap 
-          mapContainerClassName="mapContainer" 
-          zoom={11} 
-          center={center}
-          options={options}
-          onLoad={onMapLoad}
-        >
-          {markers.map((marker) => (
-            <Marker 
-              key={marker.id}
-              position={{lat: marker.lat, lng: marker.lng}} 
-              icon={{
-                url: './assets/icons/ice-cream-filled-ionicons.svg',
-                scaledSize: new window.google.maps.Size(30, 30),
-              }}
-              // label="test"
-              // title="test rollover text"
-              onClick={() => setSelected(marker)}
-            />
-          ))}
-        </GoogleMap>
+        <Search />
+          <GoogleMap 
+            mapContainerClassName="mapContainer" 
+            zoom={11} 
+            center={center}
+            options={options}
+            onLoad={onMapLoad}
+          >
+            {markers.map((marker) => (
+              <Marker 
+                key={marker.id}
+                position={{lat: marker.lat, lng: marker.lng}} 
+                icon={{
+                  url: './assets/icons/ice-cream-filled-ionicons.svg',
+                  scaledSize: new window.google.maps.Size(30, 30),
+                }}
+                // label="test"
+                // title="test rollover text"
+                onClick={() => setSelected(marker)}
+              />
+            ))}
+
+            {selected ? (
+              <InfoWindow position={{lat: selected.lat, lng: selected.lng}} onCloseClick={() => setSelected(null)} >
+                <div style={{backgroundColor: "black"}}>
+                  <h2></h2>
+                  <p>Lat: {selected.lat} Lng: {selected.lng}</p>
+                </div>
+              </InfoWindow>
+            ) : null}
+          </GoogleMap>
       </IonContent>
     </IonPage>
   );
