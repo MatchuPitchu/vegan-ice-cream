@@ -1,84 +1,145 @@
-import { useState, useEffect, useRef, useContext, useCallback, useMemo } from "react";
+import { useContext, useState, useCallback } from "react";
 import { Context } from '../context/Context';
-import { IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar} from '@ionic/react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import Leaflet from "leaflet";
-import ReactDOMServer from 'react-dom/server';
-import "leaflet/dist/leaflet.css";
-import { iceCreamOutline } from "ionicons/icons";
-
-const center = [51.505, -0.09]
-const zoom = 13
-
-const ChangeView = ( {center, zoom} ) => {
-  const map = useMap();
-  map.setView(center, zoom);
-  return null;
-};
-
-function DisplayPosition({ map }) {
-  const [position, setPosition] = useState(map.getCenter())
-
-  const onClick = useCallback(() => {
-    map.setView(center, zoom)
-  }, [map])
-
-  const onMove = useCallback(() => {
-    setPosition(map.getCenter())
-  }, [map])
-
-  useEffect(() => {
-    map.on('move', onMove)
-    return () => {
-      map.off('move', onMove)
-    }
-  }, [map, onMove])
-
-  return (
-    <p>
-      latitude: {position.lat.toFixed(4)}, longitude: {position.lng.toFixed(4)}{' '}
-      <button onClick={onClick}>reset</button>
-    </p>
-  )
-}
+import { createAnimation, IonButton, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonModal, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
+import { addCircleOutline, closeCircle, closeCircleOutline, removeCircleOutline } from "ionicons/icons";
+// import { formatRelative } from 'date-fns';
 
 const Entdecken = () => {
-  // insert icon
-  const iconHTML = ReactDOMServer.renderToString(<IonIcon icon={iceCreamOutline} />)
-  const icon = new Leaflet.DivIcon({
-    html: iconHTML,
-  });
+  const { mapStyles } = useContext(Context);
+  const [map, setMap]= useState(null);
+  const [center, setCenter] = useState({ lat: 52.524, lng: 13.410 })
+  const [markers, setMarkers] = useState([
+    { lat: 52.524, lng: 13.410, id: 1 },
+    { lat: 52.424, lng: 13.310, id: 2 }
+  ]);
+  const [selected, setSelected] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
-  console.log(icon)
+  const onMapLoad = useCallback((map) => {
+    setMap(map);
+    initZoomControl(map);
+  }, []);
 
-  const [map, setMap] = useState(null)
+  const options = {
+    styles: mapStyles,
+    disableDefaultUI: true,
+    zoomControl: false,
+    zoomControlOptions: {
+      position: window.google.maps.ControlPosition.TOP_LEFT,
+    },
+    gestureHandling: "cooperative",
+    minZoom: 9,
+    // boundaries of germany
+    restriction: {
+      latLngBounds: {
+        north: 55.1,
+        south: 47.1,
+        west: 5.8,
+        east: 15.1,
+      },
+    },
+  }
 
-  console.log(map)
+  // Add customs zoom control https://developers.google.com/maps/documentation/javascript/examples/control-replacement#maps_control_replacement-javascript
+  const initZoomControl = (map) => {
+    document.querySelector(".zoom-control-in").onclick = () => {
+      map.setZoom(map.getZoom() + 1);
+    };
+    document.querySelector(".zoom-control-out").onclick = () => {
+      map.setZoom(map.getZoom() - 1);
+    };
+    map.controls[window.google.maps.ControlPosition.TOP].push(
+      document.querySelector(".zoom-control")
+    );
+  }
 
-  const displayMap = useMemo(
-    () => (
-      <MapContainer
-        center={center}
-        zoom={zoom}
-        scrollWheelZoom={false}
-        whenCreated={setMap}
-        className="mapContainer"
-      >
-        <TileLayer
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-      </MapContainer>
-    ),
-    [],
-  )
+  // animations modal
+  const enterAnimation = (modal) => {
+    // darkened background 
+    const backdropAnimation = createAnimation()
+      .addElement(modal.querySelector('ion-backdrop'))
+      .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
+
+    // animates modal
+    const wrapperAnimation = createAnimation()
+      .addElement(modal.querySelector('.modal-wrapper'))
+      .keyframes([
+        { offset: 0, opacity: '1', transform: 'translateY(300px)' },
+        { offset: 1, opacity: '1', transform: 'translateY(0)' },
+      ]);
+
+    return createAnimation()
+      .addElement(modal)
+      .easing('ease-out')
+      .duration(200)
+      .addAnimation([backdropAnimation, wrapperAnimation]);
+  }
+
+  const leaveAnimation = (modal) => {
+    return enterAnimation(modal).direction('reverse');
+  }
+
+  const { isLoaded, loadError } = useJsApiLoader({
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    libraries: ['places']
+  })
+
+  if (loadError) return <div>"Error loading maps"</div>;
+  if (!isLoaded) return <div>"Loading Maps"</div>;
 
   return (
     <IonPage>
-      {map ? <DisplayPosition map={map} /> : null}
-      {displayMap}
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Google Maps Integration</IonTitle>  
+        </IonToolbar>
+      </IonHeader>
+      <IonContent fullscreen>
+        <div className="zoom-control">
+          <IonButton className="zoom-control-in zoomIcons" title="Zoom In" fill="clear" >
+            <IonIcon icon={addCircleOutline} />
+          </IonButton>
+          <IonButton className="zoom-control-out zoomIcons" title="Zoom Out" fill="clear">
+            <IonIcon icon={removeCircleOutline} />
+          </IonButton>
+        </div>
+
+        <GoogleMap 
+          mapContainerClassName="mapContainer" 
+          zoom={11} 
+          center={center}
+          options={options}
+          onLoad={onMapLoad}
+        >
+          {markers.map((marker) => (
+            <Marker 
+              key={marker.id}
+              position={{lat: marker.lat, lng: marker.lng}} 
+              icon={{
+                url: './assets/icons/ice-cream-filled-fontawesome.svg',
+                scaledSize: new window.google.maps.Size(30, 30),
+              }}
+              title="TEST TEST TEST rollover text"
+              onClick={() => { setSelected(marker); setShowModal(true) }}
+            />
+          ))}
+          {selected ? (
+            <div className="modalContainer">
+              <IonModal cssClass='mapModal' isOpen={showModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
+                <IonItem>
+                  <IonLabel>
+                    Lat: {selected.lat} Lng: {selected.lng}
+                  </IonLabel>
+                  <IonButton fill="clear" onClick={() => setShowModal(false)}><IonIcon icon={closeCircleOutline }/></IonButton>
+                </IonItem>
+              </IonModal>
+            </div>
+          ) : null}
+        </GoogleMap>
+      </IonContent>
     </IonPage>
-  )
+  );
 };
 
 export default Entdecken;

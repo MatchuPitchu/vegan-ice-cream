@@ -66,7 +66,7 @@ const App: React.FC = () => {
       </IonToolbar>
     </IonHeader>
 
-    <IonMenu content-id="settings" type="overlay">
+    <IonMenu contentId="settings" type="overlay" swipeGesture={true}>
       <Menu />
     </IonMenu>
     <IonPage id="settings"></IonPage>
@@ -75,19 +75,19 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
-            <Route exact path="/home">
+            <Route path="/home" exact={true} >
               <Home />
             </Route>
-            <Route exact path="/entdecken">
+            <Route path="/entdecken" exact={true}>
               <Entdecken />
             </Route>
-            <Route exact path="/eintragen">
+            <Route path="/eintragen" exact={true}>
               <Eintragen />
             </Route>
-            <Route exact path="/favoriten">
+            <Route path="/favoriten" exact={true}>
               <Favoriten />
             </Route>
-            <Route exact path="/">
+            <Route path="/" exact={true}>
               <Redirect to="/home" />
             </Route>
           </IonRouterOutlet>

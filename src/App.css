@@ -1,6 +1,6 @@
 /* General styles */
 
-* {
+body {
   top: 0;
   left: 0;
   margin: 0;
@@ -40,6 +40,15 @@ ion-icon {
 .searchbar {
   padding: 3px 0;
   margin: 3px 0;
+}
+
+/* Menu */
+.headerGraphic {
+  padding: 20px;
+}
+
+.labelMenu {
+  font-size: 0.9rem;
 }
 
 /* Toggler Day and Night */
@@ -394,44 +403,9 @@ ion-icon {
 
 /* Entdecken & Map */
 
-.gmnoprint {
-  z-index: 1000001;
-  top: 93%;
-  background-color: var(--ion-color-primary);
-}
-
-.gmnoprint.gm-bundled-control {
-}
-
-.gm-style-cc > div:nth-child(1) {
-  height: 100px;
-  background-color: var(--ion-color-primary);
-}
-
-.gm-style-cc > div:nth-child(2) {
-  width: 200px;
-  background-color: var(--ion-color-primary);
-  border: 3px solid black;
-}
-
-.gm-style-cc {
-  top: 85%;
-  background-color: var(--ion-color-primary);
-  width: 100%;
-}
-
-.gmnoprint.gm-style-cc {
-  top: 80%;
-  opacity: 1;
-}
-
-.gm-style-cc > div {
-  background-color: transparent;
-}
-
 .mapContainer {
   width: 100%;
-  height: 500px;
+  height: 100%;
   margin: 0 auto;
 }
 
@@ -442,16 +416,16 @@ ion-icon {
 
 .mapModal {
   display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: flex-end;
 }
 
 .mapModal .modal-wrapper {
-  height: 60%;
-  width: 200px;
+  height: 30%;
+  width: 100%;
 }
 
 /* important to move modal-shadow to allow backdropDismiss on iOS  */
-.modal-shadow .sc-ion-modal-ios {
+.modal-shadow.sc-ion-modal-ios {
   top: 100%;
 }
