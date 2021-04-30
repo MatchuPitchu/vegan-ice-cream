@@ -323,12 +323,13 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 .start-btn-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  position: relative;
-  margin: 60px 0;
+  margin: 30px 0;
 }
 
 .start-btn-container a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: #fff;
   text-transform: uppercase;
   text-decoration: none;
