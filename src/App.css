@@ -1,5 +1,4 @@
-/* General styles */
-
+/************ General styles ************/
 body {
   top: 0;
   left: 0;
@@ -27,22 +26,22 @@ ion-icon {
   font-size: 24px;
 }
 
+.labelTabs {
+  font-size: 0.7rem;
+}
+
 .title {
   margin-top: 15px;
   color: var(--ion-color-secondary-tint);
 }
 
-/* Header general */
-.toolbarHeader {
-  height: 46px;
-}
-
-.searchbar {
+/************ Header general ************/
+ion-toolbar .sc-ion-searchbar-ios-h {
   padding: 3px 0;
-  margin: 3px 0;
+  height: 30px;
 }
 
-/* Menu */
+/************ Menu ************/
 .headerGraphic {
   padding: 20px;
 }
@@ -168,7 +167,7 @@ ion-icon {
   transform: translate(-2px, 0);
 }
 
-/* Tab Start */
+/*********** Tab Start ************/
 .home {
   --background: none;
   background-image: url(./images/Ice\ Cream\ pablo-merchan-montes-MXovqM130UI-unsplash.jpg);
@@ -401,7 +400,12 @@ ion-icon {
   color: var(--ion-text-color);
 }
 
-/* Entdecken & Map */
+/********** Entdecken & Map **********/
+
+.headerMap {
+  width: 100%;
+  max-height: 120px;
+}
 
 .mapContainer {
   width: 100%;
@@ -409,8 +413,24 @@ ion-icon {
   margin: 0 auto;
 }
 
+.control {
+  display: flex;
+  width: 100%;
+}
+
 .zoomIcons {
   color: var(--ion-text-color);
+  background-color: var(--ion-background-color);
+  margin-right: 0;
+}
+
+.zoom-control-out {
+  margin-left: 0;
+}
+
+.center-control {
+  margin-left: auto;
+  color: var(--ion-color-danger-tint);
   background-color: var(--ion-background-color);
 }
 

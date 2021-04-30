@@ -94,19 +94,19 @@ const App: React.FC = () => {
           <IonTabBar slot="bottom">
             <IonTabButton tab="home" href="/home">
               <IonIcon icon={home} />
-              <IonLabel>Home</IonLabel>
+              <IonLabel className="labelTabs">Home</IonLabel>
             </IonTabButton>
             <IonTabButton tab="entdecken" href="/entdecken">
               <IonIcon icon={disc} />
-              <IonLabel>Entdecken</IonLabel>
+              <IonLabel className="labelTabs">Entdecken</IonLabel>
             </IonTabButton>
             <IonTabButton tab="eintragen" href="/eintragen">
               <IonIcon icon={iceCream} />
-              <IonLabel>Eis eintragen</IonLabel>
+              <IonLabel className="labelTabs">Eis eintragen</IonLabel>
             </IonTabButton>
             <IonTabButton tab="favoriten" href="/favoriten">
               <IonIcon icon={bookmarks} />
-              <IonLabel>Meine Favoriten</IonLabel>
+              <IonLabel className="labelTabs">Favoriten</IonLabel>
             </IonTabButton>
           </IonTabBar>
         </IonTabs>

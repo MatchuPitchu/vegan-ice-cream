@@ -1,14 +1,15 @@
 import { useContext, useState, useCallback } from "react";
 import { Context } from '../context/Context';
-import { createAnimation, IonButton, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonModal, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
-import { addCircleOutline, closeCircle, closeCircleOutline, removeCircleOutline } from "ionicons/icons";
+import { IonButton, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonModal, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { addCircleOutline, closeCircleOutline, refreshCircle, removeCircleOutline } from "ionicons/icons";
+import Spinner from "../components/Spinner";
 // import { formatRelative } from 'date-fns';
 
 const Entdecken = () => {
-  const { mapStyles } = useContext(Context);
+  const { toggle, mapStyles, enterAnimation, leaveAnimation } = useContext(Context);
   const [map, setMap]= useState(null);
-  const [center, setCenter] = useState({ lat: 52.524, lng: 13.410 })
+  const [center, setCenter] = useState({ lat:  52.524, lng: 13.410 })
   const [markers, setMarkers] = useState([
     { lat: 52.524, lng: 13.410, id: 1 },
     { lat: 52.424, lng: 13.310, id: 2 }
@@ -24,13 +25,9 @@ const Entdecken = () => {
   const options = {
     styles: mapStyles,
     disableDefaultUI: true,
-    zoomControl: false,
-    zoomControlOptions: {
-      position: window.google.maps.ControlPosition.TOP_LEFT,
-    },
     gestureHandling: "cooperative",
     minZoom: 9,
-    // boundaries of germany
+    // restricted to boundaries of germany
     restriction: {
       latLngBounds: {
         north: 55.1,
@@ -41,43 +38,21 @@ const Entdecken = () => {
     },
   }
 
-  // Add customs zoom control https://developers.google.com/maps/documentation/javascript/examples/control-replacement#maps_control_replacement-javascript
   const initZoomControl = (map) => {
+    // Add customs zoom control https://developers.google.com/maps/documentation/javascript/examples/control-replacement#maps_control_replacement-javascript
     document.querySelector(".zoom-control-in").onclick = () => {
       map.setZoom(map.getZoom() + 1);
     };
     document.querySelector(".zoom-control-out").onclick = () => {
       map.setZoom(map.getZoom() - 1);
     };
+    // Add custom center control https://developers.google.com/maps/documentation/javascript/examples/control-custom
+    const controlDiv = document.querySelector(".center-control");
+    controlDiv.addEventListener('click', () => map.setCenter(center));
+    
     map.controls[window.google.maps.ControlPosition.TOP].push(
-      document.querySelector(".zoom-control")
+      document.querySelector(".control")
     );
-  }
-
-  // animations modal
-  const enterAnimation = (modal) => {
-    // darkened background 
-    const backdropAnimation = createAnimation()
-      .addElement(modal.querySelector('ion-backdrop'))
-      .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
-
-    // animates modal
-    const wrapperAnimation = createAnimation()
-      .addElement(modal.querySelector('.modal-wrapper'))
-      .keyframes([
-        { offset: 0, opacity: '1', transform: 'translateY(300px)' },
-        { offset: 1, opacity: '1', transform: 'translateY(0)' },
-      ]);
-
-    return createAnimation()
-      .addElement(modal)
-      .easing('ease-out')
-      .duration(200)
-      .addAnimation([backdropAnimation, wrapperAnimation]);
-  }
-
-  const leaveAnimation = (modal) => {
-    return enterAnimation(modal).direction('reverse');
   }
 
   const { isLoaded, loadError } = useJsApiLoader({
@@ -86,22 +61,22 @@ const Entdecken = () => {
   })
 
   if (loadError) return <div>"Error loading maps"</div>;
-  if (!isLoaded) return <div>"Loading Maps"</div>;
 
-  return (
+  return (isLoaded) ? (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
-          <IonTitle>Google Maps Integration</IonTitle>  
-        </IonToolbar>
+        <img className="headerMap" src={`${toggle ? "./assets/map-header-graphic-ice-dark.svg" : "./assets/map-header-graphic-ice-light.svg"}`} />
       </IonHeader>
       <IonContent fullscreen>
-        <div className="zoom-control">
-          <IonButton className="zoom-control-in zoomIcons" title="Zoom In" fill="clear" >
+        <div className="control">
+          <IonButton className="zoom-control-in zoomIcons" fill="clear" >
             <IonIcon icon={addCircleOutline} />
           </IonButton>
-          <IonButton className="zoom-control-out zoomIcons" title="Zoom Out" fill="clear">
+          <IonButton className="zoom-control-out zoomIcons" fill="clear">
             <IonIcon icon={removeCircleOutline} />
+          </IonButton>
+          <IonButton className="center-control" title="Karte auf Anfangspunkt zentrieren" fill="clear" >
+            <IonIcon icon={refreshCircle} />
           </IonButton>
         </div>
 
@@ -139,7 +114,7 @@ const Entdecken = () => {
         </GoogleMap>
       </IonContent>
     </IonPage>
-  );
+  ) : <Spinner /> ;
 };
 
 export default Entdecken;

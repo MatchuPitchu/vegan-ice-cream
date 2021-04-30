@@ -160,7 +160,7 @@ export const mapDark = [
       "elementType": "labels.text.stroke",
       "stylers": [
           {
-              "color": "#fce6b3"
+              "color": "#ffffff"
           }
       ]
   },
