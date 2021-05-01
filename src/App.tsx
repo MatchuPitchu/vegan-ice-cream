@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
+import { IonReactRouter } from '@ionic/react-router';
 import {
   IonApp,
   IonHeader,
@@ -17,9 +18,8 @@ import {
   IonButton,
   IonContent
 } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
 import { menuController } from '@ionic/core';
-import { alarmOutline, bookmarks, disc, discOutline, ellipse, home, homeOutline, iceCream, iceCreamSharp, menu, square, triangle } from 'ionicons/icons';
+import { alarmOutline, bookmarks, disc, home, iceCream, menu } from 'ionicons/icons';
 import Menu from './components/Menu';
 import Home from './pages/Home';
 import Entdecken from './pages/Entdecken.js';
@@ -52,59 +52,59 @@ const App: React.FC = () => {
   const [searchText, setSearchText] = useState('');
 
   return (
-  <IonApp>
-    <IonHeader>
-      <IonToolbar className="toolbarHeader">
-        <IonSearchbar className="searchbar" type="search" value={searchText} onIonChange={e => setSearchText(e.detail.value!)} placeholder="Stadt" showCancelButton="always" 	cancel-button-text="" />
-        <IonButtons slot="primary" >
-          <IonButton fill="clear" >
-            <IonIcon icon={alarmOutline} />
-          </IonButton>
-          <IonButton fill="clear" onClick={ async () => await menuController.toggle()}>
-            <IonIcon icon={menu} />
-          </IonButton>
-        </IonButtons>
-      </IonToolbar>
-    </IonHeader>
-
-    <IonMenu contentId="settings" type="overlay" swipeGesture={true}>
-      <Menu />
-    </IonMenu>
-    <IonPage id="settings"></IonPage>
-    
-    <IonContent>
+    <IonApp>
       <IonReactRouter>
-        <IonTabs>
-          <IonRouterOutlet>
-            <Route path="/" render={() => <Redirect to="/home" />} exact={true} />
-            <Route path="/home" component={Home} exact={true} />
-            <Route path="/entdecken" component={Entdecken} exact={true} />
-            <Route path="/eintragen" component={Eintragen} exact={true} />
-            <Route path="/favoriten" component={Favoriten} exact={true} />
-            <Route path="/feedback" component={Feedback} exact={true} />
-          </IonRouterOutlet>
-          <IonTabBar slot="bottom">
-            <IonTabButton tab="home" href="/home">
-              <IonIcon icon={home} />
-              <IonLabel className="labelTabs">Home</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="entdecken" href="/entdecken">
-              <IonIcon icon={disc} />
-              <IonLabel className="labelTabs">Entdecken</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="eintragen" href="/eintragen">
-              <IonIcon icon={iceCream} />
-              <IonLabel className="labelTabs">Eis eintragen</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="favoriten" href="/favoriten">
-              <IonIcon icon={bookmarks} />
-              <IonLabel className="labelTabs">Favoriten</IonLabel>
-            </IonTabButton>
-          </IonTabBar>
-        </IonTabs>
+        <IonHeader>
+          <IonToolbar className="toolbarHeader">
+            <IonSearchbar className="searchbar" type="search" value={searchText} onIonChange={e => setSearchText(e.detail.value!)} placeholder="Stadt" showCancelButton="always" 	cancel-button-text="" />
+            <IonButtons slot="primary" >
+              <IonButton fill="clear" >
+                <IonIcon icon={alarmOutline} />
+              </IonButton>
+              <IonButton fill="clear" onClick={ async () => await menuController.toggle()}>
+                <IonIcon icon={menu} />
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+
+        <IonMenu contentId="settings" type="overlay" swipeGesture={true}>
+          <Menu />
+        </IonMenu>
+        <IonPage id="settings"></IonPage>
+    
+        <IonContent>
+          <IonTabs>
+            <IonRouterOutlet>
+              <Redirect from="/" to="/home" exact={true} />
+              <Route path="/home" component={Home} exact={true} />
+              <Route path="/entdecken" component={Entdecken} exact={true} />
+              <Route path="/eintragen" component={Eintragen} exact={true} />
+              <Route path="/favoriten" component={Favoriten} exact={true} />
+              <Route path="/feedback" component={Feedback} exact={true} />
+            </IonRouterOutlet>
+            <IonTabBar slot="bottom">
+              <IonTabButton tab="home" href="/home">
+                <IonIcon icon={home} />
+                <IonLabel className="labelTabs">Home</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="entdecken" href="/entdecken">
+                <IonIcon icon={disc} />
+                <IonLabel className="labelTabs">Entdecken</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="eintragen" href="/eintragen">
+                <IonIcon icon={iceCream} />
+                <IonLabel className="labelTabs">Eis eintragen</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="favoriten" href="/favoriten">
+                <IonIcon icon={bookmarks} />
+                <IonLabel className="labelTabs">Favoriten</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
+        </IonContent>
       </IonReactRouter>
-    </IonContent>
-  </IonApp>
+    </IonApp>
   )
 }
 

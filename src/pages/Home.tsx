@@ -29,8 +29,7 @@ const Home: React.FC = () => {
             <span className="btn-text">Start</span>
           </a>
         </div>
-
-
+        
       </IonContent>
     </IonPage>
   );
