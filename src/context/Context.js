@@ -5,6 +5,10 @@ import { createAnimation } from '@ionic/react';
 export const Context = createContext();
 
 const AppState = ({children}) => {
+  const [isAuth, setIsAuth] = useState(false);
+  const [user, setUser] = useState({});
+  const [loading, setLoading] = useState();
+  const [error, setError] = useState('');
   const [toggle, setToggle] = useState(true);
   const [mapStyles, setMapStyles] = useState(mapDark);
 
@@ -45,9 +49,20 @@ const AppState = ({children}) => {
     return enterAnimation(modal).direction('reverse');
   }
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) setIsAuth(true);
+  }, []);
+
   return (
     <Context.Provider
       value={{
+        isAuth,
+        setIsAuth,
+        user,
+        setUser,
+        error,
+        setError,
         toggle,
         handleToggleDN,
         mapStyles,
