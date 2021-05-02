@@ -1,76 +1,157 @@
-import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from "@ionic/react";
-import { iceCream, mailUnread } from "ionicons/icons";
-import { useForm } from "react-hook-form";
+import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonPage, IonRange, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from "@ionic/react";
+import { iceCream, mailUnread, text } from "ionicons/icons";
+import { Controller, useForm } from "react-hook-form";
+import { useState } from 'react';
 
 // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
 
 const Feedback = () => {
   // with formState I can retrieve errors obj
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
-  const onSubmit = data => console.log('Submit Data: ', data);
+  const { control, register, handleSubmit, watch, formState: { errors } } = useForm();
+  const [data, setData] = useState();
+  
+  const onSubmit = data => {
+    alert(JSON.stringify(data, null, 2));
+    console.log('Submit Data: ', data);
+    setData(data);
+  };
 
   console.log('Watch:', watch()); // watch input value by passing the name of it as a string, z.B. watch('firstName')
   console.log('Errors:', errors); // every error thrown in form
 
+  // error handler function to display error message from react-hook-form hook
+  // library creates object as part of the hook that holds the errors that are 
+  // generated when form is validated.
+  const showError = (_fieldName) => {
+    {
+      return (
+        (errors)[_fieldName] && (
+          <div className='alertMsg'>
+            {_fieldName === 'name' && 'Bitte tragen Sie Ihren Namen ein'}
+            {_fieldName === 'email' && 'Ihre Mail-Adresse fehlt'}
+            {_fieldName === 'message' && 'Ops, das Textfeld ist noch leer'}
+          </div>
+        )
+      );
+    }
+  };
+  
   return (
     <IonPage>
-    <IonHeader translucent>
+    <IonHeader>
       <IonToolbar>
-        <IonButtons slot="start">
-          <IonBackButton defaultHref="/home"></IonBackButton>
-        </IonButtons>
         <IonTitle>Feedback</IonTitle>
       </IonToolbar>
     </IonHeader>
     <IonContent fullscreen className="ion-padding">
-      <IonIcon icon={iceCream}/>
 
-        {/* // See input fields in console
-        // <form onSubmit={handleSubmit(data => console.log(data))}>
-        // "handleSubmit" will validate your inputs before invoking "onSubmit" */}
+      {/* // See input fields in console
+      // <form onSubmit={handleSubmit(data => console.log(data))}>
+      // "handleSubmit" will validate your inputs before invoking "onSubmit" */}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="row px-2">
-          <label className="form-label" htmlFor='firstName'>First Name</label>
-          {/* register your input into the hook by invoking the "register" function */}
-          {/* include validation with required or other standard HTML validation rules */}
-          <input className="form-control formInput" {...register("firstName", { required: true, maxLength: 4 })} id='firstName' />
-          {/* errors will return when field validation fails; prop name comes from ...register("")  */}
-          {/* siehe für style mit Warnzeichen css p::before */}
-          {errors.firstName && <p>This field is required</p>}
-        </div>
-        <div className="row px-2">
-          <label className="form-label" htmlFor='lastName'>Last Name</label>
-          <input className="form-control formInput" {...register("lastName", { required: 'Required', min: 0, max: 100, maxLength: { value: 4, message: 'You exceeded the max length' }})} id='lastName' />
-          {/* Insert error message of required: '...' */}
-          {errors.lastName && <p>{errors.lastName.message}</p>}
-        </div>
-        <div className="row px-2">
-          <label className="form-label" htmlFor='age'>Age</label>
-          {/* num in html is outputed as string, hooks offers way to have directly num */}
-          <input className="form-control formInput" type="number" {...register("age", { valueAsNumber: true })} id='age' />
-          {errors.age && <p>This field is required</p>}
-        </div>
-        <div className="row px-2">
-          {/* Other validation rules than the above rules supported by React Hook form https://react-hook-form.com/api/useform/register
-              pattern, validate, valueAsDate, setValueAs */}
-          <label className="form-label" htmlFor='city'>City</label>
-          <input className="form-control formInput" {...register("city", { pattern: /[A-Za-z] {3}/ })} id='city' />
-        </div>
-        <div className="row px-2">
-          <label className="form-label" htmlFor='gender'></label>
-          <select {...register("gender")} id='gender' >
-            <option value="female">female</option>
-            <option value="male">male</option>
-            <option value="divers">other</option>
-          </select>
-        </div>
-        <div className="row px-2">
-          <label className="form-check-label" htmlFor='developer'>Are you a developer?</label>
-          <input {...register("developer")} type='checkbox' />
-        </div>
-        <div className="row px-2">
-          <IonButton type="submit"><IonIcon className="pe-1"icon={mailUnread}/>Absenden</IonButton>
-        </div>
+        <IonItem lines="none" className="mb-1">
+          <IonLabel position='floating'>Name</IonLabel>
+          <Controller
+              control={control}
+              render={({ 
+                field: { onChange, value },
+                fieldState: { invalid, isTouched, isDirty, error },
+              }) => (
+                <IonInput inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
+              )}
+              name="name"
+              errors="test"
+              rules={{ required: true }}
+            />
+        </IonItem>
+
+        {showError("name")}
+        <IonItem lines="none" className="mb-1">
+          <IonLabel position='floating'>E-Mail</IonLabel>
+          <Controller 
+            control={control}
+            render={({ 
+              field: { onChange, value },
+              fieldState: { invalid, isTouched, isDirty, error },
+            }) => (
+              <IonInput type="email" inputmode="email" value={value} onIonChange={e => onChange(e.detail.value)} />
+            )}
+            name="email"
+            rules={{ required: true }}
+          />
+        </IonItem>
+        {showError("email")}
+
+        <IonItem lines="none" className="mb-1">
+          <IonLabel position='floating'>Nachricht</IonLabel>
+          <Controller 
+            control={control}
+            render={({ 
+              field: { onChange, value },
+              fieldState: { invalid, isTouched, isDirty, error },
+            }) => (
+              <IonTextarea value={value} onIonChange={e => onChange(e.detail.value)}></IonTextarea>
+              )}
+              name="message"
+              rules={{ required: true }}
+              />
+        </IonItem>
+        {showError("message")}
+
+        <IonItem lines="none" className="mb-1">
+          <IonLabel position="stacked" className="ion-text-wrap mb-2">Wie gefällt Ihnen die App?</IonLabel>
+          <Controller 
+            control={control}
+            render={({ 
+              field: { onChange, value },
+              fieldState: { invalid, isTouched, isDirty, error },
+            }) => (
+              <IonSelect
+                placeholder="Auswahl"
+              >
+                <IonSelectOption value="1">ausgezeichnet</IonSelectOption>
+                <IonSelectOption value="2">gut</IonSelectOption>
+                <IonSelectOption value="3">ganz ok</IonSelectOption>
+                <IonSelectOption value="4">verbesserungswürdig</IonSelectOption>
+                <IonSelectOption value="5">absolut nicht hilfreich</IonSelectOption>
+              </IonSelect>
+            )}
+            onChangeName="onIonChange"
+            onChange={([selected]) => {
+              return selected.detail.value;
+            }}
+            name="rating"
+          />
+        </IonItem>
+
+        <IonItem lines="none" className="mb-1">
+          <IonLabel position="stacked" className="ion-text-wrap mb-2">Würden Sie die App weiterempfehlen?</IonLabel>
+          <Controller 
+            control={control}
+            render={({ 
+              field: { onChange, value },
+              fieldState: { invalid, isTouched, isDirty, error },
+            }) => (
+              <IonSelect
+                placeholder="Auswahl"
+              >
+                <IonSelectOption value="1">ja, absolut</IonSelectOption>
+                <IonSelectOption value="2">eher ja</IonSelectOption>
+                <IonSelectOption value="3">eher nein</IonSelectOption>
+                <IonSelectOption value="4">nein</IonSelectOption>
+                <IonSelectOption value="-1">weiß nicht</IonSelectOption>
+              </IonSelect>
+            )}
+            onChangeName="onIonChange"
+            onChange={([selected]) => {
+              return selected.detail.value;
+            }}
+            name="recommand"
+          />
+        </IonItem>
+
+        
+        <IonButton className="mt-3" type="submit" expand="block"><IonIcon className="pe-1"icon={mailUnread}/>Absenden</IonButton>
       </form>
     </IonContent>
   </IonPage>

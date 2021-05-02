@@ -50,25 +50,26 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   font-size: 0.9rem;
 }
 
+.menuModal .modal-wrapper {
+  height: 100%;
+  width: 100%;
+}
+
+.menuModalDesktop {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.menuModalDesktop .modal-wrapper {
+  height: 100%;
+  width: 400px;
+}
+
 /* Feedback Form */
-.formInput {
-  padding: 10px;
-  border: solid #c8ccd0 1px;
-  border-radius: 3px 0px 0px 3px;
-  -webkit-transition: box-shadow linear 0.2s;
-  transition: box-shadow linear 0.2s;
-  border-right: 0;
-}
-
-.formInput:focus {
-  outline: none;
-  border-color: #6c757d;
-  box-shadow: 0 0 10px #6c757d;
-}
-
-.formInput:hover {
-  border-color: #6c757d;
-  box-shadow: 0 0 10px #6c757d;
+.alertMsg {
+  color: var(--ion-color-danger);
+  padding-bottom: 10px;
+  font-size: 0.7rem;
 }
 
 /* Toggler Day and Night */

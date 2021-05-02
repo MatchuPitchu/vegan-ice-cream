@@ -24,7 +24,7 @@ const AppState = ({children}) => {
   };
 
   // animations modal
-  const enterAnimation = (modal) => {
+  const enterAnimationBtm = (modal) => {
     // darkened background 
     const backdropAnimation = createAnimation()
       .addElement(modal.querySelector('ion-backdrop'))
@@ -45,8 +45,33 @@ const AppState = ({children}) => {
       .addAnimation([backdropAnimation, wrapperAnimation]);
   }
 
-  const leaveAnimation = (modal) => {
-    return enterAnimation(modal).direction('reverse');
+  const leaveAnimationBtm = (modal) => {
+    return enterAnimationBtm(modal).direction('reverse');
+  }
+
+  const enterAnimationLft = (modal) => {
+    // darkened background 
+    const backdropAnimation = createAnimation()
+      .addElement(modal.querySelector('ion-backdrop'))
+      .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
+
+    // animates modal
+    const wrapperAnimation = createAnimation()
+      .addElement(modal.querySelector('.modal-wrapper'))
+      .keyframes([
+        { offset: 0, opacity: '1', transform: 'translateX(-300px)' },
+        { offset: 1, opacity: '1', transform: 'translateX(0)' },
+      ]);
+
+    return createAnimation()
+      .addElement(modal)
+      .easing('ease-out')
+      .duration(200)
+      .addAnimation([backdropAnimation, wrapperAnimation]);
+  }
+
+  const leaveAnimationLft = (modal) => {
+    return enterAnimationLft(modal).direction('reverse');
   }
 
   useEffect(() => {
@@ -66,8 +91,10 @@ const AppState = ({children}) => {
         toggle,
         handleToggleDN,
         mapStyles,
-        enterAnimation,
-        leaveAnimation
+        enterAnimationBtm,
+        leaveAnimationBtm,
+        enterAnimationLft,
+        leaveAnimationLft
       }}
     >
       {children}

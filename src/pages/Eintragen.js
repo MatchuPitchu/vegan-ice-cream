@@ -6,7 +6,7 @@ import { addCircleOutline, closeCircle, closeCircleOutline, removeCircleOutline 
 // import { formatRelative } from 'date-fns';
 
 const Eintragen = () => {
-  const { mapStyles } = useContext(Context);
+  const { mapStyles, enterAnimationBtm, leaveAnimationBtm } = useContext(Context);
   const [map, setMap]= useState(null);
   const [center, setCenter] = useState({ lat: 52.524, lng: 13.410 })
   const [markers, setMarkers] = useState([
@@ -54,31 +54,31 @@ const Eintragen = () => {
     );
   }
 
-  // animations modal
-  const enterAnimation = (modal) => {
-    // darkened background 
-    const backdropAnimation = createAnimation()
-      .addElement(modal.querySelector('ion-backdrop'))
-      .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
+  // // animations modal
+  // const enterAnimation = (modal) => {
+  //   // darkened background 
+  //   const backdropAnimation = createAnimation()
+  //     .addElement(modal.querySelector('ion-backdrop'))
+  //     .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
 
-    // animates modal
-    const wrapperAnimation = createAnimation()
-      .addElement(modal.querySelector('.modal-wrapper'))
-      .keyframes([
-        { offset: 0, opacity: '1', transform: 'translateX(200px)' },
-        { offset: 1, opacity: '1', transform: 'translate(0px)' },
-      ]);
+  //   // animates modal
+  //   const wrapperAnimation = createAnimation()
+  //     .addElement(modal.querySelector('.modal-wrapper'))
+  //     .keyframes([
+  //       { offset: 0, opacity: '1', transform: 'translateX(200px)' },
+  //       { offset: 1, opacity: '1', transform: 'translate(0px)' },
+  //     ]);
 
-    return createAnimation()
-      .addElement(modal)
-      .easing('ease-out')
-      .duration(200)
-      .addAnimation([backdropAnimation, wrapperAnimation]);
-  }
+  //   return createAnimation()
+  //     .addElement(modal)
+  //     .easing('ease-out')
+  //     .duration(200)
+  //     .addAnimation([backdropAnimation, wrapperAnimation]);
+  // }
 
-  const leaveAnimation = (modal) => {
-    return enterAnimation(modal).direction('reverse');
-  }
+  // const leaveAnimation = (modal) => {
+  //   return enterAnimation(modal).direction('reverse');
+  // }
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -126,16 +126,14 @@ const Eintragen = () => {
           ))}
 
           {selected ? (
-            <div className="modalContainer">
-              <IonModal cssClass='mapModal' isOpen={showModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
-                <IonItem>
-                  <IonLabel>
-                    Lat: {selected.lat} Lng: {selected.lng}
-                  </IonLabel>
-                  <IonButton fill="clear" onClick={() => setShowModal(false)}><IonIcon icon={closeCircleOutline }/></IonButton>
-                </IonItem>
-              </IonModal>
-            </div>
+            <IonModal cssClass='mapModal' isOpen={showModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowModal(false)} enterAnimation={enterAnimationBtm} leaveAnimation={leaveAnimationBtm}>
+              <IonItem>
+                <IonLabel>
+                  Lat: {selected.lat} Lng: {selected.lng}
+                </IonLabel>
+                <IonButton fill="clear" onClick={() => setShowModal(false)}><IonIcon icon={closeCircleOutline }/></IonButton>
+              </IonItem>
+            </IonModal>
           ) : null}
 
         </GoogleMap>
