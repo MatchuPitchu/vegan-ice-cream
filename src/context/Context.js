@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import { mapDark, mapLight } from '../components/mapStyles'
 import { createAnimation } from '@ionic/react';
 
