@@ -1,11 +1,10 @@
-import { IonContent, IonInput, IonItem, IonLabel, IonList, IonButton } from "@ionic/react";
-import { useState } from "react";
-import { useContext } from "react";
-import { Redirect } from "react-router-dom";
+import { IonContent, IonInput, IonItem, IonLabel, IonList, IonButton, IonPage, IonHeader } from "@ionic/react";
+import { useContext, useState } from "react";
 import { Context } from "../../context/Context";
+import { Redirect } from "react-router-dom";
 
 const Login = () => {
-  const { isAuth, setIsAuth, error, setError } = useContext(Context);
+  const { isAuth, setIsAuth, error, setError, toggle } = useContext(Context);
   const [formState, setFormState] = useState({
     email: "",
     password: "",
@@ -40,7 +39,7 @@ const Login = () => {
       };
       if (token) {
         localStorage.setItem("token", token);
-        setIsAuthenticated(true);
+        setIsAuth(true);
       };
     } catch (error) {
       console.log(error);
@@ -51,66 +50,52 @@ const Login = () => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
   };
 
-  if (isAuthenticated) return <Redirect to="/" />;
+  if (isAuth) return <Redirect to="/" />;
 
   return (
-    <IonContent>
-      <div className="container" style={{ paddingBottom: "2rem" }}>
-        <picture>
-          <source
-            srcSet="https://colin-colorinspirator-assets.s3.eu-central-1.amazonaws.com/ColIn_Header_Login_Dark.jpg"
-            media="(prefers-color-scheme: dark)"
-          ></source>
-          <source
-            srcSet="https://colin-colorinspirator-assets.s3.eu-central-1.amazonaws.com/ColIn_Header_Login.jpg"
-            media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
-          ></source>
-          <img
-            src="https://colin-colorinspirator-assets.s3.eu-central-1.amazonaws.com/ColIn_Header_Login.jpg"
-            alt="Header Login"
-          />
-        </picture>
-
-        <>
-          <h1>Please log in to save color combinations or submit new themes</h1>
-          <form onSubmit={onSubmit}>
-            <IonList>
-              <IonItem>
-                <IonLabel position="floating" htmlFor="email">
-                  E-Mail
-                </IonLabel>
-                <IonInput
-                  type="email"
-                  name="email"
-                  value={email}
-                  onIonChange={onChange}
-                ></IonInput>
-              </IonItem>
-              <IonItem>
-                <IonLabel position="floating" htmlFor="password">
-                  Password
-                </IonLabel>
-                <IonInput
-                  type="password"
-                  name="password"
-                  value={password}
-                  onIonChange={onChange}
-                ></IonInput>
-              </IonItem>
-            </IonList>
-            <IonButton
-              type="submit"
-              onClick={e => console.log("clicked")}
-              style={{ marginTop: "2rem", marginBottom: "2rem" }}
-            >
-              Login
-            </IonButton>
-            {/* Could be prettier */}
-            {error && <div>{error}</div>}
-          </form>
-        </>
-      </div>
-    </IonContent>
+    <IonPage>
+      <IonHeader>
+        <img className="headerMap" src={`${toggle ? "./assets/map-header-graphic-ice-dark.svg" : "./assets/map-header-graphic-ice-light.svg"}`} />
+      </IonHeader>
+      <IonContent>
+        <h3>Please log in to save color combinations or submit new themes</h3>
+        <form onSubmit={onSubmit}>
+          <IonList>
+            <IonItem>
+              <IonLabel position="floating" htmlFor="email">
+                E-Mail
+              </IonLabel>
+              <IonInput
+                type="email"
+                name="email"
+                value={email}
+                onIonChange={onChange}
+              ></IonInput>
+            </IonItem>
+            <IonItem>
+              <IonLabel position="floating" htmlFor="password">
+                Password
+              </IonLabel>
+              <IonInput
+                type="password"
+                name="password"
+                value={password}
+                onIonChange={onChange}
+              ></IonInput>
+            </IonItem>
+          </IonList>
+          <IonButton
+            type="submit"
+            onClick={e => console.log("clicked")}
+            style={{ marginTop: "2rem", marginBottom: "2rem" }}
+          >
+            Login
+          </IonButton>
+          {/* Could be prettier */}
+          {error && <div>{error}</div>}
+        </form>
+      </IonContent>
+    </IonPage>
   );
 };
 

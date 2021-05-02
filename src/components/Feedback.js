@@ -8,10 +8,9 @@ import { useState } from 'react';
 const Feedback = () => {
   // with formState I can retrieve errors obj
   const { control, register, handleSubmit, watch, formState: { errors } } = useForm();
-  const [data, setData] = useState();
+  const  [data, setData ] = useState();
   
   const onSubmit = data => {
-    alert(JSON.stringify(data, null, 2));
     console.log('Submit Data: ', data);
     setData(data);
   };

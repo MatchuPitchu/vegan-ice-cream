@@ -25,7 +25,9 @@ import Home from './pages/Home';
 import Entdecken from './pages/Entdecken.js';
 import Eintragen from './pages/Eintragen';
 import Favoriten from './pages/Favoriten';
-import Feedback from './components/Feedback';
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
+import Logout from './components/Auth/Logout';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -81,7 +83,9 @@ const App: React.FC = () => {
               <Route path="/entdecken" component={Entdecken} exact={true} />
               <Route path="/eintragen" component={Eintragen} exact={true} />
               <Route path="/favoriten" component={Favoriten} exact={true} />
-              <Route path="/feedback" component={Feedback} exact={true} />
+              <Route path="/login" component={Login} exact={true} />
+              <Route path="/register" component={Register} exact={true} />
+              <Route path="/logout" component={Logout} exact={true} />
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
               <IonTabButton tab="home" href="/home">
