@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useContext } from 'react';
+import { Context } from "../context/Context";
 import { Controller, useForm } from 'react-hook-form';
 import { IonButton, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonPage, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
 import { mailUnread } from 'ionicons/icons';
@@ -6,18 +7,44 @@ import showError from './showError';
 
 // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
 
+const defaultValues = { 
+  name: '',
+  name: '',
+  email: '',
+  message: '',
+  rating: '',
+  recommend: ''
+}
+
 const Feedback = () => {
+  const { setShowModal } = useContext(Context);
   // with formState I can retrieve errors obj
-  const { control, register, handleSubmit, watch, formState: { errors } } = useForm();
-  const  [data, setData ] = useState();
-  
-  const onSubmit = data => {
-    console.log('Submit Data: ', data);
-    setData(data);
+  const { control, handleSubmit, reset, formState: { errors } } = useForm({defaultValues});
+
+  const sendFeedback = async (serviceID, templateId, variables) => {
+    try {
+      const res = await window.emailjs.send(serviceID, templateId, variables)
+      if(res) console.log('Email successfully sent!')
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  console.log('Watch:', watch()); // watch input value by passing the name of it as a string, z.B. watch('firstName')
-  console.log('Errors:', errors); // every error thrown in form
+  const onSubmit = (data, e) => {
+    alert(`Danke für deine Nachricht, ${data.name}`);
+    const templateID = 'contact-form';
+    const serviceID = 'gmail_account'
+    // sendFeedback(serviceID, templateID, { 
+    //   name: data.name,
+    //   reply_to: data.email,
+    //   message: data.message,
+    //   rating_App: data.rating,
+    //   recommend_App: data.recommend
+    // });
+    console.log('Submit Data: ', data);
+    reset(defaultValues);
+    setShowModal(false);
+  };
 
   return (
     <IonPage>
@@ -91,6 +118,8 @@ const Feedback = () => {
               }) => (
                 <IonSelect
                   placeholder="Auswahl"
+                  value={value}
+                  onIonChange={e => onChange(e.detail.value)}
                 >
                   <IonSelectOption value="1">ausgezeichnet</IonSelectOption>
                   <IonSelectOption value="2">gut</IonSelectOption>
@@ -99,10 +128,6 @@ const Feedback = () => {
                   <IonSelectOption value="5">absolut nicht hilfreich</IonSelectOption>
                 </IonSelect>
               )}
-              onChangeName="onIonChange"
-              onChange={([selected]) => {
-                return selected.detail.value;
-              }}
               name="rating"
             />
           </IonItem>
@@ -117,6 +142,8 @@ const Feedback = () => {
               }) => (
                 <IonSelect
                   placeholder="Auswahl"
+                  value={value}
+                  onIonChange={e => onChange(e.detail.value)}
                 >
                   <IonSelectOption value="1">ja, absolut</IonSelectOption>
                   <IonSelectOption value="2">eher ja</IonSelectOption>
@@ -125,10 +152,6 @@ const Feedback = () => {
                   <IonSelectOption value="-1">weiß nicht</IonSelectOption>
                 </IonSelect>
               )}
-              onChangeName="onIonChange"
-              onChange={([selected]) => {
-                return selected.detail.value;
-              }}
               name="recommend"
             />
           </IonItem>

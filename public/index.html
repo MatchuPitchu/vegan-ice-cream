@@ -35,6 +35,15 @@
     
     <!-- Google Maps Script -->
     <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyOeIapCDcJgNJjnNaf-Q3bzlLDzZ_0HE&callback=initMap"></script>
+  
+    <!-- EmailJS Contact Form Provider // https://dashboard.emailjs.com/admin/integration -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("%REACT_APP_USER_ID_EMAILJS%");
+        })();
+    </script>
+  
   </body>
 
 </html>

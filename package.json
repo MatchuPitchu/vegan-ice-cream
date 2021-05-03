@@ -17,7 +17,7 @@
     "@types/react-dom": "^16.9.10",
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
-    "bootstrap": "^4.6.0",
+    "bootstrap": "^5.0.0-beta3",
     "date-fns": "^2.21.1",
     "google-maps-react": "^2.0.6",
     "ionicons": "^5.4.0",

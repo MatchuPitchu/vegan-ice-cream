@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { Context } from "../context/Context";
 import { 
   IonButton, 
@@ -19,8 +19,7 @@ import Toggle from './Toggle';
 import Feedback from './Feedback';
 
 const Menu: React.FC = () => {
-  const { isAuth, setIsAuth, error, setError, toggle, enterAnimationLft, leaveAnimationLft } = useContext(Context);
-  const [ showModal, setShowModal ] = useState(false);
+  const { isAuth, setIsAuth, error, setError, toggle, enterAnimationLft, leaveAnimationLft, showModal, setShowModal } = useContext(Context);
 
   return (
     <IonPage>
@@ -48,7 +47,7 @@ const Menu: React.FC = () => {
                 <IonIcon icon={create} />
               </IonItem>
             </IonMenuToggle>
-            <IonItem className="labelMenu pe-2" button onClick={() => { setShowModal(true); console.log(isPlatform('desktop')) }} lines="full">
+            <IonItem className="labelMenu pe-2" button onClick={() => { setShowModal(true)}} lines="full">
               <IonLabel>Feedback</IonLabel>
             </IonItem>
             {showModal ? (

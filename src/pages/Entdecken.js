@@ -7,7 +7,7 @@ import Spinner from "../components/Spinner";
 // import { formatRelative } from 'date-fns';
 
 const Entdecken = () => {
-  const { toggle, mapStyles, enterAnimation, leaveAnimation } = useContext(Context);
+  const { toggle, mapStyles, enterAnimation, leaveAnimation, showModal, setShowModal } = useContext(Context);
   const [map, setMap]= useState(null);
   const [center, setCenter] = useState({ lat:  52.524, lng: 13.410 })
   const [markers, setMarkers] = useState([
@@ -15,7 +15,6 @@ const Entdecken = () => {
     { lat: 52.424, lng: 13.310, id: 2 }
   ]);
   const [selected, setSelected] = useState(null);
-  const [showModal, setShowModal] = useState(false);
 
   const onMapLoad = useCallback((map) => {
     setMap(map);

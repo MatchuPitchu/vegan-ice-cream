@@ -11,6 +11,7 @@ const AppState = ({children}) => {
   const [error, setError] = useState('');
   const [toggle, setToggle] = useState(true);
   const [mapStyles, setMapStyles] = useState(mapDark);
+  const [showModal, setShowModal] = useState(false);
 
   const handleToggleDN = (e) => {
     setToggle((prev) => !prev);
@@ -94,7 +95,9 @@ const AppState = ({children}) => {
         enterAnimationBtm,
         leaveAnimationBtm,
         enterAnimationLft,
-        leaveAnimationLft
+        leaveAnimationLft,
+        showModal,
+        setShowModal
       }}
     >
       {children}
