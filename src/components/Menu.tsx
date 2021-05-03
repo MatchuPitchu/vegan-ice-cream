@@ -36,21 +36,21 @@ const Menu: React.FC = () => {
               <img className="headerGraphic" src={`${toggle ? "./assets/header-graphic-ice-dark.svg" : "./assets/header-graphic-ice-light.svg"}`} />
             </IonListHeader>
             <IonMenuToggle autoHide={false}>
-              <IonItem className="labelMenu pe-2" routerLink='/login' routerDirection="forward" lines="none" detail={false} >
+              <IonItem className="labelMenu pe-2"  disabled={isAuth ? true : false} routerLink='/login' routerDirection="forward" lines="none" detail={false} >
                 <IonLabel>Login</IonLabel>
                 <IonIcon icon={logIn} />
               </IonItem>
             </IonMenuToggle>
             <IonMenuToggle autoHide={false}>
-              <IonItem className="labelMenu pe-2" routerLink='/register' routerDirection="forward" lines="full" detail={false}>
+            <IonItem className="labelMenu pe-2" disabled={isAuth ? true : false} routerLink='/register' routerDirection="forward" lines="full" detail={false}>
                 <IonLabel>Registrieren</IonLabel>
                 <IonIcon icon={create} />
               </IonItem>
             </IonMenuToggle>
-            <IonItem className="labelMenu pe-2" button onClick={() => { setShowModal(true)}} lines="full">
+            <IonItem className="labelMenu pe-2" button onClick={() => { setShowModal(true)}}  lines={isAuth ? "full" : "none"} detail={true}>
               <IonLabel>Feedback</IonLabel>
             </IonItem>
-            {showModal ? (
+            {showModal && (
               <IonModal cssClass={`${isPlatform('desktop') ? 'menuModalDesktop' : 'menuModal'}`} isOpen={showModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowModal(false)} enterAnimation={enterAnimationLft} leaveAnimation={leaveAnimationLft}>
                 <IonItem lines="none">
                   <IonLabel color="primary" >Feedback</IonLabel>
@@ -58,13 +58,15 @@ const Menu: React.FC = () => {
                 </IonItem>
                 <Feedback />
               </IonModal>
-            ) : null}      
+            )}      
+            {isAuth && (
             <IonMenuToggle autoHide={false}>
               <IonItem className="labelMenu mt-5 pe-2" routerLink='/logout' routerDirection="forward" lines="none" detail={false}>
                 <IonIcon slot="start" icon={logOut} />
                 <IonLabel>Logout</IonLabel>
               </IonItem>
             </IonMenuToggle>
+            )}
           </IonList>
         </IonContent>
     </IonPage>
