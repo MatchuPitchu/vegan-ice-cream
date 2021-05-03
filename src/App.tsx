@@ -25,6 +25,7 @@ import Home from './pages/Home';
 import Entdecken from './pages/Entdecken.js';
 import Eintragen from './pages/Eintragen';
 import Favoriten from './pages/Favoriten';
+import Profil from './pages/Profil';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import Logout from './components/Auth/Logout';
@@ -83,6 +84,7 @@ const App: React.FC = () => {
               <Route path="/entdecken" component={Entdecken} exact={true} />
               <Route path="/eintragen" component={Eintragen} exact={true} />
               <Route path="/favoriten" component={Favoriten} exact={true} />
+              <Route path="/profil" component={Profil} exact={true} />
               <Route path="/login" component={Login} exact={true} />
               <Route path="/register" component={Register} exact={true} />
               <Route path="/logout" component={Logout} exact={true} />

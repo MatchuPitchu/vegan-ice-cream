@@ -5,6 +5,7 @@ import { createAnimation } from '@ionic/react';
 export const Context = createContext();
 
 const AppState = ({children}) => {
+  const [token, setToken] = useState(null);
   const [isAuth, setIsAuth] = useState(false);
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState();
@@ -12,6 +13,46 @@ const AppState = ({children}) => {
   const [toggle, setToggle] = useState(true);
   const [mapStyles, setMapStyles] = useState(mapDark);
   const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    // This should also return the user info in order to store it in the user context
+    const verifySession = async () => {
+    const options = {
+        headers: { token },
+        credentials: "include"
+      };  
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/verify-session`, options);
+      const { success, user } = await res.json();
+      if (success) {
+        setIsAuth(true);
+        setUser(user);
+      } else {
+        localStorage.removeItem('token');
+        setIsAuth("false");
+        setUser({});
+      }
+    };
+    if (token) {
+      verifySession();
+    }
+  }, []);
+
+  useEffect( async() => {
+    try {
+      const token = localStorage.getItem('token');
+      const options = {
+        headers: { "token": token },
+        credentials: "include"
+      };
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/infos`, options);
+      const data = await res.json();
+      console.log(data);
+      setUser({...user});
+    } catch (error) {
+      console.log(error);
+    }
+  }, [user._id])
 
   const handleToggleDN = (e) => {
     setToggle((prev) => !prev);
@@ -74,11 +115,6 @@ const AppState = ({children}) => {
   const leaveAnimationLft = (modal) => {
     return enterAnimationLft(modal).direction('reverse');
   }
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) setIsAuth(true);
-  }, []);
 
   return (
     <Context.Provider

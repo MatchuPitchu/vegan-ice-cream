@@ -7,48 +7,44 @@ import showError from '../showError';
 import { logIn } from "ionicons/icons";
 
 const Login = () => {
-  const { isAuth, setIsAuth, error, setError, toggle } = useContext(Context);
-  const { control, register, handleSubmit, watch, formState: { errors } } = useForm();
+  const { isAuth, setIsAuth, error, setError, setUser, toggle } = useContext(Context);
+  const { control, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async data => {
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-      credentials: "include",
-    };
     try {
-      const res = await fetch(
-        "http://localhost:5000/auth/login",
-        options
-      );
-      const { success, id, userName, token } = await res.json();
-      console.log(success, id, userName, token);
-      //set this to session storage
-      // if (sucess) {
-      //   setError(sucess);
-      //   console.log(sucess);
-      //   return () => setTimeout(setError(""), 5000);
-      // };
-      // if (token) {
-      //   localStorage.setItem("token", token);
-      //   setIsAuth(true);
-      // };
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // converts JS data into JSON string.
+        body: JSON.stringify(data),
+        credentials: "include",
+      };
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, options);
+      const { success, user, token } = await res.json();
+      if (success) {
+        console.log(success);
+        setIsAuth(true);
+        setUser({user});
+        localStorage.setItem('token', token);
+        return () => setTimeout(setError(''), 5000);
+      } else {
+        console.log('Login failed, please try again later')
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  if (isAuth) return <Redirect to="/" />;
+  if (isAuth) return <Redirect to="/home" />;
 
   return (
     <IonPage>
       <IonHeader>
         <img className="headerMap" src={`${toggle ? "./assets/map-header-graphic-ice-dark.svg" : "./assets/map-header-graphic-ice-light.svg"}`} />
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent>
         <div className="container">
           <form onSubmit={handleSubmit(onSubmit)}>
               <IonItem lines="none" className="mb-1">
@@ -84,7 +80,7 @@ const Login = () => {
               {showError("password", errors)}
             <IonButton className="my-3" type="submit" expand="block"><IonIcon className="pe-1"icon={logIn}/>Login</IonButton>
           </form>
-          <p>Nach dem Einloggen kannst du neue Eisläden eintragen, Eisläden bewerten und zu deinen Favoriten hinzufügen.</p>
+          <p>Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
         </div>
       </IonContent>
     </IonPage>
