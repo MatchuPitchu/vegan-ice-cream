@@ -28,9 +28,9 @@ const Login = () => {
         setIsAuth(true);
         setUser({user});
         localStorage.setItem('token', token);
-        return () => setTimeout(setError(''), 5000);
       } else {
         setError('Prüfe, ob du das richtige Passwort eingetragen hast')
+        setTimeout(() => setError(null), 5000);
       }
     } catch (error) {
       console.log(error);
@@ -78,7 +78,7 @@ const Login = () => {
                     />
               </IonItem>
               {showError("password", errors)}
-              <div className='alertMsg'>{error}</div>
+              {error && <div className='alertMsg'>{error}</div>}
             <IonButton className="my-3" type="submit" expand="block"><IonIcon className="pe-1"icon={logIn}/>Login</IonButton>
           </form>
           <p>Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>

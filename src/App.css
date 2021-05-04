@@ -36,8 +36,8 @@ ion-icon {
 }
 
 .p-weak {
-  color: var(--ion-color-secondary-tint);
-  opacity: 0.3;
+  color: var(--ion-text-color);
+  opacity: 0.4;
 }
 
 /************ Header general ************/
@@ -433,6 +433,11 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 .headerMap {
   width: 100%;
   max-height: 120px;
+}
+
+.segmentAbsolute {
+  position: absolute;
+  width: 100%;
 }
 
 .mapContainer {

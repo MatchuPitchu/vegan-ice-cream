@@ -1,8 +1,8 @@
-import { useContext, useState, useCallback } from "react";
+import { useContext, useState, useCallback, Fragment } from "react";
 import { Context } from '../context/Context';
-import { IonButton, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonModal, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonModal, IonPage, IonSegment, IonSegmentButton, IonToolbar } from '@ionic/react';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
-import { addCircleOutline, closeCircleOutline, refreshCircle, removeCircleOutline } from "ionicons/icons";
+import { addCircleOutline, closeCircleOutline, listCircle, map as mapIcon, refreshCircle, removeCircleOutline } from "ionicons/icons";
 import Spinner from "../components/Spinner";
 // import { formatRelative } from 'date-fns';
 
@@ -15,6 +15,7 @@ const Entdecken = () => {
     { lat: 52.424, lng: 13.310, id: 2 }
   ]);
   const [selected, setSelected] = useState(null);
+  const [segment, setSegment] = useState('map');
 
   const onMapLoad = useCallback((map) => {
     setMap(map);
@@ -56,7 +57,7 @@ const Entdecken = () => {
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries: ['places']
+    // libraries: ['places']
   })
 
   if (loadError) return <div>"Error loading maps"</div>;
@@ -65,53 +66,71 @@ const Entdecken = () => {
     <IonPage>
       <IonHeader>
         <img className="headerMap" src={`${toggle ? "./assets/map-header-graphic-ice-dark.svg" : "./assets/map-header-graphic-ice-light.svg"}`} />
+        <IonToolbar>
+          <IonSegment onIonChange={(e) => setSegment(e.detail.value)}>
+            <IonSegmentButton value='map'>
+              <IonIcon icon={mapIcon} />
+            </IonSegmentButton>
+            <IonSegmentButton value='list'>
+              <IonIcon icon={listCircle} />
+            </IonSegmentButton>
+          </IonSegment>
+        </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <div className="control">
-          <IonButton className="zoom-control-in zoomIcons" fill="clear" >
-            <IonIcon icon={addCircleOutline} />
-          </IonButton>
-          <IonButton className="zoom-control-out zoomIcons" fill="clear">
-            <IonIcon icon={removeCircleOutline} />
-          </IonButton>
-          <IonButton className="center-control" title="Karte auf Anfangspunkt zentrieren" fill="clear" >
-            <IonIcon icon={refreshCircle} />
-          </IonButton>
-        </div>
 
-        <GoogleMap 
-          mapContainerClassName="mapContainer" 
-          zoom={11} 
-          center={center}
-          options={options}
-          onLoad={onMapLoad}
-        >
-          {markers.map((marker) => (
-            <Marker 
-              key={marker.id}
-              position={{lat: marker.lat, lng: marker.lng}} 
-              icon={{
-                url: './assets/icons/ice-cream-filled-fontawesome.svg',
-                scaledSize: new window.google.maps.Size(30, 30),
-              }}
-              title="TEST TEST TEST rollover text"
-              onClick={() => { setSelected(marker); setShowModal(true) }}
-            />
-          ))}
-          {selected ? (
-            <div className="modalContainer">
-              <IonModal cssClass='mapModal' isOpen={showModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
-                <IonItem>
-                  <IonLabel>
-                    Lat: {selected.lat} Lng: {selected.lng}
-                  </IonLabel>
-                  <IonButton fill="clear" onClick={() => setShowModal(false)}><IonIcon icon={closeCircleOutline }/></IonButton>
-                </IonItem>
-              </IonModal>
+        {segment === 'map' && (
+          <IonContent fullscreen>
+            <div className="control">
+              <IonButton className="zoom-control-in zoomIcons" fill="clear" >
+                <IonIcon icon={addCircleOutline} />
+              </IonButton>
+              <IonButton className="zoom-control-out zoomIcons" fill="clear">
+                <IonIcon icon={removeCircleOutline} />
+              </IonButton>
+              <IonButton className="center-control" title="Karte auf Anfangspunkt zentrieren" fill="clear" >
+                <IonIcon icon={refreshCircle} />
+              </IonButton>
             </div>
-          ) : null}
-        </GoogleMap>
-      </IonContent>
+
+            <GoogleMap 
+              mapContainerClassName="mapContainer" 
+              zoom={11} 
+              center={center}
+              options={options}
+              onLoad={onMapLoad}
+            >
+              {markers.map((marker) => (
+                <Marker 
+                  key={marker.id}
+                  position={{lat: marker.lat, lng: marker.lng}} 
+                  icon={{
+                    url: './assets/icons/ice-cream-filled-fontawesome.svg',
+                    scaledSize: new window.google.maps.Size(30, 30),
+                  }}
+                  title="TEST TEST TEST rollover text"
+                  onClick={() => { setSelected(marker); setShowModal(true) }}
+                />
+              ))}
+              {selected ? (
+                <div className="modalContainer">
+                  <IonModal cssClass='mapModal' isOpen={showModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
+                    <IonItem>
+                      <IonLabel>
+                        Lat: {selected.lat} Lng: {selected.lng}
+                      </IonLabel>
+                      <IonButton fill="clear" onClick={() => setShowModal(false)}><IonIcon icon={closeCircleOutline }/></IonButton>
+                    </IonItem>
+                  </IonModal>
+                </div>
+              ) : null}
+            </GoogleMap>
+          </IonContent>
+        )}
+
+      {segment === 'list' && (
+        <div>test</div>
+      )}
+
     </IonPage>
   ) : <Spinner /> ;
 };

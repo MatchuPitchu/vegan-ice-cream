@@ -4,10 +4,10 @@ import { Context } from "../../context/Context";
 import { IonContent, IonInput, IonItem, IonLabel, IonList, IonButton, IonPage, IonHeader, IonTitle, IonIcon, IonModal } from "@ionic/react";
 import { Redirect } from "react-router-dom";
 import showError from '../showError';
-import { closeCircleOutline, logIn } from "ionicons/icons";
+import { logIn } from "ionicons/icons";
 
 const Register = () => {
-  const { isAuth, setIsAuth, setUser, error, setError, showModal, setShowModal, toggle, enterAnimation, leaveAnimation } = useContext(Context);
+  const { isAuth, setIsAuth, setUser, error, setError, toggle } = useContext(Context);
   const { control, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async data => {
@@ -33,7 +33,8 @@ const Register = () => {
         setUser(user);
       }
     } catch (error) {
-      console.log(error);
+      setError(error)
+      setTimeout(() => setError(null), 5000);
     }
   };
 
@@ -124,7 +125,8 @@ const Register = () => {
                     }}
                     />
               </IonItem>
-              {showError("repeatPassword", errors)}              
+              {showError("repeatPassword", errors)}
+              {error && <div className='alertMsg'>{error}</div>}       
             <IonButton className="my-3" type="submit" expand="block"><IonIcon className="pe-1"icon={logIn}/>Registrieren</IonButton>
           </form>
           <p>Nach der Registrierung kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
