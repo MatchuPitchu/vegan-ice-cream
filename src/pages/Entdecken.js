@@ -67,7 +67,7 @@ const Entdecken = () => {
       <IonHeader>
         <img className="headerMap" src={`${toggle ? "./assets/map-header-graphic-ice-dark.svg" : "./assets/map-header-graphic-ice-light.svg"}`} />
         <IonToolbar>
-          <IonSegment onIonChange={(e) => setSegment(e.detail.value)}>
+          <IonSegment onIonChange={(e) => setSegment(e.detail.value)} value='map'>
             <IonSegmentButton value='map'>
               <IonIcon icon={mapIcon} />
             </IonSegmentButton>
@@ -81,15 +81,17 @@ const Entdecken = () => {
         {segment === 'map' && (
           <IonContent fullscreen>
             <div className="control">
-              <IonButton className="zoom-control-in zoomIcons" fill="clear" >
-                <IonIcon icon={addCircleOutline} />
-              </IonButton>
-              <IonButton className="zoom-control-out zoomIcons" fill="clear">
-                <IonIcon icon={removeCircleOutline} />
-              </IonButton>
-              <IonButton className="center-control" title="Karte auf Anfangspunkt zentrieren" fill="clear" >
-                <IonIcon icon={refreshCircle} />
-              </IonButton>
+              <div className="d-flex flex-column">
+                <IonButton className="zoom-control-in zoomIcons" fill="clear" >
+                  <IonIcon icon={addCircleOutline} />
+                </IonButton>
+                <IonButton className="zoom-control-out zoomIcons" fill="clear">
+                  <IonIcon icon={removeCircleOutline} />
+                </IonButton>
+              </div>
+                <IonButton className="center-control" title="Karte auf Anfangspunkt zentrieren" fill="clear" >
+                  <IonIcon icon={refreshCircle} />
+                </IonButton>
             </div>
 
             <GoogleMap 

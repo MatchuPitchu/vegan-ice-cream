@@ -454,11 +454,11 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 .zoomIcons {
   color: var(--ion-text-color);
   background-color: var(--ion-background-color);
-  margin-right: 0;
+  margin-bottom: 0;
 }
 
 .zoom-control-out {
-  margin-left: 0;
+  margin-top: 0;
 }
 
 .center-control {
