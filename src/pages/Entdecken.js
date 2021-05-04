@@ -108,7 +108,7 @@ const Entdecken = () => {
                   key={marker.id}
                   position={{lat: marker.lat, lng: marker.lng}} 
                   icon={{
-                    url: './assets/icons/ice-cream-filled-fontawesome.svg',
+                    url: './assets/icons/ice-cream-icon-dark.svg',
                     scaledSize: new window.google.maps.Size(30, 30),
                   }}
                   title="TEST TEST TEST rollover text"

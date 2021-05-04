@@ -156,15 +156,6 @@ export const mapDark = [
       ]
   },
   {
-      "featureType": "road.highway",
-      "elementType": "labels.text.stroke",
-      "stylers": [
-          {
-              "color": "#ffffff"
-          }
-      ]
-  },
-  {
       "featureType": "road.arterial",
       "elementType": "geometry",
       "stylers": [
