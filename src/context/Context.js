@@ -5,7 +5,6 @@ import { createAnimation } from '@ionic/react';
 export const Context = createContext();
 
 const AppState = ({children}) => {
-  const [token, setToken] = useState(null);
   const [isAuth, setIsAuth] = useState(false);
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState();
@@ -16,9 +15,9 @@ const AppState = ({children}) => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    // This should also return the user info in order to store it in the user context
+    // First check if token is valid, then fetch all user infos and set to state
     const verifySession = async () => {
-    const options = {
+      const options = {
         headers: { token },
         credentials: "include"
       };  
@@ -26,33 +25,16 @@ const AppState = ({children}) => {
       const { success, user } = await res.json();
       if (success) {
         setIsAuth(true);
-        setUser(user);
-      } else {
-        localStorage.removeItem('token');
-        setIsAuth("false");
-        setUser({});
-      }
-    };
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/infos`, options);
+        const data = await res.json();
+        console.log(data);
+        setUser({ ...user, ...data});
+      };
+    }
     if (token) {
       verifySession();
     }
   }, []);
-
-  useEffect( async() => {
-    try {
-      const token = localStorage.getItem('token');
-      const options = {
-        headers: { "token": token },
-        credentials: "include"
-      };
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/infos`, options);
-      const data = await res.json();
-      console.log(data);
-      setUser({...user});
-    } catch (error) {
-      console.log(error);
-    }
-  }, [user._id])
 
   const handleToggleDN = (e) => {
     setToggle((prev) => !prev);

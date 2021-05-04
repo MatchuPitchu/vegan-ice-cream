@@ -35,6 +35,11 @@ ion-icon {
   color: var(--ion-color-secondary-tint);
 }
 
+.p-weak {
+  color: var(--ion-color-secondary-tint);
+  opacity: 0.3;
+}
+
 /************ Header general ************/
 ion-toolbar .sc-ion-searchbar-ios-h {
   padding: 3px 0;

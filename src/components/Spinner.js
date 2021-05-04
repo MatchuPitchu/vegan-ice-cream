@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useContext,useState } from "react";
+import { Context } from "../context/Context";
 // import spinner
 import { css } from "@emotion/core";
 import { RingLoader } from "react-spinners";
@@ -12,6 +13,7 @@ const override = css`
 `;
 
 const Spinner = () => {
+  const { isAuth } = useContext(Context);
   const [color] = useState("var(--ion-color-primary)");
 
   return (
@@ -21,7 +23,7 @@ const Spinner = () => {
         style={{ fontSize: "2em", textAlign: "center" }}
         className="display-3"
       >
-        Loading ...
+        {isAuth ? 'Loading ...' : 'Nur für eingeloggte Nutzer:innen anzusehen'} 
       </h3>
     </div>
   );
