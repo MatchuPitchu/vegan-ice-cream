@@ -7,13 +7,17 @@ export const Context = createContext();
 const AppState = ({children}) => {
   const [isAuth, setIsAuth] = useState(false);
   const [user, setUser] = useState({});
-  const [loading, setLoading] = useState();
+  const [locations, setLocations] = useState([]);
+  const [locPage, setLocPage] = useState(1);
+  const [disableInfScroll, setDisableInfScroll] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [toggle, setToggle] = useState(true);
   const [mapStyles, setMapStyles] = useState(mapDark);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     const token = localStorage.getItem('token');
     // First check if token is valid, then fetch all user infos and set to state
     const verifySession = async () => {
@@ -34,7 +38,32 @@ const AppState = ({children}) => {
     if (token) {
       verifySession();
     }
+    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    const fetchLoc = async () => {
+      try {
+        const limit = 4;
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/locations?page=${locPage}&limit=${limit}`) 
+        const data = await res.json();
+        if(data && data.length === limit) {
+          setLocations([...locations, ...data]);
+        } else {
+          setDisableInfScroll(true);
+        }
+        console.log(data);
+      } catch (err) {
+        console.log(err.message)
+      }
+    }
+    fetchLoc();
+  }, [locPage])
+
+  const loadMore = (e) => {
+    setLocPage(prev => prev + 1);
+    e.target.complete();
+  }
 
   const handleToggleDN = (e) => {
     setToggle((prev) => !prev);
@@ -105,6 +134,13 @@ const AppState = ({children}) => {
         setIsAuth,
         user,
         setUser,
+        locations,
+        setLocations,
+        locPage, 
+        setLocPage,
+        disableInfScroll, 
+        setDisableInfScroll,
+        loadMore,
         error,
         setError,
         toggle,

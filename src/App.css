@@ -26,6 +26,10 @@ ion-icon {
   font-size: 24px;
 }
 
+.toolbarTransparent {
+  --background: transparent;
+}
+
 .labelTabs {
   font-size: 0.7rem;
 }
@@ -38,6 +42,15 @@ ion-icon {
 .p-weak {
   color: var(--ion-text-color);
   opacity: 0.4;
+}
+
+a {
+  text-decoration: none;
+  color: var(--ion-color-secondary-tint);
+}
+
+a:hover {
+  color: var(--ion-color-primary);
 }
 
 /************ Header general ************/

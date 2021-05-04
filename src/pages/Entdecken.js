@@ -1,13 +1,13 @@
-import { useContext, useState, useCallback, Fragment } from "react";
+import { useContext, useState, useCallback } from "react";
 import { Context } from '../context/Context';
-import { IonButton, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonModal, IonPage, IonSegment, IonSegmentButton, IonToolbar } from '@ionic/react';
+import ReactStars from "react-rating-stars-component";
+import { IonAvatar, IonButton, IonCard, IonCardContent, IonCardSubtitle, IonContent, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel, IonModal, IonPage, IonSegment, IonSegmentButton, IonToolbar } from '@ionic/react';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
-import { addCircleOutline, closeCircleOutline, listCircle, map as mapIcon, refreshCircle, removeCircleOutline } from "ionicons/icons";
+import { addCircleOutline, closeCircleOutline, listCircle, map as mapIcon, planet, refreshCircle, removeCircleOutline } from "ionicons/icons";
 import Spinner from "../components/Spinner";
-// import { formatRelative } from 'date-fns';
 
 const Entdecken = () => {
-  const { toggle, mapStyles, enterAnimation, leaveAnimation, showModal, setShowModal } = useContext(Context);
+  const { user, locations, disableInfScroll, loadMore, toggle, mapStyles, enterAnimation, leaveAnimation, showModal, setShowModal } = useContext(Context);
   const [map, setMap]= useState(null);
   const [center, setCenter] = useState({ lat:  52.524, lng: 13.410 })
   const [markers, setMarkers] = useState([
@@ -15,7 +15,7 @@ const Entdecken = () => {
     { lat: 52.424, lng: 13.310, id: 2 }
   ]);
   const [selected, setSelected] = useState(null);
-  const [segment, setSegment] = useState('map');
+  const [segment, setSegment] = useState('list');
 
   const onMapLoad = useCallback((map) => {
     setMap(map);
@@ -66,12 +66,14 @@ const Entdecken = () => {
     <IonPage>
       <IonHeader>
         <img className="headerMap" src={`${toggle ? "./assets/map-header-graphic-ice-dark.svg" : "./assets/map-header-graphic-ice-light.svg"}`} />
-        <IonToolbar>
-          <IonSegment onIonChange={(e) => setSegment(e.detail.value)} value='map'>
-            <IonSegmentButton value='map'>
+        <IonToolbar className="toolbarTransparent">
+          <IonSegment onIonChange={(e) => setSegment(e.detail.value)} value={segment}>
+            <IonSegmentButton value='map' layout="icon-start">
+              <IonLabel>Karte</IonLabel>
               <IonIcon icon={mapIcon} />
             </IonSegmentButton>
-            <IonSegmentButton value='list'>
+            <IonSegmentButton value='list' layout="icon-start">
+              <IonLabel>Liste</IonLabel>
               <IonIcon icon={listCircle} />
             </IonSegmentButton>
           </IonSegment>
@@ -79,7 +81,7 @@ const Entdecken = () => {
       </IonHeader>
 
         {segment === 'map' && (
-          <IonContent fullscreen>
+          <IonContent>
             <div className="control">
               <div className="d-flex flex-column">
                 <IonButton className="zoom-control-in zoomIcons" fill="clear" >
@@ -130,7 +132,61 @@ const Entdecken = () => {
         )}
 
       {segment === 'list' && (
-        <div>test</div>
+        <IonContent>
+          {locations && locations.map((loc, i) => (
+            <IonCard key={i} >
+              <IonItem lines="full">
+                <IonAvatar slot='start'>
+                  <img src='./assets/icons/ice-cream-icon-dark.svg' />
+                </IonAvatar>
+                <IonLabel >
+                  {loc.name}
+                  <p>{loc.address.street} {loc.address.number}</p>
+                  <p className="mb-2">{loc.address.zipcode} {loc.address.city}</p>
+                  <p><a href={loc.location_url}>Webseite</a></p>
+                </IonLabel>
+              </IonItem>
+              
+              <IonCardContent>
+                <IonCardSubtitle color='primary'>Bewertungen</IonCardSubtitle>
+                <p></p>
+                <div className="d-flex align-items-center">
+                  <div className="me-2">Qualität</div>
+                  <div>
+                    <ReactStars
+                      count={5}
+                      value={loc.location_rating_quality}
+                      edit={false}
+                      size={18}
+                      color='#9b9b9b'
+                      activeColor='#de9c01'
+                    />
+                  </div>
+                </div>
+                <div className="d-flex align-items-center">
+                  <div className="me-2">Veganes Angebot</div>
+                  <div>
+                    <ReactStars 
+                      count={5}
+                      value={loc.location_rating_vegan_offer}
+                      edit={false}
+                      size={18}
+                      color='#9b9b9b'
+                      activeColor='#de9c01'
+                    />
+                  </div>
+                </div>
+                <p className="p-weak">Location ID: {loc._id}</p>
+                    
+              </IonCardContent>
+            </IonCard>
+          ))}
+          {/* Infinite Scroll Ionic React: https://dev.to/daviddalbusco/infinite-scroll-with-ionic-react-3a3i */}
+          <IonInfiniteScroll threshold="25%" disabled={disableInfScroll} onIonInfinite={(e) => loadMore(e)}>
+            <IonInfiniteScrollContent loadingSpinner="dots" loadingText="Loading more locations ...">
+            </IonInfiniteScrollContent>
+          </IonInfiniteScroll>
+        </IonContent>
       )}
 
     </IonPage>
