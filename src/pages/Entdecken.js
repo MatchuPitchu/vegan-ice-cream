@@ -114,7 +114,7 @@ const Entdecken = () => {
                 
                 <IonItem className="all-control" title="Mehr Eisläden laden" lines="none">
                   <IonLabel>Alle anzeigen</IonLabel>
-                  <IonToggle onIonChange={e => setAll(prev => !prev)} disabled={`${all ? 'true' : 'false'}`} />
+                  <IonToggle onIonChange={e => setAll(prev => !prev)} checked={all} disabled={`${all ? 'true' : 'false'}`} />
                 </IonItem>
                 <IonButton className="center-control" title="Karte auf Anfangspunkt zentrieren" fill="clear" >
                   <IonIcon icon={refreshCircle} />
