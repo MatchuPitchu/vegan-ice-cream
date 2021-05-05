@@ -4,7 +4,7 @@ import { iceCream } from 'ionicons/icons';
 const Home: React.FC = () => {
   return (
     <IonPage>
-      <IonContent className="home" fullscreen >
+      <IonContent className="home">
         <div className="run-text">
           <h1 className="title">
             veganes Eis<br />
@@ -29,7 +29,6 @@ const Home: React.FC = () => {
             <span className="btn-text">Start</span>
           </a>
         </div>
-        
       </IonContent>
     </IonPage>
   );

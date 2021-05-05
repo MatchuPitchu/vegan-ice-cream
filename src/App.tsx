@@ -19,7 +19,7 @@ import {
   IonContent
 } from '@ionic/react';
 import { menuController } from '@ionic/core';
-import { alarmOutline, bookmarks, disc, home, iceCream, menu } from 'ionicons/icons';
+import { alarmOutline, bookmarks, disc, home, iceCream, menu, storefront } from 'ionicons/icons';
 import Menu from './components/Menu';
 import Home from './pages/Home';
 import Entdecken from './pages/Entdecken.js';
@@ -99,8 +99,12 @@ const App: React.FC = () => {
                 <IonLabel className="labelTabs">Entdecken</IonLabel>
               </IonTabButton>
               <IonTabButton tab="eintragen" href="/eintragen">
+                <IonIcon icon={storefront} />
+                <IonLabel className="labelTabs">Eintragen</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="bewerten" href="/bewerten">
                 <IonIcon icon={iceCream} />
-                <IonLabel className="labelTabs">Eis eintragen</IonLabel>
+                <IonLabel className="labelTabs">Bewerten</IonLabel>
               </IonTabButton>
               <IonTabButton tab="favoriten" href="/favoriten">
                 <IonIcon icon={bookmarks} />

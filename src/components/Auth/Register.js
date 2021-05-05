@@ -21,7 +21,6 @@ const Register = () => {
     };
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/register`, options);
-      console.log(res);
       const { success, user, token } = await res.json();
       if (!success) {
         setError(success);

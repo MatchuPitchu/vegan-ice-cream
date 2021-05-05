@@ -34,14 +34,13 @@ const Feedback = () => {
     alert(`Danke für deine Nachricht, ${data.name}`);
     const templateID = 'contact-form';
     const serviceID = 'gmail_account'
-    // sendFeedback(serviceID, templateID, { 
-    //   name: data.name,
-    //   reply_to: data.email,
-    //   message: data.message,
-    //   rating_App: data.rating,
-    //   recommend_App: data.recommend
-    // });
-    console.log('Submit Data: ', data);
+    sendFeedback(serviceID, templateID, { 
+      name: data.name,
+      reply_to: data.email,
+      message: data.message,
+      rating_App: data.rating,
+      recommend_App: data.recommend
+    });
     reset(defaultValues);
     setShowFeedback(false);
   };
