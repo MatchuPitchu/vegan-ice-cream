@@ -462,6 +462,7 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 .control {
   display: flex;
   width: 100%;
+  justify-content: space-between;
 }
 
 .zoomIcons {
@@ -475,29 +476,30 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   margin-top: 0;
 }
 
-.where-controlBtn {
+.all-control {
   --background: var(--ion-item-background);
   color: var(--ion-text-color);
   font-size: 0.7rem;
   text-transform: none;
   letter-spacing: 0;
-  height: 45px;
-  margin-left: auto;
-  margin-top: 4px;
-  margin-right: 0;
+  margin: 4px 4px 0 0;
+  height: 40px;
 }
 
-.all-control {
+.where-control,
+.center-control {
+  --background: var(--ion-item-background);
   font-size: 0.7rem;
-  height: 45px;
-  margin: 4px 0 0 0;
+  text-transform: none;
+  letter-spacing: 0;
+  margin: 4px 4px 0 0;
 }
 
+.where-control {
+  color: var(--ion-color-primary);
+}
 .center-control {
   color: var(--ion-color-danger-tint);
-  --background: var(--ion-item-background);
-  height: 45px;
-  margin: 4px 4px 0 0;
 }
 
 .mapModal {

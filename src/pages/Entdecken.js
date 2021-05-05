@@ -4,7 +4,7 @@ import ReactStars from "react-rating-stars-component";
 import { Geolocation } from '@ionic-native/geolocation';
 import { IonAvatar, IonButton, IonCard, IonCardContent, IonCardSubtitle, IonContent, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel, IonLoading, IonModal, IonPage, IonSegment, IonSegmentButton, IonSelect, IonSelectOption, IonToast, IonToggle, IonToolbar } from '@ionic/react';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
-import { addCircleOutline, closeCircleOutline, listCircle, map as mapIcon, refreshCircle, removeCircleOutline } from "ionicons/icons";
+import { addCircleOutline, closeCircleOutline, listCircle, location as myPos, map as mapIcon, refreshCircle, removeCircleOutline } from "ionicons/icons";
 import Spinner from "../components/Spinner";
 
 const Entdecken = () => {
@@ -109,16 +109,18 @@ const Entdecken = () => {
                   <IonIcon icon={removeCircleOutline} />
                 </IonButton>
               </div>
-               
-                  <IonButton className="where-controlBtn" onClick={getLocation} fill="clear">Wo bin ich?</IonButton>
-                
-                <IonItem className="all-control" title="Mehr Eisläden laden" lines="none">
-                  <IonLabel>Alle anzeigen</IonLabel>
+              <div className="d-flex flex-column align-items-end">
+                <IonButton className="all-control" title="Mehr Eisläden laden" >
+                  <IonLabel className="me-1">Alle anzeigen</IonLabel>
                   <IonToggle onIonChange={e => setAll(prev => !prev)} checked={all} disabled={`${all ? 'true' : 'false'}`} />
-                </IonItem>
-                <IonButton className="center-control" title="Karte auf Anfangspunkt zentrieren" fill="clear" >
+                </IonButton>
+                <IonButton className="where-control" onClick={getLocation} title="Mein Standort">
+                  <IonIcon icon={myPos} />
+                </IonButton>
+                <IonButton className="center-control" title="Karte auf Anfangspunkt zentrieren" >
                   <IonIcon icon={refreshCircle} />
                 </IonButton>
+              </div>
             </div>
 
             <GoogleMap 
