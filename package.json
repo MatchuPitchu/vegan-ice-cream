@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@capacitor/core": "2.4.7",
+    "@ionic-native/core": "^5.32.1",
+    "@ionic-native/geolocation": "^5.32.1",
     "@ionic/react": "^5.5.0",
     "@ionic/react-router": "^5.5.0",
     "@reach/combobox": "^0.15.1",
@@ -18,6 +20,7 @@
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
     "bootstrap": "^5.0.0-beta3",
+    "cordova-plugin-geolocation": "^4.1.0",
     "google-maps-react": "^2.0.6",
     "ionicons": "^5.4.0",
     "leaflet": "^1.7.1",

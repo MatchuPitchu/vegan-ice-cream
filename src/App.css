@@ -468,16 +468,36 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   color: var(--ion-text-color);
   background-color: var(--ion-background-color);
   margin-bottom: 0;
+  height: 35px;
 }
 
 .zoom-control-out {
   margin-top: 0;
 }
 
-.center-control {
+.where-controlBtn {
+  --background: var(--ion-item-background);
+  color: var(--ion-text-color);
+  font-size: 0.7rem;
+  text-transform: none;
+  letter-spacing: 0;
+  height: 45px;
   margin-left: auto;
+  margin-top: 4px;
+  margin-right: 0;
+}
+
+.all-control {
+  font-size: 0.7rem;
+  height: 45px;
+  margin: 4px 0 0 0;
+}
+
+.center-control {
   color: var(--ion-color-danger-tint);
-  background-color: var(--ion-background-color);
+  --background: var(--ion-item-background);
+  height: 45px;
+  margin: 4px 4px 0 0;
 }
 
 .mapModal {

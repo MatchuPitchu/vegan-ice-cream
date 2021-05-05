@@ -9,12 +9,15 @@ const AppState = ({children}) => {
   const [user, setUser] = useState({});
   const [locations, setLocations] = useState([]);
   const [locPage, setLocPage] = useState(1);
+  const [all, setAll] = useState(false);
   const [disableInfScroll, setDisableInfScroll] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [toggle, setToggle] = useState(true);
   const [mapStyles, setMapStyles] = useState(mapDark);
-  const [showModal, setShowModal] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
+  const [showMapModal, setShowMapModal] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -44,6 +47,21 @@ const AppState = ({children}) => {
   useEffect(() => {
     const fetchLoc = async () => {
       try {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/locations`)
+        const data = await res.json();
+        setLocations(data);
+      } catch (err) {
+        console.log(err.message)
+      }
+    }
+    if(all) fetchLoc();
+  }, [all])
+
+  console.log(locations)
+
+  useEffect(() => {
+    const fetchLoc = async () => {
+      try {
         const limit = 4;
         const res = await fetch(`${process.env.REACT_APP_API_URL}/locations?page=${locPage}&limit=${limit}`) 
         const data = await res.json();
@@ -57,7 +75,7 @@ const AppState = ({children}) => {
         console.log(err.message)
       }
     }
-    fetchLoc();
+    if(!all) fetchLoc();
   }, [locPage])
 
   const loadMore = (e) => {
@@ -130,28 +148,22 @@ const AppState = ({children}) => {
   return (
     <Context.Provider
       value={{
-        isAuth,
-        setIsAuth,
-        user,
-        setUser,
-        locations,
-        setLocations,
-        locPage, 
-        setLocPage,
-        disableInfScroll, 
-        setDisableInfScroll,
+        isAuth, setIsAuth,
+        user, setUser,
+        locations, setLocations,
+        locPage, setLocPage,
+        all, setAll,
+        disableInfScroll, setDisableInfScroll,
         loadMore,
-        error,
-        setError,
+        error, setError,
         toggle,
         handleToggleDN,
         mapStyles,
-        enterAnimationBtm,
-        leaveAnimationBtm,
-        enterAnimationLft,
-        leaveAnimationLft,
-        showModal,
-        setShowModal
+        enterAnimationBtm, leaveAnimationBtm,
+        enterAnimationLft, leaveAnimationLft,
+        showFeedback, setShowFeedback,
+        showAbout, setShowAbout,
+        showMapModal, setShowMapModal 
       }}
     >
       {children}

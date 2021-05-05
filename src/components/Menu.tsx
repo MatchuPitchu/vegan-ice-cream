@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import { Context } from "../context/Context";
 import { 
-  IonButton, 
   IonContent, 
   IonIcon, 
   IonItem, 
@@ -14,12 +13,20 @@ import {
   IonToolbar,
   isPlatform 
 } from '@ionic/react';
-import { closeCircleOutline, create, logIn, logOut, pencil, personCircle } from 'ionicons/icons';
+import { create, informationCircle, logIn, logOut, pencil, personCircle } from 'ionicons/icons';
 import Toggle from './Toggle';
 import Feedback from './Feedback';
+import About from './About';
 
 const Menu: React.FC = () => {
-  const { isAuth, setIsAuth, error, setError, toggle, enterAnimationLft, leaveAnimationLft, showModal, setShowModal } = useContext(Context);
+  const { 
+    isAuth, setIsAuth, 
+    error, setError, 
+    toggle, 
+    enterAnimationLft, leaveAnimationLft, 
+    showFeedback, setShowFeedback, 
+    showAbout, setShowAbout
+  } = useContext(Context);
 
   return (
     <IonPage>
@@ -55,17 +62,22 @@ const Menu: React.FC = () => {
               </IonItem>
             </IonMenuToggle>
             )}
-            <IonItem className="labelMenu" button onClick={() => { setShowModal(true)}}  lines={isAuth ? "full" : "none"} detail={false} >
+            <IonItem className="labelMenu" button onClick={() => { setShowFeedback(true)}} lines="none" detail={false} >
               <IonLabel>Feedback</IonLabel>
               <IonIcon slot="end" icon={pencil} />
             </IonItem>
-            {showModal && (
-              <IonModal cssClass={`${isPlatform('desktop') ? 'menuModalDesktop' : 'menuModal'}`} isOpen={showModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowModal(false)} enterAnimation={enterAnimationLft} leaveAnimation={leaveAnimationLft}>
-                <IonItem lines="none">
-                  <IonLabel color="primary" >Feedback</IonLabel>
-                  <IonButton slot="end" fill="clear" onClick={() => setShowModal(false)}><IonIcon icon={closeCircleOutline}/></IonButton>
-                </IonItem>
+            {showFeedback && (
+              <IonModal cssClass={`${isPlatform('desktop') ? 'menuModalDesktop' : 'menuModal'}`} isOpen={showFeedback} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowFeedback(false)} enterAnimation={enterAnimationLft} leaveAnimation={leaveAnimationLft}>
                 <Feedback />
+              </IonModal>
+            )}      
+            <IonItem className="labelMenu" button onClick={() => { setShowAbout(true)}}  lines={isAuth ? "full" : "none"} detail={false} >
+              <IonLabel>About</IonLabel>
+              <IonIcon slot="end" icon={informationCircle} />
+            </IonItem>
+            {showAbout && (
+              <IonModal cssClass={`${isPlatform('desktop') ? 'menuModalDesktop' : 'menuModal'}`} isOpen={showAbout} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowAbout(false)} enterAnimation={enterAnimationLft} leaveAnimation={leaveAnimationLft}>
+                <About />
               </IonModal>
             )}      
             {isAuth && (

@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Context } from "../context/Context";
 import { Controller, useForm } from 'react-hook-form';
 import { IonButton, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonPage, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
-import { mailUnread } from 'ionicons/icons';
+import { closeCircleOutline, mailUnread } from 'ionicons/icons';
 import showError from './showError';
 
 // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
@@ -17,7 +17,7 @@ const defaultValues = {
 }
 
 const Feedback = () => {
-  const { setShowModal } = useContext(Context);
+  const { setShowFeedback } = useContext(Context);
   // with formState I can retrieve errors obj
   const { control, handleSubmit, reset, formState: { errors } } = useForm({defaultValues});
 
@@ -43,17 +43,18 @@ const Feedback = () => {
     // });
     console.log('Submit Data: ', data);
     reset(defaultValues);
-    setShowModal(false);
+    setShowFeedback(false);
   };
 
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
-          <IonTitle>Feedback</IonTitle>
-        </IonToolbar>
+        <IonItem lines="none">
+          <IonLabel color="primary">Feedback</IonLabel>
+          <IonButton slot="end" fill="clear" onClick={() => setShowFeedback(false)}><IonIcon icon={closeCircleOutline}/></IonButton>
+        </IonItem>
       </IonHeader>
-      <IonContent fullscreen className="ion-padding">
+      <IonContent className="ion-padding">
 
         {/* // See input fields in console
         // <form onSubmit={handleSubmit(data => console.log(data))}>
