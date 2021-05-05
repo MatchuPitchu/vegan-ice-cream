@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { Context } from "../context/Context";
 import { Controller, useForm } from 'react-hook-form';
-import { IonButton, IonCardSubtitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonItemGroup, IonLabel, IonPage, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
-import { closeCircleOutline, mailUnread } from 'ionicons/icons';
+import { IonButton, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonPage, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
+import { mailUnread } from 'ionicons/icons';
 import showError from '../components/showError';
 
 // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started

@@ -82,7 +82,7 @@ const Menu: React.FC = () => {
             )}      
             {isAuth && (
               <IonMenuToggle autoHide={false}>
-              <IonItem className="labelMenu mt-5 pe-2" routerLink='/logout' routerDirection="forward" lines="none" detail={false}>
+              <IonItem className="labelMenu mt-3 pe-2" routerLink='/logout' routerDirection="forward" lines="none" detail={false}>
                 <IonIcon slot="start" icon={logOut} />
                 <IonLabel>Logout</IonLabel>
               </IonItem>
