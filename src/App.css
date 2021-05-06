@@ -53,6 +53,10 @@ a:hover {
   color: var(--ion-color-primary);
 }
 
+.toast {
+  color: var(--ion-color-danger);
+}
+
 /************ Header general ************/
 ion-toolbar .sc-ion-searchbar-ios-h {
   padding: 3px 0;
@@ -532,4 +536,5 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   font-size: 0.7rem;
   color: var(--ion-item-background);
   text-transform: none;
+  min-height: 30px;
 }

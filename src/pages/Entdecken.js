@@ -39,6 +39,7 @@ const Entdecken = () => {
   
   const { control, handleSubmit, reset, formState: { errors } } = useForm({defaultValues});
   const contentRef = useRef(null);
+  const markerRef = useRef(null);
 
   const getLocation = async () => {
     try {
@@ -56,11 +57,12 @@ const Entdecken = () => {
 
   const onSubmit = (data) => {
     setLoading(true);
+    setAll(true);
     const fetchData = async () => {
       try {
         const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(data.address)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
         const { results } = await res.json();
-        console.log(results)
+        console.log('Fetching data Google API:', results)
         setNewLocation({
           name: '',
           address: {
@@ -90,13 +92,23 @@ const Entdecken = () => {
     };
     fetchData();
     setLoading(false);
-    // reset(defaultValues);
+    reset(defaultValues);
   };
 
-  console.log(newLocation);
+  const checkDuplicate = () => {
+    const duplicate = locations.find(loc => loc.address.geo.lat === newLocation.address.geo.lat)
+    console.log(duplicate)
+    if(duplicate) {
+      setError('Diese Adresse gibt es schon.');
+      setNewLocation(null)
+    }
+    if(!duplicate) {
+      setSelected(newLocation); 
+      setShowNewLocModal(true); 
+    }
+  }
 
   const onMapLoad = useCallback((map) => {
-    console.log(map);
     setMap(map);
     initControl(map);
   }, []);
@@ -174,7 +186,7 @@ const Entdecken = () => {
             <div className="d-flex flex-column align-items-end">
               <IonButton className="all-control" title="Mehr Eisläden laden" >
                 <IonLabel className="me-1">Alle anzeigen</IonLabel>
-                <IonToggle onIonChange={e => setAll(prev => !prev)} checked={all} disabled={`${all ? 'true' : 'false'}`} />
+                <IonToggle onIonChange={e => setAll(true)} checked={all} disabled={`${all ? 'true' : 'false'}`} />
               </IonButton>
               <IonButton className="add-control" onClick={scrollToAdd} title="Neue Adresse hinzufügen">
                 <IonIcon icon={add} />
@@ -214,22 +226,23 @@ const Entdecken = () => {
                 position={{lat: position.lat, lng: position.lng}}
                 icon={{
                   url: './assets/icons/current-position-marker.svg',
-                  scaledSize: new window.google.maps.Size(15, 15),
+                  scaledSize: new window.google.maps.Size(60, 60),
                 }}
               />
               )}
 
-            {newLocation && newLocation.address.geo.lat && (
+            {newLocation ? (
               <Marker
+                ref={markerRef}
                 position={{lat: newLocation.address.geo.lat, lng: newLocation.address.geo.lng}}
                 icon={{
                   url: './assets/icons/newLocation-marker.svg',
                   scaledSize: new window.google.maps.Size(40, 40),
                 }}
                 title={`${newLocation.address.street} ${newLocation.address.number}, ${newLocation.address.zipcode} ${newLocation.address.city}`}
-                onClick={() => { setSelected(newLocation); setShowNewLocModal(true) }}
+                onClick={() => checkDuplicate()}
               />
-            )}
+            ) : null }
 
             {selected ? (
               <div>
@@ -243,7 +256,7 @@ const Entdecken = () => {
                 </IonModal>
 
                 <IonModal cssClass='newLocModal' isOpen={showNewLocModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowNewLocModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
-                  <IonItem>
+                  <IonItem lines='full'>
                     <IonLabel>Eisladen eintragen</IonLabel>
                     <IonButton fill="clear" onClick={() => setShowNewLocModal(false)}><IonIcon icon={closeCircleOutline }/></IonButton>
                   </IonItem>
@@ -263,13 +276,13 @@ const Entdecken = () => {
                   field: { onChange, value },
                   fieldState: { invalid, isTouched, isDirty, error },
                 }) => (
-                  <IonInput color="primary" type="search" inputmode="text" value={value} autocomplete='street-address' onIonChange={e => onChange(e.detail.value)} placeholder="Name, Adresse ..." searchIcon={add} showCancelButton="always"	cancel-button-text="" />
+                  <IonInput color="primary" type="search" inputmode="text" value={value} autocomplete='street-address' onIonChange={e => onChange(e.detail.value)} placeholder="Name, Adresse eintippen ..." searchIcon={add} showCancelButton="always"	cancel-button-text="" />
                 )}
                 name="address"
                 rules={{ required: true }}
               />
               <IonButton fill="solid" className="check-btn mb-2" type="submit">
-                <IonIcon icon={add} />Check: Erscheint ein grünes Icon? Klicke drauf.
+                <IonIcon icon={add} />Check: Erscheint ein grünes Icon? Klick darauf
               </IonButton>
             </IonItem>
           </form>
@@ -295,33 +308,38 @@ const Entdecken = () => {
               
               <IonCardContent>
                 <IonCardSubtitle color='primary'>Bewertungen</IonCardSubtitle>
-                <p></p>
-                <div className="d-flex align-items-center">
-                  <div className="me-2">Qualität</div>
-                  <div>
-                    <ReactStars
-                      count={5}
-                      value={loc.location_rating_quality}
-                      edit={false}
-                      size={18}
-                      color='#9b9b9b'
-                      activeColor='#de9c01'
-                    />
-                  </div>
-                </div>
-                <div className="d-flex align-items-center">
-                  <div className="me-2">Veganes Angebot</div>
-                  <div>
-                    <ReactStars 
-                      count={5}
-                      value={loc.location_rating_vegan_offer}
-                      edit={false}
-                      size={18}
-                      color='#9b9b9b'
-                      activeColor='#de9c01'
-                    />
-                  </div>
-                </div>
+                {loc.location_rating_quality ? (
+                  <>
+                    <div className="d-flex align-items-center">
+                      <div className="me-2">Qualität</div>
+                      <div>
+                        <ReactStars
+                          count={5}
+                          value={loc.location_rating_quality}
+                          edit={false}
+                          size={18}
+                          color='#9b9b9b'
+                          activeColor='#de9c01'
+                        />
+                      </div>
+                    </div>
+                    <div className="d-flex align-items-center">
+                      <div className="me-2">Veganes Angebot</div>
+                      <div>
+                        <ReactStars 
+                          count={5}
+                          value={loc.location_rating_vegan_offer}
+                          edit={false}
+                          size={18}
+                          color='#9b9b9b'
+                          activeColor='#de9c01'
+                        />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <p>Noch keine Bewertungen vorhanden</p>
+                )}
                 <p className="p-weak">Location ID: {loc._id}</p>
                     
               </IonCardContent>
@@ -340,9 +358,10 @@ const Entdecken = () => {
         onDidDismiss={() => setLoading(false)}
       />
       <IonToast 
+        color='danger'
         isOpen={error ? true : false} 
         message={error} 
-        onDidDismiss={() => setError('')}
+        onDidDismiss={() => setError(null)}
         duration={6000} 
       />
     </IonPage>

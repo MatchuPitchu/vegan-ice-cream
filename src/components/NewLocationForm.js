@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Context } from "../context/Context";
 import { Controller, useForm } from 'react-hook-form';
-import { IonButton, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonPage, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonPage, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToast, IonToolbar } from '@ionic/react';
 import { add, mailUnread } from 'ionicons/icons';
 import showError from './showError';
 
@@ -12,7 +12,9 @@ const NewLocationForm = () => {
   const { 
     toggle, 
     error, setError,
-    newLocation
+    locations, setLocations,
+    newLocation, setNewLocation,
+    setShowNewLocModal
   } = useContext(Context);
   
   const defaultValues = { 
@@ -22,12 +24,19 @@ const NewLocationForm = () => {
     zipcode: newLocation ? newLocation.address.zipcode : '',
     city: newLocation ? newLocation.address.city : '',
     country: 'Deutschland',
-    location_url: 'http://'
+    location_url: ''
   }
   
   const { control, handleSubmit, reset, formState: { errors } } = useForm({defaultValues});
 
   const onSubmit = async (data) => {
+    const duplicate = locations.find(loc => loc.address.geo.lat === newLocation.address.geo.lat)
+    console.log(duplicate)
+    if(duplicate) {
+      setError('Diese Adresse gibt es schon.');
+      return setNewLocation(null)
+    }
+    
     const body = {
       name: data.name,
       address: {
@@ -37,8 +46,8 @@ const NewLocationForm = () => {
         city: data.city,
         country: data.country,
         geo: {
-          lat: data.lat,
-          lng: data.lng
+          lat: newLocation.address.geo.lat,
+          lng: newLocation.address.geo.lng
         }
       },
       location_url: data.location_url
@@ -58,14 +67,18 @@ const NewLocationForm = () => {
       if (!newLocation) {
         setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
         return () => setTimeout(setError(null), 5000);
-      } 
-      console.log(newLocation);
-      reset(defaultValues);
+      }
+      setLocations([...locations, newLocation])
+      reset();
     } catch (error) {
       setError(error)
       setTimeout(() => setError(null), 5000);
-    }
+    };
+    setShowNewLocModal(false);
+    setNewLocation(null)
   };
+
+  console.log('newLocation state:', newLocation);
 
   return (
     <IonContent className="ion-padding">
@@ -178,22 +191,29 @@ const NewLocationForm = () => {
         {showError("country", errors)}
 
         <IonItem lines="none" className="mb-1">
-          <IonLabel position='floating' htmlFor="location_url">Website Eisladen</IonLabel>
+          <IonLabel position='stacked' htmlFor="location_url">Website Eisladen</IonLabel>
           <Controller
             control={control}
             render={({ 
               field: { onChange, value },
               fieldState: { invalid, isTouched, isDirty, error },
             }) => (
-              <IonInput type="url" inputmode="url" value={value} onIonChange={e => onChange(e.detail.value)} />
+              <IonInput type="text" inputmode="url" value={value} onIonChange={e => onChange(e.detail.value)} placeholder="http://" />
             )}
             name="location_url"
           />
         </IonItem>
         {showError("location_url", errors)}
         
-        <IonButton className="mt-3" type="submit" expand="block"><IonIcon className="pe-1"icon={add}/>Neu eintragen</IonButton>
+        <IonButton className="my-3" type="submit" expand="block"><IonIcon className="pe-1"icon={add}/>Neu eintragen</IonButton>
       </form>
+
+      <IonToast 
+        isOpen={error ? true : false} 
+        message={error} 
+        onDidDismiss={() => setError('')}
+        duration={6000} 
+      />
     </IonContent>
   );
 };

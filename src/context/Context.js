@@ -13,7 +13,7 @@ const AppState = ({children}) => {
   const [disableInfScroll, setDisableInfScroll] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [position, setPosition] = useState();
-  const [newLocation, setNewLocation] = useState();
+  const [newLocation, setNewLocation] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [toggle, setToggle] = useState(true);
