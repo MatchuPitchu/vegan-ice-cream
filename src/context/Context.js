@@ -12,6 +12,8 @@ const AppState = ({children}) => {
   const [all, setAll] = useState(false);
   const [disableInfScroll, setDisableInfScroll] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [position, setPosition] = useState();
+  const [newLocation, setNewLocation] = useState();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [toggle, setToggle] = useState(true);
@@ -19,6 +21,7 @@ const AppState = ({children}) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
+  const [showNewLocModal, setShowNewLocModal] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -156,6 +159,8 @@ const AppState = ({children}) => {
         all, setAll,
         disableInfScroll, setDisableInfScroll,
         searchText, setSearchText,
+        position, setPosition,
+        newLocation, setNewLocation,
         loading, setLoading,
         loadMore,
         error, setError,
@@ -166,7 +171,8 @@ const AppState = ({children}) => {
         enterAnimationLft, leaveAnimationLft,
         showFeedback, setShowFeedback,
         showAbout, setShowAbout,
-        showMapModal, setShowMapModal 
+        showMapModal, setShowMapModal,
+        showNewLocModal, setShowNewLocModal
       }}
     >
       {children}

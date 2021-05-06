@@ -505,7 +505,8 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   color: var(--ion-color-danger-tint);
 }
 
-.mapModal {
+.mapModal,
+.newLocModal {
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -516,7 +517,19 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   width: 100%;
 }
 
+.newLocModal .modal-wrapper {
+  height: 100%;
+  width: 100%;
+}
+
 /* important to move modal-shadow to allow backdropDismiss on iOS  */
 .modal-shadow.sc-ion-modal-ios {
   top: 100%;
+}
+
+.check-btn {
+  --background: var(--ion-color-primary);
+  font-size: 0.7rem;
+  color: var(--ion-item-background);
+  text-transform: none;
 }

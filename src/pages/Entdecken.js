@@ -7,21 +7,35 @@ import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardSubti
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { add, addCircleOutline, closeCircleOutline, listCircle, location as myPos, mailUnread, map as mapIcon, refreshCircle, removeCircleOutline } from "ionicons/icons";
 import Spinner from "../components/Spinner";
+import NewLocationForm from "../components/NewLocationForm";
 
 const defaultValues = { 
   address: '', 
 }
 
 const Entdecken = () => {
-  const { searchText, setSearchText, loading, setLoading, setError, error, user, locations, disableInfScroll, loadMore, all, setAll, toggle, mapStyles, enterAnimation, leaveAnimation, showMapModal, setShowMapModal  } = useContext(Context);
+  const { 
+    searchText, setSearchText, 
+    loading, setLoading, 
+    error, setError, 
+    user, 
+    locations, 
+    disableInfScroll, 
+    position, setPosition,
+    newLocation, setNewLocation,
+    loadMore, 
+    all, setAll, 
+    toggle, 
+    mapStyles, 
+    enterAnimation, leaveAnimation, 
+    showMapModal, setShowMapModal, 
+    showNewLocModal, setShowNewLocModal  
+  } = useContext(Context);
   const [center, setCenter] = useState({ lat:  52.524, lng: 13.410 });
   
   const [map, setMap]= useState(null);
-  const [geocoder, setGeocoder] = useState(null);
   const [selected, setSelected] = useState(null);
   const [segment, setSegment] = useState('map');
-  const [position, setPosition] = useState();
-  const [newLocation, setNewLocation] = useState();
   
   const { control, handleSubmit, reset, formState: { errors } } = useForm({defaultValues});
   const contentRef = useRef(null);
@@ -36,39 +50,55 @@ const Entdecken = () => {
   };
 
   const scrollToAdd = () => {
+    // (number) means duration
     contentRef.current && contentRef.current.scrollToBottom(500);
   };
 
   const onSubmit = (data) => {
-    geocoder.geocode( { 
-      'address': data.address, 
-      bounds: {
-        north: 55.1,
-        south: 47.1,
-        west: 5.8,
-        east: 15.1,
-      },
-      region: 'de',
-      componentRestrictions: {
-        country: 'DE'
+    setLoading(true);
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(data.address)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
+        const { results } = await res.json();
+        console.log(results)
+        setNewLocation({
+          name: '',
+          address: {
+            street: results[0].address_components[1] ? results[0].address_components[1].long_name : '',
+            number: results[0].address_components[0] ? results[0].address_components[0].long_name : '',
+            zipcode: results[0].address_components[7] ? results[0].address_components[7].long_name : '',
+            city: results[0].address_components[3] ? results[0].address_components[3].long_name : '',
+            country: results[0].address_components[6] ? results[0].address_components[6].long_name : '',
+            geo: {
+              lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
+              lng: results[0].geometry.location ? results[0].geometry.location.lng : null
+            }
+          },
+          location_url: '',
+          place_id: results[0].place_id ? results[0].place_id : ''
+        })
+        if(results[0].geometry.location) {
+          setCenter({
+            lat: results[0].geometry.location.lat,
+            lng: results[0].geometry.location.lng
+          });
+          contentRef.current.scrollToTop(500);
+        }
+      } catch (error) {
+        setError('Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in Deutschland eintragen.')
       }
-    }, function (results, status) {
-      if(status == 'OK') {
-        console.log(results[0]);
-      } else {
-        setError('Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Ort in Deutschland eintragen.')
-      }
-    });
-    console.log(data);
-    setSearchText(data);
+    };
+    fetchData();
+    setLoading(false);
     // reset(defaultValues);
   };
+
+  console.log(newLocation);
 
   const onMapLoad = useCallback((map) => {
     console.log(map);
     setMap(map);
     initControl(map);
-    setGeocoder(new window.google.maps.Geocoder);
   }, []);
 
   const options = {
@@ -102,8 +132,6 @@ const Entdecken = () => {
     map.controls[window.google.maps.ControlPosition.TOP].push(
       document.querySelector(".control")
     );
-
-    // const GoogleAutocomplete = new map.places.AutocompleteService();
   }
 
   const { isLoaded, loadError } = useJsApiLoader({
@@ -167,6 +195,7 @@ const Entdecken = () => {
             options={options}
             onLoad={onMapLoad}
           >
+
             {locations && locations.map((loc) => (
               <Marker 
                 key={loc._id}
@@ -179,18 +208,7 @@ const Entdecken = () => {
                 onClick={() => { setSelected(loc); setShowMapModal(true) }}
               />
             ))}
-            {selected ? (
-              <div className="modalContainer">
-                <IonModal cssClass='mapModal' isOpen={showMapModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowMapModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
-                  <IonItem>
-                    <IonLabel>
-                      Lat: {selected.lat} Lng: {selected.lng}
-                    </IonLabel>
-                    <IonButton fill="clear" onClick={() => setShowMapModal(false)}><IonIcon icon={closeCircleOutline }/></IonButton>
-                  </IonItem>
-                </IonModal>
-              </div>
-            ) : null}
+
             {position && (
               <Marker
                 position={{lat: position.lat, lng: position.lng}}
@@ -199,27 +217,63 @@ const Entdecken = () => {
                   scaledSize: new window.google.maps.Size(15, 15),
                 }}
               />
+              )}
+
+            {newLocation && newLocation.address.geo.lat && (
+              <Marker
+                position={{lat: newLocation.address.geo.lat, lng: newLocation.address.geo.lng}}
+                icon={{
+                  url: './assets/icons/newLocation-marker.svg',
+                  scaledSize: new window.google.maps.Size(40, 40),
+                }}
+                title={`${newLocation.address.street} ${newLocation.address.number}, ${newLocation.address.zipcode} ${newLocation.address.city}`}
+                onClick={() => { setSelected(newLocation); setShowNewLocModal(true) }}
+              />
             )}
+
+            {selected ? (
+              <div>
+                <IonModal cssClass='mapModal' isOpen={showMapModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowMapModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
+                  <IonItem>
+                    <IonLabel>
+                      Lat: {selected.address.geo.lat} Lng: {selected.address.geo.lng}
+                    </IonLabel>
+                    <IonButton fill="clear" onClick={() => setShowMapModal(false)}><IonIcon icon={closeCircleOutline }/></IonButton>
+                  </IonItem>
+                </IonModal>
+
+                <IonModal cssClass='newLocModal' isOpen={showNewLocModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowNewLocModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
+                  <IonItem>
+                    <IonLabel>Eisladen eintragen</IonLabel>
+                    <IonButton fill="clear" onClick={() => setShowNewLocModal(false)}><IonIcon icon={closeCircleOutline }/></IonButton>
+                  </IonItem>
+                  <NewLocationForm />
+                </IonModal>
+              </div>
+            ) : null}
+
           </GoogleMap>
-          <form className="row" onSubmit={handleSubmit(onSubmit)}>
-            <IonItem lines="none" className="mb-1">
-              {/* <IonLabel position='floating' htmlFor="address">Adresse</IonLabel> */}
+
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <IonItem lines="none" className="mb-1 d-flex flex-column align-items-center">
+              <IonLabel className="ion-text-wrap mb-2" position='stacked' htmlFor="address">Tippe den Namen des Eisladens und der Stadt ein. Wenn das nicht funktioniert, trage die korrekte Adresse ein.</IonLabel>
               <Controller
-                  control={control}
-                  render={({ 
-                    field: { onChange, value },
-                    fieldState: { invalid, isTouched, isDirty, error },
-                  }) => (
-                    <IonSearchbar className="searchbar" type="search" inputmode="text" value={value} autocomplete='street-address' onIonChange={e => onChange(e.detail.value)} placeholder="Neue Adresse hinzufügen" searchIcon={add} showCancelButton="always"	cancel-button-text="" />
-                    // <IonInput inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
-                  )}
-                  name="address"
-                  errors="test"
-                  rules={{ required: true }}
-                />
+                control={control}
+                render={({ 
+                  field: { onChange, value },
+                  fieldState: { invalid, isTouched, isDirty, error },
+                }) => (
+                  <IonInput color="primary" type="search" inputmode="text" value={value} autocomplete='street-address' onIonChange={e => onChange(e.detail.value)} placeholder="Name, Adresse ..." searchIcon={add} showCancelButton="always"	cancel-button-text="" />
+                )}
+                name="address"
+                rules={{ required: true }}
+              />
+              <IonButton fill="solid" className="check-btn mb-2" type="submit">
+                <IonIcon icon={add} />Check: Erscheint ein grünes Icon? Klicke drauf.
+              </IonButton>
             </IonItem>
-            {/* {showError("name", errors)} */}
           </form>
+
         </IonContent>
       )}
 
@@ -281,8 +335,8 @@ const Entdecken = () => {
         </IonContent>
       )}
       <IonLoading 
-        isOpen={loading} 
-        message={"Deine Position wird ermittelt ..."}
+        isOpen={loading ? true : false} 
+        message={"Einen Moment bitte ..."}
         onDidDismiss={() => setLoading(false)}
       />
       <IonToast 
