@@ -487,6 +487,7 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   height: 40px;
 }
 
+.add-control,
 .where-control,
 .center-control {
   --background: var(--ion-item-background);
@@ -496,6 +497,7 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   margin: 4px 4px 0 0;
 }
 
+.add-control,
 .where-control {
   color: var(--ion-color-primary);
 }

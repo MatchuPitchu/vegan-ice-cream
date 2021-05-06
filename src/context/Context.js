@@ -11,6 +11,7 @@ const AppState = ({children}) => {
   const [locPage, setLocPage] = useState(1);
   const [all, setAll] = useState(false);
   const [disableInfScroll, setDisableInfScroll] = useState(false);
+  const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [toggle, setToggle] = useState(true);
@@ -154,6 +155,8 @@ const AppState = ({children}) => {
         locPage, setLocPage,
         all, setAll,
         disableInfScroll, setDisableInfScroll,
+        searchText, setSearchText,
+        loading, setLoading,
         loadMore,
         error, setError,
         toggle,

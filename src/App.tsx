@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { Context } from "./context/Context";
 import { Redirect, Route } from 'react-router-dom';
 import { IonReactRouter } from '@ionic/react-router';
 import {
@@ -52,7 +53,7 @@ import './theme/variables.css';
 import './App.css'
 
 const App: React.FC = () => {
-  const [searchText, setSearchText] = useState('');
+  const { searchText, setSearchText } = useContext(Context);
 
   return (
     <IonApp>

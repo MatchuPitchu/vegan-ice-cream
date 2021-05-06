@@ -9,7 +9,6 @@ import showError from './showError';
 
 const defaultValues = { 
   name: '',
-  name: '',
   email: '',
   message: '',
   rating: '',
@@ -67,10 +66,9 @@ const Feedback = () => {
                   field: { onChange, value },
                   fieldState: { invalid, isTouched, isDirty, error },
                 }) => (
-                  <IonInput inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
+                  <IonInput type="text" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
                 )}
                 name="name"
-                errors="test"
                 rules={{ required: true }}
               />
           </IonItem>
