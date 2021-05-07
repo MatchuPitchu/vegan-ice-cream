@@ -1,5 +1,7 @@
 import { IonContent, IonIcon, IonPage } from '@ionic/react';
 import { iceCream } from 'ionicons/icons';
+import Search from '../components/Search';
+import Searchbar from '../components/Searchbar';
 
 const Home: React.FC = () => {
   return (
@@ -19,16 +21,21 @@ const Home: React.FC = () => {
               <div className="run-text-final">eintragen</div>
             </div>
           </h1>
-          <div className="overlay"><IonIcon className="startIceIcon" icon={iceCream} /></div>
+          <div className="overlay">
+            <IonIcon className="startIceIcon" icon={iceCream} />
+          </div>
+          <div className="start-btn-container">
+            <a href="#" role="button">
+              <span className="btn-ring"></span>
+              <span className="btn-border"></span>
+              <span className="btn-text">Start</span>
+            </a>
+          </div>
         </div>
 
-        <div className="start-btn-container">
-          <a href="#" role="button">
-            <span className="btn-ring"></span>
-            <span className="btn-border"></span>
-            <span className="btn-text">Start</span>
-          </a>
-        </div>
+        <Searchbar/>
+
+        {/* <Search /> */}
       </IonContent>
     </IonPage>
   );

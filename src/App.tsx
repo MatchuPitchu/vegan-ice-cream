@@ -19,9 +19,8 @@ import {
   IonButton,
   IonContent
 } from '@ionic/react';
-import { menuController } from '@ionic/core';
-import { alarmOutline, bookmarks, disc, home, iceCream, menu, storefront } from 'ionicons/icons';
-import Menu from './components/Menu';
+import { bookmarks, disc, home, iceCream, storefront } from 'ionicons/icons';
+import HeaderApp from './components/HeaderApp';
 import Home from './pages/Home';
 import Entdecken from './pages/Entdecken.js';
 import Eintragen from './pages/Eintragen';
@@ -58,25 +57,8 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
-        <IonHeader>
-          <IonToolbar className="toolbarHeader">
-            <IonSearchbar className="searchbar" type="search" value={searchText} onIonChange={e => setSearchText(e.detail.value!)} placeholder="Stadt" showCancelButton="always" 	cancel-button-text="" />
-            <IonButtons slot="primary" >
-              <IonButton fill="clear" >
-                <IonIcon icon={alarmOutline} />
-              </IonButton>
-              <IonButton fill="clear" onClick={ async () => await menuController.toggle()}>
-                <IonIcon icon={menu} />
-              </IonButton>
-            </IonButtons>
-          </IonToolbar>
-        </IonHeader>
-
-        <IonMenu contentId="settings" type="overlay" swipeGesture={true}>
-          <Menu />
-        </IonMenu>
-        <IonPage id="settings"></IonPage>
-    
+        <HeaderApp />
+      
         <IonContent>
           <IonTabs>
             <IonRouterOutlet>

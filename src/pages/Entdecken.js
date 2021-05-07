@@ -1,31 +1,26 @@
 import { useContext, useState, useCallback, useRef } from "react";
 import { Context } from '../context/Context';
-import ReactStars from "react-rating-stars-component";
 import { Geolocation } from '@ionic-native/geolocation';
 import { Controller, useForm } from 'react-hook-form';
-import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardSubtitle, IonContent, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonInput, IonItem, IonLabel, IonLoading, IonModal, IonPage, IonSearchbar, IonSegment, IonSegmentButton, IonSelect, IonSelectOption, IonToast, IonToggle, IonToolbar } from '@ionic/react';
+import { IonItem, IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonList, IonLoading, IonModal, IonPage, IonSearchbar, IonSegment, IonSegmentButton, IonToast, IonToggle, IonToolbar } from '@ionic/react';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
-import { add, addCircleOutline, closeCircleOutline, listCircle, location as myPos, mailUnread, map as mapIcon, refreshCircle, removeCircleOutline } from "ionicons/icons";
+import { add, addCircleOutline, closeCircleOutline, listCircle, location as myPos, map as mapIcon, refreshCircle, removeCircleOutline } from "ionicons/icons";
 import Spinner from "../components/Spinner";
 import NewLocationForm from "../components/NewLocationForm";
+import ListOfMap from "../components/ListOfMap";
 
 const defaultValues = { 
   address: '', 
 }
 
 const Entdecken = () => {
-  const { 
-    searchText, setSearchText, 
+  const {
     loading, setLoading, 
     error, setError, 
-    user, 
     locations, 
-    disableInfScroll, 
     position, setPosition,
     newLocation, setNewLocation,
-    loadMore, 
     all, setAll, 
-    toggle, 
     mapStyles, 
     enterAnimation, leaveAnimation, 
     showMapModal, setShowMapModal, 
@@ -36,6 +31,8 @@ const Entdecken = () => {
   const [map, setMap]= useState(null);
   const [selected, setSelected] = useState(null);
   const [segment, setSegment] = useState('map');
+  const [autocomplete, setAutocomplete] = useState(null);
+  const [predict, setPredict] = useState(null);
   
   const { control, handleSubmit, reset, formState: { errors } } = useForm({defaultValues});
   const contentRef = useRef(null);
@@ -56,6 +53,7 @@ const Entdecken = () => {
   };
 
   const onSubmit = (data) => {
+    setPredict(null);
     setLoading(true);
     setAll(true);
     const fetchData = async () => {
@@ -95,6 +93,47 @@ const Entdecken = () => {
     reset(defaultValues);
   };
 
+  const onSelect = (data) => {
+    setPredict(null);
+    setLoading(true);
+    setAll(true);
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(data.address)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
+        const { results } = await res.json();
+        console.log('Fetching data Google API:', results)
+        setNewLocation({
+          name: '',
+          address: {
+            street: results[0].address_components[1] ? results[0].address_components[1].long_name : '',
+            number: results[0].address_components[0] ? results[0].address_components[0].long_name : '',
+            zipcode: results[0].address_components[7] ? results[0].address_components[7].long_name : '',
+            city: results[0].address_components[3] ? results[0].address_components[3].long_name : '',
+            country: results[0].address_components[6] ? results[0].address_components[6].long_name : '',
+            geo: {
+              lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
+              lng: results[0].geometry.location ? results[0].geometry.location.lng : null
+            }
+          },
+          location_url: '',
+          place_id: results[0].place_id ? results[0].place_id : ''
+        })
+        if(results[0].geometry.location) {
+          setCenter({
+            lat: results[0].geometry.location.lat,
+            lng: results[0].geometry.location.lng
+          });
+          contentRef.current.scrollToTop(500);
+        }
+      } catch (error) {
+        setError('Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in Deutschland eintragen.')
+      }
+    };
+    fetchData();
+    setLoading(false);
+    reset(defaultValues);
+  }
+
   const checkDuplicate = () => {
     const duplicate = locations.find(loc => loc.address.geo.lat === newLocation.address.geo.lat)
     console.log(duplicate)
@@ -107,12 +146,7 @@ const Entdecken = () => {
       setShowNewLocModal(true); 
     }
   }
-
-  const onMapLoad = useCallback((map) => {
-    setMap(map);
-    initControl(map);
-  }, []);
-
+  
   const options = {
     styles: mapStyles,
     disableDefaultUI: true,
@@ -128,6 +162,33 @@ const Entdecken = () => {
       },
     },
   }
+
+  // Debounce Autocomplete functions
+  const debounce = (func, timeout = 2000) => {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { func.apply(this, args)}, timeout);
+    };
+  }
+  
+  const forAutocompleteChange = debounce((value) => {
+    autocomplete.getPlacePredictions({
+      input: value,
+      componentRestrictions: { country: 'de' },
+      // types: ["establishment"]
+    }, function (predictions, status) {
+      if(status != 'OK') setError('Ups, das hat nicht funktioniert.')
+      setPredict(predictions);
+    });
+  });
+
+  const onMapLoad = useCallback((map) => {
+    setMap(map);
+    initControl(map);
+    const autocompleteService = new window.google.maps.places.AutocompleteService()
+    setAutocomplete(autocompleteService);
+  }, []);
 
   const initControl = (map) => {
     // Add customs zoom control https://developers.google.com/maps/documentation/javascript/examples/control-replacement#maps_control_replacement-javascript
@@ -147,8 +208,7 @@ const Entdecken = () => {
   }
 
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    // libraries: ['places']
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY
   })
 
   if (loadError) return <IonPage>Beim Laden der Karte ist ein Fehler aufgetreten. Bitte versuche es später nochmal.</IonPage>;
@@ -156,7 +216,6 @@ const Entdecken = () => {
   return (isLoaded) ? (
     <IonPage>
       <IonHeader>
-        <img className="headerMap" src={`${toggle ? "./assets/map-header-graphic-ice-dark.svg" : "./assets/map-header-graphic-ice-light.svg"}`} />
         <IonToolbar className="toolbarTransparent">
           <IonSegment onIonChange={(e) => setSegment(e.detail.value)} value={segment}>
             <IonSegmentButton value='map' layout="icon-start">
@@ -239,6 +298,8 @@ const Entdecken = () => {
                   url: './assets/icons/newLocation-marker.svg',
                   scaledSize: new window.google.maps.Size(40, 40),
                 }}
+                optimized={false}
+                zIndex={1}
                 title={`${newLocation.address.street} ${newLocation.address.number}, ${newLocation.address.zipcode} ${newLocation.address.city}`}
                 onClick={() => checkDuplicate()}
               />
@@ -268,90 +329,54 @@ const Entdecken = () => {
           </GoogleMap>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            <IonItem lines="none" className="mb-1 d-flex flex-column align-items-center">
-              <IonLabel className="ion-text-wrap mb-2" position='stacked' htmlFor="address">Tippe den Namen des Eisladens und der Stadt ein. Wenn das nicht funktioniert, trage die korrekte Adresse ein.</IonLabel>
+            <IonItem lines="none">
+              <IonLabel className="ion-text-wrap mb-2" position='stacked' htmlFor="address">Welchen Eisladen möchtest du hinzufügen? Name und Stadt reichen meistens. Sonst tippe bitte die korrekte Adresse ein.</IonLabel>
               <Controller
                 control={control}
                 render={({ 
                   field: { onChange, value },
                   fieldState: { invalid, isTouched, isDirty, error },
                 }) => (
-                  <IonInput color="primary" type="search" inputmode="text" value={value} autocomplete='street-address' onIonChange={e => onChange(e.detail.value)} placeholder="Name, Adresse eintippen ..." searchIcon={add} showCancelButton="always"	cancel-button-text="" />
+                  <IonSearchbar
+                    type="search" 
+                    inputmode="text" 
+                    value={value} 
+                    autocomplete='street-address' 
+                    onIonChange={e => {
+                      onChange(e.detail.value);
+                      forAutocompleteChange(e.detail.value)
+                    }} 
+                    placeholder="Name, Adresse eintippen ..." 
+                    searchIcon={add} 
+                    showCancelButton="always"	
+                    cancel-button-text="" 
+                  />
                 )}
                 name="address"
                 rules={{ required: true }}
               />
-              <IonButton fill="solid" className="check-btn mb-2" type="submit">
-                <IonIcon icon={add} />Check: Erscheint ein grünes Icon? Klick darauf
-              </IonButton>
             </IonItem>
+              {predict && (
+                <IonList>
+                  {predict.map((item, i) => (
+                    <IonItem className="autocompleteListItem" key={i} button onClick={() => onSelect({"address": item.description})} lines="full">
+                      <IonLabel className="ion-text-wrap">{item.description}</IonLabel>
+                    </IonItem>
+                  ))}
+                </IonList>
+              )}
+              <IonButton fill="solid" expand="full" className="check-btn my-2" type="submit">
+                <IonIcon icon={add} />Check: Erscheint ein grünes Icon? Klicke darauf
+              </IonButton>
           </form>
 
         </IonContent>
       )}
 
       {segment === 'list' && (
-        <IonContent>
-          {locations && locations.map((loc) => (
-            <IonCard key={loc._id} >
-              <IonItem lines="full">
-                <IonAvatar slot='start'>
-                  <img src='./assets/icons/ice-cream-icon-dark.svg' />
-                </IonAvatar>
-                <IonLabel >
-                  {loc.name}
-                  <p>{loc.address.street} {loc.address.number}</p>
-                  <p className="mb-2">{loc.address.zipcode} {loc.address.city}</p>
-                  <p><a href={loc.location_url}>Webseite</a></p>
-                </IonLabel>
-              </IonItem>
-              
-              <IonCardContent>
-                <IonCardSubtitle color='primary'>Bewertungen</IonCardSubtitle>
-                {loc.location_rating_quality ? (
-                  <>
-                    <div className="d-flex align-items-center">
-                      <div className="me-2">Qualität</div>
-                      <div>
-                        <ReactStars
-                          count={5}
-                          value={loc.location_rating_quality}
-                          edit={false}
-                          size={18}
-                          color='#9b9b9b'
-                          activeColor='#de9c01'
-                        />
-                      </div>
-                    </div>
-                    <div className="d-flex align-items-center">
-                      <div className="me-2">Veganes Angebot</div>
-                      <div>
-                        <ReactStars 
-                          count={5}
-                          value={loc.location_rating_vegan_offer}
-                          edit={false}
-                          size={18}
-                          color='#9b9b9b'
-                          activeColor='#de9c01'
-                        />
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <p>Noch keine Bewertungen vorhanden</p>
-                )}
-                <p className="p-weak">Location ID: {loc._id}</p>
-                    
-              </IonCardContent>
-            </IonCard>
-          ))}
-          {/* Infinite Scroll Ionic React: https://dev.to/daviddalbusco/infinite-scroll-with-ionic-react-3a3i */}
-          <IonInfiniteScroll threshold="25%" disabled={disableInfScroll} onIonInfinite={(e) => loadMore(e)}>
-            <IonInfiniteScrollContent loadingSpinner="dots" loadingText="Loading more locations ...">
-            </IonInfiniteScrollContent>
-          </IonInfiniteScroll>
-        </IonContent>
+        <ListOfMap />
       )}
+
       <IonLoading 
         isOpen={loading ? true : false} 
         message={"Einen Moment bitte ..."}
