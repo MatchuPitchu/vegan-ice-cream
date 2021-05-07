@@ -17,7 +17,8 @@ const Entdecken = () => {
   const {
     loading, setLoading, 
     error, setError, 
-    locations, 
+    locations,
+    searchText, setSearchText,
     position, setPosition,
     newLocation, setNewLocation,
     all, setAll, 
@@ -32,7 +33,8 @@ const Entdecken = () => {
   const [selected, setSelected] = useState(null);
   const [segment, setSegment] = useState('map');
   const [autocomplete, setAutocomplete] = useState(null);
-  const [predict, setPredict] = useState(null);
+  const [predict, setPredict] = useState([]);
+
   
   const { control, handleSubmit, reset, formState: { errors } } = useForm({defaultValues});
   const contentRef = useRef(null);
@@ -53,9 +55,8 @@ const Entdecken = () => {
   };
 
   const onSubmit = (data) => {
-    setPredict(null);
-    setLoading(true);
-    setAll(true);
+    // setLoading(true);
+    // setAll(true);
     const fetchData = async () => {
       try {
         const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(data.address)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
@@ -89,57 +90,16 @@ const Entdecken = () => {
       }
     };
     fetchData();
-    setLoading(false);
-    reset(defaultValues);
+    // setLoading(false);
+    // reset(defaultValues);
   };
-
-  const onSelect = (data) => {
-    setPredict(null);
-    setLoading(true);
-    setAll(true);
-    const fetchData = async () => {
-      try {
-        const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(data.address)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
-        const { results } = await res.json();
-        console.log('Fetching data Google API:', results)
-        setNewLocation({
-          name: '',
-          address: {
-            street: results[0].address_components[1] ? results[0].address_components[1].long_name : '',
-            number: results[0].address_components[0] ? results[0].address_components[0].long_name : '',
-            zipcode: results[0].address_components[7] ? results[0].address_components[7].long_name : '',
-            city: results[0].address_components[3] ? results[0].address_components[3].long_name : '',
-            country: results[0].address_components[6] ? results[0].address_components[6].long_name : '',
-            geo: {
-              lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
-              lng: results[0].geometry.location ? results[0].geometry.location.lng : null
-            }
-          },
-          location_url: '',
-          place_id: results[0].place_id ? results[0].place_id : ''
-        })
-        if(results[0].geometry.location) {
-          setCenter({
-            lat: results[0].geometry.location.lat,
-            lng: results[0].geometry.location.lng
-          });
-          contentRef.current.scrollToTop(500);
-        }
-      } catch (error) {
-        setError('Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in Deutschland eintragen.')
-      }
-    };
-    fetchData();
-    setLoading(false);
-    reset(defaultValues);
-  }
 
   const checkDuplicate = () => {
     const duplicate = locations.find(loc => loc.address.geo.lat === newLocation.address.geo.lat)
     console.log(duplicate)
     if(duplicate) {
       setError('Diese Adresse gibt es schon.');
-      setNewLocation(null)
+      setNewLocation({})
     }
     if(!duplicate) {
       setSelected(newLocation); 
@@ -172,8 +132,8 @@ const Entdecken = () => {
     };
   }
   
-  const forAutocompleteChange = debounce((value) => {
-    autocomplete.getPlacePredictions({
+  const forAutocompleteChange = debounce(async (value) => {
+    await autocomplete.getPlacePredictions({
       input: value,
       componentRestrictions: { country: 'de' },
       // types: ["establishment"]
@@ -319,7 +279,7 @@ const Entdecken = () => {
                 <IonModal cssClass='newLocModal' isOpen={showNewLocModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowNewLocModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
                   <IonItem lines='full'>
                     <IonLabel>Eisladen eintragen</IonLabel>
-                    <IonButton fill="clear" onClick={() => setShowNewLocModal(false)}><IonIcon icon={closeCircleOutline }/></IonButton>
+                    <IonButton fill="clear" onClick={() => { setShowNewLocModal(false)}}><IonIcon icon={closeCircleOutline }/></IonButton>
                   </IonItem>
                   <NewLocationForm />
                 </IonModal>
@@ -334,13 +294,13 @@ const Entdecken = () => {
               <Controller
                 control={control}
                 render={({ 
-                  field: { onChange, value },
+                  field: { onChange, value, searchText, chosen, searchRef },
                   fieldState: { invalid, isTouched, isDirty, error },
                 }) => (
                   <IonSearchbar
                     type="search" 
                     inputmode="text" 
-                    value={value} 
+                    value={value || searchText } 
                     autocomplete='street-address' 
                     onIonChange={e => {
                       onChange(e.detail.value);
@@ -356,15 +316,15 @@ const Entdecken = () => {
                 rules={{ required: true }}
               />
             </IonItem>
-              {predict && (
+              {predict ? (
                 <IonList>
                   {predict.map((item, i) => (
-                    <IonItem className="autocompleteListItem" key={i} button onClick={() => onSelect({"address": item.description})} lines="full">
+                    <IonItem className="autocompleteListItem" key={i} button onClick={() => onSubmit({'address': item.description})} lines="full">
                       <IonLabel className="ion-text-wrap">{item.description}</IonLabel>
                     </IonItem>
                   ))}
                 </IonList>
-              )}
+              ) : null}
               <IonButton fill="solid" expand="full" className="check-btn my-2" type="submit">
                 <IonIcon icon={add} />Check: Erscheint ein grünes Icon? Klicke darauf
               </IonButton>
