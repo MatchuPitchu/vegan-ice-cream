@@ -27,6 +27,7 @@ const Entdecken = () => {
     showMapModal, setShowMapModal, 
     showNewLocModal, setShowNewLocModal  
   } = useContext(Context);
+  const [libraries] = useState(['places']);
   const [center, setCenter] = useState({ lat:  52.524, lng: 13.410 });
   
   const [map, setMap]= useState(null);
@@ -55,8 +56,9 @@ const Entdecken = () => {
   };
 
   const onSubmit = (data) => {
-    // setLoading(true);
-    // setAll(true);
+    setLoading(true);
+    setAll(true);
+    setPredict([]);
     const fetchData = async () => {
       try {
         const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(data.address)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
@@ -90,8 +92,8 @@ const Entdecken = () => {
       }
     };
     fetchData();
-    // setLoading(false);
-    // reset(defaultValues);
+    setLoading(false);
+    reset(defaultValues);
   };
 
   const checkDuplicate = () => {
@@ -132,15 +134,17 @@ const Entdecken = () => {
     };
   }
   
-  const forAutocompleteChange = debounce(async (value) => {
-    await autocomplete.getPlacePredictions({
-      input: value,
-      componentRestrictions: { country: 'de' },
-      // types: ["establishment"]
-    }, function (predictions, status) {
-      if(status != 'OK') setError('Ups, das hat nicht funktioniert.')
-      setPredict(predictions);
-    });
+  const forAutocompleteChange = debounce((value) => {
+    if(value) {
+      autocomplete.getPlacePredictions({
+        input: value,
+        componentRestrictions: { country: 'de' },
+        // types: ["establishment"]
+      }, function (predictions, status) {
+        if(status != 'OK') setError('Ups, das hat nicht funktioniert.')
+        setPredict(predictions);
+      });
+    }
   });
 
   const onMapLoad = useCallback((map) => {
@@ -149,6 +153,10 @@ const Entdecken = () => {
     const autocompleteService = new window.google.maps.places.AutocompleteService()
     setAutocomplete(autocompleteService);
   }, []);
+
+  const onUnmount = useCallback(() => {
+    setMap(null)
+  }, [])
 
   const initControl = (map) => {
     // Add customs zoom control https://developers.google.com/maps/documentation/javascript/examples/control-replacement#maps_control_replacement-javascript
@@ -167,11 +175,10 @@ const Entdecken = () => {
     );
   }
 
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    libraries
   })
-
-  if (loadError) return <IonPage>Beim Laden der Karte ist ein Fehler aufgetreten. Bitte versuche es später nochmal.</IonPage>;
 
   return (isLoaded) ? (
     <IonPage>
@@ -225,6 +232,7 @@ const Entdecken = () => {
             center={center}
             options={options}
             onLoad={onMapLoad}
+            onUnmount={onUnmount}
           >
 
             {locations && locations.map((loc) => (

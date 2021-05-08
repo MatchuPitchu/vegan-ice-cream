@@ -4,8 +4,6 @@
   "private": true,
   "dependencies": {
     "@capacitor/core": "2.4.7",
-    "@googlemaps/js-api-loader": "^1.11.1",
-    "@googlemaps/react-wrapper": "^1.1.0",
     "@ionic-native/core": "^5.32.1",
     "@ionic-native/geolocation": "^5.32.1",
     "@ionic/react": "^5.5.0",

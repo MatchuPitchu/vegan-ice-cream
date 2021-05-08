@@ -1,7 +1,6 @@
 import { IonContent, IonIcon, IonPage } from '@ionic/react';
 import { iceCream } from 'ionicons/icons';
 // import Search from '../components/Search';
-// import Searchbar from '../components/Searchbar';
 
 const Home: React.FC = () => {
   return (
@@ -32,8 +31,6 @@ const Home: React.FC = () => {
             </a>
           </div>
         </div>
-
-        {/* <Searchbar/> */}
 
         {/* <Search /> */}
       </IonContent>
