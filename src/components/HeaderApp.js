@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Context } from '../context/Context';
 import { menuController } from '@ionic/core';
-import { IonButton, IonButtons, IonIcon, IonMenu, IonPage, IonToolbar } from '@ionic/react';
+import { IonBadge, IonButton, IonButtons, IonIcon, IonMenu, IonPage, IonToolbar } from '@ionic/react';
 import { alarmOutline, menu } from 'ionicons/icons';
 import Menu from './Menu';
 import Toggle from './Toggle';
@@ -18,6 +18,7 @@ const HeaderApp = () => {
         <IonButtons slot="primary" >
           <IonButton fill="clear" >
             <IonIcon icon={alarmOutline} />
+            <IonBadge slot="end" color="secondary">2</IonBadge>
           </IonButton>
           <IonButton fill="clear" onClick={ async () => await menuController.toggle()}>
             <IonIcon icon={menu} />
