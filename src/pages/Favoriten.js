@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { Context } from "../context/Context";
 // https://www.npmjs.com/package/react-rating-stars-component
 import ReactStars from "react-rating-stars-component";
-import { IonContent, IonPage, IonHeader, IonCard, IonCardSubtitle, IonCardContent, IonIcon, IonLabel, IonButton, IonItem, isPlatform, IonInfiniteScroll, IonInfiniteScrollContent, IonAvatar, IonAlert, IonToast, IonBadge } from "@ionic/react";
+import { IonContent, IonPage, IonHeader, IonCard, IonCardSubtitle, IonCardContent, IonIcon, IonLabel, IonButton, IonItem, IonAlert, IonToast, IonBadge } from "@ionic/react";
 import { bookmarks, removeCircle } from "ionicons/icons";
 import Spinner from '../components/Spinner';
 
@@ -11,44 +11,12 @@ const Favoriten = () => {
     error, setError,
     isAuth, 
     user, setUser,
-    toggle
+    toggle,
+    removeFavLoc,
+    alertUpdateFav, setAlertUpdateFav,
   } = useContext(Context);
   
-  const [alertRemoveFav, setAlertRemoveFav] = useState({removeStatus: false, loc: null});
-
-  const updateFavLoc = async () => {
-    console.log(alertRemoveFav.loc._id)
-    console.log(user._id)
-    const token = localStorage.getItem('token');
-    try {
-      const options = {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          token
-        },
-        // converts JS data into JSON string.
-        body: JSON.stringify({remove_location_id: alertRemoveFav.loc._id}),
-        credentials: "include",
-      };
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/remove-fav-loc`, options);
-      const updatedUser = await res.json();
-      if (updatedUser) {
-        setUser({
-          ...user,
-          favorite_locations: updatedUser.favorite_locations
-        });
-        setAlertRemoveFav({removeStatus: false, loc: null});
-      } else {
-        setError('Da ist etwas schief gelaufen. Versuche es später nochmal.')
-        setTimeout(() => setError(null), 5000);
-      }
-    } catch (error) {
-      console.log(error);
-    };
-  };
-
-  console.log(alertRemoveFav)
+  console.log(alertUpdateFav)
 
   return isAuth && user ? (
     <IonPage>
@@ -66,24 +34,18 @@ const Favoriten = () => {
                 <p className="mb-2">{loc.address.zipcode} {loc.address.city}</p>
                 <p><a href={loc.location_url}>Webseite</a></p>
               </IonLabel>
-              <IonButton fill="clear" onClick={() => setAlertRemoveFav({removeStatus: true, loc})}>
+              <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: true, location: loc})}>
                 <IonIcon icon={bookmarks}/>
-                <IonBadge className="" slot="end" color="danger">-</IonBadge>
+                <IonBadge slot="end" color="danger">-</IonBadge>
               </IonButton>
               <IonAlert
-                isOpen={alertRemoveFav.removeStatus}
-                onDidDismiss={() => setAlertRemoveFav({removeStatus: false, loc: null})}
+                isOpen={alertUpdateFav.removeStatus}
+                onDidDismiss={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: false })}
                 header={'Favoriten entfernen'}
                 message={'Möchtest du den Eisladen wirklich von deiner Liste entfernen?'}
                 buttons={[
-                  {
-                    text: 'Abbrechen',
-                    role: 'cancel'
-                  },
-                  {
-                    text: 'Bestätigen',
-                    handler: updateFavLoc
-                  }
+                  { text: 'Abbrechen', role: 'cancel' },
+                  { text: 'Bestätigen', handler: removeFavLoc }
                 ]}
               />
             </IonItem>

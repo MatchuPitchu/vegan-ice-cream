@@ -25,28 +25,37 @@ const AppState = ({children}) => {
   const [showMapModal, setShowMapModal] = useState(false);
   const [showNewLocModal, setShowNewLocModal] = useState(false);
   const [bookmark, setBookmark] = useState(false);
+  const [alertUpdateFav, setAlertUpdateFav] = useState({
+    removeStatus: false, 
+    addStatus: false, 
+    location: {}
+  });
 
   useEffect(() => {
     setLoading(true);
     const token = localStorage.getItem('token');
     // First check if token is valid, then fetch all user infos and set to state
-    const verifySession = async () => {
-      const options = {
-        headers: { token },
-        credentials: "include"
-      };  
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/verify-session`, options);
-      const { success, user } = await res.json();
-      if (success) {
-        setIsAuth(true);
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/infos`, options);
-        const data = await res.json();
-        console.log(data);
-        setUser({ ...user, ...data});
-      };
-    }
-    if (token) {
-      verifySession();
+    try {
+      const verifySession = async () => {
+        const options = {
+          headers: { token },
+          credentials: "include"
+        };  
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/verify-session`, options);
+        const { success, user } = await res.json();
+        if (success) {
+          setIsAuth(true);
+          const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/infos`, options);
+          const data = await res.json();
+          console.log(data);
+          setUser({ ...user, ...data});
+        };
+      }
+      if (token) {
+        verifySession();
+      }
+    } catch (error) {
+      setError(error.message);
     }
     setLoading(false);
   }, []);
@@ -57,8 +66,8 @@ const AppState = ({children}) => {
         const res = await fetch(`${process.env.REACT_APP_API_URL}/locations`)
         const data = await res.json();
         setLocations(data);
-      } catch (err) {
-        console.log(err.message)
+      } catch (error) {
+        setError(error.message);
       }
     }
     if(all) fetchLoc();
@@ -78,8 +87,8 @@ const AppState = ({children}) => {
           setDisableInfScroll(true);
         }
         console.log(data);
-      } catch (err) {
-        console.log(err.message)
+      } catch (error) {
+        setError(error.message);
       }
     }
     if(!all) fetchLoc();
@@ -89,6 +98,73 @@ const AppState = ({children}) => {
     setLocPage(prev => prev + 1);
     e.target.complete();
   }
+  
+  const addFavLoc = async () => {
+    setLoading(true);
+    const token = localStorage.getItem('token');
+    try {
+      const options = {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          token
+        },
+        // converts JS data into JSON string.
+        body: JSON.stringify({add_location_id: alertUpdateFav.location._id}),
+        credentials: "include",
+      };
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/add-fav-loc`, options);
+      const {favorite_locations} = await res.json();
+      if (favorite_locations) {
+        // HIER KOMMT FEHLER WENN ICH USER UPDATE - WARUM???
+        // setUser({
+        //   ...user,
+        //   favorite_locations: favorite_locations
+        // });
+        setAlertUpdateFav({...alertUpdateFav, addStatus: false, location: null});
+      } else {
+        setError('Da ist etwas schief gelaufen. Versuche es später nochmal.')
+        setTimeout(() => setError(null), 5000);
+      }
+    } catch (error) {
+      setError(error.message);
+    };
+    setLoading(false)
+  };
+
+  const removeFavLoc = async () => {
+    setLoading(true);
+    const token = localStorage.getItem('token');
+    try {
+      const options = {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          token
+        },
+        // converts JS data into JSON string.
+        body: JSON.stringify({remove_location_id: alertUpdateFav.location._id}),
+        credentials: "include",
+      };
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/remove-fav-loc`, options);
+      const { favorite_locations } = await res.json();
+      if (favorite_locations) {
+        // HIER KOMMT FEHLER WENN ICH USER UPDATE - WARUM???
+        // setUser({
+        //   ...user,
+        //   favorite_locations: favorite_locations
+        // });
+        setAlertUpdateFav({...alertUpdateFav, removeStatus: false, location: null});
+      } else {
+        setError('Da ist etwas schief gelaufen. Versuche es später nochmal.')
+        setTimeout(() => setError(null), 5000);
+      }
+    } catch (error) {
+      setError(error.message);
+    };
+    setLoading(false);
+  };
+
 
   const handleToggleDN = (e) => {
     setToggle((prev) => !prev);
@@ -179,6 +255,9 @@ const AppState = ({children}) => {
         showMapModal, setShowMapModal,
         showNewLocModal, setShowNewLocModal,
         bookmark, setBookmark,
+        alertUpdateFav, setAlertUpdateFav,
+        removeFavLoc,
+        addFavLoc
       }}
     >
       {children}

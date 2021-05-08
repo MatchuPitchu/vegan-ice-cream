@@ -2,7 +2,7 @@ import { useContext, useState, useCallback, useRef } from "react";
 import { Context } from '../context/Context';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Controller, useForm } from 'react-hook-form';
-import { IonItem, IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonList, IonLoading, IonModal, IonPage, IonSearchbar, IonSegment, IonSegmentButton, IonToast, IonToggle, IonToolbar, IonAvatar } from '@ionic/react';
+import { IonItem, IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonList, IonLoading, IonModal, IonPage, IonSearchbar, IonSegment, IonSegmentButton, IonToast, IonToggle, IonToolbar, IonAvatar, IonAlert, IonBadge } from '@ionic/react';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { add, addCircleOutline, bookmarks, bookmarksOutline, closeCircleOutline, listCircle, location as myPos, map as mapIcon, refreshCircle, removeCircleOutline } from "ionicons/icons";
 import NewLocationForm from "../components/NewLocationForm";
@@ -17,7 +17,8 @@ const defaultValues = {
 const Entdecken = () => {
   const {
     loading, setLoading, 
-    error, setError, 
+    error, setError,
+    user, 
     locations,
     map, setMap,
     selected, setSelected,
@@ -28,7 +29,10 @@ const Entdecken = () => {
     enterAnimation, leaveAnimation, 
     showMapModal, setShowMapModal, 
     showNewLocModal, setShowNewLocModal,
-    bookmark, setBookmark
+    bookmark, setBookmark,
+    alertUpdateFav, setAlertUpdateFav,
+    addFavLoc,
+    removeFavLoc
   } = useContext(Context);
   const [libraries] = useState(['places']);
   const [center, setCenter] = useState({ lat:  52.524, lng: 13.410 });
@@ -277,9 +281,39 @@ const Entdecken = () => {
               <div>
                 <IonModal cssClass='mapModal' isOpen={showMapModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowMapModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
                   <IonItem lines='full'>
-                    <IonButton fill="clear" onClick={() => setBookmark(prev => !prev)}>
-                      {!bookmark ? <IonIcon icon={bookmarksOutline}/> : <IonIcon icon={bookmarks}/> }
-                    </IonButton>
+                    {user.favorite_locations.find(loc => loc._id === selected._id) ? (
+                      <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: true, location: selected})}>
+                        <IonIcon icon={bookmarks}/>
+                        <IonBadge slot="end" color="danger">-</IonBadge>
+                      </IonButton>
+                      ) : (
+                      <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, addStatus: true, location: selected})}>
+                        <IonIcon icon={bookmarksOutline}/>
+                        <IonBadge slot="end" color="success">+</IonBadge>  
+                      </IonButton>
+                      )
+                    }
+                    <IonAlert
+                      isOpen={alertUpdateFav.addStatus}
+                      onDidDismiss={() => setAlertUpdateFav({...alertUpdateFav, addStatus: false })}
+                      header={'Favoriten hinzufügen'}
+                      message={'Möchtest du den Eisladen deinen Favoriten hinzufügen?'}
+                      buttons={[
+                        { text: 'Abbrechen', role: 'cancel' },
+                        { text: 'Bestätigen', handler: addFavLoc }
+                      ]}
+                    />
+                    <IonAlert
+                      isOpen={alertUpdateFav.removeStatus}
+                      onDidDismiss={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: false })}
+                      header={'Favoriten entfernen'}
+                      message={'Möchtest du den Eisladen wirklich von deiner Liste entfernen?'}
+                      buttons={[
+                        { text: 'Abbrechen', role: 'cancel' },
+                        { text: 'Bestätigen', handler: removeFavLoc }
+                      ]}
+                    />
+
                     <IonLabel>{selected.name}</IonLabel>
                     <IonButton fill="clear" onClick={() => setShowMapModal(false)}>
                       <IonIcon icon={closeCircleOutline }/>
