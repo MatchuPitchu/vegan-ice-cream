@@ -2,12 +2,13 @@ import { useContext, useState, useCallback, useRef } from "react";
 import { Context } from '../context/Context';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Controller, useForm } from 'react-hook-form';
-import { IonItem, IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonList, IonLoading, IonModal, IonPage, IonSearchbar, IonSegment, IonSegmentButton, IonToast, IonToggle, IonToolbar } from '@ionic/react';
+import { IonItem, IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonList, IonLoading, IonModal, IonPage, IonSearchbar, IonSegment, IonSegmentButton, IonToast, IonToggle, IonToolbar, IonAvatar } from '@ionic/react';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
-import { add, addCircleOutline, closeCircleOutline, listCircle, location as myPos, map as mapIcon, refreshCircle, removeCircleOutline } from "ionicons/icons";
-import Spinner from "../components/Spinner";
+import { add, addCircleOutline, bookmarks, bookmarksOutline, closeCircleOutline, listCircle, location as myPos, map as mapIcon, refreshCircle, removeCircleOutline } from "ionicons/icons";
 import NewLocationForm from "../components/NewLocationForm";
-import ListOfMap from "../components/ListOfMap";
+import SelectedMarker from '../components/SelectedMarker';
+import ListMap from "../components/ListMap";
+import Spinner from "../components/Spinner";
 
 const defaultValues = { 
   address: '', 
@@ -18,24 +19,23 @@ const Entdecken = () => {
     loading, setLoading, 
     error, setError, 
     locations,
-    searchText, setSearchText,
+    map, setMap,
+    selected, setSelected,
     position, setPosition,
     newLocation, setNewLocation,
     all, setAll, 
     mapStyles, 
     enterAnimation, leaveAnimation, 
     showMapModal, setShowMapModal, 
-    showNewLocModal, setShowNewLocModal  
+    showNewLocModal, setShowNewLocModal,
+    bookmark, setBookmark
   } = useContext(Context);
   const [libraries] = useState(['places']);
   const [center, setCenter] = useState({ lat:  52.524, lng: 13.410 });
-  
-  const [map, setMap]= useState(null);
-  const [selected, setSelected] = useState(null);
+
   const [segment, setSegment] = useState('map');
   const [autocomplete, setAutocomplete] = useState(null);
   const [predict, setPredict] = useState([]);
-
   
   const { control, handleSubmit, reset, formState: { errors } } = useForm({defaultValues});
   const contentRef = useRef(null);
@@ -48,11 +48,6 @@ const Entdecken = () => {
     } catch (error) {
       setError('Deine Position kann nicht ermittelt werden. Kontrolliere deine Einstellungen:', error)
     }
-  };
-
-  const scrollToAdd = () => {
-    // (number) means duration
-    contentRef.current && contentRef.current.scrollToBottom(500);
   };
 
   const onSubmit = (data) => {
@@ -108,22 +103,11 @@ const Entdecken = () => {
       setShowNewLocModal(true); 
     }
   }
-  
-  const options = {
-    styles: mapStyles,
-    disableDefaultUI: true,
-    gestureHandling: "cooperative",
-    minZoom: 9,
-    // restricted to boundaries of germany
-    restriction: {
-      latLngBounds: {
-        north: 55.1,
-        south: 47.1,
-        west: 5.8,
-        east: 15.1,
-      },
-    },
-  }
+
+  const scrollDown = () => {
+    // (number) means duration
+    contentRef.current && contentRef.current.scrollToBottom(500);
+  };
 
   // Debounce Autocomplete functions
   const debounce = (func, timeout = 2000) => {
@@ -146,6 +130,22 @@ const Entdecken = () => {
       });
     }
   });
+
+  const options = {
+    styles: mapStyles,
+    disableDefaultUI: true,
+    gestureHandling: "cooperative",
+    minZoom: 9,
+    // restricted to boundaries of germany
+    restriction: {
+      latLngBounds: {
+        north: 55.1,
+        south: 47.1,
+        west: 5.8,
+        east: 15.1,
+      },
+    },
+  }
 
   const onMapLoad = useCallback((map) => {
     setMap(map);
@@ -214,7 +214,7 @@ const Entdecken = () => {
                 <IonLabel className="me-1">Alle anzeigen</IonLabel>
                 <IonToggle onIonChange={e => setAll(true)} checked={all} disabled={`${all ? 'true' : 'false'}`} />
               </IonButton>
-              <IonButton className="add-control" onClick={scrollToAdd} title="Neue Adresse hinzufügen">
+              <IonButton className="add-control" onClick={scrollDown} title="Neue Adresse hinzufügen">
                 <IonIcon icon={add} />
               </IonButton>
               <IonButton className="where-control" onClick={getLocation} title="Mein Standort">
@@ -276,12 +276,16 @@ const Entdecken = () => {
             {selected ? (
               <div>
                 <IonModal cssClass='mapModal' isOpen={showMapModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowMapModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
-                  <IonItem>
-                    <IonLabel>
-                      Lat: {selected.address.geo.lat} Lng: {selected.address.geo.lng}
-                    </IonLabel>
-                    <IonButton fill="clear" onClick={() => setShowMapModal(false)}><IonIcon icon={closeCircleOutline }/></IonButton>
+                  <IonItem lines='full'>
+                    <IonButton fill="clear" onClick={() => setBookmark(prev => !prev)}>
+                      {!bookmark ? <IonIcon icon={bookmarksOutline}/> : <IonIcon icon={bookmarks}/> }
+                    </IonButton>
+                    <IonLabel>{selected.name}</IonLabel>
+                    <IonButton fill="clear" onClick={() => setShowMapModal(false)}>
+                      <IonIcon icon={closeCircleOutline }/>
+                    </IonButton>
                   </IonItem>
+                  <SelectedMarker />
                 </IonModal>
 
                 <IonModal cssClass='newLocModal' isOpen={showNewLocModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowNewLocModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
@@ -342,7 +346,7 @@ const Entdecken = () => {
       )}
 
       {segment === 'list' && (
-        <ListOfMap />
+        <ListMap />
       )}
 
       <IonLoading 

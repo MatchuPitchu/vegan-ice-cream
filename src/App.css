@@ -42,11 +42,11 @@ ion-icon {
 
 a {
   text-decoration: none;
-  color: var(--ion-color-secondary-tint);
+  color: var(--ion-color-primary);
 }
 
 a:hover {
-  color: var(--ion-color-primary);
+  color: var(--ion-color-tertiary);
 }
 
 .toast {
@@ -520,8 +520,26 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 }
 
 .mapModal .modal-wrapper {
-  height: 30%;
+  height: 60%;
   width: 100%;
+}
+
+.modalImage {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.2;
+}
+
+.modalOverlay {
+  background: #233033;
+}
+
+.modalItem {
+  --background: transparent;
 }
 
 .newLocModal .modal-wrapper {

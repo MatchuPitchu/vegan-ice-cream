@@ -5,7 +5,7 @@ import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardSubti
 import { add, addCircleOutline, closeCircleOutline, listCircle, location as myPos, mailUnread, map as mapIcon, refreshCircle, removeCircleOutline } from "ionicons/icons";
 
 
-const ListOfMap = () => {
+const ListMap = () => {
   const { 
     locations, 
     disableInfScroll, 
@@ -76,4 +76,4 @@ const ListOfMap = () => {
   )
 };
 
-export default ListOfMap;
+export default ListMap;
