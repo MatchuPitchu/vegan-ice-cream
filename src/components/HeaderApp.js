@@ -4,6 +4,7 @@ import { menuController } from '@ionic/core';
 import { IonButton, IonButtons, IonIcon, IonMenu, IonPage, IonToolbar } from '@ionic/react';
 import { alarmOutline, menu } from 'ionicons/icons';
 import Menu from './Menu';
+import Toggle from './Toggle';
 
 const HeaderApp = () => {
   const { searchText, setSearchText } = useContext(Context);
@@ -11,6 +12,9 @@ const HeaderApp = () => {
   return (
     <>
       <IonToolbar className="headerImg">
+        <div className="ms-1">
+          <Toggle />
+        </div>
         <IonButtons slot="primary" >
           <IonButton fill="clear" >
             <IonIcon icon={alarmOutline} />

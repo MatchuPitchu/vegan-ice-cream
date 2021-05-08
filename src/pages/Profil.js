@@ -1,9 +1,9 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Context } from "../context/Context";
 // https://www.npmjs.com/package/react-rating-stars-component
 import ReactStars from "react-rating-stars-component";
-import { IonContent, IonPage, IonHeader, IonTitle, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonIcon, IonLabel, IonButton, IonItem, isPlatform } from "@ionic/react";
-import { idCard, mail, pin, star, walk, warning, wifi, wine } from "ionicons/icons";
+import { IonContent, IonPage, IonHeader, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonIcon, IonLabel, IonItem } from "@ionic/react";
+import { idCard, mail, star } from "ionicons/icons";
 import Spinner from '../components/Spinner';
 
 const Login = () => {
@@ -42,8 +42,8 @@ const Login = () => {
             <IonCardContent>
               {user.comments_list && user.comments_list.map((comment, i) => {
                 return (
-                  <>
-                    <IonCardSubtitle color='primary' key={i}>{i+1}. Bewertung</IonCardSubtitle>
+                  <div key={comment._id}>
+                    <IonCardSubtitle color='primary' >{i+1}. Bewertung</IonCardSubtitle>
                     <p>{comment.text}</p>
                     <div className="d-flex align-items-center">
                       <div className="me-2">Qualität</div>
@@ -73,7 +73,7 @@ const Login = () => {
                     </div>
                     <p className="p-weak">[REPLACE WITH LOC NAME + LINK] Location ID: {comment.location_id}</p>
                     <p className="p-weak mb-3">{comment.date.replace('T', ' // ').slice(0, 19)}</p>
-                  </>
+                  </div>
                 )
               })}
            </IonCardContent>

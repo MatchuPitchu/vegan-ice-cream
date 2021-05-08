@@ -302,7 +302,7 @@ const Entdecken = () => {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <IonItem lines="none">
-              <IonLabel className="ion-text-wrap mb-2" position='stacked' htmlFor="address">Welchen Eisladen möchtest du hinzufügen? Name und Stadt reichen meistens. Sonst tippe bitte die korrekte Adresse ein.</IonLabel>
+              <IonLabel className="ion-text-wrap mb-2" position='stacked' htmlFor="address">Welchen Eisladen hast du entdeckt? Name und Stadt reichen zumeist. Sonst trage die korrekte Adresse ein.</IonLabel>
               <Controller
                 control={control}
                 render={({ 

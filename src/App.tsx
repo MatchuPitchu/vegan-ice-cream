@@ -17,7 +17,8 @@ import {
   IonPage,
   IonButtons,
   IonButton,
-  IonContent
+  IonContent,
+  IonBadge
 } from '@ionic/react';
 import { bookmarks, disc, home, iceCream, storefront } from 'ionicons/icons';
 import HeaderApp from './components/HeaderApp';
@@ -52,7 +53,7 @@ import './theme/variables.css';
 import './App.css'
 
 const App: React.FC = () => {
-  const { searchText, setSearchText } = useContext(Context);
+  const { searchText, setSearchText, user } = useContext(Context);
 
   return (
     <IonApp>
@@ -92,6 +93,9 @@ const App: React.FC = () => {
               <IonTabButton tab="favoriten" href="/favoriten">
                 <IonIcon icon={bookmarks} />
                 <IonLabel className="labelTabs">Favoriten</IonLabel>
+                {user && (
+                  <IonBadge color="secondary">{user.favorite_locations && user.favorite_locations.length ? user.favorite_locations.length : ''}</IonBadge>
+                )}
               </IonTabButton>
             </IonTabBar>
           </IonTabs>

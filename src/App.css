@@ -53,6 +53,12 @@ a:hover {
   color: var(--ion-color-danger);
 }
 
+ion-badge {
+  margin: -2px;
+  padding: 3px;
+  border: 1px solid var(--ion-background-color);
+}
+
 /************ Header general ************/
 ion-toolbar .sc-ion-searchbar-ios-h {
   padding: 3px 0;
