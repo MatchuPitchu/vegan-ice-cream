@@ -134,7 +134,7 @@ const SelectedMarker = () => {
                     </div>
                   </div>
                   <p className="p-weak mt-1">Datum: {comment.date.replace('T', ' // ').slice(0, 19)}</p>
-                  <p className="p-weak">Author: {comment.user_id}</p>
+                  <p className="p-weak">Autor: {comment.user_id.name}</p>
                 </IonLabel>
 
               </IonItem>
