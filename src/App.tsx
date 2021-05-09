@@ -66,7 +66,7 @@ const App: React.FC = () => {
               <Redirect from="/" to="/home" exact={true} />
               <Route path="/home" component={Home} exact={true} />
               <Route path="/entdecken" component={Entdecken} exact={true} />
-              <Route path="/eintragen" component={Eintragen} exact={true} />
+              {/* <Route path="/eintragen" component={Eintragen} exact={true} /> */}
               <Route path="/favoriten" component={Favoriten} exact={true} />
               <Route path="/profil" component={Profil} exact={true} />
               <Route path="/login" component={Login} exact={true} />
@@ -82,10 +82,10 @@ const App: React.FC = () => {
                 <IonIcon icon={disc} />
                 <IonLabel className="labelTabs">Entdecken</IonLabel>
               </IonTabButton>
-              <IonTabButton tab="eintragen" href="/eintragen">
+              {/* <IonTabButton tab="eintragen" href="/eintragen">
                 <IonIcon icon={storefront} />
                 <IonLabel className="labelTabs">Eintragen</IonLabel>
-              </IonTabButton>
+              </IonTabButton> */}
               <IonTabButton tab="bewerten" href="/bewerten">
                 <IonIcon icon={iceCream} />
                 <IonLabel className="labelTabs">Bewerten</IonLabel>

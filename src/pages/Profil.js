@@ -7,8 +7,10 @@ import { idCard, mail, star } from "ionicons/icons";
 import Spinner from '../components/Spinner';
 
 const Login = () => {
-  const { isAuth, user, toggle } = useContext(Context);
+  const { isAuth, user, locations, toggle } = useContext(Context);
   
+  console.log(user.comments_list);
+
   return isAuth && user ? (
     <IonPage>
       <IonHeader>
@@ -43,7 +45,7 @@ const Login = () => {
               {user.comments_list && user.comments_list.map((comment, i) => {
                 return (
                   <div key={comment._id}>
-                    <IonCardSubtitle color='primary' >{i+1}. Bewertung</IonCardSubtitle>
+                    <IonCardSubtitle color='primary' >{i+1}. {locations.find(loc => loc._id === comment.location_id).name}</IonCardSubtitle>
                     <p>{comment.text}</p>
                     <div className="d-flex align-items-center">
                       <div className="me-2">Qualität</div>
@@ -71,7 +73,6 @@ const Login = () => {
                         />
                       </div>
                     </div>
-                    <p className="p-weak">[REPLACE WITH LOC NAME + LINK] Location ID: {comment.location_id}</p>
                     <p className="p-weak mb-3">{comment.date.replace('T', ' // ').slice(0, 19)}</p>
                   </div>
                 )

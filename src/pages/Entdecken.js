@@ -62,15 +62,17 @@ const Entdecken = () => {
       try {
         const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(data.address)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
         const { results } = await res.json();
-        console.log('Fetching data Google API:', results)
+        let formattedObj = {};
+        results[0].address_components.forEach(e => e.types.forEach(type => Object.assign(formattedObj, {[type]: e.long_name})));
+        console.log('Formatted Obj', formattedObj);
         setNewLocation({
           name: '',
           address: {
-            street: results[0].address_components[1] ? results[0].address_components[1].long_name : '',
-            number: results[0].address_components[0] ? results[0].address_components[0].long_name : '',
-            zipcode: results[0].address_components[7] ? results[0].address_components[7].long_name : '',
-            city: results[0].address_components[3] ? results[0].address_components[3].long_name : '',
-            country: results[0].address_components[6] ? results[0].address_components[6].long_name : '',
+            street: formattedObj.route ? formattedObj.route : '',
+            number: formattedObj.street_number ? formattedObj.street_number : '',
+            zipcode: formattedObj.postal_code ? formattedObj.postal_code : '',
+            city: formattedObj.locality ? formattedObj.locality : '',
+            country: formattedObj.country ? formattedObj.country : '',
             geo: {
               lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
               lng: results[0].geometry.location ? results[0].geometry.location.lng : null
@@ -130,6 +132,7 @@ const Entdecken = () => {
         // types: ["establishment"]
       }, function (predictions, status) {
         if(status != 'OK') setError('Ups, das hat nicht funktioniert.')
+        console.log('Predictions', predictions)
         setPredict(predictions);
       });
     }

@@ -455,7 +455,7 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   color: var(--ion-text-color);
 }
 
-/********** Entdecken & Map **********/
+/********** Tab Entdecken & Map **********/
 
 .headerMap {
   width: 100%;
@@ -569,4 +569,10 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   font-size: 0.7rem;
   text-transform: none;
   min-height: 30px;
+}
+
+/*********** Tab Eintragen ************/
+.my-custom-class .popover-content {
+  padding: 10px;
+  font-size: 0.8rem;
 }
