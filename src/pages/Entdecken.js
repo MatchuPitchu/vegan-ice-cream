@@ -281,7 +281,7 @@ const Entdecken = () => {
               <div>
                 <IonModal cssClass='mapModal' isOpen={showMapModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowMapModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
                   <IonItem lines='full'>
-                    {user.favorite_locations.find(loc => loc._id === selected._id) ? (
+                    {user && user.favorite_locations.find(loc => loc._id === selected._id) ? (
                       <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: true, location: selected})}>
                         <IonIcon icon={bookmarks}/>
                         <IonBadge slot="end" color="danger">-</IonBadge>

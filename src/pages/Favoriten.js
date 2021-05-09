@@ -15,8 +15,6 @@ const Favoriten = () => {
     removeFavLoc,
     alertUpdateFav, setAlertUpdateFav,
   } = useContext(Context);
-  
-  console.log(alertUpdateFav)
 
   return isAuth && user ? (
     <IonPage>
@@ -25,7 +23,7 @@ const Favoriten = () => {
       </IonHeader>
       <IonContent>
         <div className="container-sm mt-3">
-          {user.favorite_locations && user.favorite_locations.map((loc) => (
+          {user && user.favorite_locations.map((loc) => (
           <IonCard key={loc._id} >
             <IonItem lines="full">
               <IonLabel >

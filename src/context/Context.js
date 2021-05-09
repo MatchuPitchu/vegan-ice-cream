@@ -73,8 +73,6 @@ const AppState = ({children}) => {
     if(all) fetchLoc();
   }, [all])
 
-  console.log(locations)
-
   useEffect(() => {
     const fetchLoc = async () => {
       try {
@@ -114,20 +112,16 @@ const AppState = ({children}) => {
         credentials: "include",
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/add-fav-loc`, options);
-      const {favorite_locations} = await res.json();
-      if (favorite_locations) {
-        // HIER KOMMT FEHLER WENN ICH USER UPDATE - WARUM???
-        // setUser({
-        //   ...user,
-        //   favorite_locations: favorite_locations
-        // });
-        setAlertUpdateFav({...alertUpdateFav, addStatus: false, location: null});
-      } else {
-        setError('Da ist etwas schief gelaufen. Versuche es später nochmal.')
-        setTimeout(() => setError(null), 5000);
-      }
+      // Don't need sended back data of server
+      // const favorite_locations = await res.json();
+      const newFavLoc = [...user.favorite_locations, alertUpdateFav.location]
+      console.log(newFavLoc)
+      setUser(prev => ({ ...prev, favorite_locations: newFavLoc }));
+      setAlertUpdateFav({...alertUpdateFav, addStatus: false, location: null});
     } catch (error) {
-      setError(error.message);
+      console.log(error.message);
+      setError('Da ist etwas schief gelaufen. Versuche es später nochmal.')
+      setTimeout(() => setError(null), 5000);
     };
     setLoading(false)
   };
@@ -147,24 +141,16 @@ const AppState = ({children}) => {
         credentials: "include",
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/remove-fav-loc`, options);
-      const { favorite_locations } = await res.json();
-      if (favorite_locations) {
-        // HIER KOMMT FEHLER WENN ICH USER UPDATE - WARUM???
-        // setUser({
-        //   ...user,
-        //   favorite_locations: favorite_locations
-        // });
-        setAlertUpdateFav({...alertUpdateFav, removeStatus: false, location: null});
-      } else {
-        setError('Da ist etwas schief gelaufen. Versuche es später nochmal.')
-        setTimeout(() => setError(null), 5000);
-      }
+      const favorite_locations = await res.json();
+      setUser(prev => ({ ...prev, favorite_locations }));
+      setAlertUpdateFav({...alertUpdateFav, removeStatus: false, location: null});
     } catch (error) {
-      setError(error.message);
+      console.log(error.message);
+      setError('Da ist etwas schief gelaufen. Versuche es später nochmal.')
+      setTimeout(() => setError(null), 5000);
     };
     setLoading(false);
   };
-
 
   const handleToggleDN = (e) => {
     setToggle((prev) => !prev);

@@ -7,8 +7,6 @@ import { add } from "ionicons/icons";
 const SelectedMarker = () => {
   const { selected, toggle } = useContext(Context);
 
-  console.log(selected)
-
   return (
     <IonContent>
       {/* IonImg uses lazy loading */}
