@@ -90,6 +90,7 @@ const Entdecken = () => {
         }
       } catch (error) {
         setError('Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in Deutschland eintragen.')
+        setTimeout(() => setError(null), 5000);
       }
     };
     fetchData();

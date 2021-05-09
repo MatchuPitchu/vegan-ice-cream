@@ -48,7 +48,7 @@ const Login = () => {
                     <IonCardSubtitle color='primary' >{i+1}. {locations.find(loc => loc._id === comment.location_id).name}</IonCardSubtitle>
                     <p>{comment.text}</p>
                     <div className="d-flex align-items-center">
-                      <div className="me-2">Qualität</div>
+                      <div className="me-2">Eis-Qualität</div>
                       <div>
                         <ReactStars
                           count={5}

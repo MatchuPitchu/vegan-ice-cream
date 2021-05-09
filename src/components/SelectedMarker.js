@@ -1,12 +1,39 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Context } from '../context/Context';
-import { IonButton, IonCard, IonCardContent, IonCardSubtitle, IonContent, IonIcon, IonImg, IonItem, IonItemGroup, IonLabel, isPlatform } from "@ionic/react";
+import { IonButton, IonCard, IonCardContent, IonCardSubtitle, IonContent, IonIcon, IonImg, IonItem, IonItemGroup, IonLabel, IonLoading, IonToast, isPlatform } from "@ionic/react";
 import ReactStars from "react-rating-stars-component";
 import { add, caretDownCircle, caretForwardCircle } from "ionicons/icons";
 
 const SelectedMarker = () => {
-  const { selected, toggle } = useContext(Context);
+  const { 
+    loading, setLoading, 
+    error, setError,
+    selected, setSelected,
+    toggle 
+  } = useContext(Context);
   const [ openComments, setOpenComments ] = useState(false);
+
+  console.log(selected)
+
+  useEffect(() => {
+    setLoading(true);
+    const fetchData = async() => {
+      try {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/${selected._id}/all-comments-flavors`)
+        const {comments_list, flavors_listed} = await res.json();
+        setSelected({
+          ...selected,
+          comments_list,
+          flavors_listed
+        })
+      } catch (error) {
+        setError('Ups, schief gelaufen. Versuche es später nochmal.')
+        setTimeout(() => setError(null), 5000);
+      }
+    }
+    fetchData();
+    setLoading(false);
+  }, [])
 
   return (
     <IonContent>
@@ -65,17 +92,71 @@ const SelectedMarker = () => {
             )}
             </IonItem>
             <IonItem lines="none">
-              <IonIcon color="primary" icon={openComments ? caretDownCircle : caretForwardCircle} button onClick={() => setOpenComments(prev => !prev)}></IonIcon>
+              <IonIcon 
+                color="primary" 
+                icon={openComments ? caretDownCircle : caretForwardCircle} 
+                button onClick={() => {
+                  setOpenComments(prev => !prev);
+                }}
+              />
               <IonLabel className="ms-1">Alle anzeigen</IonLabel>
             </IonItem>
-            {openComments && (
-            <IonItem lines="none">
-              <IonLabel className="ms-1">Alle anzeigen</IonLabel>
-            </IonItem>
+            {openComments && selected.comments_list.map((comment, i) => {
+              return (
+              <IonItem lines="full">
+                <IonLabel className="ion-text-wrap ms-1">
+                  {i+1}. Bewertung
+                  <p className="my-1">{comment.text}</p>
+                  <div className="d-flex align-items-center">
+                    <div className="me-2">Eis-Qualität</div>
+                    <div>
+                      <ReactStars
+                        count={5}
+                        value={comment.rating_quality}
+                        edit={false}
+                        size={18}
+                        color='#9b9b9b'
+                        activeColor='#de9c01'
+                      />
+                    </div>
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <div className="me-2">Veganes Angebot</div>
+                    <div>
+                      <ReactStars 
+                        count={5}
+                        value={comment.rating_vegan_offer}
+                        edit={false}
+                        size={18}
+                        color='#9b9b9b'
+                        activeColor='#de9c01'
+                      />
+                    </div>
+                  </div>
+                  <p className="p-weak mt-1">Datum: {comment.date.replace('T', ' // ').slice(0, 19)}</p>
+                  <p className="p-weak">Author: {comment.user_id}</p>
+                </IonLabel>
+
+              </IonItem>
+              )
+            }
             )}
           </IonItemGroup>
         </div>
       </IonCard>
+      
+      <IonLoading 
+        isOpen={loading ? true : false} 
+        message={"Einen Moment bitte ..."}
+        onDidDismiss={() => setLoading(false)}
+      />
+      <IonToast
+        color='danger'
+        isOpen={error ? true : false} 
+        message={error} 
+        onDidDismiss={() => setError(null)}
+        duration={6000} 
+      />
     </IonContent>
   )
 }
