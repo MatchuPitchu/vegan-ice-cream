@@ -53,7 +53,7 @@ const Favoriten = () => {
               {loc.location_rating_quality ? (
                 <>
                   <div className="d-flex align-items-center">
-                    <div className="me-2">Qualität des Eises</div>
+                    <div className="me-2">Eis-Qualität</div>
                     <div>
                       <ReactStars
                         count={5}
