@@ -57,7 +57,7 @@ const App: React.FC = () => {
         <IonContent>
           <IonTabs>
             <IonRouterOutlet>
-            {/*   <Redirect from="/" to="/home" exact={true} /> */}
+              <Redirect from="/" to="/home" exact={true} />
               <Route path="/home" component={Home} exact />
               <Route path="/entdecken" component={Entdecken} exact />
               {/* <Route path="/eintragen" component={Eintragen} exact={true} /> */}

@@ -6,6 +6,7 @@ import { add, closeCircleOutline, disc, informationCircle, link } from "ionicons
 import showError from '../components/showError';
 import Spinner from '../components/Spinner';
 import NewLocationForm from '../components/NewLocationForm';
+import LoadingError from '../components/LoadingError';
 
 // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
 
@@ -131,13 +132,8 @@ const Eintragen = () => {
           <NewLocationForm />
         </IonModal>
 
-        <IonToast
-          color='danger'
-          isOpen={error ? true : false} 
-          message={error} 
-          onDidDismiss={() => setError('')}
-          duration={6000} 
-          />
+        <LoadingError />
+
       </IonContent>
     </IonPage>
   ) : <Spinner />;

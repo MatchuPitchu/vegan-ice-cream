@@ -5,6 +5,7 @@ import ReactStars from "react-rating-stars-component";
 import { IonContent, IonPage, IonHeader, IonCard, IonCardSubtitle, IonCardContent, IonIcon, IonLabel, IonButton, IonItem, IonAlert, IonToast, IonBadge } from "@ionic/react";
 import { bookmarks, removeCircle } from "ionicons/icons";
 import Spinner from '../components/Spinner';
+import LoadingError from "../components/LoadingError";
 
 const Favoriten = () => {
   const { 
@@ -88,13 +89,9 @@ const Favoriten = () => {
           </IonCard>
           ))}
         </div>
-        <IonToast
-          color='danger'
-          isOpen={error ? true : false} 
-          message={error} 
-          onDidDismiss={() => setError('')}
-          duration={6000} 
-        />
+        
+        <LoadingError />
+
       </IonContent>
     </IonPage>
   ) : <Spinner />;

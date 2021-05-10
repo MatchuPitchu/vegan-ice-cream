@@ -7,6 +7,7 @@ import { IonButton, IonContent, IonDatetime, IonHeader, IonIcon, IonInput, IonIt
 import { add, colorPalette, colorPaletteOutline, mailUnread } from 'ionicons/icons';
 import showError from '../components/showError';
 import Search from '../components/Search';
+import LoadingError from '../components/LoadingError';
 
 const Bewerten = () => {
   const { 
@@ -14,10 +15,7 @@ const Bewerten = () => {
     loading, setLoading,
     error, setError,
     user,
-    locations, setLocations,
-    newLocation, setNewLocation,
     selected, setSelected,
-    setShowNewLocModal
   } = useContext(Context);
   
   const [colorPicker1, setColorPicker1] = useState({field1: false, field2: false});
@@ -133,8 +131,7 @@ const Bewerten = () => {
         body: JSON.stringify(body),
         credentials: "include",
       };
-      // EINFÜGEN SPÄTER ${selected.loc._id}
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/60867e1920fc8b983cbc9327`, options);
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${selected.loc._id}`, options);
       const newComment = await res.json();
       if (!newComment) {
         setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
@@ -156,45 +153,22 @@ const Bewerten = () => {
       </IonHeader>
       <IonContent className="ion-padding">
         
-        {/* <Search /> */}
-
-        {/* <div>
-          <IonButton
-            color="medium"
-            fill="outline"
-            onClick={() => setDisplayColorPicker(true)}
-            style={{ margin: "1rem" }}
-          >
-            Click to select Base Color
-          </IonButton>
-          {selectedColor ? (
-            <div>
-              Base Color:
-              <div
-                style={{
-                  height: "4rem",
-                  backgroundColor: `${selectedColor}`,
-                  margin: "1rem",
-                }}
-              ></div>
-            </div>
-          ) : null}
-          {displayColorPicker ? (
-            <div>
-              <CirclePicker
-                colors={colorArr}
-                circleSpacing={20}
-                circleSize={30} 
-                onChangeComplete={() => {setDisplayColorPicker(false)}}>
-              </CirclePicker>
-            </div>
-          ) : null}
-        </div> */}
-
-
+        <Search />
 
         {/* "handleSubmit" will validate your inputs before invoking "onSubmit" */}
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form className="container" onSubmit={handleSubmit(onSubmit)}>
+          <IonItem lines="none">
+            <IonLabel position='stacked' htmlFor="location">Name des Eisladens</IonLabel>
+            <IonInput 
+              disabled={true}
+              type="text"
+              inputmode="text"
+              placeholder="Nutze die obere Suche"
+              value={selected ? selected.name : null}  
+              onIonChange={() => {}} 
+            />
+          </IonItem>
+
           <IonItem lines="none">
             <IonLabel ref={name1Ref} position='stacked' htmlFor="name1">1. Eissorte</IonLabel>
             <Controller 
@@ -203,7 +177,7 @@ const Bewerten = () => {
                 <IonInput 
                   type="text" 
                   inputmode="text"
-                  placeholder="Welche Sorte hast du gewählt?"
+                  placeholder="Welche Sorte hast du gegessen?"
                   value={value} 
                   onIonChange={e => onChange(e.detail.value)} 
                 />
@@ -306,7 +280,7 @@ const Bewerten = () => {
                 <IonInput 
                   type="text" 
                   inputmode="text"
-                  placeholder="Welche Sorte hast du gewählt?"
+                  placeholder="Welche Sorte hast du gegessen?"
                   value={value} 
                   onIonChange={e => onChange(e.detail.value)} 
                 />
@@ -400,7 +374,7 @@ const Bewerten = () => {
 
 
           <IonItem lines="full">
-            <IonLabel position='floating' htmlFor="text">Text</IonLabel>
+            <IonLabel position='floating' htmlFor="text">Kommentar</IonLabel>
             <Controller
                 control={control}
                 render={({ 
@@ -490,12 +464,8 @@ const Bewerten = () => {
           <IonButton className="my-3" type="submit" expand="block"><IonIcon className="pe-1"icon={add}/>Bewertung abgeben</IonButton>
         </form>
 
-        <IonToast 
-          isOpen={error ? true : false} 
-          message={error} 
-          onDidDismiss={() => setError('')}
-          duration={6000} 
-        />
+        <LoadingError />
+        
       </IonContent>
     </IonPage>
   );

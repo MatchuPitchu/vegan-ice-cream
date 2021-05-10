@@ -9,6 +9,7 @@ import NewLocationForm from "../components/NewLocationForm";
 import SelectedMarker from '../components/SelectedMarker';
 import ListMap from "../components/ListMap";
 import Spinner from "../components/Spinner";
+import LoadingError from "../components/LoadingError";
 
 const defaultValues = { 
   address: '', 
@@ -344,13 +345,12 @@ const Entdecken = () => {
               <Controller
                 control={control}
                 render={({ 
-                  field: { onChange, value, searchText, chosen, searchRef },
-                  fieldState: { invalid, isTouched, isDirty, error },
+                  field: { onChange, value }
                 }) => (
                   <IonSearchbar
                     type="search" 
                     inputmode="text" 
-                    value={value || searchText } 
+                    value={value} 
                     autocomplete='street-address' 
                     onIonChange={e => {
                       onChange(e.detail.value);
@@ -387,18 +387,8 @@ const Entdecken = () => {
         <ListMap />
       )}
 
-      <IonLoading 
-        isOpen={loading ? true : false} 
-        message={"Einen Moment bitte ..."}
-        onDidDismiss={() => setLoading(false)}
-      />
-      <IonToast 
-        color='danger'
-        isOpen={error ? true : false} 
-        message={error} 
-        onDidDismiss={() => setError(null)}
-        duration={6000} 
-      />
+    <LoadingError />
+    
     </IonPage>
   ) : <Spinner /> ;
 };

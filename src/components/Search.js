@@ -1,109 +1,75 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Context } from '../context/Context';
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  geocodeByPlaceId,
-  getLatLng,
-} from 'react-places-autocomplete';
-import { IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonSearchbar } from '@ionic/react';
+import { IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonSearchbar, IonToolbar } from '@ionic/react';
 
 const Search = () => {
-const { searchText, setSearchText } = useContext(Context);
+  const { 
+    loading, setLoading,
+    error, setError,
+    setAll,
+    locations,
+    selected, setSelected,
+    searchText, setSearchText,
+  } = useContext(Context);
+  const [ predictions, setPredictions ] = useState([]);
 
-const handleChange = address => {
-  setSearchText(address);
-}
+  console.log(locations);
 
-const handleSelect = async (address) => {
-  try {
-    const res = await geocodeByAddress(address);
-    const data = getLatLng(res[0]);
-    console.log('Success', data)
-  } catch (error) {
-    console.log(error)
+  const onSubmit = () => {
+    setLoading(true)
+    const res = locations.filter(loc => loc.name.toLowerCase().includes(searchText.toLowerCase()) || loc.address.city.toLowerCase().includes(searchText.toLowerCase()) );
+    const result = res.slice(0, 10);
+    setPredictions(result);
+    setLoading(false)
   }
-}
+
+    // Debounce Autocomplete functions
+    const debounce = (func, timeout = 1000) => {
+      let timer;
+      return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => { func.apply(this, args)}, timeout);
+      };
+    }
+    
+    const forAutocompleteChange = debounce(value => {
+      if(value.length >= 3 && locations) {
+        const res = locations.filter(loc => loc.name.toLowerCase().includes(value.toLowerCase()) || loc.address.city.toLowerCase().includes(value.toLowerCase()) );
+        const result = res.slice(0, 10);
+        setPredictions(result);
+      }
+      if(!value) {
+        setPredictions([])
+      }
+    });
 
   return (
-    <div className="container">
-      <IonSearchbar 
-        className="searchbar container" 
-        type="search" 
-        placeholder="Debounce 3s" 
-        showCancelButton="always" 
-        cancel-button-text=""
-        value={searchText}
-        onIonChange={e => {
-          setSearchText(e.detail.value);
-        }}        
-      />
-      <PlacesAutocomplete
-        value={searchText}
-        onChange={handleChange}
-        onSelect={handleSelect}
-      >
-        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-          <div>
-            <input
-              {...getInputProps({
-                placeholder: 'Search Places ...',
-                className: 'searchbar container',
-              })}
-            />
-            <div className="autocomplete-dropdown-container">
-              {loading && <div>Loading...</div>}
-              {suggestions.map(suggestion => {
-                const className = suggestion.active
-                  ? 'suggestion-item--active'
-                  : 'suggestion-item';
-                // inline style for demonstration purpose
-                const style = suggestion.active
-                  ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                  : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                return (
-                  <div
-                    {...getSuggestionItemProps(suggestion, {
-                      className,
-                      style,
-                    })}
-                  >
-                    <span>{suggestion.description}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </PlacesAutocomplete>
-      
-      {/* <IonSearchbar 
-        className="searchbar container" 
-        type="search" 
-        placeholder="Debounce 3s" 
-        showCancelButton="always" 
-        cancel-button-text=""
-        value={searchText}
-        onIonChange={e => {
-          getPlacePredictions({ input: e.detail.value});
-          setSearchText(e.detail.value);
-        }}
-        loading={isPlacePredictionsLoading}
-      />
-      {!isPlacePredictionsLoading && (
-        <IonList className="listSearch">
-          {placePredictions.map((item, i) => (
-            <IonItemSliding key={i}>
-              <IonItem button onClick={() => setSearchText(item.description)}>
-                <IonLabel>{item.description}</IonLabel>
-              </IonItem>
-              <IonItemOptions side="end">
-                <IonItemOption onClick={() => {}}>Unread</IonItemOption>
-              </IonItemOptions>
-            </IonItemSliding>
+    <form className="container" onSubmit={onSubmit}>
+      <IonItem lines="full">
+        <IonSearchbar 
+          className="searchbar container" 
+          type="search" 
+          placeholder="Eisladen suchen" 
+          showCancelButton="always" 
+          cancel-button-text=""
+          value={searchText}
+          onIonChange={e => {
+            setAll(true);
+            setSearchText(e.detail.value);
+            forAutocompleteChange(e.detail.value)
+          }}
+        />
+      </IonItem>
+      {predictions ? (
+        <IonList>
+          {predictions.map(loc => (
+            <IonItem className="autocompleteListItem" key={loc._id} button onClick={() => setSelected(loc)} lines="full">
+              <IonLabel color="secondary" className="ion-text-wrap">{loc.name} <span className="p-weak">, {loc.address.street} {loc.address.number} in {loc.address.city}</span></IonLabel>
+            </IonItem>
           ))}
         </IonList>
-      )} */}
-    </div>
+      ) : null}
+    </form>
   )
 }
 
