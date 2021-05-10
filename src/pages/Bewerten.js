@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useRef } from 'react';
 import { Context } from "../context/Context";
 import ReactStars from "react-rating-stars-component";
 import { CirclePicker } from "react-color";
@@ -20,15 +20,19 @@ const Bewerten = () => {
   } = useContext(Context);
   
   const [newComment, setNewComment] = useState();
+  const [colorPicker1, setColorPicker1] = useState({field1: false, field2: false})
+  const [colorPicker2, setColorPicker2] = useState({field1: false, field2: false})
+  const name1Ref = useRef(null);
+  const name2Ref = useRef(null);
 
   const colorArr = [
+    "TRANSPARENT",
     "#b71c1c", "#d32f2f", "#f44336", "#e57373", "#ffcdd2",
     "#880e4f", "#c2185b", "#e91e63", "#f06292", "#f8bbd0",
     "#4a148c", "#7b1fa2", "#9c27b0", "#ba68c8", "#e1bee7",
     "#0d47a1", "#1976d2", "#2196f3", "#64b5f6", "#bbdefb",
     "#004d40", "#00796b", "#009688", "#4db6ac", "#b2dfdb",
     "#194d33", "#388e3c", "#4caf50", "#81c784", "#c8e6c9",
-    "#827717", "#afb42b", "#cddc39", "#dce775", "#f0f4c3",
     "#f57f17", "#fbc02d", "#ffeb3b", "#fff176", "#fff9c4",
     "#e65100", "#f57c00", "#ff9800", "#ffb74d", "#ffe0b2",
     "#bf360c", "#e64a19", "#ff5722", "#ff8a65", "#ffccbc",
@@ -93,10 +97,13 @@ const Bewerten = () => {
     // setNewLocation(null)
   };
 
-  const [showColorPicker, setShowColorPicker] = useState({field1: false, field2: false});
+
   const [selectedColor, setSelectedColor] = useState();
 
   // console.log('newComment state:', newComment);
+  console.log('Picker 1', colorPicker1)
+  console.log('Picker 2', colorPicker2)
+
 
   return (
     <IonPage>
@@ -141,17 +148,18 @@ const Bewerten = () => {
         </div> */}
 
 
+
         {/* "handleSubmit" will validate your inputs before invoking "onSubmit" */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <IonItem lines="none">
-            <IonLabel position='stacked' htmlFor="name1">1. Eissort</IonLabel>
+            <IonLabel ref={name1Ref} position='stacked' htmlFor="name1">1. Eissort</IonLabel>
             <Controller 
               control={control}
               render={({ field: { onChange, value } }) => (
                 <IonInput 
                   type="text" 
                   inputmode="text"
-                  placeholder="Welche Kugel hast du gegessen?"
+                  placeholder="Welche Sorte hast du gewählt?"
                   value={value} 
                   onIonChange={e => onChange(e.detail.value)} 
                 />
@@ -166,8 +174,9 @@ const Bewerten = () => {
             <div className="row">
               <div className="col">
                 <IonLabel position='stacked' htmlFor="name1_type_fruit_ice">Fruchteis</IonLabel>
-                <Controller 
+                <Controller
                   control={control}
+                  defaultValue={false}
                   render={({ field: { onChange, value } }) => (
                       <IonToggle onIonChange={e => onChange(e.detail.checked)} checked={value} />
                     )}
@@ -179,6 +188,7 @@ const Bewerten = () => {
                 <IonLabel position='stacked' htmlFor="name1_type_cream_ice">Milch- oder Cremeeis</IonLabel>
                 <Controller 
                   control={control}
+                  defaultValue={false}
                   render={({ field: { onChange, value } }) => (
                       <IonToggle onIonChange={e => onChange(e.detail.checked)} checked={value} />
                     )}
@@ -196,17 +206,17 @@ const Bewerten = () => {
                 control={control}
                 render={( { field: { onChange, value } }) => (
                   <>
-                    <IonButton color="primary" fill="clear" onClick={() => setShowColorPicker(prev => ({ ...prev, field1: !prev.field1}))}>
+                    <IonButton color="primary" fill="clear" onClick={() => setColorPicker1(prev => ({ ...prev, field1: !prev.field1 }))}>
                       <IonIcon icon={colorPaletteOutline} />
                       <div className="ms-1" style={{width: "20px", height: "20px", borderRadius: "100%", backgroundColor: value}}></div>
                     </IonButton>
-                    {showColorPicker.field1 && (
+                    {colorPicker1.field1 && (
                       <div className="colorPicker ion-padding">
                         <CirclePicker
                           colors={colorArr}
                           circleSpacing={25}
                           circleSize={25} 
-                          onChangeComplete={e => { onChange(e.hex); setShowColorPicker({field1: false, field2: false}) }}
+                          onChangeComplete={e => { onChange(e.hex); name1Ref.current.scrollIntoView(); setColorPicker1(prev => ({ ...prev, field1: !prev.field1 })) }}
                         />
                       </div>
                     )}
@@ -219,22 +229,22 @@ const Bewerten = () => {
           {showError("ice-color", errors)}
 
           <IonItem lines="full">
-            <IonLabel className="mb-1" position='stacked' htmlFor="name1color2">Farbe 2</IonLabel>
+            <IonLabel ref={name2Ref} className="mb-1" position='stacked' htmlFor="name1color2">Farbe 2</IonLabel>
             <Controller
                 control={control}
                 render={( { field: { onChange, value } }) => (
                   <>
-                    <IonButton className="mb-3" color="primary" fill="clear" onClick={() => setShowColorPicker(prev => ({ ...prev, field2: !prev.field2}))}>
+                    <IonButton className="mb-3" color="primary" fill="clear" onClick={() => setColorPicker1(prev => ({ field1: false, field2: !prev.field2 }))}>
                       <IonIcon icon={colorPaletteOutline} />
                       <div className="ms-1" style={{width: "20px", height: "20px", borderRadius: "100%", backgroundColor: value}}></div>
                     </IonButton>
-                    {showColorPicker.field2 && (
+                    {colorPicker1.field2 && (
                       <div className="colorPicker ion-padding">
                         <CirclePicker
                           colors={colorArr}
                           circleSpacing={25}
                           circleSize={25} 
-                          onChangeComplete={e => { onChange(e.hex); setShowColorPicker({field1: false, field2: false}) }}
+                          onChangeComplete={e => { onChange(e.hex); name1Ref.current.scrollIntoView(); setColorPicker1(prev => ({  field1: false, field2: !prev.field2 })) }}
                           />
                       </div>
                     )}
@@ -255,7 +265,7 @@ const Bewerten = () => {
                 <IonInput 
                   type="text" 
                   inputmode="text"
-                  placeholder="Welche Kugel hast du gegessen?"
+                  placeholder="Welche Sorte hast du gewählt?"
                   value={value} 
                   onIonChange={e => onChange(e.detail.value)} 
                 />
@@ -272,6 +282,7 @@ const Bewerten = () => {
                 <IonLabel position='stacked' htmlFor="name2_type_fruit_ice">Fruchteis</IonLabel>
                 <Controller 
                   control={control}
+                  defaultValue={false}
                   render={({ field: { onChange, value } }) => (
                       <IonToggle onIonChange={e => onChange(e.detail.checked)} checked={value} />
                     )}
@@ -283,6 +294,7 @@ const Bewerten = () => {
                 <IonLabel position='stacked' htmlFor="name2_type_cream_ice">Milch- oder Cremeeis</IonLabel>
                 <Controller 
                   control={control}
+                  defaultValue={false}
                   render={({ field: { onChange, value } }) => (
                       <IonToggle onIonChange={e => onChange(e.detail.checked)} checked={value} />
                     )}
@@ -300,17 +312,17 @@ const Bewerten = () => {
                 control={control}
                 render={( { field: { onChange, value } }) => (
                   <>
-                    <IonButton color="primary" fill="clear" onClick={() => setShowColorPicker(prev => ({ ...prev, field1: !prev.field1}))}>
+                    <IonButton color="primary" fill="clear" onClick={() => setColorPicker2(prev => ({ field1: !prev.field1, field2: false }))}>
                       <IonIcon icon={colorPaletteOutline} />
                       <div className="ms-1" style={{width: "20px", height: "20px", borderRadius: "100%", backgroundColor: value}}></div>
                     </IonButton>
-                    {showColorPicker.field1 && (
+                    {colorPicker2.field1 && (
                       <div className="colorPicker ion-padding">
                         <CirclePicker
                           colors={colorArr}
                           circleSpacing={25}
                           circleSize={25} 
-                          onChangeComplete={e => { onChange(e.hex); setShowColorPicker({field1: false, field2: false}) }}
+                          onChangeComplete={e => { onChange(e.hex); name2Ref.current.scrollIntoView(); setColorPicker2(prev => ({ field1: !prev.field1, field2: false })) }}
                         />
                       </div>
                     )}
@@ -328,17 +340,17 @@ const Bewerten = () => {
                 control={control}
                 render={( { field: { onChange, value } }) => (
                   <>
-                    <IonButton className="mb-3" color="primary" fill="clear" onClick={() => setShowColorPicker(prev => ({ ...prev, field2: !prev.field2}))}>
+                    <IonButton className="mb-3" color="primary" fill="clear" onClick={() => setColorPicker2(prev => ({ ...prev, field2: !prev.field2 }))}>
                       <IonIcon icon={colorPaletteOutline} />
                       <div className="ms-1" style={{width: "20px", height: "20px", borderRadius: "100%", backgroundColor: value}}></div>
                     </IonButton>
-                    {showColorPicker.field2 && (
+                    {colorPicker2.field2 && (
                       <div className="colorPicker ion-padding">
                         <CirclePicker
                           colors={colorArr}
                           circleSpacing={25}
                           circleSize={25} 
-                          onChangeComplete={e => { onChange(e.hex); setShowColorPicker({field1: false, field2: false}) }}
+                          onChangeComplete={e => { onChange(e.hex); name2Ref.current.scrollIntoView(); setColorPicker2(prev => ({ ...prev, field2: !prev.field2 })) }}
                           />
                       </div>
                     )}
