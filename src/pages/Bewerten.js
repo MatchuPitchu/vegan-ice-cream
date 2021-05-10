@@ -243,7 +243,7 @@ const Bewerten = () => {
           {showError("type_cream_ice", errors)}
 
           <IonItem lines="none">
-            <IonLabel className="mb-1" position='stacked' htmlFor="name1color1">Eisfarbe 1</IonLabel>
+            <IonLabel className="mb-1" position='stacked' htmlFor="name1color1">Farbmischung deiner Eiskugel</IonLabel>
             <Controller
                 control={control}
                 render={( { field: { onChange, value } }) => (
@@ -271,7 +271,7 @@ const Bewerten = () => {
           {showError("ice-color", errors)}
 
           <IonItem lines="full">
-            <IonLabel ref={name2Ref} className="mb-1" position='stacked' htmlFor="name1color2">Eisfarbe 2</IonLabel>
+            <IonLabel ref={name2Ref} className="mb-1" position='stacked' htmlFor="name1color2"></IonLabel>
             <Controller
                 control={control}
                 render={( { field: { onChange, value } }) => (
@@ -345,7 +345,7 @@ const Bewerten = () => {
           {showError("type_cream_ice", errors)}
 
           <IonItem lines="none">
-            <IonLabel className="mb-1" position='stacked' htmlFor="name2color1">Eisfarbe 1</IonLabel>
+            <IonLabel className="mb-1" position='stacked' htmlFor="name2color1">Farbmischung deiner Eiskugel</IonLabel>
             <Controller
                 control={control}
                 render={( { field: { onChange, value } }) => (
@@ -372,7 +372,7 @@ const Bewerten = () => {
           {showError("ice-color", errors)}
 
           <IonItem lines="full">
-            <IonLabel className="mb-1" position='stacked' htmlFor="name2color2">Eisfarbe 2</IonLabel>
+            <IonLabel className="mb-1" position='stacked' htmlFor="name2color2"></IonLabel>
             <Controller
                 control={control}
                 render={( { field: { onChange, value } }) => (
