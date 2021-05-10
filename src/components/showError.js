@@ -18,10 +18,12 @@ const showError = (_fieldName, errors) => {
           {_fieldName === 'number' && 'Hast du eine korrekte Hausnummer eingetragen?'}
           {_fieldName === 'zipcode' && 'Überprüfe die Eingabe der Postleitzahl.'}
           {_fieldName === 'country' && 'Überprüfe die Eingabe des Landes.'}
+          {_fieldName === 'type_cream_ice' && 'Trage mindestens 1 Eissorte ein.'}
+          {_fieldName === 'ice-color' && 'Trage mindestens 1 Farbe ein.'}
           {_fieldName === 'text' && 'Was möchtest du über den Eisladen teilen?'}
           {_fieldName === 'rating_quality' && 'Die Sterne fehlen noch.'}
           {_fieldName === 'rating_vegan_offer' && 'Die Sterne fehlen noch.'}
-          
+          {_fieldName === 'date' && 'Mit dem Datum stimmt etwas nicht.'}
         </div>
       )
     );

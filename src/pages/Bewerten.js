@@ -11,6 +11,7 @@ import Search from '../components/Search';
 const Bewerten = () => {
   const { 
     toggle,
+    loading, setLoading,
     error, setError,
     user,
     locations, setLocations,
@@ -19,15 +20,13 @@ const Bewerten = () => {
     setShowNewLocModal
   } = useContext(Context);
   
-  const [newComment, setNewComment] = useState();
-  const [colorPicker1, setColorPicker1] = useState({field1: false, field2: false})
-  const [colorPicker2, setColorPicker2] = useState({field1: false, field2: false})
+  const [colorPicker1, setColorPicker1] = useState({field1: false, field2: false});
+  const [colorPicker2, setColorPicker2] = useState({field1: false, field2: false});
   const name1Ref = useRef(null);
   const name2Ref = useRef(null);
 
   const colorArr = [
-    "TRANSPARENT",
-    "#b71c1c", "#d32f2f", "#f44336", "#e57373", "#ffcdd2",
+    "TRANSPARENT", "#b71c1c", "#f44336", "#e57373", "#ffcdd2",
     "#880e4f", "#c2185b", "#e91e63", "#f06292", "#f8bbd0",
     "#4a148c", "#7b1fa2", "#9c27b0", "#ba68c8", "#e1bee7",
     "#0d47a1", "#1976d2", "#2196f3", "#64b5f6", "#bbdefb",
@@ -39,71 +38,116 @@ const Bewerten = () => {
     "#3e2723", "#5d4037", "#795548", "#a1887f", "#d7ccc8",
     "#000000", "#231509", "#4d2119", "#693e18", "#ffffff",
   ]
-
-  const defaultValues = { 
-    flavors_referred: '',
-    text: '',
-    rating_quality: null,
-    rating_vegan_offer: null,
-    date: ''
-  }
   
   // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
-  const { control, handleSubmit, watch, reset, formState: { errors } } = useForm({defaultValues});
+  const { control, handleSubmit, watch, reset, formState: { errors } } = useForm({});
 
-  console.log('Watch:', watch()); 
-  console.log('Errors:', errors);
+  // console.log('Watch:', watch()); 
+  // console.log('Errors:', errors);
 
-  const onSubmit = (data) => {
-    console.log('Output', data.date.toISOString)
-    // const duplicate = locations.find(loc => loc.address.geo.lat === newLocation.address.geo.lat)
-    // console.log(duplicate)
-    // if(duplicate) {
-    //   setError('Diese Adresse gibt es schon.');
-    //   return setNewLocation(null)
-    // }
-    
-    // const body = {
-    //   user_id: user._id,
-    //   flavors_referred: [], 
-    //   text: data.text, 
-    //   rating_quality: data.rating_quality, 
-    //   rating_vegan_offer: data.rating_vegan_offer, 
-    //   date: data.date
-    // };
+  const createFlavor = async (data, commentID) => {
+    console.log(commentID)
+    setLoading(true);
+    const token = localStorage.getItem('token');
+    try {
+      if(data.name1) {
+        const body = {
+          name: data.name1,
+          type_fruit_ice: data.name1_type_fruit_ice,
+          type_cream_ice: data.name1_type_cream_ice,
+          ice_color: {
+            color_primary: data.name1color1,
+            color_secondary: data.name1color2
+          },
+        };
+        const options = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            token
+          },
+          body: JSON.stringify(body),
+          credentials: "include",
+        };
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors/${commentID}`, options);
+        const newFlavor1 = await res.json();
+        console.log("Flavor 1", newFlavor1)
+        if (!newFlavor1) {
+          setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
+          return () => setTimeout(setError(null), 5000);
+        }
+      }
 
-    // const options = {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(body),
-    //   credentials: "include",
-    // };
-    // try {
-    //   const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${selected.loc._id}`, options);
-    //   const newLocation = await res.json();
-    //   if (!newLocation) {
-    //     setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
-    //     return () => setTimeout(setError(null), 5000);
-    //   }
-    //   setLocations([...locations, newLocation])
-    //   reset(defaultValues);
-    // } catch (error) {
-    //   setError(error)
-    //   setTimeout(() => setError(null), 5000);
-    // };
-    // setShowNewLocModal(false);
-    // setNewLocation(null)
+      if(data.name2) {
+        const body = {
+          name: data.name2,
+          type_fruit_ice: data.name2_type_fruit_ice,
+          type_cream_ice: data.name2_type_cream_ice,
+          ice_color: {
+            color_primary: data.name2color1,
+            color_secondary: data.name2color2 ? data.name2color2 : null,
+          },
+        };
+        const options = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            token
+          },
+          body: JSON.stringify(body),
+          credentials: "include",
+        };
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors/${commentID}`, options);
+        const newFlavor2 = await res.json();
+        if (!newFlavor2) {
+          setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
+          return () => setTimeout(setError(null), 5000);
+        }
+      }
+      // reset();
+    } catch (error) {
+      setError(error)
+      setTimeout(() => setError(null), 5000);
+    };
   };
 
-
-  const [selectedColor, setSelectedColor] = useState();
-
-  // console.log('newComment state:', newComment);
-  console.log('Picker 1', colorPicker1)
-  console.log('Picker 2', colorPicker2)
-
+  const onSubmit = async (data) => {
+    console.log('Form data', data)
+    console.log('UserId', user._id)
+    setLoading(true);
+    const token = localStorage.getItem('token');
+    try {
+      const body = {
+        user_id: user._id,
+        text: data.text, 
+        rating_quality: data.rating_quality, 
+        rating_vegan_offer: data.rating_vegan_offer, 
+        date: data.date ? data.date : null,
+      };
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token
+        },
+        body: JSON.stringify(body),
+        credentials: "include",
+      };
+      // EINFÜGEN SPÄTER ${selected.loc._id}
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/60867e1920fc8b983cbc9327`, options);
+      const newComment = await res.json();
+      if (!newComment) {
+        setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
+        return () => setTimeout(setError(null), 5000);
+      }
+      createFlavor(data, newComment._id);
+      // reset();
+    } catch (error) {
+      setError(error)
+      setTimeout(() => setError(null), 5000);
+    };
+    setLoading(false)
+  };
 
   return (
     <IonPage>
@@ -152,7 +196,7 @@ const Bewerten = () => {
         {/* "handleSubmit" will validate your inputs before invoking "onSubmit" */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <IonItem lines="none">
-            <IonLabel ref={name1Ref} position='stacked' htmlFor="name1">1. Eissort</IonLabel>
+            <IonLabel ref={name1Ref} position='stacked' htmlFor="name1">1. Eissorte</IonLabel>
             <Controller 
               control={control}
               render={({ field: { onChange, value } }) => (
@@ -181,7 +225,6 @@ const Bewerten = () => {
                       <IonToggle onIonChange={e => onChange(e.detail.checked)} checked={value} />
                     )}
                   name="name1_type_fruit_ice"
-                  rules={{ required: true }}
                 />
               </div>
               <div className="col">
@@ -193,7 +236,6 @@ const Bewerten = () => {
                       <IonToggle onIonChange={e => onChange(e.detail.checked)} checked={value} />
                     )}
                   name="name1_type_cream_ice"
-                  rules={{ required: true }}
                 />
               </div>
             </div>
@@ -201,7 +243,7 @@ const Bewerten = () => {
           {showError("type_cream_ice", errors)}
 
           <IonItem lines="none">
-            <IonLabel className="mb-1" position='stacked' htmlFor="name1color1">Farbe 1</IonLabel>
+            <IonLabel className="mb-1" position='stacked' htmlFor="name1color1">Eisfarbe 1</IonLabel>
             <Controller
                 control={control}
                 render={( { field: { onChange, value } }) => (
@@ -229,7 +271,7 @@ const Bewerten = () => {
           {showError("ice-color", errors)}
 
           <IonItem lines="full">
-            <IonLabel ref={name2Ref} className="mb-1" position='stacked' htmlFor="name1color2">Farbe 2</IonLabel>
+            <IonLabel ref={name2Ref} className="mb-1" position='stacked' htmlFor="name1color2">Eisfarbe 2</IonLabel>
             <Controller
                 control={control}
                 render={( { field: { onChange, value } }) => (
@@ -251,7 +293,6 @@ const Bewerten = () => {
                   </>
                 )}
                 name="name1color2"
-                rules={{ required: true }}
                 />
           </IonItem>
           {showError("ice-color", errors)}
@@ -271,7 +312,6 @@ const Bewerten = () => {
                 />
                 )}
                 name="name2"
-                rules={{ required: true }}
                 />
           </IonItem>
           {showError("name", errors)}
@@ -287,7 +327,6 @@ const Bewerten = () => {
                       <IonToggle onIonChange={e => onChange(e.detail.checked)} checked={value} />
                     )}
                   name="name2_type_fruit_ice"
-                  rules={{ required: true }}
                 />
               </div>
               <div className="col">
@@ -299,7 +338,6 @@ const Bewerten = () => {
                       <IonToggle onIonChange={e => onChange(e.detail.checked)} checked={value} />
                     )}
                   name="name2_type_cream_ice"
-                  rules={{ required: true }}
                 />
               </div>
             </div>
@@ -307,7 +345,7 @@ const Bewerten = () => {
           {showError("type_cream_ice", errors)}
 
           <IonItem lines="none">
-            <IonLabel className="mb-1" position='stacked' htmlFor="name2color1">Farbe 1</IonLabel>
+            <IonLabel className="mb-1" position='stacked' htmlFor="name2color1">Eisfarbe 1</IonLabel>
             <Controller
                 control={control}
                 render={( { field: { onChange, value } }) => (
@@ -329,13 +367,12 @@ const Bewerten = () => {
                   </>
                 )}
                 name="name2color1"
-                rules={{ required: true }}
               />
           </IonItem>
           {showError("ice-color", errors)}
 
           <IonItem lines="full">
-            <IonLabel className="mb-1" position='stacked' htmlFor="name2color2">Farbe 2</IonLabel>
+            <IonLabel className="mb-1" position='stacked' htmlFor="name2color2">Eisfarbe 2</IonLabel>
             <Controller
                 control={control}
                 render={( { field: { onChange, value } }) => (
@@ -357,7 +394,6 @@ const Bewerten = () => {
                   </>
                 )}
                 name="name2color2"
-                rules={{ required: true }}
                 />
           </IonItem>
           {showError("ice-color", errors)}
@@ -447,7 +483,6 @@ const Bewerten = () => {
                 />
               )}
               name="date"
-              rules={{ required: false }}
             />
           </IonItem>
           {showError("date", errors)}
