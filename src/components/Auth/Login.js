@@ -25,12 +25,17 @@ const Login = () => {
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, options);
       const { success, user, token } = await res.json();
-      console.log(user);
+      console.log("login:", user);
       if (success) {
-        console.log(success);
-        setIsAuth(true);
-        setUser({user});
+        const options = {
+          headers: { token },
+          credentials: "include"
+        }; 
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/infos`, options);
+        const data = await res.json();
         localStorage.setItem('token', token);
+        setUser({ ...user, ...data});
+        setIsAuth(true);
       } else {
         setError('Prüfe, ob du das richtige Passwort eingetragen hast')
         setTimeout(() => setError(null), 5000);
@@ -40,9 +45,7 @@ const Login = () => {
     }
   };
 
-  console.log(user);
-
-  if (isAuth) return <Redirect to="/home" />;
+  if (isAuth) return <Redirect exact to="/home" />;
 
   return (
     <IonPage>
@@ -84,7 +87,10 @@ const Login = () => {
               </IonItem>
               {showError("password", errors)}
               {error && <div className='alertMsg'>{error}</div>}
-            <IonButton className="my-3" type="submit" expand="block"><IonIcon className="pe-1"icon={logIn}/>Login</IonButton>
+              
+              <IonButton href='/home' className="my-3 confirm-btn" type="submit" expand="block">
+                <IonIcon className="pe-1"icon={logIn}/>Login
+              </IonButton>
           </form>
           <p>Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
         </div>

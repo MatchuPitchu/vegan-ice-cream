@@ -27,7 +27,7 @@ const Entdecken = () => {
     all, setAll, 
     mapStyles, 
     enterAnimation, leaveAnimation, 
-    showMapModal, setShowMapModal, 
+    showMapModal, setShowMapModal,
     showNewLocModal, setShowNewLocModal,
     bookmark, setBookmark,
     alertUpdateFav, setAlertUpdateFav,

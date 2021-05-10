@@ -1,15 +1,9 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Context } from "../../context/Context";
-import { IonContent, IonPage, IonHeader, IonTitle } from "@ionic/react";
+import { IonContent, IonPage, IonHeader } from "@ionic/react";
 
 const Login = () => {
-  const { setIsAuth, setUser, toggle } = useContext(Context);
-  
-  useEffect(() => {
-    localStorage.removeItem('token');
-    setIsAuth(false);
-    setUser({});
-  }, [])
+  const { toggle } = useContext(Context);
 
   return (
     <IonPage>

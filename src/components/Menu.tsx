@@ -6,27 +6,37 @@ import {
   IonItem, 
   IonLabel, 
   IonList, 
-  IonListHeader, 
+  IonListHeader, IonRouterOutlet,
   IonMenuToggle, 
   IonModal, 
   IonPage, 
   IonToolbar,
   isPlatform 
 } from '@ionic/react';
+import {Redirect} from 'react-router-dom'
 import { create, informationCircle, logIn, logOut, pencil, personCircle } from 'ionicons/icons';
 import Toggle from './Toggle';
 import Feedback from './Feedback';
 import About from './About';
+import Profil from './Profil';
 
 const Menu: React.FC = () => {
   const { 
     isAuth, setIsAuth, 
-    error, setError, 
+    error, setError,
+    setUser,
     toggle, 
     enterAnimationLft, leaveAnimationLft, 
+    showProfil, setShowProfil,
     showFeedback, setShowFeedback, 
     showAbout, setShowAbout
   } = useContext(Context);
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    setIsAuth(false);
+    setUser({});
+  }
 
   return (
     <IonPage>
@@ -43,25 +53,30 @@ const Menu: React.FC = () => {
               <img className="headerGraphic" src={`${toggle ? "./assets/header-graphic-ice-dark.svg" : "./assets/header-graphic-ice-light.svg"}`} />
             </IonListHeader>
             <IonMenuToggle autoHide={false}>
-              <IonItem className="labelMenu"  disabled={isAuth ? true : false} routerLink='/login' routerDirection="forward" lines="none" detail={false} >
+              <IonItem className="labelMenu"  disabled={isAuth ? true : false} routerLink='/login' lines="none" detail={false} >
                 <IonLabel>Login</IonLabel>
                 <IonIcon slot="end" icon={logIn} />
               </IonItem>
             </IonMenuToggle>
             <IonMenuToggle autoHide={false}>
-            <IonItem className="labelMenu" disabled={isAuth ? true : false} routerLink='/register' routerDirection="forward" lines="none" detail={false}>
-                <IonLabel>Registrieren</IonLabel>
-                <IonIcon slot="end" icon={create} />
-              </IonItem>
+            <IonItem className="labelMenu" disabled={isAuth ? true : false} routerLink='/register' lines="none" detail={false}>
+              <IonLabel>Registrieren</IonLabel>
+              <IonIcon slot="end" icon={create} />
+            </IonItem>
             </IonMenuToggle>
             {isAuth && (
             <IonMenuToggle autoHide={false}>
-              <IonItem className="labelMenu" routerLink='/profil' routerDirection="forward" lines="full" detail={false}>
+              <IonItem className="labelMenu" button onClick={() => { setShowProfil(true)}} lines="full" detail={false}>
                 <IonLabel>Profil</IonLabel>
                 <IonIcon slot="end" icon={personCircle} />
               </IonItem>
             </IonMenuToggle>
             )}
+            {showProfil && (
+              <IonModal cssClass={`${isPlatform('desktop') ? 'menuModalDesktop' : 'menuModal'}`} isOpen={showProfil} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowProfil(false)} enterAnimation={enterAnimationLft} leaveAnimation={leaveAnimationLft}>
+                <Profil />
+              </IonModal>
+            )}      
             <IonItem className="labelMenu" button onClick={() => { setShowFeedback(true)}} lines="none" detail={false} >
               <IonLabel>Feedback</IonLabel>
               <IonIcon slot="end" icon={pencil} />
@@ -82,7 +97,7 @@ const Menu: React.FC = () => {
             )}      
             {isAuth && (
               <IonMenuToggle autoHide={false}>
-              <IonItem className="labelMenu mt-3 pe-2" routerLink='/logout' routerDirection="forward" lines="none" detail={false}>
+              <IonItem button onClick={logout} className="labelMenu mt-3 pe-2" routerLink='/logout' lines="none" detail={false}>
                 <IonIcon slot="start" icon={logOut} />
                 <IonLabel>Logout</IonLabel>
               </IonItem>

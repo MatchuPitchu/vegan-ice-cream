@@ -59,6 +59,10 @@ ion-badge {
   border: 1px solid var(--ion-background-color);
 }
 
+.confirm-btn {
+  height: 30px;
+}
+
 /************ Header general ************/
 ion-toolbar .sc-ion-searchbar-ios-h {
   padding: 3px 0;
@@ -571,8 +575,8 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   min-height: 30px;
 }
 
-/*********** Tab Eintragen ************/
-.my-custom-class .popover-content {
-  padding: 10px;
-  font-size: 0.8rem;
+/*********** Tab Bewerten ************/
+
+.colorPicker {
+  margin: 0 auto;
 }

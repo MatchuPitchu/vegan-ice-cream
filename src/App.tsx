@@ -4,27 +4,20 @@ import { Redirect, Route } from 'react-router-dom';
 import { IonReactRouter } from '@ionic/react-router';
 import {
   IonApp,
-  IonHeader,
   IonIcon,
   IonLabel,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
   IonTabs,
-  IonToolbar,
-  IonSearchbar,
-  IonMenu,
-  IonPage,
-  IonButtons,
-  IonButton,
   IonContent,
   IonBadge
 } from '@ionic/react';
-import { bookmarks, disc, home, iceCream, storefront } from 'ionicons/icons';
+import { bookmarks, disc, home, iceCream } from 'ionicons/icons';
 import HeaderApp from './components/HeaderApp';
 import Home from './pages/Home';
-import Entdecken from './pages/Entdecken.js';
-import Eintragen from './pages/Eintragen';
+import Entdecken from './pages/Entdecken';
+import Bewerten from './pages/Bewerten';
 import Favoriten from './pages/Favoriten';
 import Profil from './pages/Profil';
 import Login from './components/Auth/Login';
@@ -58,20 +51,21 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
+        
         <HeaderApp />
       
         <IonContent>
           <IonTabs>
             <IonRouterOutlet>
-              <Redirect from="/" to="/home" exact={true} />
-              <Route path="/home" component={Home} exact={true} />
-              <Route path="/entdecken" component={Entdecken} exact={true} />
+            {/*   <Redirect from="/" to="/home" exact={true} /> */}
+              <Route path="/home" component={Home} exact />
+              <Route path="/entdecken" component={Entdecken} exact />
               {/* <Route path="/eintragen" component={Eintragen} exact={true} /> */}
-              <Route path="/favoriten" component={Favoriten} exact={true} />
-              <Route path="/profil" component={Profil} exact={true} />
-              <Route path="/login" component={Login} exact={true} />
-              <Route path="/register" component={Register} exact={true} />
-              <Route path="/logout" component={Logout} exact={true} />
+              <Route path="/bewerten" component={Bewerten} exact />
+              <Route path="/favoriten" component={Favoriten} exact />
+              <Route path="/login" component={Login} exact />
+              <Route path="/register" component={Register} exact />
+              <Route path="/logout" component={Logout} exact/>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
               <IonTabButton tab="home" href="/home">

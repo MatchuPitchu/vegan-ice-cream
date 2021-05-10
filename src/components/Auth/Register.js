@@ -37,8 +37,8 @@ const Register = () => {
     }
   };
 
-  // REDIRECT TO PROFIL PAGE
-  if (isAuth) return <Redirect to="/profil" />;
+  // // REDIRECT TO PROFIL PAGE
+  // if (isAuth) return <Redirect to="/profil" />;
 
   return (
     <IonPage>
@@ -126,8 +126,12 @@ const Register = () => {
               </IonItem>
               {showError("repeatPassword", errors)}
               {error && <div className='alertMsg'>{error}</div>}       
-            <IonButton className="my-3" type="submit" expand="block"><IonIcon className="pe-1"icon={logIn}/>Registrieren</IonButton>
+            
+              <IonButton href='/profil' className="my-3 confirm-btn" type="submit" expand="block">
+                <IonIcon className="pe-1"icon={logIn}/>Registrieren
+              </IonButton>        
           </form>
+
           <p>Nach der Registrierung kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
           <p className="mt-5">
             <IonList>

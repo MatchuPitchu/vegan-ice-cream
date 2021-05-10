@@ -20,6 +20,7 @@ const AppState = ({children}) => {
   const [error, setError] = useState('');
   const [toggle, setToggle] = useState(true);
   const [mapStyles, setMapStyles] = useState(mapDark);
+  const [showProfil, setShowProfil] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
@@ -236,6 +237,7 @@ const AppState = ({children}) => {
         mapStyles,
         enterAnimationBtm, leaveAnimationBtm,
         enterAnimationLft, leaveAnimationLft,
+        showProfil, setShowProfil,
         showFeedback, setShowFeedback,
         showAbout, setShowAbout,
         showMapModal, setShowMapModal,

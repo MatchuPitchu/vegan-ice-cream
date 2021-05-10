@@ -2,16 +2,21 @@ import { useContext } from "react";
 import { Context } from "../context/Context";
 // https://www.npmjs.com/package/react-rating-stars-component
 import ReactStars from "react-rating-stars-component";
-import { IonContent, IonPage, IonHeader, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonIcon, IonLabel, IonItem } from "@ionic/react";
-import { idCard, mail, star } from "ionicons/icons";
+import { IonButton, IonContent, IonPage, IonHeader, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonIcon, IonLabel, IonItem } from "@ionic/react";
+import { closeCircleOutline, idCard, mail, star } from "ionicons/icons";
 import Spinner from '../components/Spinner';
 
-const Login = () => {
-  const { isAuth, user, locations, toggle } = useContext(Context);
+const Profil = () => {
+  const { isAuth, toggle, user, setShowProfil, locations } = useContext(Context);
 
   return isAuth && user ? (
     <IonPage>
       <IonHeader>
+        <IonItem lines="none">
+          <IonButton slot="end" fill="clear" onClick={() => setShowProfil(false)}>
+            <IonIcon icon={closeCircleOutline}/>
+          </IonButton>
+        </IonItem>
         <img className="headerMap" src={`${toggle ? "./assets/map-header-graphic-ice-dark.svg" : "./assets/map-header-graphic-ice-light.svg"}`} />
       </IonHeader>
       <IonContent>
@@ -83,4 +88,4 @@ const Login = () => {
   ) : <Spinner />;
 };
 
-export default Login;
+export default Profil
