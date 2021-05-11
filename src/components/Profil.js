@@ -13,7 +13,7 @@ const Profil = () => {
   return isAuth && user && locations ? (
     <IonPage>
       <IonHeader>
-        <IonItem lines="none">
+        <IonItem color="secondary" lines="none">
           <IonButton slot="end" fill="clear" onClick={() => setShowProfil(false)}>
             <IonIcon icon={closeCircleOutline}/>
           </IonButton>

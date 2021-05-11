@@ -154,16 +154,16 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-shade: #acacac;
   --ion-color-light-tint: #cacaca;
 
-  --ion-background-color: #fffbf2;
+  --ion-background-color: #fce6b3;
   --ion-background-color-rgb: 255, 255, 255;
 
   --ion-text-color: #4a4a4a;
   --ion-text-color-rgb: 35, 48, 51;
 
-  --ion-item-background: #f7eacc;
-  --ion-card-background: #fffaec;
+  --ion-item-background: #fdf7e7;
+  --ion-card-background: #fff4d5;
   --ion-toolbar-background: #fce6b3;
-  --ion-tab-bar-background: #ffffff;
+  --ion-tab-bar-background: #fce6b3;
 
   /* font family */
   --ion-font-family: "Lato", -apple-system, BlinkMacSystemFont, Roboto,

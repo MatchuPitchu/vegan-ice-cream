@@ -497,7 +497,7 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 
 .zoomIcons {
   color: var(--ion-text-color);
-  background-color: var(--ion-background-color);
+  background-color: var(--ion-item-background);
   margin-bottom: 0;
   height: 35px;
 }

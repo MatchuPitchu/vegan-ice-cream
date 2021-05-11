@@ -29,7 +29,7 @@ const ListMap = () => {
           </IonItem>
           
           <IonCardContent>
-            <IonCardSubtitle color='light'>Bewertung der Community</IonCardSubtitle>
+            <IonCardSubtitle color='primary'>Bewertung der Community</IonCardSubtitle>
             {loc.location_rating_quality ? (
               <>
                 <div className="d-flex align-items-center">
@@ -61,9 +61,7 @@ const ListMap = () => {
               </>
             ) : (
               <p>Noch keine Bewertungen vorhanden</p>
-            )}
-            <p className="p-weak">Location ID: {loc._id}</p>
-                
+            )}  
           </IonCardContent>
         </IonCard>
       ))}
