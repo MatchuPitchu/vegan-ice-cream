@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState, useCallback, useRef } from "react";
+import { useContext, useState, useCallback, useRef } from "react";
 import { Context } from '../context/Context';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Controller, useForm } from 'react-hook-form';
-import { IonItem, IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonList, IonLoading, IonModal, IonPage, IonSearchbar, IonSegment, IonSegmentButton, IonToast, IonToggle, IonToolbar, IonAvatar, IonAlert, IonBadge } from '@ionic/react';
+import { IonItem, IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonList, IonModal, IonPage, IonSearchbar, IonSegment, IonSegmentButton, IonToggle, IonToolbar, IonAlert, IonBadge } from '@ionic/react';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { add, addCircleOutline, bookmarks, bookmarksOutline, closeCircleOutline, listCircle, location as myPos, map as mapIcon, refreshCircle, removeCircleOutline } from "ionicons/icons";
 import NewLocationForm from "../components/NewLocationForm";
@@ -21,7 +21,6 @@ const Entdecken = () => {
     error, setError,
     user, 
     locations,
-    searchText, setSearchText,
     map, setMap,
     selected, setSelected,
     position, setPosition,
@@ -31,7 +30,6 @@ const Entdecken = () => {
     enterAnimation, leaveAnimation, 
     showMapModal, setShowMapModal,
     showNewLocModal, setShowNewLocModal,
-    bookmark, setBookmark,
     alertUpdateFav, setAlertUpdateFav,
     addFavLoc,
     removeFavLoc

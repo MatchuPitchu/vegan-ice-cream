@@ -19,7 +19,6 @@ import Home from './pages/Home';
 import Entdecken from './pages/Entdecken';
 import Bewerten from './pages/Bewerten';
 import Favoriten from './pages/Favoriten';
-import Profil from './pages/Profil';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import Logout from './components/Auth/Logout';

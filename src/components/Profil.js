@@ -2,18 +2,21 @@ import { useContext, useState } from "react";
 import { Context } from "../context/Context";
 // https://www.npmjs.com/package/react-rating-stars-component
 import ReactStars from "react-rating-stars-component";
-import { IonButton, IonContent, IonPage, IonHeader, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonIcon, IonLabel, IonItem, IonItemGroup } from "@ionic/react";
-import { caretDownCircle, caretForwardCircle, closeCircleOutline, idCard, mail, star } from "ionicons/icons";
+import { IonButton, IonContent, IonPage, IonHeader, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonIcon, IonLabel, IonItem, IonItemGroup, IonPopover } from "@ionic/react";
+import { add, caretDownCircle, caretForwardCircle, closeCircleOutline, iceCream, idCard, informationCircle, mail, star } from "ionicons/icons";
 import Spinner from '../components/Spinner';
 
 const Profil = () => {
   const { isAuth, toggle, user, setShowProfil, locations } = useContext(Context);
   const [showComments, setShowComments] = useState(false);
+  const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
+
+  console.log(user.favorite_flavors)
 
   return isAuth && user && locations ? (
     <IonPage>
       <IonHeader>
-        <IonItem color="secondary" lines="none">
+        <IonItem color="tab-bar-background" lines="none">
           <IonButton slot="end" fill="clear" onClick={() => setShowProfil(false)}>
             <IonIcon icon={closeCircleOutline}/>
           </IonButton>
@@ -43,16 +46,16 @@ const Profil = () => {
            </IonCardContent>
 
             <IonItemGroup>
-              <IonItem lines="none">
+              <IonItem lines="full">
                 <IonIcon 
                   slot="start"
-                  color="primary" 
+                  color={`${showComments ? "tertiary" : "primary"}`} 
                   icon={showComments ? caretDownCircle : caretForwardCircle} 
                   button onClick={() => {
                     setShowComments(prev => !prev);
                   }}
                 />
-                <IonLabel>Deine Bewertungen</IonLabel>
+                <IonLabel>Meine Bewertungen</IonLabel>
               </IonItem>
 
               {showComments && user.comments_list && user.comments_list.map((comment, i) => {
@@ -93,6 +96,53 @@ const Profil = () => {
                 </IonItem>
                 )}
               )}
+
+              <IonItem lines="none">
+                <IonIcon 
+                  slot="start"
+                  color="primary"
+                  icon={iceCream}
+                />
+                <IonLabel>Mein Lieblingseis</IonLabel>
+                <div>
+                  <IonIcon
+                    className="infoIcon"
+                    color="primary"
+                    button 
+                    onClick={e => {
+                      e.persist();
+                      setPopoverShow({ show: true, event: e })
+                    }}
+                    icon={informationCircle} 
+                  />
+
+                </div>
+                <IonPopover
+                  color="primary"
+                  cssClass='my-custom-class'
+                  event={popoverShow.event}
+                  isOpen={popoverShow.show}
+                  onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
+                >
+                  <p>Diese Sorten hast du bei deinen Bewertungen angegeben</p>
+                </IonPopover>
+              </IonItem>
+              
+              {user.favorite_flavors.map(ice => {
+                return (
+                  <div key={ice._id} style={{backgroundColor: 'var(--ion-background-color)'}}>
+                    <IonCardHeader>{ice.name}</IonCardHeader>
+                    <div className="iceContainer">
+                      <div className="icecream" style={{background: `linear-gradient(to bottom, ${ice.ice_color.color_primary}, ${ice.ice_color.color_secondary} )`}}></div>
+                      <div className="icecreamBottom" style={{background: ice.ice_color.color_primary}}></div>
+                      <div className="cone"></div>
+                    </div>
+                  </div>
+                )}
+              )}
+             
+
+
             </IonItemGroup>
           </IonCard>
         </div>

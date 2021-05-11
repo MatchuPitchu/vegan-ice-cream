@@ -93,14 +93,43 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   width: 400px;
 }
 
-/* Feedback Form */
+/************ Feedback Form ************/
 .alertMsg {
   color: var(--ion-color-danger);
   padding-bottom: 10px;
   font-size: 0.7rem;
 }
 
-/* Toggler Day and Night */
+/************ Profil Page ************/
+
+/* Ice cream cone */
+.iceContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 130px;
+  width: 100%;
+}
+
+.icecream {
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  position: relative;
+  box-shadow: 10px 5px 20px #4a4a4a;
+  opacity: 0.7;
+}
+
+.cone {
+  margin-top: -20px;
+  border-right: 29px solid transparent;
+  border-left: 29px solid transparent;
+  border-top: 70px solid tan;
+  z-index: 1;
+}
+
+/************ Toggler Day and Night ************/
 .toggle {
   height: 30px;
   width: 60px;
@@ -231,8 +260,9 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 }
 
 .my-custom-class .popover-content {
-  background: #222;
+  background: var(--ion-background-color);
   padding: 10px;
+  width: 150px;
 }
 
 /*********** Tab Home ************/
