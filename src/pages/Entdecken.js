@@ -38,7 +38,7 @@ const Entdecken = () => {
   } = useContext(Context);
   const [libraries] = useState(['places']);
   const [center, setCenter] = useState({ lat:  52.524, lng: 13.410 });
-  const [zoom, setZoom] = useState(11);
+  const [zoom, setZoom] = useState(12);
 
   const [segment, setSegment] = useState('map');
   const [autocomplete, setAutocomplete] = useState(null);
