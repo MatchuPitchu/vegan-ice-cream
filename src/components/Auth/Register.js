@@ -37,9 +37,6 @@ const Register = () => {
     }
   };
 
-  // // REDIRECT TO PROFIL PAGE
-  // if (isAuth) return <Redirect to="/profil" />;
-
   return (
     <IonPage>
       <IonHeader>

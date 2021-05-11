@@ -420,6 +420,10 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   transform: rotate(30deg);
 }
 
+.start-btn-wrapper {
+  height: 140px;
+}
+
 .start-btn-container {
   display: flex;
   justify-content: center;
@@ -484,8 +488,8 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   background-origin: border-box;
   background-clip: content-box, border-box;
   background-image: linear-gradient(
-      var(--ion-background-color),
-      var(--ion-background-color)
+      var(--ion-item-background),
+      var(--ion-item-background)
     ),
     linear-gradient(
       to top,

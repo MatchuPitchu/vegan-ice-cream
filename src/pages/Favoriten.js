@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Context } from "../context/Context";
 // https://www.npmjs.com/package/react-rating-stars-component
 import ReactStars from "react-rating-stars-component";
@@ -20,7 +20,7 @@ const Favoriten = () => {
   return isAuth && user ? (
     <IonPage>
       <IonHeader>
-        <img className="headerMap" src={`${toggle ? "./assets/map-header-graphic-ice-dark.svg" : "./assets/map-header-graphic-ice-light.svg"}`} />
+        <img className="headerMap" src={`${toggle ? "./assets/header-favoriten-dark.svg" : "./assets/header-favoriten-light.svg"}`} />
       </IonHeader>
       <IonContent>
         <div className="container-sm mt-3">

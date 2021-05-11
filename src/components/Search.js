@@ -15,8 +15,6 @@ const Search = () => {
   const [ predictions, setPredictions ] = useState([]);
   const [ popoverShow, setPopoverShow ] = useState({ show: false, event: undefined });
 
-  console.log(locations);
-
   const onSubmit = () => {
     setLoading(true)
     const res = locations.filter(loc => loc.name.toLowerCase().includes(searchText.toLowerCase()) || loc.address.city.toLowerCase().includes(searchText.toLowerCase()) );

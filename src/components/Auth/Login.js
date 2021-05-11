@@ -11,8 +11,6 @@ const Login = () => {
   const { control, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async data => {
-    console.log(data)
-
     try {
       const options = {
         method: "POST",
@@ -25,7 +23,6 @@ const Login = () => {
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, options);
       const { success, user, token } = await res.json();
-      console.log("login:", user);
       if (success) {
         const options = {
           headers: { token },

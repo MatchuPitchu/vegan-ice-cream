@@ -11,8 +11,6 @@ const Profil = () => {
   const [showComments, setShowComments] = useState(false);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
 
-  console.log(user.favorite_flavors)
-
   return isAuth && user && locations ? (
     <IonPage>
       <IonHeader>
