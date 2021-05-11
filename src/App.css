@@ -580,6 +580,10 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   margin: 0 auto;
 }
 
+.colorPicker > div {
+  width: 100% !important;
+}
+
 .colorPicker > div > span > div {
   border-radius: 90%;
   box-shadow: 2px 2px 4px #000000;

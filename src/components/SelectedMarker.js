@@ -45,7 +45,7 @@ const SelectedMarker = () => {
             <IonLabel color="text-color">
               {selected.address.street} {selected.address.number}, {selected.address.zipcode} {selected.address.city}
               <br/>
-              <a href={selected.location_url}>Webseite</a>
+              <a href={selected.location_url} target="_blank">Webseite</a>
             </IonLabel>
           </IonItem>
           <IonItem className="modalItem" lines="full">

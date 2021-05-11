@@ -63,7 +63,16 @@ const Search = () => {
       {predictions ? (
         <IonList>
           {predictions.map(loc => (
-            <IonItem className="autocompleteListItem" key={loc._id} button onClick={() => setSelected(loc)} lines="full">
+            <IonItem 
+              className="autocompleteListItem" 
+              key={loc._id} 
+              button 
+              onClick={() => { 
+                setSelected(loc); 
+                setPredictions([]) 
+              }} 
+              lines="full"
+            >
               <IonLabel color="secondary" className="ion-text-wrap">{loc.name} <span className="p-weak">, {loc.address.street} {loc.address.number} in {loc.address.city}</span></IonLabel>
             </IonItem>
           ))}

@@ -127,7 +127,7 @@ const Register = () => {
               {showError("repeatPassword", errors)}
               {error && <div className='alertMsg'>{error}</div>}       
             
-              <IonButton href='/profil' className="my-3 confirm-btn" type="submit" expand="block">
+              <IonButton routerLink='/profil' className="my-3 confirm-btn" type="submit" expand="block">
                 <IonIcon className="pe-1"icon={logIn}/>Registrieren
               </IonButton>        
           </form>

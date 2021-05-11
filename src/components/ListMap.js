@@ -24,7 +24,7 @@ const ListMap = () => {
               {loc.name}
               <p>{loc.address.street} {loc.address.number}</p>
               <p className="mb-2">{loc.address.zipcode} {loc.address.city}</p>
-              <p><a href={loc.location_url}>Webseite</a></p>
+              <p><a href={loc.location_url} target="_blank">Webseite</a></p>
             </IonLabel>
           </IonItem>
           

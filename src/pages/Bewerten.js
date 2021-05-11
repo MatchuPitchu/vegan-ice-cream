@@ -120,7 +120,7 @@ const Bewerten = () => {
         text: data.text, 
         rating_quality: data.rating_quality, 
         rating_vegan_offer: data.rating_vegan_offer, 
-        date: data.date ? data.date : null,
+        date: data.date ? data.date : undefined,
       };
       const options = {
         method: "POST",
@@ -131,7 +131,7 @@ const Bewerten = () => {
         body: JSON.stringify(body),
         credentials: "include",
       };
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${selected.loc._id}`, options);
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${selected._id}`, options);
       const newComment = await res.json();
       if (!newComment) {
         setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
@@ -164,7 +164,7 @@ const Bewerten = () => {
               type="text"
               inputmode="text"
               placeholder="Nutze die obere Suche"
-              value={selected ? selected.name : null}  
+              value={selected ? selected.name : ''}  
               onIonChange={() => {}} 
             />
           </IonItem>
@@ -230,7 +230,7 @@ const Bewerten = () => {
                       <div className="colorPicker ion-padding">
                         <CirclePicker
                           colors={colorArr}
-                          circleSpacing={25}
+                          circleSpacing={15}
                           circleSize={25} 
                           onChangeComplete={e => { onChange(e.hex); name1Ref.current.scrollIntoView(); setColorPicker1(prev => ({ ...prev, field1: !prev.field1 })) }}
                         />
@@ -258,8 +258,8 @@ const Bewerten = () => {
                       <div className="colorPicker ion-padding">
                         <CirclePicker
                           colors={colorArr}
-                          circleSpacing={25}
-                          circleSize={25} 
+                          circleSpacing={15}
+                          circleSize={25}
                           onChangeComplete={e => { onChange(e.hex); name1Ref.current.scrollIntoView(); setColorPicker1(prev => ({  field1: false, field2: !prev.field2 })) }}
                           />
                       </div>
@@ -332,8 +332,8 @@ const Bewerten = () => {
                       <div className="colorPicker ion-padding">
                         <CirclePicker
                           colors={colorArr}
-                          circleSpacing={25}
-                          circleSize={25} 
+                          circleSpacing={15}
+                          circleSize={25}
                           onChangeComplete={e => { onChange(e.hex); name2Ref.current.scrollIntoView(); setColorPicker2(prev => ({ field1: !prev.field1, field2: false })) }}
                         />
                       </div>
@@ -359,8 +359,8 @@ const Bewerten = () => {
                       <div className="colorPicker ion-padding">
                         <CirclePicker
                           colors={colorArr}
-                          circleSpacing={25}
-                          circleSize={25} 
+                          circleSpacing={15}
+                          circleSize={25}
                           onChangeComplete={e => { onChange(e.hex); name2Ref.current.scrollIntoView(); setColorPicker2(prev => ({ ...prev, field2: !prev.field2 })) }}
                           />
                       </div>

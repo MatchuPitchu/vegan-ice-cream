@@ -88,7 +88,7 @@ const Login = () => {
               {showError("password", errors)}
               {error && <div className='alertMsg'>{error}</div>}
               
-              <IonButton href='/home' className="my-3 confirm-btn" type="submit" expand="block">
+              <IonButton routerLink='/home' className="my-3 confirm-btn" type="submit" expand="block">
                 <IonIcon className="pe-1"icon={logIn}/>Login
               </IonButton>
           </form>
