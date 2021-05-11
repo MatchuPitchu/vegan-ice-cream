@@ -24,7 +24,7 @@ const Favoriten = () => {
       </IonHeader>
       <IonContent>
         <div className="container-sm mt-3">
-          {user && user.favorite_locations.map((loc) => (
+          {user.favorite_locations && user.favorite_locations.map((loc) => (
           <IonCard key={loc._id} >
             <IonItem lines="full">
               <IonLabel >

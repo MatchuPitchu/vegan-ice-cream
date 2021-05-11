@@ -461,7 +461,9 @@ const Bewerten = () => {
           </IonItem>
           {showError("date", errors)}
 
-          <IonButton className="my-3" type="submit" expand="block"><IonIcon className="pe-1"icon={add}/>Bewertung abgeben</IonButton>
+          <IonButton fill="solid" className="check-btn my-3" type="submit">
+            <IonIcon className="pe-1" icon={add}/>Bewertung abgeben
+          </IonButton>
         </form>
 
         <LoadingError />

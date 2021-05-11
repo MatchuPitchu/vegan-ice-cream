@@ -91,18 +91,12 @@ http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
 :root {
-  --ion-background-color: #ffffff;
-  --ion-background-color-rgb: 35, 48, 51;
-
-  --ion-text-color: #233033;
-  --ion-text-color-rgb: 255, 255, 255;
-
-  --ion-color-primary: #de9c01;
-  --ion-color-primary-rgb: 249, 206, 100;
+  --ion-color-primary: #e1a61a;
+  --ion-color-primary-rgb: 225, 166, 26;
   --ion-color-primary-contrast: #000000;
   --ion-color-primary-contrast-rgb: 0, 0, 0;
-  --ion-color-primary-shade: #dbb558;
-  --ion-color-primary-tint: #fad374;
+  --ion-color-primary-shade: #c69217;
+  --ion-color-primary-tint: #e4af31;
 
   --ion-color-secondary: #fce3ab;
   --ion-color-secondary-rgb: 252, 227, 171;
@@ -160,11 +154,16 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-shade: #acacac;
   --ion-color-light-tint: #cacaca;
 
-  --ion-background-color: #ffffff;
+  --ion-background-color: #fffbf2;
   --ion-background-color-rgb: 255, 255, 255;
 
-  --ion-text-color: #233033;
+  --ion-text-color: #4a4a4a;
   --ion-text-color-rgb: 35, 48, 51;
+
+  --ion-item-background: #f7eacc;
+  --ion-card-background: #fffaec;
+  --ion-toolbar-background: #fce6b3;
+  --ion-tab-bar-background: #ffffff;
 
   /* font family */
   --ion-font-family: "Lato", -apple-system, BlinkMacSystemFont, Roboto,
@@ -173,12 +172,6 @@ http://ionicframework.com/docs/theming/ */
 
 /* Dark Mode Colors */
 body[color-theme="dark"] {
-  /* --ion-background-color: #233033;
-  --ion-background-color-rgb: 35, 48, 51;
-
-  --ion-text-color: #ffffff;
-  --ion-text-color-rgb: 255, 255, 255; */
-
   --ion-color-primary: #f9ce64;
   --ion-color-primary-rgb: 249, 206, 100;
   --ion-color-primary-contrast: #000000;
@@ -276,7 +269,9 @@ body[color-theme="dark"] {
   --ion-color-step-950: #eec662;
 
   --ion-item-background: #2e3a3d;
-  --ion-card-background: #384038;
+  --ion-card-background: #2e3835;
+  --ion-toolbar-background: #233033;
+  --ion-tab-bar-background: #233033;
 }
 
 .ios ion-modal {
@@ -293,7 +288,7 @@ body[color-theme="dark"] {
   --ion-text-color: #ffffff;
   --ion-text-color-rgb: 255, 255, 255;
 
-  --ion-border-color: #384038;
+  --ion-border-color: #59583f;
 
   --ion-color-step-50: #2e3835;
   --ion-color-step-100: #384038;
@@ -316,7 +311,7 @@ body[color-theme="dark"] {
   --ion-color-step-950: #eec662;
 
   --ion-item-background: #2e3a3d;
-  --ion-card-background: #384038;
-  --ion-toolbar-background: #384038;
-  --ion-tab-bar-background: #384038;
+  --ion-card-background: #2e3835;
+  --ion-toolbar-background: #233033;
+  --ion-tab-bar-background: #233033;
 }

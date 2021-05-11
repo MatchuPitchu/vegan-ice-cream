@@ -44,7 +44,7 @@ const Entdecken = () => {
   const [autocomplete, setAutocomplete] = useState(null);
   const [predict, setPredict] = useState([]);
   
-  const { control, handleSubmit, reset, watch, formState: { errors } } = useForm({defaultValues});
+  const { control, handleSubmit, reset, formState: { errors } } = useForm({defaultValues});
   const contentRef = useRef(null);
   const markerRef = useRef(null);
 
@@ -57,8 +57,6 @@ const Entdecken = () => {
       setError('Deine Position kann nicht ermittelt werden. Kontrolliere deine Einstellungen:', error)
     }
   };
-
-  console.log('Watch', watch())
 
   const onSubmit = (data) => {
     setLoading(true);
@@ -362,7 +360,6 @@ const Entdecken = () => {
                 name="address"
                 rules={{ required: true }}
               />
-            </IonItem>
               {predict ? (
                 <IonList>
                   {predict.map((item, i) => (
@@ -372,9 +369,10 @@ const Entdecken = () => {
                   ))}
                 </IonList>
               ) : null}
-              <IonButton fill="solid" expand="full" className="check-btn my-2" type="submit">
+              <IonButton fill="solid" className="check-btn my-3" type="submit">
                 <IonIcon icon={add} />Check: Erscheint ein grünes Icon? Klicke darauf
               </IonButton>
+            </IonItem>
           </form>
 
         </IonContent>

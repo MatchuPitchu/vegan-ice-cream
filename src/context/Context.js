@@ -18,8 +18,8 @@ const AppState = ({children}) => {
   const [newLocation, setNewLocation] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [toggle, setToggle] = useState(true);
-  const [mapStyles, setMapStyles] = useState(mapDark);
+  const [toggle, setToggle] = useState(null);
+  const [mapStyles, setMapStyles] = useState(null);
   const [showProfil, setShowProfil] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
@@ -35,6 +35,7 @@ const AppState = ({children}) => {
   useEffect(() => {
     setLoading(true);
     const token = localStorage.getItem('token');
+
     // First check if token is valid, then fetch all user infos and set to state
     try {
       const verifySession = async () => {
@@ -92,6 +93,23 @@ const AppState = ({children}) => {
     }
     if(!all) fetchLoc();
   }, [locPage])
+
+  const initTheme = () => {
+    var darkSelected = (localStorage.getItem('themeSwitch') !== null && localStorage.getItem('themeSwitch') === 'dark');
+    if(darkSelected) {
+      document.body.setAttribute('color-theme', 'dark') 
+      setMapStyles(mapDark);
+      setToggle(true);
+    } else {
+      document.body.setAttribute('color-theme', 'light');
+      setMapStyles(mapLight);
+      setToggle(false);
+    } 
+  };
+
+  useEffect(() => {
+    initTheme()
+  }, [])
 
   const loadMore = (e) => {
     setLocPage(prev => prev + 1);
@@ -153,14 +171,16 @@ const AppState = ({children}) => {
     setLoading(false);
   };
 
-  const handleToggleDN = (e) => {
+  const handleToggleDN = () => {
     setToggle((prev) => !prev);
     if(!toggle) {
       document.body.setAttribute('color-theme', 'dark');
       setMapStyles(mapDark);
+      localStorage.setItem('themeSwitch', 'dark');
     } else {
       document.body.setAttribute('color-theme', 'light');
       setMapStyles(mapLight);
+      localStorage.removeItem('themeSwitch');
     }
   };
 

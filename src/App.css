@@ -56,7 +56,7 @@ a:hover {
 ion-badge {
   margin: -2px;
   padding: 3px;
-  border: 1px solid var(--ion-background-color);
+  border: 1px solid var(--ion-text-color);
 }
 
 .confirm-btn {
@@ -221,11 +221,11 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 .searchbar {
   --background: var(--ion-background-color);
   --border-radius: 5px;
-  --placeholder-color: var(--ion-color-light-shade);
+  --placeholder-color: var(--ion-color-medium-shade);
 }
 
 .infoIcon:hover {
-  border: 1px solid var(--ion-color-secondary);
+  border: 1px solid var(--ion-color-primary);
   border-radius: 90%;
   background-color: var(--ion-background-color);
 }
@@ -579,11 +579,10 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 }
 
 .check-btn {
-  --background: var(--ion-color-primary);
-  color: var(--ion-item-background);
   font-size: 0.7rem;
   text-transform: none;
   min-height: 30px;
+  align-self: center;
 }
 
 /*********** Tab Bewerten ************/
