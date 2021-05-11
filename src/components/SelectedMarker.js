@@ -50,7 +50,7 @@ const SelectedMarker = () => {
           </IonItem>
           <IonItem className="modalItem" lines="full">
             <IonLabel color='primary'>Bewertung schreiben</IonLabel>
-            <IonButton fill="clear" onClick={() => { }}>
+            <IonButton fill="clear" routerLink="/bewerten" routerDirection="forward">
               <IonIcon icon={add}/>
             </IonButton>
           </IonItem>

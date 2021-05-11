@@ -115,6 +115,7 @@ const Feedback = () => {
                 fieldState: { invalid, isTouched, isDirty, error },
               }) => (
                 <IonSelect
+                  cancelText="Abbrechen"
                   placeholder="Auswahl"
                   value={value}
                   onIonChange={e => onChange(e.detail.value)}
@@ -123,7 +124,7 @@ const Feedback = () => {
                   <IonSelectOption value="2">gut</IonSelectOption>
                   <IonSelectOption value="3">ganz ok</IonSelectOption>
                   <IonSelectOption value="4">verbesserungswürdig</IonSelectOption>
-                  <IonSelectOption value="5">absolut nicht hilfreich</IonSelectOption>
+                  <IonSelectOption value="5">nicht hilfreich</IonSelectOption>
                 </IonSelect>
               )}
               name="rating"
@@ -139,6 +140,7 @@ const Feedback = () => {
                 fieldState: { invalid, isTouched, isDirty, error },
               }) => (
                 <IonSelect
+                  cancelText="Abbrechen"
                   placeholder="Auswahl"
                   value={value}
                   onIonChange={e => onChange(e.detail.value)}

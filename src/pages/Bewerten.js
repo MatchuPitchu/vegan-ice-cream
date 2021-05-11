@@ -244,7 +244,7 @@ const Bewerten = () => {
           </IonItem>
           {showError("ice-color", errors)}
 
-          <IonItem lines="full">
+          <IonItem lines="none" className="mb-1">
             <IonLabel ref={name2Ref} className="mb-1" position='stacked' htmlFor="name1color2"></IonLabel>
             <Controller
                 control={control}
@@ -345,7 +345,7 @@ const Bewerten = () => {
           </IonItem>
           {showError("ice-color", errors)}
 
-          <IonItem lines="full">
+          <IonItem lines="none" className="mb-1">
             <IonLabel className="mb-1" position='stacked' htmlFor="name2color2"></IonLabel>
             <Controller
                 control={control}
@@ -373,7 +373,7 @@ const Bewerten = () => {
           {showError("ice-color", errors)}
 
 
-          <IonItem lines="full">
+          <IonItem lines="none" className="mb-1">
             <IonLabel position='floating' htmlFor="text">Kommentar</IonLabel>
             <Controller
                 control={control}
@@ -413,7 +413,7 @@ const Bewerten = () => {
           </IonItem>
           {showError("rating_quality", errors)}
     
-          <IonItem lines="full">
+          <IonItem lines="none" className="mb-1">
             <IonLabel position='stacked' htmlFor="rating_vegan_offer">Veganes Angebot des Eisladens</IonLabel>
             <Controller
               control={control}
@@ -447,13 +447,13 @@ const Bewerten = () => {
               }) => (
                 <IonDatetime
                   min="2021"
-                  max="2022"
+                  max="2023"
                   monthNames='Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember'
                   displayFormat="D. MMMM YYYY"
                   value={value} 
                   onIonChange={e => onChange(e.detail.value)}
                   cancelText='Zurück'
-                  doneText='Speichern'
+                  doneText='OK'
                 />
               )}
               name="date"
