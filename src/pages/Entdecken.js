@@ -37,6 +37,7 @@ const Entdecken = () => {
   } = useContext(Context);
   const [libraries] = useState(['places']);
   const [center, setCenter] = useState({ lat:  52.524, lng: 13.410 });
+  const [zoom, setZoom] = useState(11);
 
   const [segment, setSegment] = useState('map');
   const [autocomplete, setAutocomplete] = useState(null);
@@ -50,6 +51,7 @@ const Entdecken = () => {
     try {
       const position = await Geolocation.getCurrentPosition();
       setPosition({lat: position.coords.latitude, lng: position.coords.longitude});
+      setCenter({lat: position.coords.latitude, lng: position.coords.longitude})
     } catch (error) {
       setError('Deine Position kann nicht ermittelt werden. Kontrolliere deine Einstellungen:', error)
     }
@@ -117,17 +119,8 @@ const Entdecken = () => {
     contentRef.current && contentRef.current.scrollToBottom(500);
   };
 
-  // Debounce Autocomplete functions
-  const debounce = (func, timeout = 2000) => {
-    let timer;
-    return (...args) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => { func.apply(this, args)}, timeout);
-    };
-  }
-  
-  const forAutocompleteChange = debounce((value) => {
-    if(value) {
+  const forAutocompleteChange = (value => {
+    if(value.length > 4) {
       autocomplete.getPlacePredictions({
         input: value,
         componentRestrictions: { country: 'de' },
@@ -177,7 +170,7 @@ const Entdecken = () => {
     };
     // Add custom center control https://developers.google.com/maps/documentation/javascript/examples/control-custom
     const controlDiv = document.querySelector(".center-control");
-    controlDiv.addEventListener('click', () => map.setCenter(center));
+    controlDiv.addEventListener('click', () => { map.setCenter(center); map.setZoom(11)});
     
     map.controls[window.google.maps.ControlPosition.TOP].push(
       document.querySelector(".control")
@@ -237,7 +230,7 @@ const Entdecken = () => {
 
           <GoogleMap 
             mapContainerClassName="mapContainer" 
-            zoom={11} 
+            zoom={zoom} 
             center={center}
             options={options}
             onLoad={onMapLoad}

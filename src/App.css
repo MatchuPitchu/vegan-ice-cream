@@ -217,18 +217,30 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   transform: translate(-2px, 0);
 }
 
+/*********** Searchbar ************/
+.searchbar {
+  --background: var(--ion-background-color);
+  --border-radius: 5px;
+  --placeholder-color: var(--ion-color-light-shade);
+}
+
+.infoIcon:hover {
+  border: 1px solid var(--ion-color-secondary);
+  border-radius: 90%;
+  background-color: var(--ion-background-color);
+}
+
+.my-custom-class .popover-content {
+  background: #222;
+  padding: 10px;
+}
+
 /*********** Tab Home ************/
 .home {
   --background: none;
   background-image: url(./images/Ice\ Cream\ pablo-merchan-montes-MXovqM130UI-unsplash.jpg);
   background-size: cover;
   background-position: top;
-}
-
-.searchbar {
-  --background: var(--ion-background-color);
-  --border-radius: 5px;
-  --placeholder-color: var(--ion-color-light-shade);
 }
 
 /* Run animation and overlay effect */

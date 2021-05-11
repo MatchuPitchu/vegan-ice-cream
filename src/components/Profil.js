@@ -1,15 +1,16 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Context } from "../context/Context";
 // https://www.npmjs.com/package/react-rating-stars-component
 import ReactStars from "react-rating-stars-component";
-import { IonButton, IonContent, IonPage, IonHeader, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonIcon, IonLabel, IonItem } from "@ionic/react";
-import { closeCircleOutline, idCard, mail, star } from "ionicons/icons";
+import { IonButton, IonContent, IonPage, IonHeader, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonIcon, IonLabel, IonItem, IonItemGroup } from "@ionic/react";
+import { caretDownCircle, caretForwardCircle, closeCircleOutline, idCard, mail, star } from "ionicons/icons";
 import Spinner from '../components/Spinner';
 
 const Profil = () => {
   const { isAuth, toggle, user, setShowProfil, locations } = useContext(Context);
+  const [showComments, setShowComments] = useState(false);
 
-  return isAuth && user ? (
+  return isAuth && user && locations ? (
     <IonPage>
       <IonHeader>
         <IonItem lines="none">
@@ -40,16 +41,26 @@ const Profil = () => {
             <IonCardContent>
               {user._id}
            </IonCardContent>
-            <IonItem lines="none">
-              <IonIcon icon={star} slot="start" />
-              <IonLabel>Deine Bewertungen</IonLabel>
-            </IonItem>
-            <IonCardContent>
-              {user.comments_list && user.comments_list.map((comment, i) => {
+
+            <IonItemGroup>
+              <IonItem lines="none">
+                <IonIcon 
+                  slot="start"
+                  color="primary" 
+                  icon={showComments ? caretDownCircle : caretForwardCircle} 
+                  button onClick={() => {
+                    setShowComments(prev => !prev);
+                  }}
+                />
+                <IonLabel>Deine Bewertungen</IonLabel>
+              </IonItem>
+
+              {showComments && user.comments_list && user.comments_list.map((comment, i) => {
                 return (
-                  <div key={comment._id}>
-                    <IonCardSubtitle color='primary' >{i+1}. {locations.find(loc => loc._id === comment.location_id).name}</IonCardSubtitle>
-                    <p>{comment.text}</p>
+                <IonItem key={comment._id} lines="full">
+                  <IonLabel className="ion-text-wrap ms-1">
+                    {i+1}. {comment.location_id.name}
+                    <p className="my-1">{comment.text}</p>
                     <div className="d-flex align-items-center">
                       <div className="me-2">Eis-Qualität</div>
                       <div>
@@ -76,11 +87,13 @@ const Profil = () => {
                         />
                       </div>
                     </div>
-                    <p className="p-weak mb-3">{comment.date.replace('T', ' // ').slice(0, 19)}</p>
-                  </div>
-                )
-              })}
-           </IonCardContent>
+                    <p className="p-weak mt-1">Datum: {comment.date.replace('T', ' // ').slice(0, 19)}</p>
+                  </IonLabel>
+
+                </IonItem>
+                )}
+              )}
+            </IonItemGroup>
           </IonCard>
         </div>
       </IonContent>

@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { Context } from '../context/Context';
-import { IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonSearchbar, IonToolbar } from '@ionic/react';
+import { IonButton, IonIcon, IonItem, IonLabel, IonList, IonPopover, IonSearchbar } from '@ionic/react';
+import { add, informationCircle } from 'ionicons/icons';
 
 const Search = () => {
   const { 
@@ -12,6 +13,7 @@ const Search = () => {
     searchText, setSearchText,
   } = useContext(Context);
   const [ predictions, setPredictions ] = useState([]);
+  const [ popoverShow, setPopoverShow ] = useState({ show: false, event: undefined });
 
   console.log(locations);
 
@@ -23,25 +25,16 @@ const Search = () => {
     setLoading(false)
   }
 
-    // Debounce Autocomplete functions
-    const debounce = (func, timeout = 1000) => {
-      let timer;
-      return (...args) => {
-        clearTimeout(timer);
-        timer = setTimeout(() => { func.apply(this, args)}, timeout);
-      };
+  const forAutocompleteChange = (value) => {
+    if(value.length >= 2 && locations) {
+      const res = locations.filter(loc => loc.name.toLowerCase().includes(value.toLowerCase()) || loc.address.city.toLowerCase().includes(value.toLowerCase()) );
+      const result = res.slice(0, 10);
+      setPredictions(result);
     }
-    
-    const forAutocompleteChange = debounce(value => {
-      if(value.length >= 3 && locations) {
-        const res = locations.filter(loc => loc.name.toLowerCase().includes(value.toLowerCase()) || loc.address.city.toLowerCase().includes(value.toLowerCase()) );
-        const result = res.slice(0, 10);
-        setPredictions(result);
-      }
-      if(!value) {
-        setPredictions([])
-      }
-    });
+    if(!value) {
+      setPredictions([])
+    }
+  };
 
   return (
     <form className="container" onSubmit={onSubmit}>
@@ -59,6 +52,32 @@ const Search = () => {
             forAutocompleteChange(e.detail.value)
           }}
         />
+        <div>
+          <IonIcon
+            className="infoIcon"
+            color="primary"
+            button 
+            onClick={e => {
+              e.persist();
+              setPopoverShow({ show: true, event: e })
+            }}
+            icon={informationCircle} 
+          />
+
+        </div>
+        <IonPopover
+          color="primary"
+          cssClass='my-custom-class'
+          event={popoverShow.event}
+          isOpen={popoverShow.show}
+          onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
+        >
+          <p>Wirst du nicht fündig?</p>
+          <p>Dann trage den Eisladen zuerst auf der Karte ein</p>
+          <IonButton size="small" routerLink='/entdecken' onClick={() => setPopoverShow({ show: false, event: undefined })} className="my-3 confirm-btn" type="submit" expand="block">
+            <IonIcon className="pe-1"icon={add}/>
+          </IonButton>
+        </IonPopover>
       </IonItem>
       {predictions ? (
         <IonList>

@@ -177,7 +177,7 @@ const Bewerten = () => {
                 <IonInput 
                   type="text" 
                   inputmode="text"
-                  placeholder="Welche Sorte hast du gegessen?"
+                  placeholder="Was hast du probiert?"
                   value={value} 
                   onIonChange={e => onChange(e.detail.value)} 
                 />
@@ -280,7 +280,7 @@ const Bewerten = () => {
                 <IonInput 
                   type="text" 
                   inputmode="text"
-                  placeholder="Welche Sorte hast du gegessen?"
+                  placeholder="Was hast du probiert?"
                   value={value} 
                   onIonChange={e => onChange(e.detail.value)} 
                 />

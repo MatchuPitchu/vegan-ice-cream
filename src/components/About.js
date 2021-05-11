@@ -19,11 +19,11 @@ const About = () => {
             <IonCardTitle>Über die App</IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
-          <IonItem lines="none">
-            <IonIcon icon={helpCircle} slot="start" />
-            <IonLabel>... warum diese App?</IonLabel>
-          </IonItem>
-            <p className="mb-2">
+            <IonItem lines="none">
+              <IonIcon icon={helpCircle} slot="start" />
+              <IonLabel className="ion-text-wrap">... warum diese App?</IonLabel>
+            </IonItem>
+            <p className="my-2">
               Regelmäßige - und nicht nur im Sommer - begebe ich mich auf die Suche nach veganem Eis. 
               Egal an welchem Ort ich mich befinde. Ich liebe veganes Eis. Damit meine ich aber nicht 
               dieses von manchen Eisläden einfach als 'vegan' bezeichnete Sorbet-Wasser-Gemisch.
@@ -78,10 +78,10 @@ const About = () => {
           </IonCardHeader>
           <IonCardContent>
             <IonItem lines="none">
-            <IonIcon icon={bulb} slot="start" />
-            <IonLabel>... ein persönlicher Gedanke</IonLabel>
-          </IonItem>
-            <p className="mb-2">
+              <IonIcon icon={bulb} slot="start" />
+              <IonLabel className="ion-text-wrap">... ein persönlicher Gedanke</IonLabel>
+            </IonItem>
+            <p className="my-2">
               Seit vielen Jahren beschäftige ich mich mit Nachhaltigkeit und versuche, in meinem eigenen Leben kleine Schritte nach vorne zu gehen, 
               um meinen ökologischen Fußabdruck auf diesem Planeten möglichst klein zu halten.
             </p>
