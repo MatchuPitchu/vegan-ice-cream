@@ -173,11 +173,11 @@ http://ionicframework.com/docs/theming/ */
 
 /* Dark Mode Colors */
 body[color-theme="dark"] {
-  --ion-background-color: #233033;
+  /* --ion-background-color: #233033;
   --ion-background-color-rgb: 35, 48, 51;
 
   --ion-text-color: #ffffff;
-  --ion-text-color-rgb: 255, 255, 255;
+  --ion-text-color-rgb: 255, 255, 255; */
 
   --ion-color-primary: #f9ce64;
   --ion-color-primary-rgb: 249, 206, 100;
@@ -275,7 +275,7 @@ body[color-theme="dark"] {
   --ion-color-step-900: #e4be5f;
   --ion-color-step-950: #eec662;
 
-  --ion-item-background: #2e3835;
+  --ion-item-background: #2e3a3d;
   --ion-card-background: #384038;
 }
 
@@ -315,11 +315,8 @@ body[color-theme="dark"] {
   --ion-color-step-900: #e4be5f;
   --ion-color-step-950: #eec662;
 
-  --ion-item-background: #2e3835;
-
+  --ion-item-background: #2e3a3d;
+  --ion-card-background: #384038;
   --ion-toolbar-background: #384038;
-
   --ion-tab-bar-background: #384038;
-
-  --ion-card-background: #2e3835;
 }

@@ -1,4 +1,4 @@
-import { useContext, useState, useCallback, useRef } from "react";
+import { useContext, useEffect, useState, useCallback, useRef } from "react";
 import { Context } from '../context/Context';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Controller, useForm } from 'react-hook-form';
@@ -21,6 +21,7 @@ const Entdecken = () => {
     error, setError,
     user, 
     locations,
+    searchText, setSearchText,
     map, setMap,
     selected, setSelected,
     position, setPosition,
@@ -43,7 +44,7 @@ const Entdecken = () => {
   const [autocomplete, setAutocomplete] = useState(null);
   const [predict, setPredict] = useState([]);
   
-  const { control, handleSubmit, reset, formState: { errors } } = useForm({defaultValues});
+  const { control, handleSubmit, reset, watch, formState: { errors } } = useForm({defaultValues});
   const contentRef = useRef(null);
   const markerRef = useRef(null);
 
@@ -56,6 +57,8 @@ const Entdecken = () => {
       setError('Deine Position kann nicht ermittelt werden. Kontrolliere deine Einstellungen:', error)
     }
   };
+
+  console.log('Watch', watch())
 
   const onSubmit = (data) => {
     setLoading(true);
@@ -119,9 +122,9 @@ const Entdecken = () => {
     contentRef.current && contentRef.current.scrollToBottom(500);
   };
 
-  const forAutocompleteChange = (value => {
+  const forAutocompleteChange = async value => {
     if(value.length > 4) {
-      autocomplete.getPlacePredictions({
+      await autocomplete.getPlacePredictions({
         input: value,
         componentRestrictions: { country: 'de' },
         // types: ["establishment"]
@@ -131,7 +134,8 @@ const Entdecken = () => {
         setPredict(predictions);
       });
     }
-  });
+    if(!value) setPredict([])
+  };
 
   const options = {
     styles: mapStyles,

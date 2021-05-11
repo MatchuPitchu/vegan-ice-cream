@@ -83,8 +83,6 @@ const Favoriten = () => {
               ) : (
                 <p>Noch keine Bewertungen vorhanden</p>
               )}
-              <p className="p-weak">Location ID: {loc._id}</p>
-                  
             </IonCardContent>
           </IonCard>
           ))}
