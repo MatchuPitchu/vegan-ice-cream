@@ -36,8 +36,8 @@ const SelectedMarker = () => {
   return (
     <IonContent>
       {/* IonImg uses lazy loading */}
-      <IonImg className="modalImage" src='./assets/shapes.svg' />
-      <div style={toggle ? {backgroundColor: '#233033' } : {backgroundColor: '#fff'}}>
+      <IonImg className="modalImage" src='./assets/ice-cream-truck-vincent-creton-unsplash.jpg' />
+      <div style={toggle ? {backgroundColor: '#23303390' } : {backgroundColor: '#ffffff90'}}>
         <IonItemGroup>
           <IonItem className="modalItem" lines="full">
             <IonLabel color="text-color">
