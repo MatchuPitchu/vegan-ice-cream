@@ -27,7 +27,7 @@ const Home: React.FC = () => {
               <div className="run-text-final">eintragen</div>
             </div>
           </h1>
-          <div className="overlay">
+          <div className={`${toggle ? "overlay" : "overlay-light"}`}>
             <IonIcon className="startIceIcon" icon={iceCream} />
           </div>
           <IonButton className="start-btn-wrapper" routerLink="/entdecken" fill="clear">

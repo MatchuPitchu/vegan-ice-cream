@@ -32,7 +32,7 @@ ion-icon {
 
 .title {
   margin: 20px;
-  color: var(--ion-color-secondary-tint);
+  color: var(--ion-color-tertiary);
 }
 
 .p-weak {
@@ -268,9 +268,9 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 /*********** Tab Home ************/
 .home {
   --background: none;
-  background-image: url(./images/Ice\ Cream\ pablo-merchan-montes-MXovqM130UI-unsplash.jpg);
+  background-image: url(./images/ice-cream-yellow-light-wesual-click-unsplash.jpg);
   background-size: cover;
-  background-position: top;
+  background-position: center;
 }
 
 /* Run animation and overlay effect */
@@ -305,7 +305,7 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 }
 
 .run-text-wrapper .run-text-word:nth-child(2) {
-  color: var(--ion-color-primary);
+  color: var(--ion-color-tertiary);
   -webkit-animation-delay: 3s;
   animation-delay: 3s;
 }
@@ -314,6 +314,7 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   -webkit-animation-delay: 6s;
   animation-delay: 6s;
 }
+
 @-webkit-keyframes run {
   0% {
     opacity: 0;
@@ -384,7 +385,7 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 }
 
 .run-text-wrapper .run-text-final:nth-child(3) {
-  color: var(--ion-color-primary);
+  color: var(--ion-color-tertiary);
 }
 
 @keyframes show {
@@ -408,15 +409,27 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   justify-content: center;
   width: 100%;
   height: 130%;
-  opacity: 0.15;
-  background: #fff;
+  opacity: 0.55;
+  background: var(--ion-background-color);
+  z-index: -1;
+}
+
+.overlay-light {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 130%;
+  opacity: 0.75;
+  background: #233033;
+  z-index: -1;
 }
 
 .startIceIcon {
   align-self: center;
   font-size: 9rem;
   color: var(--ion-color-dark);
-  opacity: 1;
+  opacity: 0.6;
   transform: rotate(30deg);
 }
 
