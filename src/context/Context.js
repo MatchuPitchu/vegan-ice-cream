@@ -6,7 +6,7 @@ export const Context = createContext();
 
 const AppState = ({children}) => {
   const [isAuth, setIsAuth] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   const [locations, setLocations] = useState([]);
   const [locPage, setLocPage] = useState(1);
   const [all, setAll] = useState(false);

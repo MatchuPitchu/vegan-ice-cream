@@ -34,7 +34,7 @@ const Menu: React.FC = () => {
   const logout = () => {
     localStorage.removeItem('token');
     setIsAuth(false);
-    setUser({});
+    // setUser({});
   }
 
   return (

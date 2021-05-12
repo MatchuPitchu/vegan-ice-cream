@@ -224,9 +224,11 @@ const Entdecken = () => {
                 <IonLabel className="me-1">Alle anzeigen</IonLabel>
                 <IonToggle onIonChange={e => setAll(true)} checked={all} disabled={`${all ? 'true' : 'false'}`} />
               </IonButton>
-              <IonButton className="add-control" onClick={scrollDown} title="Neue Adresse hinzufügen">
-                <IonIcon icon={add} />
-              </IonButton>
+              { user ? ( 
+                <IonButton className="add-control" onClick={scrollDown} title="Neue Adresse hinzufügen">
+                  <IonIcon icon={add} />
+                </IonButton>
+              ) : null}
               <IonButton className="where-control" onClick={getLocation} title="Mein Standort">
                 <IonIcon icon={myPos} />
               </IonButton>
@@ -295,22 +297,22 @@ const Entdecken = () => {
               />
             ) : null}
 
-            {selected && user ? (
+            {selected ? (
               <div>
                 <IonModal cssClass='mapModal' isOpen={showMapModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowMapModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
                   <IonItem lines='full'>
-                    {user.favorite_locations.find(loc => loc._id === selected._id) ? (
+                    {user && user.favorite_locations.find(loc => loc._id === selected._id) ? (
                       <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: true, location: selected})}>
                         <IonIcon icon={bookmarks}/>
                         <IonBadge slot="end" color="danger">-</IonBadge>
                       </IonButton>
-                      ) : (
+                      ) : null}
+                    {user && user.favorite_locations.find(loc => loc._id === selected._id) ? (
                       <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, addStatus: true, location: selected})}>
                         <IonIcon icon={bookmarksOutline}/>
                         <IonBadge slot="end" color="success">+</IonBadge>  
                       </IonButton>
-                      )
-                    }
+                      ) : null}
                     <IonAlert
                       isOpen={alertUpdateFav.addStatus}
                       onDidDismiss={() => setAlertUpdateFav({...alertUpdateFav, addStatus: false })}
@@ -352,46 +354,48 @@ const Entdecken = () => {
 
           </GoogleMap>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <IonItem lines="none">
-              <IonLabel className="ion-text-wrap mb-2" position='stacked' htmlFor="address">Welchen Eisladen hast du entdeckt? Name und Stadt reichen zumeist. Sonst trage die korrekte Adresse ein.</IonLabel>
-              <Controller
-                control={control}
-                render={({ 
-                  field: { onChange, value }
-                }) => (
-                  <IonSearchbar
-                    type="search" 
-                    inputmode="text" 
-                    value={value} 
-                    autocomplete='street-address' 
-                    onIonChange={e => {
-                      onChange(e.detail.value);
-                      setTimeout(() => forAutocompleteChange(e.detail.value), 3000)
-                    }} 
-                    placeholder="Name, Adresse eintippen ..." 
-                    searchIcon={add} 
-                    showCancelButton="always"	
-                    cancel-button-text="" 
-                  />
-                )}
-                name="address"
-                rules={{ required: true }}
-              />
-              {predict ? (
-                <IonList>
-                  {predict.map((item, i) => (
-                    <IonItem className="autocompleteListItem" key={i} button onClick={() => onSubmit({'address': item.description}, console.log(item))} lines="full">
-                      <IonLabel className="ion-text-wrap">{item.description}</IonLabel>
-                    </IonItem>
-                  ))}
-                </IonList>
-              ) : null}
-              <IonButton fill="solid" className="check-btn my-3" type="submit">
-                <IonIcon icon={add} />Check: Erscheint ein grünes Icon? Klicke darauf
-              </IonButton>
-            </IonItem>
-          </form>
+          {user ? (
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <IonItem lines="none">
+                <IonLabel className="ion-text-wrap mb-2" position='stacked' htmlFor="address">Welchen Eisladen hast du entdeckt? Name und Stadt reichen zumeist. Sonst trage die korrekte Adresse ein.</IonLabel>
+                <Controller
+                  control={control}
+                  render={({ 
+                    field: { onChange, value }
+                  }) => (
+                    <IonSearchbar
+                      type="search" 
+                      inputmode="text" 
+                      value={value} 
+                      autocomplete='street-address' 
+                      onIonChange={e => {
+                        onChange(e.detail.value);
+                        setTimeout(() => forAutocompleteChange(e.detail.value), 3000)
+                      }} 
+                      placeholder="Name, Adresse eintippen ..." 
+                      searchIcon={add} 
+                      showCancelButton="always"	
+                      cancel-button-text="" 
+                    />
+                  )}
+                  name="address"
+                  rules={{ required: true }}
+                />
+                {predict ? (
+                  <IonList>
+                    {predict.map((item, i) => (
+                      <IonItem className="autocompleteListItem" key={i} button onClick={() => onSubmit({'address': item.description}, console.log(item))} lines="full">
+                        <IonLabel className="ion-text-wrap">{item.description}</IonLabel>
+                      </IonItem>
+                    ))}
+                  </IonList>
+                ) : null}
+                <IonButton fill="solid" className="check-btn my-3" type="submit">
+                  <IonIcon icon={add} />Check: Erscheint ein grünes Icon? Klicke darauf
+                </IonButton>
+              </IonItem>
+            </form>
+          ) : null}
 
         </IonContent>
       )}

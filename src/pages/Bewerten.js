@@ -8,9 +8,11 @@ import { add, colorPaletteOutline } from 'ionicons/icons';
 import showError from '../components/showError';
 import Search from '../components/Search';
 import LoadingError from '../components/LoadingError';
+import Spinner from '../components/Spinner';
 
 const Bewerten = () => {
   const { 
+    isAuth,
     toggle,
     loading, setLoading,
     error, setError,
@@ -146,7 +148,7 @@ const Bewerten = () => {
     setLoading(false)
   };
 
-  return (
+  return isAuth && user ? (
     <IonPage>
       <IonHeader>
         <img className="headerMap" src={`${toggle ? "./assets/header-bewerten-dark.svg" : "./assets/header-bewerten-light.svg"}`} />
@@ -474,7 +476,11 @@ const Bewerten = () => {
         
       </IonContent>
     </IonPage>
-  );
+   ) : (
+    <IonPage>
+      <Spinner />;
+    </IonPage>
+  )
 };
 
 export default Bewerten;

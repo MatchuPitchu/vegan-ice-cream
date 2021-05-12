@@ -92,7 +92,11 @@ const Favoriten = () => {
 
       </IonContent>
     </IonPage>
-  ) : <Spinner />;
+  ) : (
+  <IonPage>
+    <Spinner />;
+  </IonPage>
+  )
 };
 
 export default Favoriten;

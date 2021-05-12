@@ -5,7 +5,8 @@ import ReactStars from "react-rating-stars-component";
 import { add, caretDownCircle, caretForwardCircle } from "ionicons/icons";
 
 const SelectedMarker = () => {
-  const { 
+  const {
+    user, 
     loading, setLoading, 
     error, setError,
     selected, setSelected,
@@ -46,12 +47,14 @@ const SelectedMarker = () => {
               <a href={selected.location_url} target="_blank">Webseite</a>
             </IonLabel>
           </IonItem>
-          <IonItem className="modalItem" lines="full">
-            <IonLabel color='primary'>Bewertung schreiben</IonLabel>
-            <IonButton fill="clear" routerLink="/bewerten" routerDirection="forward">
-              <IonIcon icon={add}/>
-            </IonButton>
-          </IonItem>
+          { user ? ( 
+            <IonItem className="modalItem" lines="full">
+              <IonLabel color='primary'>Bewertung schreiben</IonLabel>
+              <IonButton fill="clear" routerLink="/bewerten" routerDirection="forward">
+                <IonIcon icon={add}/>
+              </IonButton>
+            </IonItem>
+          ) : null}
         </IonItemGroup>
       </div>
     
