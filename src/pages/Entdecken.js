@@ -6,6 +6,7 @@ import { IonItem, IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonList, 
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { add, addCircleOutline, bookmarks, bookmarksOutline, closeCircleOutline, listCircle, location as myPos, map as mapIcon, refreshCircle, removeCircleOutline } from "ionicons/icons";
 import NewLocationForm from "../components/NewLocationForm";
+import Search from "../components/Search";
 import SelectedMarker from '../components/SelectedMarker';
 import ListMap from "../components/ListMap";
 import Spinner from "../components/Spinner";
@@ -23,6 +24,7 @@ const Entdecken = () => {
     locations,
     map, setMap,
     selected, setSelected,
+    searchSelected, setSearchSelected,
     position, setPosition,
     newLocation, setNewLocation,
     all, setAll, 
@@ -66,7 +68,6 @@ const Entdecken = () => {
         const { results } = await res.json();
         let formattedObj = {};
         results[0].address_components.forEach(e => e.types.forEach(type => Object.assign(formattedObj, {[type]: e.long_name})));
-        console.log('Formatted Obj', formattedObj);
         setNewLocation({
           name: '',
           address: {
@@ -102,10 +103,9 @@ const Entdecken = () => {
 
   const checkDuplicate = () => {
     const duplicate = locations.find(loc => loc.address.geo.lat === newLocation.address.geo.lat)
-    console.log(duplicate)
     if(duplicate) {
       setError('Diese Adresse gibt es schon.');
-      setNewLocation({})
+      setNewLocation(null)
     }
     if(!duplicate) {
       setSelected(newLocation); 
@@ -126,7 +126,6 @@ const Entdecken = () => {
         // types: ["establishment"]
       }, function (predictions, status) {
         if(status != 'OK') setError('Ups, das hat nicht funktioniert.')
-        console.log('Predictions', predictions)
         setPredict(predictions);
       });
     }
@@ -197,12 +196,17 @@ const Entdecken = () => {
             </IonSegmentButton>
           </IonSegment>
         </IonToolbar>
+        
+        <Search />
+      
       </IonHeader>
 
       {segment === 'map' && (
         <IonContent ref={contentRef} scrollEvents>
  
           <div className="control">
+            
+
             <div className="d-flex flex-column">
               <IonButton className="zoom-control-in zoomIcons" fill="clear" >
                 <IonIcon icon={addCircleOutline} />
@@ -210,6 +214,9 @@ const Entdecken = () => {
               <IonButton className="zoom-control-out zoomIcons" fill="clear">
                 <IonIcon icon={removeCircleOutline} />
               </IonButton>
+            </div>
+            <div className="d-flex flex-column">
+              
             </div>
             <div className="d-flex flex-column align-items-end">
               <IonButton className="all-control" title="Mehr Eisläden laden" >
@@ -250,7 +257,7 @@ const Entdecken = () => {
               />
             ))}
 
-            {position && (
+            {position ? (
               <Marker
                 position={{lat: position.lat, lng: position.lng}}
                 icon={{
@@ -258,7 +265,19 @@ const Entdecken = () => {
                   scaledSize: new window.google.maps.Size(60, 60),
                 }}
               />
-              )}
+              ) : null}
+
+            {searchSelected ? (
+              <Marker
+                position={{lat: searchSelected.address.geo.lat, lng: searchSelected.address.geo.lng}}
+                icon={{
+                  url: './assets/icons/selected-ice-location.svg',
+                  scaledSize: new window.google.maps.Size(60, 60),
+                }}
+                title={`${searchSelected.name}, ${searchSelected.address.street} ${searchSelected.address.number}`}
+                onClick={() => { setSelected(searchSelected); setShowMapModal(true)} }
+              />
+            ) : null}
 
             {newLocation ? (
               <Marker
@@ -273,7 +292,7 @@ const Entdecken = () => {
                 title={`${newLocation.address.street} ${newLocation.address.number}, ${newLocation.address.zipcode} ${newLocation.address.city}`}
                 onClick={() => checkDuplicate()}
               />
-            ) : null }
+            ) : null}
 
             {selected ? (
               <div>

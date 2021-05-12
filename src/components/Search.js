@@ -9,7 +9,7 @@ const Search = () => {
     error, setError,
     setAll,
     locations,
-    selected, setSelected,
+    searchSelected, setSearchSelected,
     searchText, setSearchText,
   } = useContext(Context);
   const [ predictions, setPredictions ] = useState([]);
@@ -31,12 +31,13 @@ const Search = () => {
     }
     if(!value) {
       setPredictions([])
+      setSearchSelected(null)
     }
   };
 
   return (
-    <form className="container" onSubmit={onSubmit}>
-      <IonItem lines="full">
+    <form onSubmit={onSubmit}>
+      <IonItem className="searchbar" lines="none">
         <IonSearchbar 
           className="searchbar container" 
           type="search" 
@@ -50,19 +51,16 @@ const Search = () => {
             forAutocompleteChange(e.detail.value)
           }}
         />
-        <div>
-          <IonIcon
-            className="infoIcon"
-            color="primary"
-            button 
-            onClick={e => {
-              e.persist();
-              setPopoverShow({ show: true, event: e })
-            }}
-            icon={informationCircle} 
-          />
-
-        </div>
+        <IonIcon
+          className="infoIcon"
+          color="primary"
+          button 
+          onClick={e => {
+            e.persist();
+            setPopoverShow({ show: true, event: e })
+          }}
+          icon={informationCircle} 
+        />
         <IonPopover
           color="primary"
           cssClass='my-custom-class'
@@ -78,19 +76,19 @@ const Search = () => {
         </IonPopover>
       </IonItem>
       {predictions ? (
-        <IonList>
+        <IonList className="py-0">
           {predictions.map(loc => (
             <IonItem 
               className="autocompleteListItem" 
               key={loc._id} 
               button 
               onClick={() => { 
-                setSelected(loc); 
+                setSearchSelected(loc); 
                 setPredictions([]) 
               }} 
               lines="full"
             >
-              <IonLabel color="secondary" className="ion-text-wrap">{loc.name} <span className="p-weak">, {loc.address.street} {loc.address.number} in {loc.address.city}</span></IonLabel>
+              <IonLabel color="primary" className="ion-text-wrap">{loc.name} <span className="p-weak">, {loc.address.street} {loc.address.number} in {loc.address.city}</span></IonLabel>
             </IonItem>
           ))}
         </IonList>

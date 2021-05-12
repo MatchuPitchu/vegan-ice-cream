@@ -4,7 +4,7 @@ import ReactStars from "react-rating-stars-component";
 import { CirclePicker } from "react-color";
 import { Controller, useForm } from 'react-hook-form';
 import { IonButton, IonContent, IonDatetime, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonPage, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToast, IonToggle, IonToolbar } from '@ionic/react';
-import { add, colorPalette, colorPaletteOutline, mailUnread } from 'ionicons/icons';
+import { add, colorPaletteOutline } from 'ionicons/icons';
 import showError from '../components/showError';
 import Search from '../components/Search';
 import LoadingError from '../components/LoadingError';
@@ -15,7 +15,7 @@ const Bewerten = () => {
     loading, setLoading,
     error, setError,
     user,
-    selected, setSelected,
+    searchSelected
   } = useContext(Context);
   
   const [colorPicker1, setColorPicker1] = useState({field1: false, field2: false});
@@ -34,7 +34,7 @@ const Bewerten = () => {
     "#e65100", "#f57c00", "#ff9800", "#ffb74d", "#ffe0b2",
     "#bf360c", "#e64a19", "#ff5722", "#ff8a65", "#ffccbc",
     "#3e2723", "#5d4037", "#795548", "#a1887f", "#d7ccc8",
-    "#000000", "#231509", "#4d2119", "#693e18", "#ffffff",
+    "#000000", "#4d2119", "#693e18", "#c98850", "#ffffff",
   ]
   
   // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
@@ -44,7 +44,6 @@ const Bewerten = () => {
   // console.log('Errors:', errors);
 
   const createFlavor = async (data, commentID) => {
-    console.log(commentID)
     setLoading(true);
     const token = localStorage.getItem('token');
     try {
@@ -69,7 +68,6 @@ const Bewerten = () => {
         };
         const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors/${commentID}`, options);
         const newFlavor1 = await res.json();
-        console.log("Flavor 1", newFlavor1)
         if (!newFlavor1) {
           setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
           return () => setTimeout(setError(null), 5000);
@@ -102,7 +100,7 @@ const Bewerten = () => {
           return () => setTimeout(setError(null), 5000);
         }
       }
-      // reset();
+      reset();
     } catch (error) {
       setError(error)
       setTimeout(() => setError(null), 5000);
@@ -110,8 +108,6 @@ const Bewerten = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log('Form data', data)
-    console.log('UserId', user._id)
     setLoading(true);
     const token = localStorage.getItem('token');
     try {
@@ -131,7 +127,7 @@ const Bewerten = () => {
         body: JSON.stringify(body),
         credentials: "include",
       };
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${selected._id}`, options);
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${searchSelected._id}`, options);
       const newComment = await res.json();
       if (!newComment) {
         setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
@@ -153,10 +149,14 @@ const Bewerten = () => {
       </IonHeader>
       <IonContent className="ion-padding">
         
-        <Search />
+        <div className="container">
+          <Search />
+        </div>
 
         {/* "handleSubmit" will validate your inputs before invoking "onSubmit" */}
         <form className="container" onSubmit={handleSubmit(onSubmit)}>
+          
+          
           <IonItem lines="none">
             <IonLabel position='stacked' htmlFor="location">Name des Eisladens</IonLabel>
             <IonInput 
@@ -164,7 +164,7 @@ const Bewerten = () => {
               type="text"
               inputmode="text"
               placeholder="Nutze die obere Suche"
-              value={selected ? selected.name : ''}  
+              value={searchSelected ? searchSelected.name : ''}  
               onIonChange={() => {}} 
             />
           </IonItem>

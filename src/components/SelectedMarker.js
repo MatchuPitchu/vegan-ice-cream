@@ -13,8 +13,6 @@ const SelectedMarker = () => {
   } = useContext(Context);
   const [ openComments, setOpenComments ] = useState(false);
 
-  console.log(selected)
-
   useEffect(() => {
     setLoading(true);
     const fetchData = async() => {
@@ -103,7 +101,7 @@ const SelectedMarker = () => {
             </IonItem>
             {openComments && selected.comments_list.map((comment, i) => {
               return (
-              <IonItem lines="full">
+              <IonItem key={comment._id} lines="full">
                 <IonLabel className="ion-text-wrap ms-1">
                   {i+1}. Bewertung
                   <p className="my-1">{comment.text}</p>

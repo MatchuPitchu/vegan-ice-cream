@@ -251,6 +251,11 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   --background: var(--ion-background-color);
   --border-radius: 5px;
   --placeholder-color: var(--ion-color-medium-shade);
+  --placeholder-background: var(--ion-color-medium-shade);
+}
+
+.searchbar-input::placeholder {
+  background-color: var(--ion-item-background);
 }
 
 .infoIcon:hover {

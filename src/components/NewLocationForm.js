@@ -78,8 +78,6 @@ const NewLocationForm = () => {
     setNewLocation(null)
   };
 
-  console.log('newLocation state:', newLocation);
-
   return (
     <IonContent className="ion-padding">
       {/* // See input fields in console

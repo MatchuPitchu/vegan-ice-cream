@@ -7,7 +7,12 @@ import showError from '../showError';
 import { logIn } from "ionicons/icons";
 
 const Register = () => {
-  const { isAuth, setIsAuth, setUser, error, setError, toggle } = useContext(Context);
+  const { 
+    isAuth, 
+    setIsAuth, setUser, 
+    error, setError, 
+    toggle 
+  } = useContext(Context);
   const { control, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async data => {
@@ -36,6 +41,8 @@ const Register = () => {
       setTimeout(() => setError(null), 5000);
     }
   };
+
+  if (isAuth) return <Redirect to="/home" />;
 
   return (
     <IonPage>
@@ -124,8 +131,8 @@ const Register = () => {
               {showError("repeatPassword", errors)}
               {error && <div className='alertMsg'>{error}</div>}       
             
-              <IonButton routerLink='/profil' className="my-3 confirm-btn" type="submit" expand="block">
-                <IonIcon className="pe-1"icon={logIn}/>Registrieren
+              <IonButton className="my-3 confirm-btn" type="submit" expand="block">
+                <IonIcon className="pe-1" icon={logIn}/>Registrieren
               </IonButton>        
           </form>
 

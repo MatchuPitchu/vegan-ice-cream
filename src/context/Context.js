@@ -14,6 +14,7 @@ const AppState = ({children}) => {
   const [searchText, setSearchText] = useState('');
   const [map, setMap]= useState(null);
   const [selected, setSelected] = useState(null);
+  const [searchSelected, setSearchSelected] = useState(null);
   const [position, setPosition] = useState();
   const [newLocation, setNewLocation] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -49,7 +50,6 @@ const AppState = ({children}) => {
           setIsAuth(true);
           const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/infos`, options);
           const data = await res.json();
-          console.log(data);
           setUser({ ...user, ...data});
         };
       }
@@ -86,7 +86,6 @@ const AppState = ({children}) => {
         } else {
           setDisableInfScroll(true);
         }
-        console.log(data);
       } catch (error) {
         setError(error.message);
       }
@@ -134,7 +133,6 @@ const AppState = ({children}) => {
       // Don't need sended back data of server
       // const favorite_locations = await res.json();
       const newFavLoc = [...user.favorite_locations, alertUpdateFav.location]
-      console.log(newFavLoc)
       setUser(prev => ({ ...prev, favorite_locations: newFavLoc }));
       setAlertUpdateFav({...alertUpdateFav, addStatus: false, location: null});
     } catch (error) {
@@ -247,6 +245,7 @@ const AppState = ({children}) => {
         searchText, setSearchText,
         map, setMap,
         selected, setSelected,
+        searchSelected, setSearchSelected,
         position, setPosition,
         newLocation, setNewLocation,
         loading, setLoading,
