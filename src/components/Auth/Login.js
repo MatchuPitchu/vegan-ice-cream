@@ -50,7 +50,7 @@ const Login = () => {
         <img className="headerMap" src={`${toggle ? "./assets/map-header-graphic-ice-dark.svg" : "./assets/map-header-graphic-ice-light.svg"}`} />
       </IonHeader>
       <IonContent>
-        <div className="container">
+        <div className="container mt-3">
           <form onSubmit={handleSubmit(onSubmit)}>
               <IonItem lines="none" className="mb-1">
                 <IonLabel position='floating' htmlFor="email">E-Mail</IonLabel>

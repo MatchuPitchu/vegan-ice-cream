@@ -8,6 +8,8 @@ const Search = () => {
     loading, setLoading,
     error, setError,
     setAll,
+    setCenter,
+    setZoom,
     locations,
     searchSelected, setSearchSelected,
     searchText, setSearchText,
@@ -84,7 +86,9 @@ const Search = () => {
               button 
               onClick={() => { 
                 setSearchSelected(loc); 
-                setPredictions([]) 
+                setPredictions([])
+                setCenter({lat: loc.address.geo.lat, lng: loc.address.geo.lng})
+                setZoom(12)
               }} 
               lines="full"
             >

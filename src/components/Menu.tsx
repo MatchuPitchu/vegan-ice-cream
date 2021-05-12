@@ -52,7 +52,7 @@ const Menu: React.FC = () => {
             <img className="headerGraphic" src={`${toggle ? "./assets/header-graphic-ice-dark.svg" : "./assets/header-graphic-ice-light.svg"}`} />
           </IonListHeader>
           <IonMenuToggle autoHide={false}>
-            <IonItem className="labelMenu"  disabled={isAuth ? true : false} routerLink='/login' lines="none" detail={false} >
+            <IonItem className="labelMenu" disabled={isAuth ? true : false} routerLink='/login' lines="none" detail={false} >
               <IonLabel>Login</IonLabel>
               <IonIcon slot="end" icon={logIn} />
             </IonItem>

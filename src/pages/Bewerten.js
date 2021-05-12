@@ -15,7 +15,8 @@ const Bewerten = () => {
     loading, setLoading,
     error, setError,
     user,
-    searchSelected
+    searchSelected,
+    newComment, setNewComment
   } = useContext(Context);
   
   const [colorPicker1, setColorPicker1] = useState({field1: false, field2: false});
@@ -43,12 +44,13 @@ const Bewerten = () => {
   // console.log('Watch:', watch()); 
   // console.log('Errors:', errors);
 
-  const createFlavor = async (data, commentID) => {
+  const createFlavor = async (data, commentID, comment) => {
     setLoading(true);
     const token = localStorage.getItem('token');
     try {
       if(data.name1) {
         const body = {
+          user_id: user._id,
           name: data.name1,
           type_fruit_ice: data.name1_type_fruit_ice,
           type_cream_ice: data.name1_type_cream_ice,
@@ -68,6 +70,7 @@ const Bewerten = () => {
         };
         const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors/${commentID}`, options);
         const newFlavor1 = await res.json();
+        console.log(newFlavor1);
         if (!newFlavor1) {
           setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
           return () => setTimeout(setError(null), 5000);
@@ -105,6 +108,7 @@ const Bewerten = () => {
       setError(error)
       setTimeout(() => setError(null), 5000);
     };
+    setNewComment(comment);
   };
 
   const onSubmit = async (data) => {
@@ -133,7 +137,7 @@ const Bewerten = () => {
         setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
         return () => setTimeout(setError(null), 5000);
       }
-      createFlavor(data, newComment._id);
+      createFlavor(data, newComment._id, newComment);
       // reset();
     } catch (error) {
       setError(error)

@@ -99,7 +99,7 @@ const SelectedMarker = () => {
               />
               <IonLabel className="ms-1">Alle anzeigen</IonLabel>
             </IonItem>
-            {openComments && selected.comments_list.map((comment, i) => {
+            {openComments ? selected.comments_list.map((comment, i) => {
               return (
               <IonItem key={comment._id} lines="full">
                 <IonLabel className="ion-text-wrap ms-1">
@@ -138,7 +138,7 @@ const SelectedMarker = () => {
               </IonItem>
               )
             }
-            )}
+            ) : null}
           </IonItemGroup>
         </div>
       </IonCard>

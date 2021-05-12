@@ -22,6 +22,8 @@ const Entdecken = () => {
     error, setError,
     user, 
     locations,
+    center, setCenter,
+    zoom, setZoom,
     map, setMap,
     selected, setSelected,
     searchSelected, setSearchSelected,
@@ -37,8 +39,6 @@ const Entdecken = () => {
     removeFavLoc
   } = useContext(Context);
   const [libraries] = useState(['places']);
-  const [center, setCenter] = useState({ lat:  52.524, lng: 13.410 });
-  const [zoom, setZoom] = useState(12);
 
   const [segment, setSegment] = useState('map');
   const [autocomplete, setAutocomplete] = useState(null);
@@ -294,7 +294,7 @@ const Entdecken = () => {
               />
             ) : null}
 
-            {selected ? (
+            {selected && user ? (
               <div>
                 <IonModal cssClass='mapModal' isOpen={showMapModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowMapModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
                   <IonItem lines='full'>

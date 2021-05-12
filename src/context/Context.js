@@ -13,6 +13,8 @@ const AppState = ({children}) => {
   const [disableInfScroll, setDisableInfScroll] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [map, setMap]= useState(null);
+  const [center, setCenter] = useState({ lat:  52.524, lng: 13.410 });
+  const [zoom, setZoom] = useState(12);
   const [selected, setSelected] = useState(null);
   const [searchSelected, setSearchSelected] = useState(null);
   const [position, setPosition] = useState();
@@ -33,6 +35,7 @@ const AppState = ({children}) => {
     location: {}
   });
   const [ openComments, setOpenComments ] = useState(false);
+  const [ newComment, setNewComment ] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -61,7 +64,7 @@ const AppState = ({children}) => {
       setError(error.message);
     }
     setLoading(false);
-  }, []);
+  }, [newComment]);
 
   useEffect(() => {
     const fetchLoc = async () => {
@@ -245,6 +248,8 @@ const AppState = ({children}) => {
         disableInfScroll, setDisableInfScroll,
         searchText, setSearchText,
         map, setMap,
+        center, setCenter,
+        zoom, setZoom,
         selected, setSelected,
         searchSelected, setSearchSelected,
         position, setPosition,
@@ -266,7 +271,8 @@ const AppState = ({children}) => {
         alertUpdateFav, setAlertUpdateFav,
         removeFavLoc,
         addFavLoc,
-        openComments, setOpenComments
+        openComments, setOpenComments,
+        newComment, setNewComment
       }}
     >
       {children}

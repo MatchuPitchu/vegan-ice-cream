@@ -46,27 +46,27 @@ const About = () => {
           <IonCardContent>
             <IonList>
               <IonItem>
-                <IonLabel color="secondary">HTML5</IonLabel>
+                <IonLabel color="primary">HTML5</IonLabel>
                 <IonIcon color="primary" slot="start" icon={logoHtml5} />
               </IonItem>
               <IonItem>
-                <IonLabel color="secondary">CSS und Bootstrap 5</IonLabel>
+                <IonLabel color="primary">CSS und Bootstrap 5</IonLabel>
                 <IonIcon color="primary" slot="start" icon={logoCss3} />
               </IonItem>
               <IonItem>
-                <IonLabel color="secondary">JavaScript</IonLabel>
+                <IonLabel color="primary">JavaScript</IonLabel>
                 <IonIcon color="primary" slot="start" icon={logoJavascript} />
               </IonItem>
               <IonItem>
-                <IonLabel color="secondary">ReactJS</IonLabel>
+                <IonLabel color="primary">ReactJS</IonLabel>
                 <IonIcon color="primary" slot="start" icon={logoReact} />
               </IonItem>
               <IonItem>
-                <IonLabel color="secondary">Ionic</IonLabel>
+                <IonLabel color="primary">Ionic</IonLabel>
                 <IonIcon color="primary" slot="start" icon={logoIonic} />
               </IonItem>
               <IonItem>
-                <IonLabel color="secondary">NodeJS mit Express</IonLabel>
+                <IonLabel color="primary">NodeJS mit Express</IonLabel>
                 <IonIcon color="primary" slot="start" icon={logoNodejs} />
               </IonItem>
             </IonList>
