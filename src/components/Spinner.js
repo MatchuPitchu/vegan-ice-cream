@@ -7,7 +7,7 @@ import { RingLoader } from "react-spinners";
 // Can be a string as well. Need to ensure each key-value pair ends with ;
 const override = css`
   display: flex;
-  margin: 70px auto;
+  margin: 30px auto;
   background-color: transparent;
   opacity: 0.8;
 `;
