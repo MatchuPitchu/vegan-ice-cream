@@ -570,7 +570,8 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 
 .add-control,
 .where-control,
-.center-control {
+.center-control,
+.more-infos {
   --background: var(--ion-item-background);
   font-size: 0.7rem;
   text-transform: none;
@@ -579,7 +580,8 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 }
 
 .add-control,
-.where-control {
+.where-control,
+.more-infos {
   color: var(--ion-color-primary);
 }
 .center-control {

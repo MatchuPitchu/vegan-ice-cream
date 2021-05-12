@@ -9,9 +9,9 @@ const SelectedMarker = () => {
     loading, setLoading, 
     error, setError,
     selected, setSelected,
-    toggle 
+    toggle,
+    openComments, setOpenComments
   } = useContext(Context);
-  const [ openComments, setOpenComments ] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -62,7 +62,7 @@ const SelectedMarker = () => {
               <IonLabel color='primary'>Bewertungen</IonLabel>
             </IonItem>
             <IonItem className="row modalItem" lines="full">
-              {selected.location_rating_quality && (
+              {selected.location_rating_quality ? (
                 <div className="col-auto my-2">Eis-Qualität
                   <ReactStars
                     count={5}
@@ -73,7 +73,7 @@ const SelectedMarker = () => {
                     activeColor='#de9c01'
                   />
                 </div>
-              )}
+              ) : null}
               {selected.location_rating_quality ? (
                 <div className="col-auto my-2">Veganes Angebot
                   <ReactStars 

@@ -32,6 +32,7 @@ const AppState = ({children}) => {
     addStatus: false, 
     location: {}
   });
+  const [ openComments, setOpenComments ] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -264,7 +265,8 @@ const AppState = ({children}) => {
         bookmark, setBookmark,
         alertUpdateFav, setAlertUpdateFav,
         removeFavLoc,
-        addFavLoc
+        addFavLoc,
+        openComments, setOpenComments
       }}
     >
       {children}
