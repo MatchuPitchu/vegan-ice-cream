@@ -67,6 +67,7 @@ const Entdecken = () => {
         const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(data.address)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
         const { results } = await res.json();
         let formattedObj = {};
+        console.log(results);
         results[0].address_components.forEach(e => e.types.forEach(type => Object.assign(formattedObj, {[type]: e.long_name})));
         setNewLocation({
           name: '',
@@ -119,7 +120,7 @@ const Entdecken = () => {
   };
 
   const forAutocompleteChange = async value => {
-    if(value.length > 4) {
+    if(value.length > 3) {
       await autocomplete.getPlacePredictions({
         input: value,
         componentRestrictions: { country: 'de' },
@@ -298,7 +299,7 @@ const Entdecken = () => {
               <div>
                 <IonModal cssClass='mapModal' isOpen={showMapModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowMapModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
                   <IonItem lines='full'>
-                    {user && user.favorite_locations.find(loc => loc._id === selected._id) ? (
+                    {user.favorite_locations.find(loc => loc._id === selected._id) ? (
                       <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: true, location: selected})}>
                         <IonIcon icon={bookmarks}/>
                         <IonBadge slot="end" color="danger">-</IonBadge>
@@ -366,7 +367,7 @@ const Entdecken = () => {
                     autocomplete='street-address' 
                     onIonChange={e => {
                       onChange(e.detail.value);
-                      forAutocompleteChange(e.detail.value)
+                      setTimeout(() => forAutocompleteChange(e.detail.value), 3000)
                     }} 
                     placeholder="Name, Adresse eintippen ..." 
                     searchIcon={add} 
@@ -380,7 +381,7 @@ const Entdecken = () => {
               {predict ? (
                 <IonList>
                   {predict.map((item, i) => (
-                    <IonItem className="autocompleteListItem" key={i} button onClick={() => onSubmit({'address': item.description})} lines="full">
+                    <IonItem className="autocompleteListItem" key={i} button onClick={() => onSubmit({'address': item.description}, console.log(item))} lines="full">
                       <IonLabel className="ion-text-wrap">{item.description}</IonLabel>
                     </IonItem>
                   ))}

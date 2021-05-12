@@ -25,9 +25,9 @@ const Search = () => {
     setLoading(false)
   }
 
-  const forAutocompleteChange = (value) => {
+  const forAutocompleteChange = async value => {
     if(value.length >= 2 && locations) {
-      const res = locations.filter(loc => loc.name.toLowerCase().includes(value.toLowerCase()) || loc.address.city.toLowerCase().includes(value.toLowerCase()) );
+      const res = await locations.filter(loc => loc.name.toLowerCase().includes(value.toLowerCase()) || loc.address.city.toLowerCase().includes(value.toLowerCase()) );
       const result = res.slice(0, 10);
       setPredictions(result);
     }
@@ -50,7 +50,8 @@ const Search = () => {
           onIonChange={e => {
             setAll(true);
             setSearchText(e.detail.value);
-            forAutocompleteChange(e.detail.value)
+            setTimeout(() => forAutocompleteChange(e.detail.value), 3000)
+            
           }}
         />
         <IonIcon
