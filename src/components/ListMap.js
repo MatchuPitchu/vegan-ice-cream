@@ -97,7 +97,7 @@ const ListMap = () => {
                   <IonBadge slot="end" color="danger">-</IonBadge>
                 </IonButton>
                 ) : null}
-              {user && user.favorite_locations.find(loc => loc._id === selected._id) ? (
+              {user && user.favorite_locations.find(loc => loc._id !== selected._id) ? (
                 <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, addStatus: true, location: selected})}>
                   <IonIcon icon={bookmarksOutline}/>
                   <IonBadge slot="end" color="success">+</IonBadge>  
