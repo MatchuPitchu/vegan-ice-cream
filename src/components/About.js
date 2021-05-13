@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Context } from "../context/Context";
-import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
-import { bulb, closeCircleOutline, codeWorking, helpCircle, logoCss3, logoHtml5, logoIonic, logoJavascript, logoNodejs, logoReact, mail } from 'ionicons/icons';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonIcon, IonItem, IonLabel, IonList, IonPage } from '@ionic/react';
+import { bulb, closeCircleOutline, helpCircle, logoCss3, logoHtml5, logoIonic, logoJavascript, logoNodejs, logoReact } from 'ionicons/icons';
 
 const About = () => {
   const { setShowAbout, toggle } = useContext(Context);
@@ -24,19 +24,22 @@ const About = () => {
               <IonLabel className="ion-text-wrap">... warum diese App?</IonLabel>
             </IonItem>
             <p className="my-2">
-              Regelmäßige - und nicht nur im Sommer - begebe ich mich auf die Suche nach veganem Eis. 
+              Regelmäßig - und nicht nur im Sommer - begebe ich mich auf die Suche nach veganem Eis. 
               Egal an welchem Ort ich mich befinde. Ich liebe veganes Eis. Damit meine ich aber nicht 
               dieses von manchen Eisläden einfach als 'vegan' bezeichnete Sorbet-Wasser-Gemisch.
             </p>
             <p className="mb-2">
-              Nein: Ich möchte richtiges veganes Eis und mich nicht nur mit diesem gefrorenen Wasser abspeisen lassen.
+              Nein: Ich mag richtig cremiges veganes Eis - allein mit gefrorenem Wasser lasse ich mich nur ungern abspeisen.
             </p>
             <p className="mb-2">
               Doch die Suche war für mich immer beschwerlich. Ich musste mich durch Google mit allerlei Suchbegriffen quälen.
-              Auch auf Google Maps stellten sich viele vegane Eis-"Fundstellen" als falsch heraus.
+              Auch auf Google Maps stellten sich viele vegane Eis-"Fundstellen" als unzutreffend heraus.
             </p>
             <p className="mb-2">
-              Dies war der Anstoß, eine eigene Plattform aufzubauen, auf der veganes Eis gefunden, eingetragen und bewertet werden kann.
+              Dies gab mir den Impuls, eine eigene Plattform aufzubauen, auf der veganes Eis gefunden, eingetragen und bewertet werden kann.
+            </p>
+            <p className="mb-2">
+              Natürlich seid ihr eingeladen, alle möglichen Eisläden hier eintragen - aber neben der Qualität des Eises soll auch stets das vegane Angebot bewertet werden.
             </p>
             <p className="mb-2">Macht mit und genießt das Eis!</p> 
           </IonCardContent>

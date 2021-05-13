@@ -18,12 +18,12 @@ const Spinner = () => {
 
   return (
     <div>
-      <RingLoader color={color} css={override} size={200} />
+      <RingLoader color={color} css={override} size={120} />
       <h3
-        style={{ fontSize: "2em", textAlign: "center" }}
+        style={{ fontSize: "1.3em", textAlign: "center" }}
         className="display-3"
       >
-        {isAuth ? 'Loading ...' : 'Nur für eingeloggte Nutzer:innen anzusehen'} 
+        {isAuth ? 'Loading ...' : 'Nur für eingeloggte User sichtbar'} 
       </h3>
     </div>
   );

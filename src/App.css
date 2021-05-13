@@ -270,6 +270,77 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   width: 150px;
 }
 
+/* Searchbar Autocomplete Google */
+.container-autocomplete {
+  display: flex;
+  width: 100%;
+  padding: 0 5px;
+}
+
+.search-autocomplete {
+  background: var(--ion-background-color);
+  background-position: left 8px center;
+  font-size: 16px;
+  font-weight: 400;
+  height: auto;
+  line-height: 30px;
+  border-radius: 5px;
+  padding: 6px 10px;
+  border-radius: var(--border-radius);
+  width: 100%;
+  border: 0;
+  outline: none;
+  box-sizing: border-box;
+  box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.14),
+    0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  appearance: none;
+  outline-offset: -2px;
+}
+
+.search-autocomplete::placeholder {
+  color: var(--ion-color-medium-shade);
+  background-color: var(--ion-item-background);
+}
+
+.pac-container {
+  background: var(--ion-background-color);
+}
+
+.pac-icon {
+  display: none;
+}
+
+.pac-item {
+  padding: 3px 10px 0 10px;
+  border: 0;
+  border-bottom: 1px solid var(--ion-item-background);
+}
+
+.pac-item:hover {
+  background: var(--ion-background-color);
+  opacity: 0.8;
+}
+
+.pac-item-query {
+  font-weight: 300;
+  color: var(--ion-color-primary-tint);
+}
+
+.pac-matched {
+  font-weight: 600;
+  color: var(--ion-color-primary);
+}
+
+.pac-item-selected {
+  background: var(--ion-background-color);
+}
+
+.pac-container:after {
+  /* Disclaimer: not needed to show 'powered by Google' if also a Google Map is shown */
+  background-image: none !important;
+  height: 0px;
+}
+
 /*********** Tab Home ************/
 .home {
   --background: none;
@@ -627,10 +698,6 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 /* important to move modal-shadow to allow backdropDismiss on iOS  */
 .modal-shadow.sc-ion-modal-ios {
   top: 100%;
-}
-
-.autocompleteListItem {
-  font-weight: 300;
 }
 
 .check-btn {
