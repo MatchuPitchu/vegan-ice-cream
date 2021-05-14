@@ -137,21 +137,21 @@ const Register = () => {
           </form>
 
           <p>Nach der Registrierung kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
-          <p className="mt-5">
+          <p className="mt-4">
             <IonList>
-              <IonItem disabled lines="full">
+              <IonItem lines="full">
                 <IonLabel color="primary">Hinweise zur Wahl des Passworts</IonLabel>
               </IonItem>
-              <IonItem disabled lines="none">
+              <IonItem lines="none">
                 <IonLabel>mindestens eine Ziffer [0-9]</IonLabel>
               </IonItem>
-              <IonItem disabled lines="none">
+              <IonItem lines="none">
                 <IonLabel>mindestens einen kleinen Buchstaben [a-z]</IonLabel>
               </IonItem>
-              <IonItem disabled lines="none">
+              <IonItem lines="none">
                 <IonLabel>mindestens einen großen Buchstaben [A-Z]</IonLabel>
               </IonItem>
-              <IonItem disabled lines="none">
+              <IonItem lines="none">
                 <IonLabel>mindestens 6 Stellen lang, maximal 32</IonLabel>
               </IonItem>
               <IonItem lines="none">

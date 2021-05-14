@@ -235,6 +235,9 @@ body[color-theme="dark"] {
   --ion-color-light-shade: #acacac;
   --ion-color-light-tint: #cacaca;
 
+  --ion-text-color: #ffffff;
+  --ion-text-color-rgb: 255, 255, 255;
+
   /* font family */
   --ion-font-family: "Lato", -apple-system, BlinkMacSystemFont, Roboto,
     "Helvetica Neue", sans-serif;

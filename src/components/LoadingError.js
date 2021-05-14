@@ -11,11 +11,11 @@ const LoadingError = () => {
 
   return (
     <>
-      <IonToast 
+      <IonToast
+        cssClass="errorToast"
         isOpen={error ? true : false} 
         message={error} 
         onDidDismiss={() => setError('')}
-        duration={6000} 
       />
       <IonLoading 
         isOpen={loading ? true : false} 

@@ -2,7 +2,7 @@ import { useContext, useState, useCallback, useRef } from "react";
 import { Context } from '../context/Context';
 import { Geolocation } from '@ionic-native/geolocation';
 import { IonItem, IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonModal, IonPage, IonSegment, IonSegmentButton, IonToggle, IonToolbar, IonAlert, IonBadge, isPlatform } from '@ionic/react';
-import { Autocomplete, GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { Autocomplete, GoogleMap, Marker, MarkerClusterer, useJsApiLoader } from '@react-google-maps/api';
 import { add, addCircleOutline, bookmarks, bookmarksOutline, closeCircleOutline, listCircle, location as myPos, map as mapIcon, refreshCircle, removeCircleOutline } from "ionicons/icons";
 import NewLocationForm from "../components/NewLocationForm";
 import Search from "../components/Search";
@@ -132,11 +132,20 @@ const Entdecken = () => {
         location_url: result.website ? result.website : '',
         place_id: result.place_id ? result.place_id : ''
       })
+      scrollDown()
     }
     else {
       setError('Autocomplete kann gerade nicht geladen werden');
       setTimeout(() => setError(null), 5000);
     }
+  }
+  
+  const clusterOptions = {
+    imagePath: './assets/m'
+  }
+
+  const createKey = (location) => {
+    return location.lat + location.lng
   }
 
   const options = {
@@ -179,10 +188,6 @@ const Entdecken = () => {
     // Add custom center control https://developers.google.com/maps/documentation/javascript/examples/control-custom
     const controlDiv = document.querySelector(".center-control");
     controlDiv.addEventListener('click', () => { map.setCenter(center); map.setZoom(11)});
-    
-    map.controls[window.google.maps.ControlPosition.TOP].push(
-      document.querySelector(".control")
-    );
   }
 
   const { isLoaded } = useJsApiLoader({
@@ -212,154 +217,188 @@ const Entdecken = () => {
 
       {segment === 'map' && (
         <IonContent ref={contentRef} scrollEvents>
- 
-          <div className="control">
-            <div className="d-flex flex-column">
-              <IonButton className="zoom-control-in zoomIcons" fill="clear" >
-                <IonIcon icon={addCircleOutline} />
-              </IonButton>
-              <IonButton className="zoom-control-out zoomIcons" fill="clear">
-                <IonIcon icon={removeCircleOutline} />
-              </IonButton>
+          <div className="containerMap">
+            <div className="control-left">
+              <div className="col">
+                <IonButton className="d-flex justify-content-start zoom-control-in zoomIcons" fill="clear" >
+                  <IonIcon icon={addCircleOutline} />
+                </IonButton>
+                <IonButton className="d-flex justify-content-start zoom-control-out zoomIcons" fill="clear">
+                  <IonIcon icon={removeCircleOutline} />
+                </IonButton>
+              </div>
             </div>
-            <div className="d-flex flex-column">
-              
-            </div>
-            <div className="d-flex flex-column align-items-end">
+            <div className="control-right-top">
               <IonButton className="all-control" title="Mehr Eisläden laden" >
                 <IonLabel className="me-1">Alle anzeigen</IonLabel>
                 <IonToggle onIonChange={e => setAll(true)} checked={all} disabled={`${all ? 'true' : 'false'}`} />
               </IonButton>
-              { user ? ( 
-                <IonButton className="add-control" onClick={scrollDown} title="Neue Adresse hinzufügen">
-                  <IonIcon icon={add} />
-                </IonButton>
-              ) : null}
-              <IonButton className="where-control" onClick={getLocation} title="Mein Standort">
-                <IonIcon icon={myPos} />
-              </IonButton>
-              <IonButton className="center-control" title="Karte auf Anfangspunkt zentrieren" >
-                <IonIcon icon={refreshCircle} />
-              </IonButton>
+           </div>
+           <div className="control-right-bottom">
+              <div className="col">
+                { user ? ( 
+                <div className="d-flex justify-content-end">
+                  <IonButton className="add-control" onClick={scrollDown} title="Neue Adresse hinzufügen">
+                    <IonIcon icon={add} />
+                  </IonButton>
+                </div>
+                ) : null}
+                <div className="d-flex justify-content-end">
+                  <IonButton className="where-control" onClick={getLocation} title="Mein Standort">
+                    <IonIcon icon={myPos} />
+                  </IonButton>
+                </div>
+                <div className="d-flex justify-content-end">
+                  <IonButton className="center-control" title="Karte auf Anfangspunkt zentrieren" >
+                    <IonIcon icon={refreshCircle} />
+                  </IonButton>
+                </div>
+              </div>
             </div>
+
+            <GoogleMap 
+              mapContainerClassName="map" 
+              zoom={zoom} 
+              center={center}
+              options={options}
+              onLoad={onMapLoad}
+              onUnmount={onUnmount}
+              zIndex={10}
+            >
+
+              <MarkerClusterer 
+                options={clusterOptions}
+                imageExtension='png'
+                // zoomOnClick={false}
+              >
+                {(clusterer) =>
+                  locations ? locations.map(loc => (
+                    <Marker 
+                      key={createKey({lat: loc.address.geo.lat, lng: loc.address.geo.lng})} 
+                      position={{lat: loc.address.geo.lat, lng: loc.address.geo.lng}} 
+                      clusterer={clusterer}
+                      icon={newLocation && 
+                        newLocation.address.street === loc.address.street && 
+                        newLocation.address.number === loc.address.number ?
+                        {
+                          url: './assets/icons/ice-cream-icon-dark.svg',
+                          scaledSize: new window.google.maps.Size(0, 0)
+                        } : {
+                          url: searchSelected && searchSelected.address.geo.lat === loc.address.geo.lat && 
+                            searchSelected.address.geo.lng === loc.address.geo.lng ?
+                            './assets/icons/selected-ice-location.svg' : './assets/icons/ice-cream-icon-dark.svg',
+                          scaledSize: new window.google.maps.Size(30, 30),
+                          origin: new window.google.maps.Point(0, 0),
+                          anchor: new window.google.maps.Point(15, 15)
+                      }}
+                      shape={{
+                        coords: [1, 1, 1, 28, 26, 28, 26, 1],
+                        type: "poly",
+                      }}
+                      title={`${loc.name}, ${loc.address.street} ${loc.address.number}`}
+                      cursor='pointer'
+                      onClick={() => { setSelected(loc); setShowMapModal(true) }}
+                    />
+                    )
+                  ) : null}
+
+              </MarkerClusterer>
+
+              {/* {locations ? locations.map(loc => (
+                <Marker
+                  key={loc._id}
+                  position={{lat: loc.address.geo.lat, lng: loc.address.geo.lng}}
+                  // If newLocation exists on same place as normal marker, than normal marker is size 0
+                  // If newLocation does not exist than condition: if searchSelected exists on same place as normal marker,
+                  // than normal marker becomes green, otherwise normal marker is alway dark
+              */}
+
+              {position ? (
+                <Marker
+                  position={{lat: position.lat, lng: position.lng}}
+                  icon={{
+                    url: './assets/icons/current-position-marker.svg',
+                    scaledSize: new window.google.maps.Size(60, 60),
+                  }}
+                />
+                ) : null}
+
+              {newLocation ? (
+                <Marker
+                  ref={markerRef}
+                  position={{lat: newLocation.address.geo.lat, lng: newLocation.address.geo.lng}}
+                  icon={{
+                    url: './assets/icons/newLocation-marker.svg',
+                    scaledSize: new window.google.maps.Size(30, 30),
+                    origin: new window.google.maps.Point(0, 0),
+                    anchor: new window.google.maps.Point(15, 15)
+                  }}
+                  optimized={false}
+                  title={`${newLocation.address.street} ${newLocation.address.number}, ${newLocation.address.zipcode} ${newLocation.address.city}`}
+                  onClick={() => checkDuplicate()}
+                />
+              ) : null}
+
+              {selected ? (
+                <div>
+                  <IonModal cssClass='mapModal' isOpen={showMapModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowMapModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
+                      <IonItem lines='full'>
+                        {user ? (
+                          <>
+                          {user.favorite_locations.find(loc => loc._id === selected._id) ? (
+                            <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: true, location: selected})}>
+                              <IonIcon icon={bookmarks}/>
+                              <IonBadge slot="end" color="danger">-</IonBadge>
+                            </IonButton>
+                            ) : (
+                            <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, addStatus: true, location: selected})}>
+                              <IonIcon icon={bookmarksOutline}/>
+                              <IonBadge slot="end" color="success">+</IonBadge>  
+                            </IonButton>
+                            )}
+                          </>
+                        ) : null}
+                        <IonAlert
+                          isOpen={alertUpdateFav.addStatus}
+                          onDidDismiss={() => setAlertUpdateFav({...alertUpdateFav, addStatus: false })}
+                          header={'Favoriten hinzufügen'}
+                          message={'Möchtest du den Eisladen deinen Favoriten hinzufügen?'}
+                          buttons={[
+                            { text: 'Abbrechen', role: 'cancel' },
+                            { text: 'Bestätigen', handler: addFavLoc }
+                          ]}
+                        />
+                        <IonAlert
+                          isOpen={alertUpdateFav.removeStatus}
+                          onDidDismiss={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: false })}
+                          header={'Favoriten entfernen'}
+                          message={'Möchtest du den Eisladen wirklich von deiner Liste entfernen?'}
+                          buttons={[
+                            { text: 'Abbrechen', role: 'cancel' },
+                            { text: 'Bestätigen', handler: removeFavLoc }
+                          ]}
+                        />
+                        <IonLabel>{selected.name}</IonLabel>
+                        <IonButton fill="clear" onClick={() => setShowMapModal(false)}>
+                          <IonIcon icon={closeCircleOutline }/>
+                        </IonButton>
+                      </IonItem>
+                    <SelectedMarker />
+                  </IonModal>
+
+                  <IonModal cssClass='newLocModal' isOpen={showNewLocModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowNewLocModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
+                    <IonItem lines='full'>
+                      <IonLabel>Eisladen eintragen</IonLabel>
+                      <IonButton fill="clear" onClick={() => { setShowNewLocModal(false)}}><IonIcon icon={closeCircleOutline }/></IonButton>
+                    </IonItem>
+                    <NewLocationForm />
+                  </IonModal>
+                </div>
+              ) : null}
+
+            </GoogleMap>
           </div>
 
-          <GoogleMap 
-            mapContainerClassName="mapContainer" 
-            zoom={zoom} 
-            center={center}
-            options={options}
-            onLoad={onMapLoad}
-            onUnmount={onUnmount}
-          >
-
-            {locations && locations.map((loc) => (
-              <Marker
-                key={loc._id}
-                position={{lat: loc.address.geo.lat, lng: loc.address.geo.lng}} 
-                icon={{
-                  url: './assets/icons/ice-cream-icon-dark.svg',
-                  scaledSize: new window.google.maps.Size(30, 30),
-                }}
-                title={`${loc.name}, ${loc.address.street} ${loc.address.number}`}
-                cursor='pointer'
-                onClick={() => { setSelected(loc); setShowMapModal(true) }}
-              />
-            ))}
-
-            {position ? (
-              <Marker
-                position={{lat: position.lat, lng: position.lng}}
-                icon={{
-                  url: './assets/icons/current-position-marker.svg',
-                  scaledSize: new window.google.maps.Size(60, 60),
-                }}
-              />
-              ) : null}
-
-            {searchSelected ? (
-              <Marker
-                position={{lat: searchSelected.address.geo.lat, lng: searchSelected.address.geo.lng}}
-                icon={{
-                  url: './assets/icons/selected-ice-location.svg',
-                  scaledSize: new window.google.maps.Size(60, 60),
-                }}
-                title={`${searchSelected.name}, ${searchSelected.address.street} ${searchSelected.address.number}`}
-                onClick={() => { setSelected(searchSelected); setShowMapModal(true)} }
-              />
-            ) : null}
-
-            {newLocation ? (
-              <Marker
-                ref={markerRef}
-                position={{lat: newLocation.address.geo.lat, lng: newLocation.address.geo.lng}}
-                icon={{
-                  url: './assets/icons/newLocation-marker.svg',
-                  scaledSize: new window.google.maps.Size(40, 40),
-                }}
-                optimized={false}
-                zIndex={1}
-                title={`${newLocation.address.street} ${newLocation.address.number}, ${newLocation.address.zipcode} ${newLocation.address.city}`}
-                onClick={() => checkDuplicate()}
-              />
-            ) : null}
-
-            {selected ? (
-              <div>
-                <IonModal cssClass='mapModal' isOpen={showMapModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowMapModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
-                  <IonItem lines='full'>
-                    {user && user.favorite_locations.find(loc => loc._id === selected._id) ? (
-                      <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: true, location: selected})}>
-                        <IonIcon icon={bookmarks}/>
-                        <IonBadge slot="end" color="danger">-</IonBadge>
-                      </IonButton>
-                      ) : null}
-                    {user && user.favorite_locations.find(loc => loc._id === selected._id) ? (
-                      <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, addStatus: true, location: selected})}>
-                        <IonIcon icon={bookmarksOutline}/>
-                        <IonBadge slot="end" color="success">+</IonBadge>  
-                      </IonButton>
-                      ) : null}
-                    <IonAlert
-                      isOpen={alertUpdateFav.addStatus}
-                      onDidDismiss={() => setAlertUpdateFav({...alertUpdateFav, addStatus: false })}
-                      header={'Favoriten hinzufügen'}
-                      message={'Möchtest du den Eisladen deinen Favoriten hinzufügen?'}
-                      buttons={[
-                        { text: 'Abbrechen', role: 'cancel' },
-                        { text: 'Bestätigen', handler: addFavLoc }
-                      ]}
-                    />
-                    <IonAlert
-                      isOpen={alertUpdateFav.removeStatus}
-                      onDidDismiss={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: false })}
-                      header={'Favoriten entfernen'}
-                      message={'Möchtest du den Eisladen wirklich von deiner Liste entfernen?'}
-                      buttons={[
-                        { text: 'Abbrechen', role: 'cancel' },
-                        { text: 'Bestätigen', handler: removeFavLoc }
-                      ]}
-                    />
-
-                    <IonLabel>{selected.name}</IonLabel>
-                    <IonButton fill="clear" onClick={() => setShowMapModal(false)}>
-                      <IonIcon icon={closeCircleOutline }/>
-                    </IonButton>
-                  </IonItem>
-                  <SelectedMarker />
-                </IonModal>
-
-                <IonModal cssClass='newLocModal' isOpen={showNewLocModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowNewLocModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
-                  <IonItem lines='full'>
-                    <IonLabel>Eisladen eintragen</IonLabel>
-                    <IonButton fill="clear" onClick={() => { setShowNewLocModal(false)}}><IonIcon icon={closeCircleOutline }/></IonButton>
-                  </IonItem>
-                  <NewLocationForm />
-                </IonModal>
-              </div>
-            ) : null}
-
-          </GoogleMap>
 
           {user ? (
             <form onSubmit={onSubmit}>
