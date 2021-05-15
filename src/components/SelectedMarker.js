@@ -14,6 +14,8 @@ const SelectedMarker = () => {
     openComments, setOpenComments
   } = useContext(Context);
 
+  console.log(selected);
+
   useEffect(() => {
     setLoading(true);
     const fetchData = async() => {

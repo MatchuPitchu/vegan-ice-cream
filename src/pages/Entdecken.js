@@ -1,15 +1,16 @@
 import { useContext, useState, useCallback, useRef } from "react";
 import { Context } from '../context/Context';
 import { Geolocation } from '@ionic-native/geolocation';
-import { IonItem, IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonModal, IonPage, IonSegment, IonSegmentButton, IonToggle, IonToolbar, IonAlert, IonBadge, isPlatform } from '@ionic/react';
+import { IonItem, IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonModal, IonPage, IonSegment, IonSegmentButton, IonToolbar, isPlatform } from '@ionic/react';
 import { Autocomplete, GoogleMap, Marker, MarkerClusterer, useJsApiLoader } from '@react-google-maps/api';
-import { add, addCircleOutline, bookmarks, bookmarksOutline, closeCircleOutline, listCircle, location as myPos, map as mapIcon, refreshCircle, removeCircleOutline } from "ionicons/icons";
+import { add, addCircleOutline, closeCircleOutline, listCircle, location as myPos, map as mapIcon, refreshCircle, removeCircleOutline, search } from "ionicons/icons";
 import NewLocationForm from "../components/NewLocationForm";
 import Search from "../components/Search";
 import SelectedMarker from '../components/SelectedMarker';
 import ListMap from "../components/ListMap";
 import Spinner from "../components/Spinner";
 import LoadingError from "../components/LoadingError";
+import FavLocBtn from "../components/FavLocBtn";
 
 const Entdecken = () => {
   const {
@@ -17,9 +18,11 @@ const Entdecken = () => {
     error, setError,
     user, 
     locations,
+    locationsMap,
     center, setCenter,
     zoom, setZoom,
     map, setMap,
+    viewport, setViewport,
     selected, setSelected,
     searchSelected, setSearchSelected,
     position, setPosition,
@@ -29,9 +32,7 @@ const Entdecken = () => {
     enterAnimation, leaveAnimation, 
     showMapModal, setShowMapModal,
     showNewLocModal, setShowNewLocModal,
-    alertUpdateFav, setAlertUpdateFav,
-    addFavLoc,
-    removeFavLoc
+    setOpenComments
   } = useContext(Context);
   const [libraries] = useState(['places']);
 
@@ -140,12 +141,19 @@ const Entdecken = () => {
     }
   }
   
-  const clusterOptions = {
-    imagePath: './assets/icons/m'
+  const searchViewport = () => {
+    let { Ua, La } = map.getBounds()
+    const latLngBounds = {
+      southLat: Ua.g,
+      westLng: La.g,
+      northLat: Ua.i,
+      eastLng: La.i,
+    };
+    setViewport(latLngBounds);
   }
 
-  const createKey = (location) => {
-    return location.lat + location.lng
+  const clusterOptions = {
+    imagePath: './assets/icons/m'
   }
 
   const options = {
@@ -156,9 +164,9 @@ const Entdecken = () => {
     // restricted to boundaries of germany
     restriction: {
       latLngBounds: {
-        north: 55.1,
         south: 47.1,
         west: 5.8,
+        north: 55.1,
         east: 15.1,
       },
     },
@@ -195,6 +203,8 @@ const Entdecken = () => {
     libraries
   })
 
+  console.log('selected:', selected)
+
   return (isLoaded) ? (
     <IonPage>
       <IonHeader>
@@ -229,10 +239,20 @@ const Entdecken = () => {
               </div>
             </div>
             <div className="control-right-top">
-              <IonButton className="all-control" title="Mehr Eisläden laden" >
-                <IonLabel className="me-1">Alle anzeigen</IonLabel>
-                <IonToggle onIonChange={e => setAll(true)} checked={all} disabled={`${all ? 'true' : 'false'}`} />
-              </IonButton>
+              <div className="col">
+                <div className="d-flex justify-content-end">
+                  <IonButton className="viewport-control" onClick={searchViewport}>
+                    <IonLabel className="me-1">In diesem Gebiet suchen</IonLabel>
+                    <IonIcon slot="start" icon={search} />
+                  </IonButton>
+                </div>
+                {/* <div className="d-flex justify-content-end">
+                  <IonButton className="all-control" title="Mehr Eisläden laden" >
+                    <IonLabel className="me-1">Alle anzeigen</IonLabel>
+                    <IonToggle onIonChange={e => setAll(true)} checked={all} disabled={`${all ? 'true' : 'false'}`} />
+                  </IonButton>
+                </div> */}
+              </div>
            </div>
            <div className="control-right-bottom">
               <div className="col">
@@ -272,11 +292,14 @@ const Entdecken = () => {
                 // zoomOnClick={false}
               >
                 {(clusterer) =>
-                  locations ? locations.map(loc => (
-                    <Marker 
-                      key={createKey({lat: loc.address.geo.lat, lng: loc.address.geo.lng})} 
+                  locationsMap ? locationsMap.map(loc => (
+                    <Marker
+                      key={loc._id} 
                       position={{lat: loc.address.geo.lat, lng: loc.address.geo.lng}} 
                       clusterer={clusterer}
+                      // If newLocation exists on same place as normal marker, than normal marker is size 0
+                      // If newLocation does not exist than condition: if searchSelected exists on same place as normal marker,
+                      // than normal marker becomes green, otherwise normal marker is alway dark
                       icon={newLocation && 
                         newLocation.address.street === loc.address.street && 
                         newLocation.address.number === loc.address.number ?
@@ -303,15 +326,6 @@ const Entdecken = () => {
                   ) : null}
 
               </MarkerClusterer>
-
-              {/* {locations ? locations.map(loc => (
-                <Marker
-                  key={loc._id}
-                  position={{lat: loc.address.geo.lat, lng: loc.address.geo.lng}}
-                  // If newLocation exists on same place as normal marker, than normal marker is size 0
-                  // If newLocation does not exist than condition: if searchSelected exists on same place as normal marker,
-                  // than normal marker becomes green, otherwise normal marker is alway dark
-              */}
 
               {position ? (
                 <Marker
@@ -343,43 +357,9 @@ const Entdecken = () => {
                 <div>
                   <IonModal cssClass='mapModal' isOpen={showMapModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowMapModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
                       <IonItem lines='full'>
-                        {user ? (
-                          <>
-                          {user.favorite_locations.find(loc => loc._id === selected._id) ? (
-                            <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: true, location: selected})}>
-                              <IonIcon icon={bookmarks}/>
-                              <IonBadge slot="end" color="danger">-</IonBadge>
-                            </IonButton>
-                            ) : (
-                            <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, addStatus: true, location: selected})}>
-                              <IonIcon icon={bookmarksOutline}/>
-                              <IonBadge slot="end" color="success">+</IonBadge>  
-                            </IonButton>
-                            )}
-                          </>
-                        ) : null}
-                        <IonAlert
-                          isOpen={alertUpdateFav.addStatus}
-                          onDidDismiss={() => setAlertUpdateFav({...alertUpdateFav, addStatus: false })}
-                          header={'Favoriten hinzufügen'}
-                          message={'Möchtest du den Eisladen deinen Favoriten hinzufügen?'}
-                          buttons={[
-                            { text: 'Abbrechen', role: 'cancel' },
-                            { text: 'Bestätigen', handler: addFavLoc }
-                          ]}
-                        />
-                        <IonAlert
-                          isOpen={alertUpdateFav.removeStatus}
-                          onDidDismiss={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: false })}
-                          header={'Favoriten entfernen'}
-                          message={'Möchtest du den Eisladen wirklich von deiner Liste entfernen?'}
-                          buttons={[
-                            { text: 'Abbrechen', role: 'cancel' },
-                            { text: 'Bestätigen', handler: removeFavLoc }
-                          ]}
-                        />
+                        {user ? <FavLocBtn /> : null}
                         <IonLabel>{selected.name}</IonLabel>
-                        <IonButton fill="clear" onClick={() => setShowMapModal(false)}>
+                        <IonButton fill="clear" onClick={() => {setOpenComments(false); setShowMapModal(false)}} >
                           <IonIcon icon={closeCircleOutline }/>
                         </IonButton>
                       </IonItem>

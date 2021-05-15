@@ -8,11 +8,15 @@ const AppState = ({children}) => {
   const [isAuth, setIsAuth] = useState(false);
   const [user, setUser] = useState(null);
   const [locations, setLocations] = useState([]);
+  const [locationsMap, setLocationsMap] = useState([]);
+  const [locationsList, setLocationsList] = useState([]);
   const [locPage, setLocPage] = useState(1);
+  const [num, setNum] = useState(4);
   const [all, setAll] = useState(false);
   const [disableInfScroll, setDisableInfScroll] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [map, setMap]= useState(null);
+  const [viewport, setViewport] = useState({});
   const [center, setCenter] = useState({ lat:  52.524, lng: 13.410 });
   const [zoom, setZoom] = useState(12);
   const [selected, setSelected] = useState(null);
@@ -71,30 +75,75 @@ const AppState = ({children}) => {
       try {
         const res = await fetch(`${process.env.REACT_APP_API_URL}/locations`)
         const data = await res.json();
+        console.log(data);
         setLocations(data);
-      } catch (error) {
-        setError(error.message);
-      }
-    }
-    if(all) fetchLoc();
-  }, [all])
 
-  useEffect(() => {
-    const fetchLoc = async () => {
-      try {
-        const limit = 4;
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/locations?page=${locPage}&limit=${limit}`) 
-        const data = await res.json();
-        if(data && data.length === limit) {
-          setLocations([...locations, ...data]);
-        } else {
-          setDisableInfScroll(true);
+        // set first elements for locations segment 'list' when mounting page
+        if(locationsList.length < 4) {
+          const newArr = data.slice(0, 4)
+          setLocationsList(newArr)
+          console.log('newArr', newArr)
         }
       } catch (error) {
         setError(error.message);
       }
     }
-    if(!all) fetchLoc();
+    fetchLoc();
+
+  }, [])
+
+
+  useEffect(() => {
+    const fetchLocInViewport = async () => {
+      try {
+        const limit = 50;
+        const options = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // converts JS data into JSON string.
+          body: JSON.stringify({
+            southLat: viewport.southLat,
+            westLng: viewport.westLng,
+            northLat: viewport.northLat,
+            eastLng: viewport.eastLng,
+          }),
+          credentials: "include",
+        };
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/viewport?limit=${limit}`, options)
+        const data = await res.json();
+        setLocationsMap(data);
+      } catch (error) {
+        setError(error.message);
+      }
+    }
+
+    if(viewport) fetchLocInViewport();
+  }, [viewport])
+
+  useEffect(() => {
+    const newArr = locations.slice(num, num+4)
+    console.log('newArr', newArr)
+    setNum(prev => prev + 4)
+    setLocationsList([...locationsList, ...newArr])
+    console.log(locationsList);
+
+    // const fetchLoc = async () => {
+    //   try {
+    //     const limit = 4;
+    //     const res = await fetch(`${process.env.REACT_APP_API_URL}/locations?page=${locPage}&limit=${limit}`) 
+    //     const data = await res.json();
+    //     if(data && data.length === limit) {
+    //       setLocations([...locations, ...data]);
+    //     } else {
+    //       setDisableInfScroll(true);
+    //     }
+    //   } catch (error) {
+    //     setError(error.message);
+    //   }
+    // }
+    // if(!all) fetchLoc();
   }, [locPage])
 
   const initTheme = () => {
@@ -243,11 +292,14 @@ const AppState = ({children}) => {
         isAuth, setIsAuth,
         user, setUser,
         locations, setLocations,
+        locationsMap, setLocationsMap,
+        locationsList, setLocationsList,
         locPage, setLocPage,
         all, setAll,
         disableInfScroll, setDisableInfScroll,
         searchText, setSearchText,
         map, setMap,
+        viewport, setViewport,
         center, setCenter,
         zoom, setZoom,
         selected, setSelected,
