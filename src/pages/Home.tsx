@@ -12,7 +12,7 @@ const Home: React.FC = () => {
       <IonHeader>
         <img className="headerMap" src={`${toggle ? "./assets/header-home-dark.svg" : "./assets/header-home-light.svg"}`} />
       </IonHeader>
-      <IonContent className="home">
+      <IonContent className="home" style={{backgroundImage: `url(./assets/images/${toggle ? 'ice-cream-red-dark-pablo-merchan-montes-unsplash.jpg' : 'ice-cream-yellow-light-wesual-click-unsplash.jpg'})`}}>
         <div className="run-text">
           <h1 className="title">
             veganes Eis<br />

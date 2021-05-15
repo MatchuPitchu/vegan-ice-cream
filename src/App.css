@@ -346,7 +346,6 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 /*********** Tab Home ************/
 .home {
   --background: none;
-  background-image: url(./images/ice-cream-yellow-light-wesual-click-unsplash.jpg);
   background-size: cover;
   background-position: center;
 }

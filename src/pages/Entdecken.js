@@ -141,7 +141,7 @@ const Entdecken = () => {
   }
   
   const clusterOptions = {
-    imagePath: './assets/m'
+    imagePath: './assets/icons/m'
   }
 
   const createKey = (location) => {
