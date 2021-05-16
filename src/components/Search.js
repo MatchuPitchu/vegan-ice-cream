@@ -7,7 +7,7 @@ const Search = () => {
   const { 
     loading, setLoading,
     error, setError,
-    setAll,
+    // setAll,
     setCenter,
     setZoom,
     locations,
@@ -48,7 +48,7 @@ const Search = () => {
           cancel-button-text=""
           value={searchText}
           onIonChange={e => {
-            setAll(true);
+            // setAll(true);
             setSearchText(e.detail.value);
             setTimeout(() => forAutocompleteChange(e.detail.value), 3000)
             
@@ -72,7 +72,7 @@ const Search = () => {
           onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
         >
           <p>Wirst du nicht fündig?</p>
-          <p>Dann trage den Eisladen zuerst auf der Karte ein</p>
+          <p>Trage den Eisladen zuerst ein</p>
           <IonButton size="small" routerLink='/entdecken' onClick={() => setPopoverShow({ show: false, event: undefined })} className="my-3 confirm-btn" type="submit" expand="block">
             <IonIcon className="pe-1"icon={add}/>
           </IonButton>

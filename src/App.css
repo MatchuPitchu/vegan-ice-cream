@@ -269,7 +269,8 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 .my-custom-class .popover-content {
   background: var(--ion-background-color);
   padding: 10px;
-  width: 150px;
+  width: 180px;
+  text-align: center;
 }
 
 /* Searchbar Autocomplete Google */

@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Context } from "../context/Context";
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonIcon, IonItem, IonLabel, IonList, IonPage } from '@ionic/react';
-import { bulb, closeCircleOutline, helpCircle, logoCss3, logoHtml5, logoIonic, logoJavascript, logoNodejs, logoReact } from 'ionicons/icons';
+import { bulb, closeCircleOutline, documentLock, helpCircle, logoCss3, logoHtml5, logoIonic, logoJavascript, logoNodejs, logoReact } from 'ionicons/icons';
 
 const About = () => {
   const { setShowAbout, toggle } = useContext(Context);
@@ -71,6 +71,10 @@ const About = () => {
               <IonItem>
                 <IonLabel color="primary">NodeJS mit Express</IonLabel>
                 <IonIcon color="primary" slot="start" icon={logoNodejs} />
+              </IonItem>
+              <IonItem>
+                <IonLabel color="primary">MongoDB mit Mongoose</IonLabel>
+                <IonIcon color="primary" slot="start" icon={documentLock} />
               </IonItem>
             </IonList>
           </IonCardContent>

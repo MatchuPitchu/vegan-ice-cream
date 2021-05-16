@@ -38,6 +38,7 @@ const Entdecken = () => {
 
   const [segment, setSegment] = useState('map');
   const [autocomplete, setAutocomplete] = useState(null);
+  const [searchAutocomplete, setSearchAutocomplete] = useState('');
   const [result, setResult] = useState(null);
   const [formattedAddress, setFormattedAddress] = useState(null);
   
@@ -57,22 +58,52 @@ const Entdecken = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    setAll(true);
+
+    const duplicate = locations.find(loc => loc.address.street === result.address.street && loc.address.number === result.address.number)    
+    if(duplicate) {
+      setResult(null)
+      setError('Diese Adresse gibt es schon.');
+      setTimeout(() => setError(null), 5000);
+    }
 
     const fetchData = async () => {
       try {
-        const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(formattedAddress)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
+        const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(formattedAddress ? formattedAddress : searchAutocomplete)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
         const { results } = await res.json();
-        setNewLocation({
-          ...result,
-          address: {
-            ...result.address,
-            geo: {
-              lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
-              lng: results[0].geometry.location ? results[0].geometry.location.lng : null
+        console.log(results)
+        
+        if(result.address.number) {
+          setNewLocation({
+            ...result,
+            address: {
+              ...result.address,
+              geo: {
+                lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
+                lng: results[0].geometry.location ? results[0].geometry.location.lng : null
+              }
             }
-          }
-        })
+          })
+        } else {
+          let address = {};
+          results[0].address_components && results[0].address_components.forEach(e => e.types.forEach(type => Object.assign(address, {[type]: e.long_name})));
+          setNewLocation({
+            name: '',
+            address: {
+              street: address.route ? address.route : '',
+              number: address.street_number ? parseInt(address.street_number) : '',
+              zipcode: address.postal_code ? address.postal_code : '',
+              city: address.locality ? address.locality : '',
+              country: address.country ? address.country : '',
+              geo: {
+                lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
+                lng: results[0].geometry.location ? results[0].geometry.location.lng : null
+              }
+            },
+            location_url: '',
+            place_id: address.place_id ? address.place_id : ''
+          })
+        }
+
         if(results[0].geometry.location) {
           setCenter({
             lat: results[0].geometry.location.lat,
@@ -85,26 +116,10 @@ const Entdecken = () => {
         setTimeout(() => setError(null), 5000);
       }
     };
-    fetchData();
+    if(!duplicate) fetchData();
+    setSearchAutocomplete('');
     setLoading(false);
   };
-
-  const checkDuplicate = () => {
-    console.log(locations)
-    console.log(newLocation)
-
-    const duplicate = locations.find(loc => loc.address.street === newLocation.address.street && loc.address.number === newLocation.address.number)
-    console.log(duplicate)
-    
-    if(duplicate) {
-      setError('Diese Adresse gibt es schon.');
-      setNewLocation(null)
-    }
-    if(!duplicate) {
-      setSelected(newLocation); 
-      setShowNewLocModal(true); 
-    }
-  }
 
   const scrollDown = () => {
     // (number) means duration
@@ -113,10 +128,10 @@ const Entdecken = () => {
 
   const onPlaceChanged = () => {
     if(autocomplete !== null) {
-      const result = autocomplete.getPlace();
+      const data = autocomplete.getPlace();
       let address = {};
-      result.address_components.forEach(e => e.types.forEach(type => Object.assign(address, {[type]: e.long_name})));
-      setFormattedAddress(result.formatted_address);
+      data.address_components && data.address_components.forEach(e => e.types.forEach(type => Object.assign(address, {[type]: e.long_name})));
+      setFormattedAddress(data.formatted_address);
       setResult({
         name: '',
         address: {
@@ -130,8 +145,8 @@ const Entdecken = () => {
             lng: null
           }
         },
-        location_url: result.website ? result.website : '',
-        place_id: result.place_id ? result.place_id : ''
+        location_url: data.website ? data.website : '',
+        place_id: data.place_id ? data.place_id : ''
       })
       scrollDown()
     }
@@ -202,8 +217,6 @@ const Entdecken = () => {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries
   })
-
-  console.log('selected:', selected)
 
   return (isLoaded) ? (
     <IonPage>
@@ -289,7 +302,6 @@ const Entdecken = () => {
               <MarkerClusterer 
                 options={clusterOptions}
                 imageExtension='png'
-                // zoomOnClick={false}
               >
                 {(clusterer) =>
                   locationsMap ? locationsMap.map(loc => (
@@ -348,8 +360,11 @@ const Entdecken = () => {
                     anchor: new window.google.maps.Point(15, 15)
                   }}
                   optimized={false}
-                  title={`${newLocation.address.street} ${newLocation.address.number}, ${newLocation.address.zipcode} ${newLocation.address.city}`}
-                  onClick={() => checkDuplicate()}
+                  title={`${newLocation.address.street} ${newLocation.address.number} ${newLocation.address.zipcode} ${newLocation.address.city}`}
+                  onClick={() => { 
+                    setSelected(newLocation); 
+                    setShowNewLocModal(true); 
+                  }}
                 />
               ) : null}
 
@@ -397,10 +412,12 @@ const Entdecken = () => {
                     type="text"
                     placeholder="Name, Adresse eintippen ..."
                     className="search-autocomplete"
+                    // value={searchText}
+                    onChange={(e) => setSearchAutocomplete(e.target.value)}
                   />
                 </Autocomplete>
                 <IonButton fill="solid" className="check-btn my-3" type="submit">
-                  <IonIcon icon={add} />Check: Erscheint ein grünes Icon? Klicke darauf
+                  <IonIcon icon={add} />Check: Klicke auf das neue grüne Icon
                 </IonButton>
               </IonItem>
             </form>
