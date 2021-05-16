@@ -144,7 +144,18 @@ const AppState = ({children}) => {
     }
 
     if(viewport) updateLocInViewport();
-  }, [viewport])
+  }, [viewport, searchSelected])
+
+  const searchViewport = () => {
+    let { Ua, La } = map.getBounds()
+    const latLngBounds = {
+      southLat: Ua.g,
+      westLng: La.g,
+      northLat: Ua.i,
+      eastLng: La.i,
+    };
+    setViewport(latLngBounds);
+  }
 
   useEffect(() => {
     const newArr = locations.slice(num, num+4)
@@ -310,6 +321,7 @@ const AppState = ({children}) => {
         searchText, setSearchText,
         map, setMap,
         viewport, setViewport,
+        searchViewport,
         center, setCenter,
         zoom, setZoom,
         selected, setSelected,

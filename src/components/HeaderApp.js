@@ -10,9 +10,10 @@ const HeaderApp = () => {
   const {
     toggle,
     user,
-    numNewLoc,
-    popoverShow, setPopoverShow
+    numNewLoc
   } = useContext(Context);
+
+  const [ popoverShow, setPopoverShow ] = useState({ show: false, event: undefined });
 
   return (
     <>

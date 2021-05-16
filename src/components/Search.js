@@ -11,6 +11,9 @@ const Search = () => {
     setCenter,
     setZoom,
     locations,
+    map,
+    viewport, setViewport,
+    searchViewport,
     searchSelected, setSearchSelected,
     searchText, setSearchText,
   } = useContext(Context);
@@ -26,7 +29,7 @@ const Search = () => {
   }
 
   const forAutocompleteChange = async value => {
-    if(value.length >= 2 && locations) {
+    if(value.length >= 3 && locations) {
       const res = await locations.filter(loc => loc.name.toLowerCase().includes(value.toLowerCase()) || loc.address.city.toLowerCase().includes(value.toLowerCase()) );
       const result = res.slice(0, 10);
       setPredictions(result);
@@ -37,21 +40,28 @@ const Search = () => {
     }
   };
 
+  const initMarker = (loc) => {
+    setSearchSelected(loc); 
+    setPredictions([])
+    setCenter({lat: loc.address.geo.lat, lng: loc.address.geo.lng})
+    setZoom(14)
+  }
+
   return (
     <form onSubmit={onSubmit}>
       <IonItem className="searchbar" lines="none">
         <IonSearchbar 
           className="searchbar container" 
-          type="search" 
+          type="search"
+          inputMode="search"
           placeholder="Eisladen suchen" 
           showCancelButton="always" 
           cancel-button-text=""
           value={searchText}
+          debounce={100}
           onIonChange={e => {
-            // setAll(true);
             setSearchText(e.detail.value);
-            setTimeout(() => forAutocompleteChange(e.detail.value), 3000)
-            
+            forAutocompleteChange(e.detail.value)
           }}
         />
         <IonIcon
@@ -81,12 +91,7 @@ const Search = () => {
               className="autocompleteListItem" 
               key={loc._id} 
               button 
-              onClick={() => { 
-                setSearchSelected(loc); 
-                setPredictions([])
-                setCenter({lat: loc.address.geo.lat, lng: loc.address.geo.lng})
-                setZoom(12)
-              }} 
+              onClick={() => initMarker(loc)}
               lines="full"
             >
               <IonLabel color="primary" className="ion-text-wrap">{loc.name} <span className="p-weak">, {loc.address.street} {loc.address.number} in {loc.address.city}</span></IonLabel>

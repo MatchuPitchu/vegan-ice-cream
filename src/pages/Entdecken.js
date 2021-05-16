@@ -23,6 +23,7 @@ const Entdecken = () => {
     zoom, setZoom,
     map, setMap,
     viewport, setViewport,
+    searchViewport,
     selected, setSelected,
     searchSelected, setSearchSelected,
     position, setPosition,
@@ -43,7 +44,6 @@ const Entdecken = () => {
   const [formattedAddress, setFormattedAddress] = useState(null);
   
   const contentRef = useRef(null);
-  const markerRef = useRef(null);
 
   const getLocation = async () => {
     try {
@@ -155,17 +155,6 @@ const Entdecken = () => {
       setTimeout(() => setError(null), 5000);
     }
   }
-  
-  const searchViewport = () => {
-    let { Ua, La } = map.getBounds()
-    const latLngBounds = {
-      southLat: Ua.g,
-      westLng: La.g,
-      northLat: Ua.i,
-      eastLng: La.i,
-    };
-    setViewport(latLngBounds);
-  }
 
   const clusterOptions = {
     imagePath: './assets/icons/m'
@@ -175,14 +164,14 @@ const Entdecken = () => {
     styles: mapStyles,
     disableDefaultUI: true,
     gestureHandling: "cooperative",
-    minZoom: 9,
+    minZoom: 7,
     // restricted to boundaries of germany
     restriction: {
       latLngBounds: {
         south: 47.1,
-        west: 5.8,
-        north: 55.1,
-        east: 15.1,
+        west: 5.7,
+        north: 55.3,
+        east: 15.3,
       },
     },
   }
@@ -330,6 +319,7 @@ const Entdecken = () => {
                         coords: [1, 1, 1, 28, 26, 28, 26, 1],
                         type: "poly",
                       }}
+                      optimized={false}
                       title={`${loc.name}, ${loc.address.street} ${loc.address.number}`}
                       cursor='pointer'
                       onClick={() => { setSelected(loc); setShowMapModal(true) }}
@@ -338,6 +328,25 @@ const Entdecken = () => {
                   ) : null}
 
               </MarkerClusterer>
+
+              {searchSelected ? (
+                <Marker
+                  position={{lat: searchSelected.address.geo.lat, lng: searchSelected.address.geo.lng}}
+                  icon={{
+                    url: './assets/icons/selected-ice-location.svg',
+                    scaledSize: new window.google.maps.Size(30, 30),
+                    origin: new window.google.maps.Point(0, 0),
+                    anchor: new window.google.maps.Point(15, 15)
+                  }}
+                  optimized={false}
+                  title={`${searchSelected.address.street} ${searchSelected.address.number} ${searchSelected.address.zipcode} ${searchSelected.address.city}`}
+                  onClick={() => { 
+                    setSelected(searchSelected); 
+                    setShowMapModal(true); 
+                  }}
+                  zIndex={2}
+                />
+              ) : null}
 
               {position ? (
                 <Marker
@@ -351,7 +360,6 @@ const Entdecken = () => {
 
               {newLocation ? (
                 <Marker
-                  ref={markerRef}
                   position={{lat: newLocation.address.geo.lat, lng: newLocation.address.geo.lng}}
                   icon={{
                     url: './assets/icons/newLocation-marker.svg',
