@@ -85,13 +85,18 @@ const AppState = ({children}) => {
           credentials: "include"
         };
         await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/num-loc-last-visit`, options);
-        setNumNewLoc(locations.length - user.num_loc_last_visit);
       } catch (error) {
         setError(error.message);
       }
     }
 
-    if(locations && user) updateNewNumLoc();
+    if(locations && user) {
+      const timer = setTimeout(() => updateNewNumLoc(), 20000);
+      setNumNewLoc(locations.length - user.num_loc_last_visit);
+      
+      return () => clearTimeout(timer);
+    }
+
   }, [locations, user])
 
   useEffect(() => {
