@@ -137,7 +137,7 @@ const Bewerten = () => {
       const newComment = await res.json();
       if (!newComment) {
         setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
-        return () => setTimeout(setError(null), 5000);
+        setTimeout(() => setError(null), 5000);
       }
       createFlavor(data, newComment._id, newComment);
       // reset();

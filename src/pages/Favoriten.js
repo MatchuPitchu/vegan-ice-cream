@@ -9,9 +9,8 @@ import LoadingError from "../components/LoadingError";
 
 const Favoriten = () => {
   const { 
-    error, setError,
     isAuth, 
-    user, setUser,
+    user,
     toggle,
     removeFavLoc,
     alertUpdateFav, setAlertUpdateFav,

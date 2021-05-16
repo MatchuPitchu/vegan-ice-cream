@@ -86,7 +86,7 @@ const AppState = ({children}) => {
         };
         await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/num-loc-last-visit`, options);
       } catch (error) {
-        setError(error.message);
+        console.log(error.message);
       }
     }
 

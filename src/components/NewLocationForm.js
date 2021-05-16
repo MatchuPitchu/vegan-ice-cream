@@ -34,6 +34,7 @@ const NewLocationForm = () => {
     console.log(duplicate)
     if(duplicate) {
       setError('Diese Adresse gibt es schon.');
+      setTimeout(() => setError(null), 5000);
       return setNewLocation(null)
     }
     
@@ -66,7 +67,7 @@ const NewLocationForm = () => {
       const newLocation = await res.json();
       if (!newLocation) {
         setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
-        return () => setTimeout(setError(null), 5000);
+        setTimeout(() => setError(null), 5000);
       }
       setLocations([...locations, newLocation])
       reset();

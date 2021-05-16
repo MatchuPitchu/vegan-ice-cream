@@ -6,15 +6,11 @@ import { add, informationCircle } from 'ionicons/icons';
 const Search = () => {
   const { 
     loading, setLoading,
-    error, setError,
     // setAll,
     setCenter,
     setZoom,
     locations,
-    map,
-    viewport, setViewport,
-    searchViewport,
-    searchSelected, setSearchSelected,
+    setSearchSelected,
     searchText, setSearchText,
   } = useContext(Context);
   const [ predictions, setPredictions ] = useState([]);

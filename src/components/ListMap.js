@@ -8,8 +8,6 @@ import FavLocBtn from "./FavLocBtn";
 
 const ListMap = () => {
   const { 
-    loading, setLoading, 
-    error, setError,
     locationsList,
     disableInfScroll, 
     loadMore,

@@ -52,6 +52,7 @@ const Entdecken = () => {
       setCenter({lat: position.coords.latitude, lng: position.coords.longitude})
     } catch (error) {
       setError('Deine Position kann nicht ermittelt werden. Kontrolliere deine Einstellungen:', error)
+      setTimeout(() => setError(null), 5000);
     }
   };
 
