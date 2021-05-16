@@ -101,7 +101,7 @@ const Profil = () => {
                   color="primary"
                   icon={iceCream}
                 />
-                <IonLabel>Mein Lieblingseis</IonLabel>
+                <IonLabel>Meine Eissorten</IonLabel>
                 <div>
                   <IonIcon
                     className="infoIcon"
@@ -117,12 +117,12 @@ const Profil = () => {
                 </div>
                 <IonPopover
                   color="primary"
-                  cssClass='my-custom-class'
+                  cssClass='info-popover'
                   event={popoverShow.event}
                   isOpen={popoverShow.show}
                   onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
                 >
-                  <p>Diese Sorten hast du bei deinen Bewertungen angegeben</p>
+                  Angaben aus deinen Bewertungen
                 </IonPopover>
               </IonItem>
               

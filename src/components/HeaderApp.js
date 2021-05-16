@@ -2,17 +2,17 @@ import { useContext, useState } from 'react';
 import { Context } from '../context/Context';
 import { menuController } from '@ionic/core';
 import { IonBadge, IonButton, IonButtons, IonIcon, IonLabel, IonMenu, IonPage, IonPopover, IonToolbar } from '@ionic/react';
-import { alarmOutline, menu } from 'ionicons/icons';
+import { menu, storefront } from 'ionicons/icons';
 import Menu from './Menu';
 import Toggle from './Toggle';
 
 const HeaderApp = () => {
   const {
+    toggle,
     user,
-    numNewLoc
+    numNewLoc,
+    popoverShow, setPopoverShow
   } = useContext(Context);
-
-  const [ popoverShow, setPopoverShow ] = useState({ show: false, event: undefined });
 
   return (
     <>
@@ -24,24 +24,25 @@ const HeaderApp = () => {
           {user && (
             <>
               <IonIcon
+                color={`${toggle ? "primary" : ''}`}
                 button 
                 onClick={e => {
                   e.persist();
                   setPopoverShow({ show: true, event: e })
                 }}
-                icon={alarmOutline}
+                icon={storefront}
+                title="Neue Eisläden seit letztem Besuch"
               />
-              <IonBadge slot="end" color="secondary">{numNewLoc ? numNewLoc : null}</IonBadge>
+              <IonBadge slot="end" color="secondary">{numNewLoc ? numNewLoc : 0}</IonBadge>
           
               <IonPopover
                 color="primary"
-                cssClass='my-custom-class'
+                cssClass='info-popover'
                 event={popoverShow.event}
                 isOpen={popoverShow.show}
                 onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
               >
-                <p>Neue Eisläden seit deinem letzten Besuch:</p>
-                <p>{numNewLoc}</p>
+                Neue Eisläden seit letztem Besuch
               </IonPopover>
             </>
           )}

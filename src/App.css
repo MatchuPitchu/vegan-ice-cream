@@ -71,6 +71,15 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   height: 30px;
 }
 
+.info-popover .popover-content {
+  background: var(--ion-background-color);
+  font-size: 0.8rem;
+  line-height: 1.2;
+  padding: 5px;
+  width: 150px;
+  text-align: center;
+}
+
 /************ Menu ************/
 .headerGraphic {
   padding: 20px;
@@ -264,13 +273,6 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   border: 1px solid var(--ion-color-primary);
   border-radius: 90%;
   background-color: var(--ion-background-color);
-}
-
-.my-custom-class .popover-content {
-  background: var(--ion-background-color);
-  padding: 10px;
-  width: 180px;
-  text-align: center;
 }
 
 /* Searchbar Autocomplete Google */

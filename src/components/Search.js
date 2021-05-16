@@ -66,16 +66,12 @@ const Search = () => {
         />
         <IonPopover
           color="primary"
-          cssClass='my-custom-class'
+          cssClass='info-popover'
           event={popoverShow.event}
           isOpen={popoverShow.show}
           onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
         >
-          <p>Wirst du nicht fündig?</p>
-          <p>Trage den Eisladen zuerst ein</p>
-          <IonButton size="small" routerLink='/entdecken' onClick={() => setPopoverShow({ show: false, event: undefined })} className="my-3 confirm-btn" type="submit" expand="block">
-            <IonIcon className="pe-1"icon={add}/>
-          </IonButton>
+          Nichts gefunden? Trage den Eisladen zuerst auf der Karte ein
         </IonPopover>
       </IonItem>
       {predictions ? (
