@@ -1,13 +1,18 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Context } from '../context/Context';
 import { menuController } from '@ionic/core';
-import { IonBadge, IonButton, IonButtons, IonIcon, IonMenu, IonPage, IonToolbar } from '@ionic/react';
+import { IonBadge, IonButton, IonButtons, IonIcon, IonLabel, IonMenu, IonPage, IonPopover, IonToolbar } from '@ionic/react';
 import { alarmOutline, menu } from 'ionicons/icons';
 import Menu from './Menu';
 import Toggle from './Toggle';
 
 const HeaderApp = () => {
-  const { searchText, setSearchText } = useContext(Context);
+  const {
+    user,
+    numNewLoc
+  } = useContext(Context);
+
+  const [ popoverShow, setPopoverShow ] = useState({ show: false, event: undefined });
 
   return (
     <>
@@ -16,11 +21,31 @@ const HeaderApp = () => {
           <Toggle />
         </div>
         <IonButtons slot="primary" >
-          <IonButton fill="clear" >
-            <IonIcon icon={alarmOutline} />
-            <IonBadge slot="end" color="secondary">2</IonBadge>
-          </IonButton>
-          <IonButton fill="clear" onClick={ async () => await menuController.toggle()}>
+          {user && (
+            <>
+              <IonIcon
+                button 
+                onClick={e => {
+                  e.persist();
+                  setPopoverShow({ show: true, event: e })
+                }}
+                icon={alarmOutline}
+              />
+              <IonBadge slot="end" color="secondary">{numNewLoc ? numNewLoc : null}</IonBadge>
+          
+              <IonPopover
+                color="primary"
+                cssClass='my-custom-class'
+                event={popoverShow.event}
+                isOpen={popoverShow.show}
+                onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
+              >
+                <p>Neue Eisläden seit deinem letzten Besuch:</p>
+                <p>{numNewLoc}</p>
+              </IonPopover>
+            </>
+          )}
+          <IonButton className="ms-3" fill="clear" onClick={ async () => await menuController.toggle()}>
             <IonIcon icon={menu} />
           </IonButton>
         </IonButtons>

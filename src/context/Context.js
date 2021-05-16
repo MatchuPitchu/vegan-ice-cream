@@ -7,6 +7,7 @@ export const Context = createContext();
 const AppState = ({children}) => {
   const [isAuth, setIsAuth] = useState(false);
   const [user, setUser] = useState(null);
+  const [numNewLoc, setNumNewLoc] = useState();
   const [locations, setLocations] = useState([]);
   const [locationsMap, setLocationsMap] = useState([]);
   const [locationsList, setLocationsList] = useState([]);
@@ -46,8 +47,8 @@ const AppState = ({children}) => {
     const token = localStorage.getItem('token');
 
     // First check if token is valid, then fetch all user infos and set to state
-    try {
-      const verifySession = async () => {
+    const verifySession = async () => {
+      try {
         const options = {
           headers: { token },
           credentials: "include"
@@ -60,22 +61,45 @@ const AppState = ({children}) => {
           const data = await res.json();
           setUser({ ...user, ...data});
         };
+      } catch (error) {
+        console.log(error.message);
       }
-      if (token) {
-        verifySession();
-      }
-    } catch (error) {
-      setError(error.message);
     }
+
+    if (token) verifySession();   
     setLoading(false);
   }, [newComment]);
+
+  useEffect(() => {
+    const updateNewNumLoc = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const options = {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            token
+          },
+          // converts JS data into JSON string.
+          body: JSON.stringify({current_num_loc: locations.length}),
+          credentials: "include"
+        };
+        await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/num-loc-last-visit`, options);
+        setNumNewLoc(locations.length - user.num_loc_last_visit);
+      } catch (error) {
+        setError(error.message);
+      }
+    }
+
+    if(locations && user) updateNewNumLoc();
+  }, [locations, user])
 
   useEffect(() => {
     const fetchLoc = async () => {
       try {
         const res = await fetch(`${process.env.REACT_APP_API_URL}/locations`)
         const data = await res.json();
-        console.log(data);
+        console.log('All locations:', data);
         setLocations(data);
 
         // set first elements for locations segment 'list' when mounting page
@@ -85,16 +109,16 @@ const AppState = ({children}) => {
           console.log('newArr', newArr)
         }
       } catch (error) {
-        setError(error.message);
+        console.log(error.message);
       }
     }
-    fetchLoc();
 
+    fetchLoc();
   }, [])
 
 
   useEffect(() => {
-    const fetchLocInViewport = async () => {
+    const updateLocInViewport = async () => {
       try {
         const limit = 50;
         const options = {
@@ -115,11 +139,11 @@ const AppState = ({children}) => {
         const data = await res.json();
         setLocationsMap(data);
       } catch (error) {
-        setError(error.message);
+        console.log(error.message);
       }
     }
 
-    if(viewport) fetchLocInViewport();
+    if(viewport) updateLocInViewport();
   }, [viewport])
 
   useEffect(() => {
@@ -128,38 +152,23 @@ const AppState = ({children}) => {
     setNum(prev => prev + 4)
     setLocationsList([...locationsList, ...newArr])
     console.log(locationsList);
-
-    // const fetchLoc = async () => {
-    //   try {
-    //     const limit = 4;
-    //     const res = await fetch(`${process.env.REACT_APP_API_URL}/locations?page=${locPage}&limit=${limit}`) 
-    //     const data = await res.json();
-    //     if(data && data.length === limit) {
-    //       setLocations([...locations, ...data]);
-    //     } else {
-    //       setDisableInfScroll(true);
-    //     }
-    //   } catch (error) {
-    //     setError(error.message);
-    //   }
-    // }
-    // if(!all) fetchLoc();
   }, [locPage])
 
-  const initTheme = () => {
-    var darkSelected = (localStorage.getItem('themeSwitch') !== null && localStorage.getItem('themeSwitch') === 'dark');
-    if(darkSelected) {
-      document.body.setAttribute('color-theme', 'dark') 
-      setMapStyles(mapDark);
-      setToggle(true);
-    } else {
-      document.body.setAttribute('color-theme', 'light');
-      setMapStyles(mapLight);
-      setToggle(false);
-    } 
-  };
-
+  
   useEffect(() => {
+    const initTheme = () => {
+      var darkSelected = (localStorage.getItem('themeSwitch') !== null && localStorage.getItem('themeSwitch') === 'dark');
+      if(darkSelected) {
+        document.body.setAttribute('color-theme', 'dark') 
+        setMapStyles(mapDark);
+        setToggle(true);
+      } else {
+        document.body.setAttribute('color-theme', 'light');
+        setMapStyles(mapLight);
+        setToggle(false);
+      } 
+    };
+    
     initTheme()
   }, [])
 
@@ -291,6 +300,7 @@ const AppState = ({children}) => {
       value={{
         isAuth, setIsAuth,
         user, setUser,
+        numNewLoc, setNumNewLoc,
         locations, setLocations,
         locationsMap, setLocationsMap,
         locationsList, setLocationsList,
