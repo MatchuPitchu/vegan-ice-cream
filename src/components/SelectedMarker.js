@@ -80,12 +80,7 @@ const SelectedMarker = () => {
         </div>
       
         <IonCard>
-          <div style={toggle ? {backgroundColor: '#233033' } : {backgroundColor: '#fff'}}>
-            <IonCardHeader>
-              <IonCardTitle>Bewertungen</IonCardTitle>
-              <IonCardSubtitle>Anzahl: {selected.comments_list.length > 0 ? selected.comments_list.length : null}</IonCardSubtitle>
-            </IonCardHeader>
-            
+          <div style={toggle ? {backgroundColor: '#233033' } : {backgroundColor: '#fff'}}>          
             <IonItemGroup>
               <IonItem className="d-flex modalItem" lines="full">
                 {selected.location_rating_quality ? (
@@ -165,8 +160,8 @@ const SelectedMarker = () => {
                       <div className="d-flex align-items-center">
                         {comment.flavors_referred.map(flavor => {
                           return (
-                            <IonButton key={flavor._id} disabled fill="outline" className="disabled-btn my-3">
-                              <IonIcon className="pe-1" color="primary" icon={iceCream} />
+                            <IonButton key={flavor._id} disabled fill="solid" className="disabled-btn my-3">
+                              <IonIcon className="pe-1" icon={iceCream} />
                               {flavor.name}
                             </IonButton>
                             )
