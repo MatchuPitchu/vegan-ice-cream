@@ -735,7 +735,7 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   align-self: center;
 }
 
-.ice-cream-btn {
+.disabled-btn {
   font-size: 0.7rem;
   text-transform: none;
   min-height: 33px;

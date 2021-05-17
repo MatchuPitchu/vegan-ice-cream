@@ -1,24 +1,23 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Context } from '../context/Context';
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonIcon, IonImg, IonItem, IonItemGroup, IonLabel, IonLoading, IonModal, IonPopover, IonToast, isPlatform } from "@ionic/react";
+import { IonButton, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonIcon, IonImg, IonItem, IonItemGroup, IonLabel, IonModal } from "@ionic/react";
 import ReactStars from "react-rating-stars-component";
-import { add, caretDownCircle, caretForwardCircle, closeCircleOutline, iceCream, informationCircle } from "ionicons/icons";
+import { add, caretDownCircle, caretForwardCircle, closeCircleOutline, iceCream } from "ionicons/icons";
 import FavLocBtn from "./FavLocBtn";
 import LoadingError from "./LoadingError";
 
 const SelectedMarker = () => {
   const {
     user, 
-    loading, setLoading, 
-    error, setError,
+    setLoading, 
+    setError,
     selected, setSelected,
+    setSearchSelected,
     toggle,
     openComments, setOpenComments,
     infoModal, setInfoModal,
     enterAnimation, leaveAnimation,
   } = useContext(Context);
-
-  const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
 
   useEffect(() => {
     setLoading(true);
@@ -41,8 +40,6 @@ const SelectedMarker = () => {
     fetchData();
     setLoading(false);
   }, [])
-
-  console.log(selected);
 
   return (
     <IonModal
@@ -75,7 +72,7 @@ const SelectedMarker = () => {
             </IonItem>
             <IonItem className="modalItem" lines="full">
               <IonLabel color='primary'>Bewertung schreiben</IonLabel>
-              <IonButton fill="clear" routerLink="/bewerten" routerDirection="forward">
+              <IonButton onClick={() => setSearchSelected(selected)} fill="clear" routerLink="/bewerten" routerDirection="forward">
                 <IonIcon icon={add}/>
               </IonButton>
             </IonItem>
@@ -85,7 +82,7 @@ const SelectedMarker = () => {
         <IonCard>
           <div style={toggle ? {backgroundColor: '#233033' } : {backgroundColor: '#fff'}}>
             <IonCardHeader>
-              <IonCardTitle> Bewertungen</IonCardTitle>
+              <IonCardTitle>Bewertungen</IonCardTitle>
               <IonCardSubtitle>Anzahl: {selected.comments_list.length > 0 ? selected.comments_list.length : null}</IonCardSubtitle>
             </IonCardHeader>
             
@@ -139,17 +136,22 @@ const SelectedMarker = () => {
                   </div>
               </IonItem>
               
-              <IonItem color="background-color" lines="none">
-                <IonIcon 
-                  className="me-2"
-                  color="primary" 
-                  icon={openComments ? caretDownCircle : caretForwardCircle} 
-                  button onClick={() => {
-                    setOpenComments(prev => !prev);
-                  }}
-                />
-                <IonLabel className="ms-1">Alle Bewertungen anzeigen</IonLabel>
-              </IonItem>
+              {selected.comments_list.length > 0 ? (
+                <IonItem color="background-color" lines="none">
+                  <IonIcon 
+                    className="me-2"
+                    color="primary" 
+                    icon={openComments ? caretDownCircle : caretForwardCircle} 
+                    button onClick={() => {
+                      setOpenComments(prev => !prev);
+                    }}
+                  />
+                  <IonLabel className="ms-1">Alle Bewertungen anzeigen</IonLabel>
+                  <IonButton disabled fill="solid" className="disabled-btn my-3">
+                    {selected.comments_list.length} 
+                  </IonButton>
+                </IonItem>
+              ) : null}
               {openComments ? selected.comments_list.map((comment, i) => {
                 return (
                   <>
@@ -163,7 +165,7 @@ const SelectedMarker = () => {
                       <div className="d-flex align-items-center">
                         {comment.flavors_referred.map(flavor => {
                           return (
-                            <IonButton key={flavor._id} disabled fill="outline" className="ice-cream-btn my-3">
+                            <IonButton key={flavor._id} disabled fill="outline" className="disabled-btn my-3">
                               <IonIcon className="pe-1" color="primary" icon={iceCream} />
                               {flavor.name}
                             </IonButton>

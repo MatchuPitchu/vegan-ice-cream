@@ -159,10 +159,7 @@ const Bewerten = () => {
           <Search />
         </div>
 
-        {/* "handleSubmit" will validate your inputs before invoking "onSubmit" */}
         <form className="container" onSubmit={handleSubmit(onSubmit)}>
-          
-          
           <IonItem lines="none">
             <IonLabel position='stacked' htmlFor="location">Name des Eisladens</IonLabel>
             <IonInput 
