@@ -14,10 +14,10 @@ const ListMap = () => {
     user,
     selected, setSelected,
     enterAnimation, leaveAnimation, 
-    showMapModal, setShowMapModal,
+    infoModal, setInfoModal,
     setOpenComments,
   } = useContext(Context);
-  
+
   return (
     <IonContent>
       {locationsList && locationsList.map((loc) => (
@@ -75,7 +75,7 @@ const ListMap = () => {
               onClick={() => {
                 setOpenComments(false);
                 setSelected(loc); 
-                setShowMapModal(true) 
+                setInfoModal(true) 
               }}
             >
               <IonIcon icon={open} />
@@ -85,20 +85,7 @@ const ListMap = () => {
         </IonCard>
       ))}
 
-      {selected ? (
-        <div>
-          <IonModal cssClass='mapModal' isOpen={showMapModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowMapModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
-            <IonItem lines='full'>
-              {user ? <FavLocBtn /> : null}
-              <IonLabel>{selected.name}</IonLabel>
-              <IonButton fill="clear" onClick={() => setShowMapModal(false)}>
-                <IonIcon icon={closeCircleOutline }/>
-              </IonButton>
-            </IonItem>
-            <SelectedMarker />
-          </IonModal>
-        </div>
-      ) : null}
+      {selected ? <SelectedMarker /> : null}
 
       {/* Infinite Scroll Ionic React: https://dev.to/daviddalbusco/infinite-scroll-with-ionic-react-3a3i */}
       <IonInfiniteScroll threshold="10%" disabled={disableInfScroll} onIonInfinite={(e) => loadMore(e)}>

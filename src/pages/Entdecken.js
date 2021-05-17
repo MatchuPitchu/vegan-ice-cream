@@ -31,8 +31,8 @@ const Entdecken = () => {
     all, setAll, 
     mapStyles, 
     enterAnimation, leaveAnimation, 
-    showMapModal, setShowMapModal,
-    showNewLocModal, setShowNewLocModal,
+    infoModal, setInfoModal,
+    newLocModal, setNewLocModal,
     setOpenComments
   } = useContext(Context);
   const [libraries] = useState(['places']);
@@ -43,6 +43,8 @@ const Entdecken = () => {
   const [result, setResult] = useState(null);
   const [formattedAddress, setFormattedAddress] = useState(null);
   
+  console.log('Locs', locationsMap)
+
   const contentRef = useRef(null);
 
   const getLocation = async () => {
@@ -71,7 +73,6 @@ const Entdecken = () => {
       try {
         const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(formattedAddress ? formattedAddress : searchAutocomplete)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
         const { results } = await res.json();
-        console.log(results)
         
         if(result.address.number) {
           setNewLocation({
@@ -323,7 +324,11 @@ const Entdecken = () => {
                       optimized={false}
                       title={`${loc.name}, ${loc.address.street} ${loc.address.number}`}
                       cursor='pointer'
-                      onClick={() => { setSelected(loc); setShowMapModal(true) }}
+                      onClick={() => { 
+                        setOpenComments(false); 
+                        setSelected(loc); 
+                        setInfoModal(true) 
+                      }}
                     />
                     )
                   ) : null}
@@ -342,8 +347,9 @@ const Entdecken = () => {
                   optimized={false}
                   title={`${searchSelected.address.street} ${searchSelected.address.number} ${searchSelected.address.zipcode} ${searchSelected.address.city}`}
                   onClick={() => { 
+                    setOpenComments(false);
                     setSelected(searchSelected); 
-                    setShowMapModal(true); 
+                    setInfoModal(true); 
                   }}
                   zIndex={2}
                 />
@@ -372,28 +378,19 @@ const Entdecken = () => {
                   title={`${newLocation.address.street} ${newLocation.address.number} ${newLocation.address.zipcode} ${newLocation.address.city}`}
                   onClick={() => { 
                     setSelected(newLocation); 
-                    setShowNewLocModal(true); 
+                    setNewLocModal(true); 
                   }}
                 />
               ) : null}
 
               {selected ? (
                 <div>
-                  <IonModal cssClass='mapModal' isOpen={showMapModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowMapModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
-                      <IonItem lines='full'>
-                        {user ? <FavLocBtn /> : null}
-                        <IonLabel>{selected.name}</IonLabel>
-                        <IonButton fill="clear" onClick={() => {setOpenComments(false); setShowMapModal(false)}} >
-                          <IonIcon icon={closeCircleOutline }/>
-                        </IonButton>
-                      </IonItem>
-                    <SelectedMarker />
-                  </IonModal>
+                  <SelectedMarker />
 
-                  <IonModal cssClass='newLocModal' isOpen={showNewLocModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowNewLocModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
+                  <IonModal cssClass='newLocModal' isOpen={newLocModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setNewLocModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
                     <IonItem lines='full'>
                       <IonLabel>Eisladen eintragen</IonLabel>
-                      <IonButton fill="clear" onClick={() => { setShowNewLocModal(false)}}><IonIcon icon={closeCircleOutline }/></IonButton>
+                      <IonButton fill="clear" onClick={() => { setNewLocModal(false)}}><IonIcon icon={closeCircleOutline }/></IonButton>
                     </IonItem>
                     <NewLocationForm />
                   </IonModal>

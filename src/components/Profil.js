@@ -130,7 +130,7 @@ const Profil = () => {
                 return (
                   <div key={ice._id} style={{backgroundColor: 'var(--ion-background-color)'}}>
                     <IonCardHeader>{ice.name}</IonCardHeader>
-                    <div className="iceContainer">
+                    <div className="mx-auto iceContainer">
                       <div className="icecream" style={{background: `linear-gradient(to bottom, ${ice.ice_color.color_primary}, ${ice.ice_color.color_secondary} )`}}></div>
                       <div className="icecreamBottom" style={{background: ice.ice_color.color_primary}}></div>
                       <div className="cone"></div>
@@ -138,8 +138,6 @@ const Profil = () => {
                   </div>
                 )}
               )}
-             
-
 
             </IonItemGroup>
           </IonCard>

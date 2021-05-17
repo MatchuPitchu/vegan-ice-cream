@@ -120,7 +120,7 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   justify-content: center;
   align-items: center;
   height: 130px;
-  width: 100%;
+  width: 90px;
 }
 
 .icecream {
@@ -731,8 +731,16 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 .check-btn {
   font-size: 0.7rem;
   text-transform: none;
-  min-height: 30px;
+  min-height: 33px;
   align-self: center;
+}
+
+.ice-cream-btn {
+  font-size: 0.7rem;
+  text-transform: none;
+  min-height: 33px;
+  align-self: center;
+  opacity: 0.9;
 }
 
 /*********** Tab Bewerten ************/

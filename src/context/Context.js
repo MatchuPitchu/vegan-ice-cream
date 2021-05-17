@@ -31,8 +31,8 @@ const AppState = ({children}) => {
   const [showProfil, setShowProfil] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
-  const [showMapModal, setShowMapModal] = useState(false);
-  const [showNewLocModal, setShowNewLocModal] = useState(false);
+  const [infoModal, setInfoModal] = useState(false);
+  const [newLocModal, setNewLocModal] = useState(false);
   const [bookmark, setBookmark] = useState(false);
   const [alertUpdateFav, setAlertUpdateFav] = useState({
     removeStatus: false, 
@@ -91,7 +91,7 @@ const AppState = ({children}) => {
     }
 
     if(locations && user) {
-      const timer = setTimeout(() => updateNewNumLoc(), 20000);
+      const timer = setTimeout(() => updateNewNumLoc(), 25000);
       setNumNewLoc(locations.length - user.num_loc_last_visit);
       
       return () => clearTimeout(timer);
@@ -104,14 +104,12 @@ const AppState = ({children}) => {
       try {
         const res = await fetch(`${process.env.REACT_APP_API_URL}/locations`)
         const data = await res.json();
-        console.log('All locations:', data);
         setLocations(data);
 
         // set first elements for locations segment 'list' when mounting page
         if(locationsList.length < 4) {
           const newArr = data.slice(0, 4)
           setLocationsList(newArr)
-          console.log('newArr', newArr)
         }
       } catch (error) {
         console.log(error.message);
@@ -120,7 +118,6 @@ const AppState = ({children}) => {
 
     fetchLoc();
   }, [])
-
 
   useEffect(() => {
     const updateLocInViewport = async () => {
@@ -164,10 +161,8 @@ const AppState = ({children}) => {
 
   useEffect(() => {
     const newArr = locations.slice(num, num+4)
-    console.log('newArr', newArr)
     setNum(prev => prev + 4)
     setLocationsList([...locationsList, ...newArr])
-    console.log(locationsList);
   }, [locPage])
 
   
@@ -344,8 +339,8 @@ const AppState = ({children}) => {
         showProfil, setShowProfil,
         showFeedback, setShowFeedback,
         showAbout, setShowAbout,
-        showMapModal, setShowMapModal,
-        showNewLocModal, setShowNewLocModal,
+        infoModal, setInfoModal,
+        newLocModal, setNewLocModal,
         bookmark, setBookmark,
         alertUpdateFav, setAlertUpdateFav,
         removeFavLoc,

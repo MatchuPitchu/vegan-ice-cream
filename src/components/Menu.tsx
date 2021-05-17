@@ -20,9 +20,10 @@ import About from './About';
 import Profil from './Profil';
 
 const Menu: React.FC = () => {
-  const { 
+  const {
+    setUser,
     isAuth, setIsAuth, 
-    toggle, 
+    toggle,
     enterAnimationLft, leaveAnimationLft, 
     showProfil, setShowProfil,
     showFeedback, setShowFeedback, 
@@ -32,7 +33,7 @@ const Menu: React.FC = () => {
   const logout = () => {
     localStorage.removeItem('token');
     setIsAuth(false);
-    // setUser({});
+    setUser(null);
   }
 
   return (

@@ -34,7 +34,7 @@ const Login = () => {
         setUser({ ...user, ...data});
         setIsAuth(true);
       } else {
-        setError('Prüfe, ob du das richtige Passwort eingetragen hast')
+        setError('Prüfe, ob du das richtige Passwort eingetippt hast');
         setTimeout(() => setError(null), 5000);
       }
     } catch (error) {
