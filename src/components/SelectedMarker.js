@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import { Context } from '../context/Context';
 import { IonButton, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonIcon, IonImg, IonItem, IonItemGroup, IonLabel, IonModal } from "@ionic/react";
 import ReactStars from "react-rating-stars-component";
-import { add, caretDownCircle, caretForwardCircle, closeCircleOutline, iceCream } from "ionicons/icons";
+import { add, caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, iceCream } from "ionicons/icons";
 import FavLocBtn from "./FavLocBtn";
 import LoadingError from "./LoadingError";
 
@@ -160,12 +160,9 @@ const SelectedMarker = () => {
               {openComments ? selected.comments_list.map((comment, i) => {
                 return (
                   <>
-                    <IonItem color="background-color" lines="none">
-                      <IonLabel>{i+1}. Bewertung</IonLabel>
-                    </IonItem>
                     <IonItem key={comment._id} color="background-color" lines="full">
-                      <IonLabel className="ion-text-wrap mt-0 ms-1">
-                      <p>{comment.text}</p>
+                      <IonLabel className="ion-text-wrap mt-3 ms-1">
+                      <p><IonIcon className="me-2" color={`${toggle ? '' : 'primary'}`} icon={chatboxEllipses}/> {comment.text}</p>
                       
                       <div className="d-flex align-items-center">
                         {comment.flavors_referred.map(flavor => {

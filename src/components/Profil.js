@@ -3,7 +3,7 @@ import { Context } from "../context/Context";
 // https://www.npmjs.com/package/react-rating-stars-component
 import ReactStars from "react-rating-stars-component";
 import { IonButton, IonContent, IonPage, IonHeader, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonIcon, IonLabel, IonItem, IonItemGroup, IonPopover } from "@ionic/react";
-import { add, caretDownCircle, caretForwardCircle, closeCircleOutline, iceCream, idCard, informationCircle, mail, star } from "ionicons/icons";
+import { add, caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, iceCream, idCard, informationCircle, mail, star } from "ionicons/icons";
 import Spinner from '../components/Spinner';
 
 const Profil = () => {
@@ -59,15 +59,15 @@ const Profil = () => {
                 </IonButton>
               </IonItem>
 
-              {showComments && user.comments_list ? user.comments_list.map((comment, i) => {
+              {showComments && user.comments_list ? user.comments_list.map(comment => {
                 return (
                   <div key={comment._id}>
                     <IonItem className="ms-1" lines="none">
-                      <IonLabel>{i+1}. Bewertung</IonLabel>
+                      <IonLabel color="primary">{comment.location_id.name}</IonLabel>
                     </IonItem>
                     <IonItem key={comment._id} lines="full">
-                      <IonLabel className="ion-text-wrap mt-0 ms-1">
-                        <p>{comment.text}</p>
+                      <IonLabel color="text-color" className="ion-text-wrap mt-0 ms-1">
+                        <p><IonIcon className="me-2" color={`${toggle ? '' : 'primary'}`} icon={chatboxEllipses}/>{comment.text}</p>
                         
                         <div className="d-flex align-items-center">
                           {comment.flavors_referred.map(flavor => {
