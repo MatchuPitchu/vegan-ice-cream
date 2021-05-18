@@ -82,7 +82,7 @@ const Profil = () => {
                         </div>
                       
                         <div className="d-flex align-items-center">
-                          <div className="me-2">Eis-Qualität</div>
+                          <div className="me-2">Eis-Erlebnis</div>
                           <div>
                             <ReactStars
                               count={5}

@@ -3,8 +3,8 @@ import { Context } from "../context/Context";
 import ReactStars from "react-rating-stars-component";
 import { CirclePicker } from "react-color";
 import { Controller, useForm } from 'react-hook-form';
-import { IonButton, IonContent, IonDatetime, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonPage, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToast, IonToggle, IonToolbar } from '@ionic/react';
-import { add, colorPaletteOutline, search } from 'ionicons/icons';
+import { IonButton, IonContent, IonDatetime, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonPage, IonPopover, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToast, IonToggle, IonToolbar } from '@ionic/react';
+import { add, colorPaletteOutline, informationCircle, search } from 'ionicons/icons';
 import showError from '../components/showError';
 import Search from '../components/Search';
 import LoadingError from '../components/LoadingError';
@@ -14,14 +14,15 @@ const Bewerten = () => {
   const { 
     isAuth,
     toggle,
-    loading, setLoading,
-    error, setError,
+    setLoading,
+    setError,
     user,
     searchSelected, setSearchSelected,
     setSearchText,
-    newComment, setNewComment
+    setNewComment
   } = useContext(Context);
   
+  const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
   const [colorPicker1, setColorPicker1] = useState({field1: false, field2: false});
   const [colorPicker2, setColorPicker2] = useState({field1: false, field2: false});
   const name1Ref = useRef(null);
@@ -202,6 +203,84 @@ const Bewerten = () => {
               placeholder="Nutze die obere Suche"
               value={searchSelected ? searchSelected.name : ''}
             />
+          </IonItem>
+
+          <IonItem lines="none" className="mb-1">
+            <IonLabel position='floating' htmlFor="text">Kommentar</IonLabel>
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <IonTextarea rows={6} value={value} onIonChange={e => onChange(e.detail.value)} />
+              )}
+              name="text"
+              rules={{ required: true }}
+            />
+          </IonItem>
+          {showError("text", errors)}
+          
+          <IonItem lines="none">
+            <IonLabel position='stacked' htmlFor="rating_quality">Eis-Erlebnis</IonLabel>
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <ReactStars
+                  count={5}
+                  value={value}
+                  onChange={e => onChange(e)}
+                  edit={true}
+                  size={30}
+                  color='#9b9b9b'
+                  activeColor='#de9c01'
+                />
+              )}
+              name="rating_quality"
+              rules={{ required: true }}
+            />
+          </IonItem>
+          {showError("rating_quality", errors)}
+    
+          <IonItem lines="none" className="mb-1">
+            <IonLabel position='stacked' htmlFor="rating_vegan_offer">Veganes Angebot des Eisladens</IonLabel>
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <ReactStars
+                  count={5}
+                  value={value}
+                  onChange={e => onChange(e)}
+                  edit={true}
+                  size={30}
+                  color='#9b9b9b'
+                  activeColor='#de9c01'
+                />
+              )}
+              name="rating_vegan_offer"
+              rules={{ required: true }}
+            />
+          </IonItem>
+          {showError("rating_vegan_offer", errors)}
+
+          <IonItem lines="full">
+            <IonLabel color="primary">Infos zu deiner Bewertung</IonLabel>
+            <IonIcon
+              className="infoIcon ms-auto"
+              color="primary"
+              button 
+              onClick={e => {
+                e.persist();
+                setPopoverShow({ show: true, event: e })
+              }}
+              icon={informationCircle} 
+            />
+            <IonPopover
+              color="primary"
+              cssClass='info-popover'
+              event={popoverShow.event}
+              isOpen={popoverShow.show}
+              onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
+            >
+              mind. 1 gewählte Eissorte ist anzugeben
+            </IonPopover>
           </IonItem>
 
           <IonItem lines="none">
@@ -406,62 +485,6 @@ const Bewerten = () => {
                 />
           </IonItem>
           {showError("ice-color", errors)}
-
-
-          <IonItem lines="none" className="mb-1">
-            <IonLabel position='floating' htmlFor="text">Kommentar</IonLabel>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <IonTextarea rows={6} value={value} onIonChange={e => onChange(e.detail.value)} />
-              )}
-              name="text"
-              rules={{ required: true }}
-            />
-          </IonItem>
-          {showError("text", errors)}
-          
-          <IonItem lines="none">
-            <IonLabel position='stacked' htmlFor="rating_quality">Eis-Qualität</IonLabel>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <ReactStars
-                  count={5}
-                  value={value}
-                  onChange={e => onChange(e)}
-                  edit={true}
-                  size={30}
-                  color='#9b9b9b'
-                  activeColor='#de9c01'
-                />
-              )}
-              name="rating_quality"
-              rules={{ required: true }}
-            />
-          </IonItem>
-          {showError("rating_quality", errors)}
-    
-          <IonItem lines="none" className="mb-1">
-            <IonLabel position='stacked' htmlFor="rating_vegan_offer">Veganes Angebot des Eisladens</IonLabel>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <ReactStars
-                  count={5}
-                  value={value}
-                  onChange={e => onChange(e)}
-                  edit={true}
-                  size={30}
-                  color='#9b9b9b'
-                  activeColor='#de9c01'
-                />
-              )}
-              name="rating_vegan_offer"
-              rules={{ required: true }}
-            />
-          </IonItem>
-          {showError("rating_vegan_offer", errors)}
 
           <IonItem lines="none" className="mb-1">
             <IonLabel position='floating' htmlFor="date">Datum</IonLabel>

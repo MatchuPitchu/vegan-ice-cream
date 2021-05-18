@@ -94,7 +94,7 @@ const SelectedMarker = () => {
             <IonItemGroup>
               <IonItem className="d-flex modalItem" lines="full">
                 {selected.location_rating_quality ? (
-                  <div className="pe-3 py-2">Eis-Qualität
+                  <div className="pe-3 py-2">Eis-Erlebnis
                     <ReactStars
                       count={5}
                       value={selected.location_rating_quality}
@@ -177,7 +177,7 @@ const SelectedMarker = () => {
                       </div>
                     
                       <div className="d-flex align-items-center">
-                        <div className="me-2">Eis-Qualität</div>
+                        <div className="me-2">Eis-Erlebnis</div>
                         <div>
                           <ReactStars
                             count={5}

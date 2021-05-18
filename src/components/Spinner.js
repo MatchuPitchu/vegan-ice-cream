@@ -1,8 +1,10 @@
-import { useContext,useState } from "react";
+import { useContext } from "react";
 import { Context } from "../context/Context";
 // import spinner
 import { css } from "@emotion/core";
 import { RingLoader } from "react-spinners";
+import { IonButton, IonIcon, IonLabel } from "@ionic/react";
+import { create, logIn } from "ionicons/icons";
 
 // Can be a string as well. Need to ensure each key-value pair ends with ;
 const override = css`
@@ -13,18 +15,26 @@ const override = css`
 `;
 
 const Spinner = () => {
-  const { isAuth } = useContext(Context);
-  const [color] = useState("var(--ion-color-primary)");
+  const { isAuth, toggle } = useContext(Context);
 
   return (
-    <div>
-      <RingLoader color={color} css={override} size={120} />
-      <h3
-        style={{ fontSize: "1.3em", textAlign: "center" }}
-        className="display-3"
-      >
+    <div className="d-flex flex-column align-items-center">
+      <RingLoader color="var(--ion-color-primary)" css={override} size={120} />
+      <h3 style={{ fontSize: "1.3em" }} className="display-3">
         {isAuth ? 'Loading ...' : 'Nur für eingeloggte User sichtbar'} 
       </h3>
+      {!isAuth ? (
+        <div>
+          <IonButton routerLink='/login' fill="solid" className="disabled-btn my-3">
+            <IonLabel>Login</IonLabel>
+            <IonIcon className="pe-1" icon={logIn} />
+          </IonButton>
+          <IonButton routerLink='/register' fill="solid" className="disabled-btn my-3">
+            <IonLabel>Registrieren</IonLabel>
+            <IonIcon className="pe-1" icon={create} />
+          </IonButton>
+        </div>
+      ) : null}
     </div>
   );
 };

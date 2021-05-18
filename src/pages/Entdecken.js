@@ -297,33 +297,21 @@ const Entdecken = () => {
                   locationsMap ? locationsMap.map(loc => (
                     <Marker
                       key={loc._id} 
-                      position={{lat: loc.address.geo.lat, lng: loc.address.geo.lng}} 
+                      position={{ lat: loc.address.geo.lat, lng: loc.address.geo.lng }} 
                       clusterer={clusterer}
-                      // If newLocation exists on same place as normal marker, than normal marker is size 0
-                      // If newLocation does not exist than condition: if searchSelected exists on same place as normal marker,
-                      // than normal marker becomes green, otherwise normal marker is alway dark
-                      icon={newLocation && 
-                        newLocation.address.street === loc.address.street && 
-                        newLocation.address.number === loc.address.number ?
-                        {
-                          url: './assets/icons/ice-cream-icon-dark.svg',
-                          scaledSize: new window.google.maps.Size(0, 0)
-                        } : {
-                          url: searchSelected && searchSelected.address.geo.lat === loc.address.geo.lat && 
-                            searchSelected.address.geo.lng === loc.address.geo.lng ?
-                            './assets/icons/selected-ice-location.svg' : './assets/icons/ice-cream-icon-dark.svg',
-                          scaledSize: new window.google.maps.Size(30, 30),
-                          origin: new window.google.maps.Point(0, 0),
-                          anchor: new window.google.maps.Point(15, 15)
+                      icon={{
+                        url: './assets/icons/ice-cream-icon-dark.svg',
+                        scaledSize: new window.google.maps.Size(30, 30),
+                        origin: new window.google.maps.Point(0, 0),
+                        anchor: new window.google.maps.Point(15, 15)
                       }}
                       shape={{
                         coords: [1, 1, 1, 28, 26, 28, 26, 1],
                         type: "poly",
                       }}
                       optimized={false}
-                      title={`${loc.name}, ${loc.address.street} ${loc.address.number}`}
-                      cursor='pointer'
-                      onClick={() => { 
+                      title={`${loc.name}, ${loc.address.street} ${loc.address.number}`}                     cursor='pointer'
+                      onClick={() => {
                         setOpenComments(false); 
                         setSelected(loc); 
                         setInfoModal(true) 
@@ -361,40 +349,31 @@ const Entdecken = () => {
                     url: './assets/icons/current-position-marker.svg',
                     scaledSize: new window.google.maps.Size(60, 60),
                   }}
+                  zIndex={0}
                 />
                 ) : null}
 
               {newLocation ? (
-                <Marker
-                  position={{lat: newLocation.address.geo.lat, lng: newLocation.address.geo.lng}}
-                  icon={{
-                    url: './assets/icons/newLocation-marker.svg',
-                    scaledSize: new window.google.maps.Size(30, 30),
-                    origin: new window.google.maps.Point(0, 0),
-                    anchor: new window.google.maps.Point(15, 15)
-                  }}
-                  optimized={false}
-                  title={`${newLocation.address.street} ${newLocation.address.number} ${newLocation.address.zipcode} ${newLocation.address.city}`}
-                  onClick={() => { 
-                    setSelected(newLocation); 
-                    setNewLocModal(true); 
-                  }}
-                />
+                <>
+                  <Marker
+                    position={{lat: newLocation.address.geo.lat, lng: newLocation.address.geo.lng}}
+                    icon={{
+                      url: './assets/icons/newLocation-marker.svg',
+                      scaledSize: new window.google.maps.Size(30, 30),
+                      origin: new window.google.maps.Point(0, 0),
+                      anchor: new window.google.maps.Point(15, 15)
+                    }}
+                    optimized={false}
+                    title={`${newLocation.address.street} ${newLocation.address.number} ${newLocation.address.zipcode} ${newLocation.address.city}`}
+                    cursor='pointer'
+                    onClick={() => setNewLocModal(true)}
+                    zIndex={2}
+                  />
+                  <NewLocationForm />
+                </>
               ) : null}
 
-              {selected ? (
-                <div>
-                  <SelectedMarker />
-
-                  <IonModal cssClass='newLocModal' isOpen={newLocModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setNewLocModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
-                    <IonItem lines='full'>
-                      <IonLabel>Eisladen eintragen</IonLabel>
-                      <IonButton fill="clear" onClick={() => { setNewLocModal(false)}}><IonIcon icon={closeCircleOutline }/></IonButton>
-                    </IonItem>
-                    <NewLocationForm />
-                  </IonModal>
-                </div>
-              ) : null}
+              {selected ? <SelectedMarker /> : null}
 
             </GoogleMap>
           </div>
