@@ -42,8 +42,6 @@ const Entdecken = () => {
   const [searchAutocomplete, setSearchAutocomplete] = useState('');
   const [result, setResult] = useState(null);
   const [formattedAddress, setFormattedAddress] = useState(null);
-  
-  console.log('Locs', locationsMap)
 
   const contentRef = useRef(null);
 
@@ -293,6 +291,7 @@ const Entdecken = () => {
               <MarkerClusterer 
                 options={clusterOptions}
                 imageExtension='png'
+                averageCenter
               >
                 {(clusterer) =>
                   locationsMap ? locationsMap.map(loc => (

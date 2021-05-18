@@ -4,7 +4,7 @@ import ReactStars from "react-rating-stars-component";
 import { CirclePicker } from "react-color";
 import { Controller, useForm } from 'react-hook-form';
 import { IonButton, IonContent, IonDatetime, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonPage, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToast, IonToggle, IonToolbar } from '@ionic/react';
-import { add, colorPaletteOutline } from 'ionicons/icons';
+import { add, colorPaletteOutline, search } from 'ionicons/icons';
 import showError from '../components/showError';
 import Search from '../components/Search';
 import LoadingError from '../components/LoadingError';
@@ -17,7 +17,8 @@ const Bewerten = () => {
     loading, setLoading,
     error, setError,
     user,
-    searchSelected,
+    searchSelected, setSearchSelected,
+    setSearchText,
     newComment, setNewComment
   } = useContext(Context);
   
@@ -40,10 +41,29 @@ const Bewerten = () => {
     "#000000", "#4d2119", "#693e18", "#c98850", "#ffffff",
   ]
   
-  // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
-  const { control, handleSubmit, watch, reset, formState: { errors } } = useForm({});
+  const defaultValues = { 
+    name1: undefined,
+    name1_type_cream_ice: false,
+    name1_type_fruit_ice: false,
+    name1color1: undefined,
+    name1color2: undefined,
+    name2: undefined,
+    name2_type_cream_ice: false,
+    name2_type_fruit_ice: false,
+    name2color1: undefined,
+    name2color2: undefined,
+    rating_quality: 0,
+    rating_vegan_offer: 0,
+    text: ''
+  }
 
-  // console.log('Watch:', watch()); 
+
+  // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
+  const { control, handleSubmit, watch, reset, formState: { errors } } = useForm({
+    defaultValues
+  });
+
+  console.log('Watch:', watch()); 
   // console.log('Errors:', errors);
 
   const createFlavor = async (data, commentID, comment) => {
@@ -52,6 +72,7 @@ const Bewerten = () => {
     try {
       if(data.name1) {
         const body = {
+          location_id: searchSelected._id,
           user_id: user._id,
           name: data.name1,
           type_fruit_ice: data.name1_type_fruit_ice,
@@ -61,6 +82,7 @@ const Bewerten = () => {
             color_secondary: data.name1color2
           },
         };
+
         const options = {
           method: "POST",
           headers: {
@@ -70,17 +92,20 @@ const Bewerten = () => {
           body: JSON.stringify(body),
           credentials: "include",
         };
+
         const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors/${commentID}`, options);
         const newFlavor1 = await res.json();
-        console.log(newFlavor1);
+        console.log('newFla1:', newFlavor1);
         if (!newFlavor1) {
           setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
-          return () => setTimeout(setError(null), 5000);
+          setTimeout(() => setError(null), 5000);
         }
       }
-
+      console.log(searchSelected._id)
       if(data.name2) {
         const body = {
+          location_id: searchSelected._id,
+          user_id: user._id,
           name: data.name2,
           type_fruit_ice: data.name2_type_fruit_ice,
           type_cream_ice: data.name2_type_cream_ice,
@@ -89,6 +114,7 @@ const Bewerten = () => {
             color_secondary: data.name2color2 ? data.name2color2 : null,
           },
         };
+
         const options = {
           method: "POST",
           headers: {
@@ -98,19 +124,24 @@ const Bewerten = () => {
           body: JSON.stringify(body),
           credentials: "include",
         };
+
         const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors/${commentID}`, options);
         const newFlavor2 = await res.json();
+        console.log('newFla2:', newFlavor2);
         if (!newFlavor2) {
           setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
-          return () => setTimeout(setError(null), 5000);
+          setTimeout(() => setError(null), 5000);
         }
       }
-      reset();
     } catch (error) {
       setError(error)
       setTimeout(() => setError(null), 5000);
     };
+
     setNewComment(comment);
+    setSearchText('');
+    setSearchSelected(null);
+    reset(defaultValues);
   };
 
   const onSubmit = async (data) => {
@@ -135,6 +166,9 @@ const Bewerten = () => {
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${searchSelected._id}`, options);
       const newComment = await res.json();
+
+      console.log('new comment:', newComment)
+      
       if (!newComment) {
         setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
         setTimeout(() => setError(null), 5000);
@@ -163,12 +197,10 @@ const Bewerten = () => {
           <IonItem lines="none">
             <IonLabel position='stacked' htmlFor="location">Name des Eisladens</IonLabel>
             <IonInput 
-              disabled={true}
+              disabled
               type="text"
-              inputmode="text"
               placeholder="Nutze die obere Suche"
-              value={searchSelected ? searchSelected.name : ''}  
-              onIonChange={() => {}} 
+              value={searchSelected ? searchSelected.name : ''}
             />
           </IonItem>
 
@@ -379,16 +411,13 @@ const Bewerten = () => {
           <IonItem lines="none" className="mb-1">
             <IonLabel position='floating' htmlFor="text">Kommentar</IonLabel>
             <Controller
-                control={control}
-                render={({ 
-                  field: { onChange, value },
-                  fieldState: { invalid, isTouched, isDirty, error },
-                }) => (
-                  <IonTextarea rows={6} value={value} onIonChange={e => onChange(e.detail.value)} />
-                )}
-                name="text"
-                rules={{ required: true }}
-              />
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <IonTextarea rows={6} value={value} onIonChange={e => onChange(e.detail.value)} />
+              )}
+              name="text"
+              rules={{ required: true }}
+            />
           </IonItem>
           {showError("text", errors)}
           
@@ -396,19 +425,16 @@ const Bewerten = () => {
             <IonLabel position='stacked' htmlFor="rating_quality">Eis-Qualität</IonLabel>
             <Controller
               control={control}
-              render={({ 
-                field: { onChange, value },
-                fieldState: { invalid, isTouched, isDirty, error },
-              }) => (
-              <ReactStars
-                count={5}
-                value={value}
-                onChange={e => onChange(e)}
-                edit={true}
-                size={30}
-                color='#9b9b9b'
-                activeColor='#de9c01'
-              />
+              render={({ field: { onChange, value } }) => (
+                <ReactStars
+                  count={5}
+                  value={value}
+                  onChange={e => onChange(e)}
+                  edit={true}
+                  size={30}
+                  color='#9b9b9b'
+                  activeColor='#de9c01'
+                />
               )}
               name="rating_quality"
               rules={{ required: true }}
@@ -420,19 +446,16 @@ const Bewerten = () => {
             <IonLabel position='stacked' htmlFor="rating_vegan_offer">Veganes Angebot des Eisladens</IonLabel>
             <Controller
               control={control}
-              render={({ 
-                field: { onChange, value },
-                fieldState: { invalid, isTouched, isDirty, error },
-              }) => (
-              <ReactStars
-                count={5}
-                value={value}
-                onChange={e => onChange(e)}
-                edit={true}
-                size={30}
-                color='#9b9b9b'
-                activeColor='#de9c01'
-              />
+              render={({ field: { onChange, value } }) => (
+                <ReactStars
+                  count={5}
+                  value={value}
+                  onChange={e => onChange(e)}
+                  edit={true}
+                  size={30}
+                  color='#9b9b9b'
+                  activeColor='#de9c01'
+                />
               )}
               name="rating_vegan_offer"
               rules={{ required: true }}
@@ -444,10 +467,7 @@ const Bewerten = () => {
             <IonLabel position='floating' htmlFor="date">Datum</IonLabel>
             <Controller
               control={control}
-              render={({ 
-                field: { onChange, value },
-                fieldState: { invalid, isTouched, isDirty, error },
-              }) => (
+              render={({ field: { onChange, value } }) => (
                 <IonDatetime
                   min="2021"
                   max="2023"

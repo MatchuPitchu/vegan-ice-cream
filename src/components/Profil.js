@@ -54,48 +54,67 @@ const Profil = () => {
                   }}
                 />
                 <IonLabel>Meine Bewertungen</IonLabel>
+                <IonButton disabled fill="solid" className="disabled-btn my-3">
+                  {user.comments_list.length ? user.comments_list.length : '0'} 
+                </IonButton>
               </IonItem>
 
-              {showComments && user.comments_list && user.comments_list.map((comment, i) => {
+              {showComments && user.comments_list ? user.comments_list.map((comment, i) => {
                 return (
-                <IonItem key={comment._id} lines="full">
-                  <IonLabel className="ion-text-wrap ms-1">
-                    {i+1}. {comment.location_id.name}
-                    <p className="my-1">{comment.text}</p>
-                    <div className="d-flex align-items-center">
-                      <div className="me-2">Eis-Qualität</div>
-                      <div>
-                        <ReactStars
-                          count={5}
-                          value={comment.rating_quality}
-                          edit={false}
-                          size={18}
-                          color='#9b9b9b'
-                          activeColor='#de9c01'
-                        />
-                      </div>
-                    </div>
-                    <div className="d-flex align-items-center">
-                      <div className="me-2">Veganes Angebot</div>
-                      <div>
-                        <ReactStars 
-                          count={5}
-                          value={comment.rating_vegan_offer}
-                          edit={false}
-                          size={18}
-                          color='#9b9b9b'
-                          activeColor='#de9c01'
-                        />
-                      </div>
-                    </div>
-                    <p className="p-weak mt-1">Datum: {comment.date.replace('T', ' // ').slice(0, 19)}</p>
-                  </IonLabel>
-
-                </IonItem>
+                  <div key={comment._id}>
+                    <IonItem className="ms-1" lines="none">
+                      <IonLabel>{i+1}. Bewertung</IonLabel>
+                    </IonItem>
+                    <IonItem key={comment._id} lines="full">
+                      <IonLabel className="ion-text-wrap mt-0 ms-1">
+                        <p>{comment.text}</p>
+                        
+                        <div className="d-flex align-items-center">
+                          {comment.flavors_referred.map(flavor => {
+                            return (
+                              <IonButton key={flavor._id} disabled fill="solid" className="disabled-btn my-3">
+                                <IonIcon color={`${toggle ? "warning" : "secondary"}`} className="pe-1" icon={iceCream} />
+                                {flavor.name}
+                              </IonButton>
+                              )
+                            })
+                          }
+                        </div>
+                      
+                        <div className="d-flex align-items-center">
+                          <div className="me-2">Eis-Qualität</div>
+                          <div>
+                            <ReactStars
+                              count={5}
+                              value={comment.rating_quality}
+                              edit={false}
+                              size={18}
+                              color='#9b9b9b'
+                              activeColor='#de9c01'
+                            />
+                          </div>
+                        </div>
+                        <div className="d-flex align-items-center">
+                          <div className="me-2">Veganes Angebot</div>
+                          <div>
+                            <ReactStars 
+                              count={5}
+                              value={comment.rating_vegan_offer}
+                              edit={false}
+                              size={18}
+                              color='#9b9b9b'
+                              activeColor='#de9c01'
+                            />
+                          </div>
+                        </div>
+                        <p className="p-weak mt-1">Datum: {comment.date.replace('T', ' // ').slice(0, 19)}</p>
+                      </IonLabel>
+                    </IonItem>
+                  </div>
                 )}
-              )}
+              ) : null}
 
-              <IonItem lines="none">
+              <IonItem color="card-background" lines="none">
                 <IonIcon 
                   slot="start"
                   color="primary"
@@ -126,18 +145,20 @@ const Profil = () => {
                 </IonPopover>
               </IonItem>
               
-              {user.favorite_flavors.map(ice => {
+              <div className="d-flex justify-content-around flex-wrap px-3 py-2">
+              {user.favorite_flavors ? user.favorite_flavors.map(flavor => {
                 return (
-                  <div key={ice._id} style={{backgroundColor: 'var(--ion-background-color)'}}>
-                    <IonCardHeader>{ice.name}</IonCardHeader>
-                    <div className="mx-auto iceContainer">
-                      <div className="icecream" style={{background: `linear-gradient(to bottom, ${ice.ice_color.color_primary}, ${ice.ice_color.color_secondary} )`}}></div>
-                      <div className="icecreamBottom" style={{background: ice.ice_color.color_primary}}></div>
+                  <div key={flavor._id}>
+                    <div className="iceContainer">
+                      <div className="icecream" style={{background: `linear-gradient(to bottom, ${flavor.ice_color.color_primary}, ${flavor.ice_color.color_secondary} )`}}></div>
+                      <div className="icecreamBottom" style={{background: flavor.ice_color.color_primary}}></div>
                       <div className="cone"></div>
                     </div>
+                    <div className="p-weak text-center">{flavor.name}</div>
                   </div>
                 )}
-              )}
+                ) : null }
+              </div>
 
             </IonItemGroup>
           </IonCard>

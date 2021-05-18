@@ -72,7 +72,17 @@ const SelectedMarker = () => {
             </IonItem>
             <IonItem className="modalItem" lines="full">
               <IonLabel color='primary'>Bewertung schreiben</IonLabel>
-              <IonButton onClick={() => setSearchSelected(selected)} fill="clear" routerLink="/bewerten" routerDirection="forward">
+              <IonButton 
+                onClick={() => {
+                  setSearchSelected(selected);
+                  setOpenComments(false);
+                  setSelected(null);
+                  setInfoModal(false);
+                }} 
+                fill="clear" 
+                routerLink="/bewerten" 
+                routerDirection="forward"
+              >
                 <IonIcon icon={add}/>
               </IonButton>
             </IonItem>
@@ -115,7 +125,7 @@ const SelectedMarker = () => {
                 <IonLabel>Alle bewerteten Eissorten</IonLabel>
               </IonItem>
               <IonItem lines="full">
-                <div className="d-flex flex-wrap px-3 py-2">
+                <div className="d-flex justify-content-around flex-wrap px-3 py-2">
                 {selected.flavors_listed ? selected.flavors_listed.map(flavor => {
                   return (
                     <div key={flavor._id}>
@@ -154,14 +164,14 @@ const SelectedMarker = () => {
                       <IonLabel>{i+1}. Bewertung</IonLabel>
                     </IonItem>
                     <IonItem key={comment._id} color="background-color" lines="full">
-                      <IonLabel className="ion-text-wrap ms-1">
-                      <p className="my-1">{comment.text}</p>
+                      <IonLabel className="ion-text-wrap mt-0 ms-1">
+                      <p>{comment.text}</p>
                       
                       <div className="d-flex align-items-center">
                         {comment.flavors_referred.map(flavor => {
                           return (
                             <IonButton key={flavor._id} disabled fill="solid" className="disabled-btn my-3">
-                              <IonIcon className="pe-1" icon={iceCream} />
+                              <IonIcon color={`${toggle ? "warning" : "secondary"}`} className="pe-1" icon={iceCream} />
                               {flavor.name}
                             </IonButton>
                             )

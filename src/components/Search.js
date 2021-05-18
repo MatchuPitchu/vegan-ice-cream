@@ -16,12 +16,11 @@ const Search = () => {
   const [ predictions, setPredictions ] = useState([]);
   const [ popoverShow, setPopoverShow ] = useState({ show: false, event: undefined });
 
-  const onSubmit = () => {
-    setLoading(true)
+  const onSubmit = (e) => {
+    e.preventDefault();
     const res = locations.filter(loc => loc.name.toLowerCase().includes(searchText.toLowerCase()) || loc.address.city.toLowerCase().includes(searchText.toLowerCase()) );
     const result = res.slice(0, 10);
     setPredictions(result);
-    setLoading(false)
   }
 
   const forAutocompleteChange = async value => {
@@ -38,9 +37,9 @@ const Search = () => {
 
   const initMarker = (loc) => {
     setSearchSelected(loc); 
-    setPredictions([])
+    setPredictions([]);
     setCenter({lat: loc.address.geo.lat, lng: loc.address.geo.lng})
-    setZoom(14)
+    setZoom(14);
   }
 
   return (
@@ -87,7 +86,10 @@ const Search = () => {
               className="autocompleteListItem" 
               key={loc._id} 
               button 
-              onClick={() => initMarker(loc)}
+              onClick={() => {
+                setSearchText(`${loc.name}, ${loc.address.street} ${loc.address.number}, ${loc.address.city}`);
+                initMarker(loc)}
+              }
               lines="full"
             >
               <IonLabel color="primary" className="ion-text-wrap">{loc.name} <span className="p-weak">, {loc.address.street} {loc.address.number} in {loc.address.city}</span></IonLabel>
