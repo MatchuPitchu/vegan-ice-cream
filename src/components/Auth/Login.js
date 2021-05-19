@@ -4,7 +4,7 @@ import { Context } from "../../context/Context";
 import { IonContent, IonInput, IonItem, IonLabel, IonList, IonButton, IonPage, IonHeader, IonTitle, IonIcon } from "@ionic/react";
 import { Redirect } from "react-router-dom";
 import showError from '../showError';
-import { logIn } from "ionicons/icons";
+import { logIn, refreshCircle } from "ionicons/icons";
 
 const Login = () => {
   const { isAuth, setIsAuth, error, setError, user, setUser, toggle } = useContext(Context);
@@ -52,42 +52,45 @@ const Login = () => {
       <IonContent>
         <div className="container mt-3">
           <form onSubmit={handleSubmit(onSubmit)}>
-              <IonItem lines="none" className="mb-1">
-                <IonLabel position='floating' htmlFor="email">E-Mail</IonLabel>
-                <Controller 
-                  control={control}
-                  render={({ 
-                    field: { onChange, value },
-                    fieldState: { invalid, isTouched, isDirty, error },
-                  }) => (
-                    <IonInput type="email" inputmode="email" value={value} onIonChange={e => onChange(e.detail.value)} />
-                    )}
-                    name="email"
-                    rules={{ required: true }}
-                    />
-              </IonItem>
-              {showError("email", errors)}
+            <IonItem lines="none" className="mb-1">
+              <IonLabel position='floating' htmlFor="email">E-Mail</IonLabel>
+              <Controller 
+                control={control}
+                render={({ 
+                  field: { onChange, value },
+                  fieldState: { invalid, isTouched, isDirty, error },
+                }) => (
+                  <IonInput type="email" inputmode="email" value={value} onIonChange={e => onChange(e.detail.value)} />
+                  )}
+                  name="email"
+                  rules={{ required: true }}
+                  />
+            </IonItem>
+            {showError("email", errors)}
 
-              <IonItem lines="none" className="mb-1">
-                <IonLabel position='floating' htmlFor="password">Passwort</IonLabel>
-                <Controller 
-                  control={control}
-                  render={({ 
-                    field: { onChange, value },
-                    fieldState: { invalid, isTouched, isDirty, error },
-                  }) => (
-                    <IonInput type="password" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
-                    )}
-                    name="password"
-                    rules={{ required: true }}
-                    />
-              </IonItem>
-              {showError("password", errors)}
-              {error && <div className='alertMsg'>{error}</div>}
-              
-              <IonButton className="my-3 confirm-btn" type="submit" expand="block">
-                <IonIcon className="pe-1"icon={logIn}/>Login
-              </IonButton>
+            <IonItem lines="none" className="mb-1">
+              <IonLabel position='floating' htmlFor="password">Passwort</IonLabel>
+              <Controller 
+                control={control}
+                render={({ 
+                  field: { onChange, value },
+                  fieldState: { invalid, isTouched, isDirty, error },
+                }) => (
+                  <IonInput type="password" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
+                  )}
+                  name="password"
+                  rules={{ required: true }}
+                  />
+            </IonItem>
+            {showError("password", errors)}
+            {error && <div className='alertMsg'>{error}</div>}
+            
+            <IonButton className="my-3 confirm-btn" type="submit" expand="block">
+              <IonIcon className="pe-1"icon={logIn}/>Login
+            </IonButton>
+            <IonButton routerLink="/auth/reset-password" size="small" fill="clear" expand="block">
+              <IonIcon slot="end" icon={refreshCircle}/>Passwort vergessen?
+            </IonButton>
           </form>
           <p className="text-center">Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
         </div>

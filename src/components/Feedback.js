@@ -29,7 +29,7 @@ const Feedback = () => {
     }
   };
 
-  const onSubmit = (data, e) => {
+  const onSubmit = (data) => {
     alert(`Danke für deine Nachricht, ${data.name}`);
     const templateID = 'contact-form';
     const serviceID = 'gmail_account'
@@ -78,10 +78,7 @@ const Feedback = () => {
             <IonLabel position='floating' htmlFor="email">E-Mail</IonLabel>
             <Controller 
               control={control}
-              render={({ 
-                field: { onChange, value },
-                fieldState: { invalid, isTouched, isDirty, error },
-              }) => (
+              render={({ field: { onChange, value } }) => (
                 <IonInput type="email" inputmode="email" value={value} onIonChange={e => onChange(e.detail.value)} />
               )}
               name="email"
@@ -94,10 +91,7 @@ const Feedback = () => {
             <IonLabel position='floating' htmlFor="message">Nachricht</IonLabel>
             <Controller 
               control={control}
-              render={({ 
-                field: { onChange, value },
-                fieldState: { invalid, isTouched, isDirty, error },
-              }) => (
+              render={({ field: { onChange, value } }) => (
                 <IonTextarea value={value} onIonChange={e => onChange(e.detail.value)}></IonTextarea>
                 )}
                 name="message"
@@ -110,10 +104,7 @@ const Feedback = () => {
             <IonLabel position="stacked" className="ion-text-wrap mb-2" htmlFor="rating">Wie gefällt dir die App?</IonLabel>
             <Controller 
               control={control}
-              render={({ 
-                field: { onChange, value },
-                fieldState: { invalid, isTouched, isDirty, error },
-              }) => (
+              render={({ field: { onChange, value } }) => (
                 <IonSelect
                   cancelText="Abbrechen"
                   placeholder="Auswahl"
@@ -135,10 +126,7 @@ const Feedback = () => {
             <IonLabel position="stacked" className="ion-text-wrap mb-2" htmlFor="recommend">Würdest du die App weiterempfehlen?</IonLabel>
             <Controller 
               control={control}
-              render={({ 
-                field: { onChange, value },
-                fieldState: { invalid, isTouched, isDirty, error },
-              }) => (
+              render={({ field: { onChange, value } }) => (
                 <IonSelect
                   cancelText="Abbrechen"
                   placeholder="Auswahl"

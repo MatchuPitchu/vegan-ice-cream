@@ -45,6 +45,7 @@ import '@ionic/react/css/display.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './theme/variables.css';
 import './App.css'
+import ResetPassword from './components/Auth/ResetPassword';
 
 const App: React.FC = () => {
   const { searchText, setSearchText, user } = useContext(Context);
@@ -58,16 +59,16 @@ const App: React.FC = () => {
         <IonContent>
           <IonTabs>
             <IonRouterOutlet>
-              <Redirect from="/" to="/home" exact={true} />
+              <Redirect from="/" to="/home" exact />
               <Route path="/home" component={Home} exact />
               <Route path="/entdecken" component={Entdecken} exact />
-              {/* <Route path="/eintragen" component={Eintragen} exact={true} /> */}
               <Route path="/bewerten" component={Bewerten} exact />
               <Route path="/favoriten" component={Favoriten} exact />
               <Route path="/login" component={Login} exact />
               <Route path="/register" component={Register} exact />
               <Route path="/logout" component={Logout} exact/>
               <Route path="/auth/activate/user/:id" component={ActivateUser} exact/>
+              <Route path="/auth/reset-password" component={ResetPassword} exact/>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
               <IonTabButton tab="home" href="/home">
@@ -78,10 +79,6 @@ const App: React.FC = () => {
                 <IonIcon icon={disc} />
                 <IonLabel className="labelTabs">Entdecken</IonLabel>
               </IonTabButton>
-              {/* <IonTabButton tab="eintragen" href="/eintragen">
-                <IonIcon icon={storefront} />
-                <IonLabel className="labelTabs">Eintragen</IonLabel>
-              </IonTabButton> */}
               <IonTabButton tab="bewerten" href="/bewerten">
                 <IonIcon icon={iceCream} />
                 <IonLabel className="labelTabs">Bewerten</IonLabel>
