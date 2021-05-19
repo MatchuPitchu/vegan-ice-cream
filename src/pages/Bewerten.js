@@ -58,13 +58,12 @@ const Bewerten = () => {
     text: ''
   }
 
-
   // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
   const { control, handleSubmit, watch, reset, formState: { errors } } = useForm({
     defaultValues
   });
 
-  console.log('Watch:', watch()); 
+  // console.log('Watch:', watch()); 
   // console.log('Errors:', errors);
 
   const createFlavor = async (data, commentID, comment) => {
@@ -279,7 +278,7 @@ const Bewerten = () => {
               isOpen={popoverShow.show}
               onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
             >
-              mind. 1 gewählte Eissorte ist anzugeben
+              mind. 1 gewählte Eissorte angeben
             </IonPopover>
           </IonItem>
 

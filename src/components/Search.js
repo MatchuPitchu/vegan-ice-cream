@@ -76,7 +76,7 @@ const Search = () => {
           isOpen={popoverShow.show}
           onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
         >
-          Nichts gefunden? Trage den Eisladen zuerst auf der Karte ein
+          Nichts gefunden? Trage den Eisladen zuerst auf der Karte ganz unten ein
         </IonPopover>
       </IonItem>
       {predictions ? (

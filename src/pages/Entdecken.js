@@ -58,6 +58,7 @@ const Entdecken = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    if(!result) return;
     setLoading(true);
 
     const duplicate = locations.find(loc => loc.address.street === result.address.street && loc.address.number === result.address.number)    
