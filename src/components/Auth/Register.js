@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Context } from "../../context/Context";
 import { IonContent, IonInput, IonItem, IonLabel, IonList, IonButton, IonPage, IonHeader, IonIcon } from "@ionic/react";
@@ -14,6 +14,7 @@ const Register = () => {
     toggle 
   } = useContext(Context);
   const { control, handleSubmit, formState: { errors } } = useForm();
+  const [endRegister, setEndRegister] = useState(false);
 
   const onSubmit = async data => {
     const options = {
@@ -29,20 +30,21 @@ const Register = () => {
       const { error, success, user, token } = await res.json();
       if (error) {
         setError('E-Mail ist bereits im System hinterlegt');
-        setTimeout(() => setError(''), 5000);
+        return setTimeout(() => setError(''), 5000);
       } 
-      if (token && user) {
-        localStorage.setItem('token', token);
-        setIsAuth(true);
-        setUser(user);
-      }
+
+      setEndRegister(true);
+      
+      // if (token && user) {
+      //   localStorage.setItem('token', token);
+      //   setIsAuth(true);
+      //   setUser(user);
+      // }
     } catch (error) {
       setError(error)
       setTimeout(() => setError(null), 5000);
     }
   };
-
-  if (isAuth) return <Redirect to="/home" />;
 
   return (
     <IonPage>
@@ -133,7 +135,12 @@ const Register = () => {
             
               <IonButton className="my-3 confirm-btn" type="submit" expand="block">
                 <IonIcon className="pe-1" icon={logIn}/>Registrieren
-              </IonButton>        
+              </IonButton>
+              {endRegister && (
+                <IonButton className="check-btn" routerLink="/home" color="success" expand="block">
+                  Du solltest eine Bestätigungs-Mail erhalten haben.
+                </IonButton>
+              )}
           </form>
 
           <p className="text-center">Nach der Registrierung kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>

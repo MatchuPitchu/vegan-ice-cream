@@ -11,7 +11,6 @@ const ActivateUser = () => {
   useEffect(() => {
     const activateUser = async() => {
       try {
-        setActivateMessage('Aktivierung des Mail-Accounts erfolgreich');
         const options = {
           method: "PUT",
           headers: {
@@ -20,12 +19,10 @@ const ActivateUser = () => {
           credentials: "include",
         };
         const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/activate/user/${id}`, options);
-        const data = await res.json();
-        console.log(data);
+        const { message }= await res.json();
+        setActivateMessage(message);
       } catch (error) {
-        console.log(error.message);
-        setError('Da ist etwas schief gelaufen. Versuche es später nochmal.')
-        setTimeout(() => setError(null), 5000);
+        console.log(error);
       };
     };
 
@@ -41,7 +38,7 @@ const ActivateUser = () => {
   ) : (
     <IonPage>
       <Spinner />
-    </IonPage> 
+    </IonPage>
   )
 }
 
