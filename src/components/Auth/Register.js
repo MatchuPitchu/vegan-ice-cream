@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Context } from "../../context/Context";
-import { IonContent, IonInput, IonItem, IonLabel, IonList, IonButton, IonPage, IonHeader, IonTitle, IonIcon, IonModal } from "@ionic/react";
+import { IonContent, IonInput, IonItem, IonLabel, IonList, IonButton, IonPage, IonHeader, IonIcon } from "@ionic/react";
 import { Redirect } from "react-router-dom";
 import showError from '../showError';
 import { logIn } from "ionicons/icons";
@@ -26,12 +26,12 @@ const Register = () => {
     };
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/register`, options);
-      const { success, user, token } = await res.json();
-      if (!success) {
-        setError(success);
-        console.log(success);
-        return () => setTimeout(setError(''), 5000);
-      } else if (token) {
+      const { error, success, user, token } = await res.json();
+      if (error) {
+        setError('E-Mail ist bereits im System hinterlegt');
+        setTimeout(() => setError(''), 5000);
+      } 
+      if (token && user) {
         localStorage.setItem('token', token);
         setIsAuth(true);
         setUser(user);
@@ -136,7 +136,7 @@ const Register = () => {
               </IonButton>        
           </form>
 
-          <p>Nach der Registrierung kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
+          <p className="text-center">Nach der Registrierung kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
           <p className="mt-4">
             <IonList>
               <IonItem lines="full">

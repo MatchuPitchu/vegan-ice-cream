@@ -89,7 +89,7 @@ const Login = () => {
                 <IonIcon className="pe-1"icon={logIn}/>Login
               </IonButton>
           </form>
-          <p>Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
+          <p className="text-center">Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
         </div>
       </IonContent>
     </IonPage>

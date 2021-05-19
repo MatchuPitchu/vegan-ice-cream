@@ -80,6 +80,16 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   text-align: center;
 }
 
+.rotateIcon {
+  color: var(--ion-color-primary);
+}
+
+.rotateIcon:hover {
+  --background-hover: transparent;
+  transform: rotate(360deg);
+  transition: transform 4s;
+}
+
 /************ Menu ************/
 .headerGraphic {
   padding: 20px;

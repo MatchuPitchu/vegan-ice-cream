@@ -15,7 +15,21 @@ const override = css`
 `;
 
 const Spinner = () => {
-  const { isAuth, toggle } = useContext(Context);
+  const { isAuth, toggle, activateMessage } = useContext(Context);
+
+  if (activateMessage === 'Aktivierung des Mail-Accounts erfolgreich') 
+    return (
+    <div className="d-flex flex-column align-items-center">
+      <RingLoader color="var(--ion-color-primary)" css={override} size={120} />
+      <h3 style={{ fontSize: "1.3em" }} className="display-3">
+        {activateMessage}
+      </h3>
+      <IonButton routerLink='/login' fill="solid" className="disabled-btn my-3">
+        <IonLabel>Login</IonLabel>
+        <IonIcon className="pe-1" icon={logIn} />
+      </IonButton>
+    </div>
+  );
 
   return (
     <div className="d-flex flex-column align-items-center">

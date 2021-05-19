@@ -21,7 +21,9 @@ import Bewerten from './pages/Bewerten';
 import Favoriten from './pages/Favoriten';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+import ActivateUser from './components/Auth/ActivateUser';
 import Logout from './components/Auth/Logout';
+
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -65,6 +67,7 @@ const App: React.FC = () => {
               <Route path="/login" component={Login} exact />
               <Route path="/register" component={Register} exact />
               <Route path="/logout" component={Logout} exact/>
+              <Route path="/auth/activate/user/:id" component={ActivateUser} exact/>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
               <IonTabButton tab="home" href="/home">

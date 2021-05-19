@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
 import { Context } from '../context/Context';
 import { menuController } from '@ionic/core';
-import { IonBadge, IonButton, IonButtons, IonIcon, IonLabel, IonMenu, IonPage, IonPopover, IonToolbar } from '@ionic/react';
-import { menu, storefront } from 'ionicons/icons';
+import { IonBadge, IonButton, IonButtons, IonIcon, IonMenu, IonPage, IonPopover, IonToolbar } from '@ionic/react';
+import { cog, storefront } from 'ionicons/icons';
 import Menu from './Menu';
 import Toggle from './Toggle';
 
@@ -47,8 +47,8 @@ const HeaderApp = () => {
               </IonPopover>
             </>
           )}
-          <IonButton className="ms-3" fill="clear" onClick={ async () => await menuController.toggle()}>
-            <IonIcon icon={menu} />
+          <IonButton className="rotateIcon ms-3" fill="clear" onClick={ async () => await menuController.toggle()}>
+            <IonIcon icon={cog} />
           </IonButton>
         </IonButtons>
       </IonToolbar>   

@@ -6,6 +6,7 @@ export const Context = createContext();
 
 const AppState = ({children}) => {
   const [isAuth, setIsAuth] = useState(false);
+  const [activateMessage, setActivateMessage] = useState('Waiting');
   const [user, setUser] = useState(null);
   const [numNewLoc, setNumNewLoc] = useState();
   const [locations, setLocations] = useState([]);
@@ -310,6 +311,7 @@ const AppState = ({children}) => {
     <Context.Provider
       value={{
         isAuth, setIsAuth,
+        activateMessage, setActivateMessage,
         user, setUser,
         numNewLoc, setNumNewLoc,
         locations, setLocations,
