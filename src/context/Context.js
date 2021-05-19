@@ -159,13 +159,6 @@ const AppState = ({children}) => {
     };
     setViewport(latLngBounds);
   }
-
-  useEffect(() => {
-    const newArr = locations.slice(num, num+4)
-    setNum(prev => prev + 4)
-    setLocationsList([...locationsList, ...newArr])
-  }, [locPage])
-
   
   useEffect(() => {
     const initTheme = () => {
@@ -186,9 +179,12 @@ const AppState = ({children}) => {
 
   const loadMore = (e) => {
     setLocPage(prev => prev + 1);
+    const newArr = locations.slice(num, num+4)
+    setNum(prev => prev + 4)
+    setLocationsList([...locationsList, ...newArr])
     e.target.complete();
   }
-  
+
   const addFavLoc = async () => {
     setLoading(true);
     const token = localStorage.getItem('token');

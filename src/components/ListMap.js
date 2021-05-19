@@ -88,8 +88,8 @@ const ListMap = () => {
       {selected ? <SelectedMarker /> : null}
 
       {/* Infinite Scroll Ionic React: https://dev.to/daviddalbusco/infinite-scroll-with-ionic-react-3a3i */}
-      <IonInfiniteScroll threshold="10%" disabled={disableInfScroll} onIonInfinite={(e) => loadMore(e)}>
-        <IonInfiniteScrollContent loadingSpinner="dots" loadingText="Loading more locations ...">
+      <IonInfiniteScroll threshold="20%" disabled={disableInfScroll} onIonInfinite={(e) => loadMore(e)}>
+        <IonInfiniteScrollContent loadingSpinner="dots">
         </IonInfiniteScrollContent>
       </IonInfiniteScroll>
     </IonContent>
