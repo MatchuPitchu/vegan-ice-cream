@@ -23,7 +23,7 @@ const Login = () => {
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, options);
       const { success, user, token } = await res.json();
-      if (success) {
+      if(user.confirmed) {
         const options = {
           headers: { token },
           credentials: "include"
@@ -34,7 +34,7 @@ const Login = () => {
         setUser({ ...user, ...data});
         setIsAuth(true);
       } else {
-        setError('Prüfe, ob du das richtige Passwort eingetippt hast');
+        setError('Prüfe, ob du das richtige Passwort eingetippt hast oder ob du deine Mailadresse bestätigt hast.');
         setTimeout(() => setError(null), 5000);
       }
     } catch (error) {
