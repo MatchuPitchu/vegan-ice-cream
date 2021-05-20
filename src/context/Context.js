@@ -12,6 +12,10 @@ const AppState = ({children}) => {
   const [locations, setLocations] = useState([]);
   const [locationsMap, setLocationsMap] = useState([]);
   const [locationsList, setLocationsList] = useState([]);
+  const [autocomplete, setAutocomplete] = useState(null);
+  const [searchAutocomplete, setSearchAutocomplete] = useState('');
+  const [result, setResult] = useState(null);
+  const [formattedAddress, setFormattedAddress] = useState(null);
   const [locPage, setLocPage] = useState(1);
   const [num, setNum] = useState(4);
   const [all, setAll] = useState(false);
@@ -34,7 +38,7 @@ const AppState = ({children}) => {
   const [showAbout, setShowAbout] = useState(false);
   const [infoModal, setInfoModal] = useState(false);
   const [newLocModal, setNewLocModal] = useState(false);
-  const [bookmark, setBookmark] = useState(false);
+  const [autocompleteModal, setAutocompleteModal] = useState(false);
   const [alertUpdateFav, setAlertUpdateFav] = useState({
     removeStatus: false, 
     addStatus: false, 
@@ -313,6 +317,10 @@ const AppState = ({children}) => {
         locations, setLocations,
         locationsMap, setLocationsMap,
         locationsList, setLocationsList,
+        autocomplete, setAutocomplete,
+        searchAutocomplete, setSearchAutocomplete,
+        result, setResult,
+        formattedAddress, setFormattedAddress,
         locPage, setLocPage,
         all, setAll,
         disableInfScroll, setDisableInfScroll,
@@ -339,7 +347,7 @@ const AppState = ({children}) => {
         showAbout, setShowAbout,
         infoModal, setInfoModal,
         newLocModal, setNewLocModal,
-        bookmark, setBookmark,
+        autocompleteModal, setAutocompleteModal,
         alertUpdateFav, setAlertUpdateFav,
         removeFavLoc,
         addFavLoc,

@@ -37,9 +37,12 @@ const ListMap = () => {
           <IonCardContent>
             <IonCardSubtitle color='primary'>Bewertung der Community</IonCardSubtitle>
             {loc.location_rating_quality ? (
-              <>
-                <div className="d-flex align-items-center">
-                  <div className="me-2">Qualität des Eises</div>
+              <div className="d-flex align-items-center">
+                <div className="me-2">
+                  <div className="ratingContainer">Eis-Erlebnis</div>
+                  <div>Veganes Angebot</div>
+                </div>
+                <div>
                   <div>
                     <ReactStars
                       count={5}
@@ -50,9 +53,6 @@ const ListMap = () => {
                       activeColor='#de9c01'
                     />
                   </div>
-                </div>
-                <div className="d-flex align-items-center">
-                  <div className="me-2">Veganes Angebot</div>
                   <div>
                     <ReactStars 
                       count={5}
@@ -64,21 +64,21 @@ const ListMap = () => {
                     />
                   </div>
                 </div>
-              </>
+              </div>
             ) : (
               <p>Noch keine Bewertungen vorhanden</p>
             )}  
 
             <IonButton 
-              className="more-infos" 
-              title="Mehr Infos" 
+              className="more-infos mt-2" 
+              title="Mehr Infos"
               onClick={() => {
                 setOpenComments(false);
                 setSelected(loc); 
                 setInfoModal(true) 
               }}
             >
-              <IonIcon icon={open} />
+              <IonIcon className="me-1" icon={open} />Mehr Infos
             </IonButton>
           </IonCardContent>
           

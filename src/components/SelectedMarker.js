@@ -157,54 +157,56 @@ const SelectedMarker = () => {
               ) : null}
               {openComments ? selected.comments_list.map((comment, i) => {
                 return (
-                  <>
-                    <IonItem key={comment._id} color="background-color" lines="full">
+                  <div key={comment._id}>
+                    <IonItem color="background-color" lines="full">
                       <IonLabel className="ion-text-wrap mt-3 ms-1">
-                      <p><IonIcon className="me-2" color={`${toggle ? '' : 'primary'}`} icon={chatboxEllipses}/> {comment.text}</p>
+                        <p>
+                          <IonIcon className="me-2" color={`${toggle ? '' : 'primary'}`} icon={chatboxEllipses}/> {comment.text}
+                        </p>
+
+                        <div className="d-flex align-items-center">
+                          {comment.flavors_referred.map(flavor => {
+                            return (
+                              <IonButton key={flavor._id} disabled fill="solid" className="disabled-btn my-3">
+                                <IonIcon color={`${toggle ? "warning" : "secondary"}`} className="pe-1" icon={iceCream} />
+                                {flavor.name}
+                              </IonButton>
+                              )
+                            })
+                          }
+                        </div>
                       
-                      <div className="d-flex align-items-center">
-                        {comment.flavors_referred.map(flavor => {
-                          return (
-                            <IonButton key={flavor._id} disabled fill="solid" className="disabled-btn my-3">
-                              <IonIcon color={`${toggle ? "warning" : "secondary"}`} className="pe-1" icon={iceCream} />
-                              {flavor.name}
-                            </IonButton>
-                            )
-                          })
-                        }
-                      </div>
-                    
-                      <div className="d-flex align-items-center">
-                        <div className="me-2">Eis-Erlebnis</div>
-                        <div>
-                          <ReactStars
-                            count={5}
-                            value={comment.rating_quality}
-                            edit={false}
-                            size={18}
-                            color='#9b9b9b'
-                            activeColor='#de9c01'
-                          />
+                        <div className="d-flex align-items-center">
+                          <div className="me-2">Eis-Erlebnis</div>
+                          <div>
+                            <ReactStars
+                              count={5}
+                              value={comment.rating_quality}
+                              edit={false}
+                              size={18}
+                              color='#9b9b9b'
+                              activeColor='#de9c01'
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <div className="d-flex align-items-center">
-                        <div className="me-2">Veganes Angebot</div>
-                        <div>
-                          <ReactStars 
-                            count={5}
-                            value={comment.rating_vegan_offer}
-                            edit={false}
-                            size={18}
-                            color='#9b9b9b'
-                            activeColor='#de9c01'
-                          />
+                        <div className="d-flex align-items-center">
+                          <div className="me-2">Veganes Angebot</div>
+                          <div>
+                            <ReactStars 
+                              count={5}
+                              value={comment.rating_vegan_offer}
+                              edit={false}
+                              size={18}
+                              color='#9b9b9b'
+                              activeColor='#de9c01'
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <p className="p-weak mt-1">Datum: {comment.date.replace('T', ' // ').slice(0, 19)}</p>
-                      <p className="p-weak">User: {comment.user_id.name}</p>
-                    </IonLabel>
-                  </IonItem>
-                </>
+                        <p className="p-weak mt-1">Datum: {comment.date.replace('T', ' // ').slice(0, 19)}</p>
+                        <p className="p-weak">User: {comment.user_id.name}</p>
+                      </IonLabel>
+                    </IonItem>
+                  </div>
                 )
               }
               ) : null}

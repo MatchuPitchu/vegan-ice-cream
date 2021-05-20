@@ -1,49 +1,42 @@
-import { useContext, useState, useCallback, useRef } from "react";
+import { useContext, useState, useEffect, useCallback } from "react";
 import { Context } from '../context/Context';
 import { Geolocation } from '@ionic-native/geolocation';
-import { IonItem, IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonModal, IonPage, IonSegment, IonSegmentButton, IonToolbar, isPlatform } from '@ionic/react';
-import { Autocomplete, GoogleMap, Marker, MarkerClusterer, useJsApiLoader } from '@react-google-maps/api';
-import { add, addCircleOutline, closeCircleOutline, listCircle, location as myPos, map as mapIcon, refreshCircle, removeCircleOutline, search } from "ionicons/icons";
+import { IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonPage, IonSegment, IonSegmentButton, IonToolbar } from '@ionic/react';
+import { GoogleMap, Marker, MarkerClusterer, useJsApiLoader } from '@react-google-maps/api';
+import { add, addCircleOutline, listCircle, location as myPos, map as mapIcon, refreshCircle, removeCircleOutline, search } from "ionicons/icons";
 import NewLocationForm from "../components/NewLocationForm";
 import Search from "../components/Search";
 import SelectedMarker from '../components/SelectedMarker';
 import ListMap from "../components/ListMap";
 import Spinner from "../components/Spinner";
 import LoadingError from "../components/LoadingError";
-import FavLocBtn from "../components/FavLocBtn";
+import AutocompleteForm from "../components/AutocompleteForm";
 
 const Entdecken = () => {
   const {
-    loading, setLoading, 
-    error, setError,
+    setError,
     user, 
-    locations,
     locationsMap,
     center, setCenter,
-    zoom, setZoom,
+    zoom,
     map, setMap,
-    viewport, setViewport,
+    setAutocompleteModal,
     searchViewport,
     selected, setSelected,
-    searchSelected, setSearchSelected,
+    searchSelected,
     position, setPosition,
-    newLocation, setNewLocation,
-    all, setAll, 
+    newLocation,
     mapStyles, 
-    enterAnimation, leaveAnimation, 
-    infoModal, setInfoModal,
-    newLocModal, setNewLocModal,
+    setInfoModal,
+    setNewLocModal,
     setOpenComments
   } = useContext(Context);
   const [libraries] = useState(['places']);
-
   const [segment, setSegment] = useState('map');
-  const [autocomplete, setAutocomplete] = useState(null);
-  const [searchAutocomplete, setSearchAutocomplete] = useState('');
-  const [result, setResult] = useState(null);
-  const [formattedAddress, setFormattedAddress] = useState(null);
 
-  const contentRef = useRef(null);
+  useEffect(() => {
+    if(map) setTimeout(() => searchViewport(), 2000);
+  }, [map])
 
   const getLocation = async () => {
     try {
@@ -55,107 +48,6 @@ const Entdecken = () => {
       setTimeout(() => setError(null), 5000);
     }
   };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    if(!result) return;
-    setLoading(true);
-
-    const duplicate = locations.find(loc => loc.address.street === result.address.street && loc.address.number === result.address.number)    
-    if(duplicate) {
-      setResult(null)
-      setError('Diese Adresse gibt es schon.');
-      setTimeout(() => setError(null), 5000);
-    }
-
-    const fetchData = async () => {
-      try {
-        const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(formattedAddress ? formattedAddress : searchAutocomplete)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
-        const { results } = await res.json();
-        
-        if(result.address.number) {
-          setNewLocation({
-            ...result,
-            address: {
-              ...result.address,
-              geo: {
-                lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
-                lng: results[0].geometry.location ? results[0].geometry.location.lng : null
-              }
-            }
-          })
-        } else {
-          let address = {};
-          results[0].address_components && results[0].address_components.forEach(e => e.types.forEach(type => Object.assign(address, {[type]: e.long_name})));
-          setNewLocation({
-            name: '',
-            address: {
-              street: address.route ? address.route : '',
-              number: address.street_number ? parseInt(address.street_number) : '',
-              zipcode: address.postal_code ? address.postal_code : '',
-              city: address.locality ? address.locality : '',
-              country: address.country ? address.country : '',
-              geo: {
-                lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
-                lng: results[0].geometry.location ? results[0].geometry.location.lng : null
-              }
-            },
-            location_url: '',
-            place_id: address.place_id ? address.place_id : ''
-          })
-        }
-
-        if(results[0].geometry.location) {
-          setCenter({
-            lat: results[0].geometry.location.lat,
-            lng: results[0].geometry.location.lng
-          });
-          contentRef.current.scrollToTop(500);
-        }
-      } catch (error) {
-        setError('Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in Deutschland eintragen.')
-        setTimeout(() => setError(null), 5000);
-      }
-    };
-    if(!duplicate) fetchData();
-    setSearchAutocomplete('');
-    setLoading(false);
-  };
-
-  const scrollDown = () => {
-    // (number) means duration
-    contentRef.current && contentRef.current.scrollToBottom(500);
-  };
-
-  const onPlaceChanged = () => {
-    if(autocomplete !== null) {
-      const data = autocomplete.getPlace();
-      let address = {};
-      data.address_components && data.address_components.forEach(e => e.types.forEach(type => Object.assign(address, {[type]: e.long_name})));
-      setFormattedAddress(data.formatted_address);
-      setResult({
-        name: '',
-        address: {
-          street: address.route ? address.route : '',
-          number: address.street_number ? parseInt(address.street_number) : '',
-          zipcode: address.postal_code ? address.postal_code : '',
-          city: address.locality ? address.locality : '',
-          country: address.country ? address.country : '',
-          geo: {
-            lat: null,
-            lng: null
-          }
-        },
-        location_url: data.website ? data.website : '',
-        place_id: data.place_id ? data.place_id : ''
-      })
-      scrollDown()
-    }
-    else {
-      setError('Autocomplete kann gerade nicht geladen werden');
-      setTimeout(() => setError(null), 5000);
-    }
-  }
 
   const clusterOptions = {
     imagePath: './assets/icons/m'
@@ -186,10 +78,6 @@ const Entdecken = () => {
     setMap(null)
   }, [])
 
-  const onAutocompleteLoad = (autocomplete) => {
-    setAutocomplete(autocomplete)
-  }
-
   const initControl = (map) => {
     // Add customs zoom control https://developers.google.com/maps/documentation/javascript/examples/control-replacement#maps_control_replacement-javascript
     document.querySelector(".zoom-control-in").onclick = () => {
@@ -202,6 +90,8 @@ const Entdecken = () => {
     const controlDiv = document.querySelector(".center-control");
     controlDiv.addEventListener('click', () => { map.setCenter(center); map.setZoom(11)});
   }
+
+  
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -225,11 +115,11 @@ const Entdecken = () => {
         </IonToolbar>
         
         <Search />
-      
+
       </IonHeader>
 
       {segment === 'map' && (
-        <IonContent ref={contentRef} scrollEvents>
+        <IonContent>
           <div className="containerMap">
             <div className="control-left">
               <div className="col">
@@ -245,25 +135,21 @@ const Entdecken = () => {
               <div className="col">
                 <div className="d-flex justify-content-end">
                   <IonButton className="viewport-control" onClick={searchViewport}>
-                    <IonLabel className="me-1">In diesem Gebiet suchen</IonLabel>
+                    <IonLabel className="me-1">Eisläden im Gebiet</IonLabel>
                     <IonIcon slot="start" icon={search} />
                   </IonButton>
                 </div>
-                {/* <div className="d-flex justify-content-end">
-                  <IonButton className="all-control" title="Mehr Eisläden laden" >
-                    <IonLabel className="me-1">Alle anzeigen</IonLabel>
-                    <IonToggle onIonChange={e => setAll(true)} checked={all} disabled={`${all ? 'true' : 'false'}`} />
-                  </IonButton>
-                </div> */}
               </div>
            </div>
            <div className="control-right-bottom">
               <div className="col">
                 { user ? ( 
-                <div className="d-flex justify-content-end">
-                  <IonButton className="add-control" onClick={scrollDown} title="Neue Adresse hinzufügen">
-                    <IonIcon icon={add} />
+                  <div className="d-flex justify-content-end">
+                  <IonButton className="add-control" onClick={() => setAutocompleteModal(true)} title="Neue Adresse hinzufügen">
+                    <IonLabel className="me-1">Neuer Laden</IonLabel>
+                    <IonIcon slot="start" icon={add} />
                   </IonButton>
+                  <AutocompleteForm />
                 </div>
                 ) : null}
                 <div className="d-flex justify-content-end">
@@ -378,47 +264,19 @@ const Entdecken = () => {
 
             </GoogleMap>
           </div>
-
-
-          {user ? (
-            <form onSubmit={onSubmit}>
-              <IonItem lines="none">
-                <IonLabel className={`container ion-text-wrap ${isPlatform('desktop') ? 'mb-4' : 'my-2'}`} position="stacked">
-                  Welchen Eisladen hast du entdeckt? Name und Stadt reichen zumeist. Sonst trage die korrekte Adresse ein.
-                </IonLabel>
-                <Autocomplete
-                  className='container-autocomplete'
-                  onLoad={ onAutocompleteLoad }
-                  onPlaceChanged={ onPlaceChanged }
-                  restrictions={ { country: 'de' } }
-                  fields={ ['address_components', 'formatted_address', 'place_id', 'website']}
-                >
-                  <input 
-                    type="text"
-                    placeholder="Name, Adresse eintippen ..."
-                    className="search-autocomplete"
-                    // value={searchText}
-                    onChange={(e) => setSearchAutocomplete(e.target.value)}
-                  />
-                </Autocomplete>
-                <IonButton fill="solid" className="check-btn my-3" type="submit">
-                  <IonIcon icon={add} />Check: Klicke auf das neue grüne Icon
-                </IonButton>
-              </IonItem>
-            </form>
-          ) : null}
-
         </IonContent>
       )}
 
-      {segment === 'list' && (
-        <ListMap />
-      )}
+      {segment === 'list' && <ListMap /> }
 
     <LoadingError />
     
     </IonPage>
-  ) : <Spinner /> ;
+  ) : (
+  <IonPage>
+    <Spinner />
+  </IonPage>
+  )
 };
 
 export default Entdecken;

@@ -278,6 +278,10 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   background-color: var(--ion-item-background);
 }
 
+.sc-ion-searchbar-ios-h {
+  --background: var(--ion-card-background);
+}
+
 .infoIcon:hover {
   border: 1px solid var(--ion-color-primary);
   border-radius: 90%;
@@ -649,7 +653,7 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 
 .control-right-bottom {
   position: absolute;
-  top: 47px;
+  top: 39px;
   right: 3px;
   z-index: 1;
 }
@@ -658,7 +662,7 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   color: var(--ion-text-color);
   background-color: var(--ion-item-background);
   margin-bottom: 0;
-  height: 35px;
+  height: 33px;
 }
 
 .zoom-control-out {
@@ -673,13 +677,12 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   text-transform: none;
   letter-spacing: 0;
   margin: 4px 4px 0 0;
-  height: 40px;
+  height: 33px;
 }
 
 .add-control,
 .where-control,
-.center-control,
-.more-infos {
+.center-control {
   --background: var(--ion-item-background);
   font-size: 0.7rem;
   text-transform: none;
@@ -688,10 +691,10 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 }
 
 .add-control,
-.where-control,
-.more-infos {
+.where-control {
   color: var(--ion-color-primary);
 }
+
 .center-control {
   color: var(--ion-color-danger-tint);
 }
@@ -750,6 +753,24 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   min-height: 33px;
   align-self: center;
   opacity: 0.9;
+}
+
+.addLocForm {
+  --background: var(--ion-background-color);
+}
+
+/*********** Map Liste *************/
+.ratingContainer {
+  height: 27px;
+}
+
+.more-infos {
+  color: var(--ion-color-primary);
+  --background: var(--ion-background-color);
+  height: 35px;
+  font-size: 0.7rem;
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 /*********** Tab Bewerten ************/
