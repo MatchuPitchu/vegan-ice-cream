@@ -129,8 +129,8 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100px;
-  width: 90px;
+  height: 90px;
+  width: 100px;
 }
 
 .icecream {
@@ -147,6 +147,13 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   border-left: 20px solid transparent;
   border-top: 50px solid tan;
   z-index: 1;
+}
+
+.labelFlavor {
+  font-size: 0.8rem;
+  text-align: center;
+  width: 100px;
+  margin-bottom: 10px;
 }
 
 /************ Toggler Day and Night ************/

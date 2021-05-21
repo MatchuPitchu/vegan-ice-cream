@@ -1,6 +1,5 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { Context } from "../context/Context";
-import { useForm } from 'react-hook-form';
 import { Autocomplete } from '@react-google-maps/api';
 import { IonButton, IonContent, IonIcon, IonItem, IonLabel, IonModal, isPlatform } from '@ionic/react';
 import { add, closeCircleOutline } from 'ionicons/icons';
@@ -17,10 +16,9 @@ const AutocompleteForm = () => {
     searchAutocomplete, setSearchAutocomplete,
     result, setResult,
     formattedAddress, setFormattedAddress,
-    newLocation, setNewLocation,
-    newLocModal, setNewLocModal,
+    setNewLocation,
+    setNewLocModal,
     enterAnimation, leaveAnimation,
-    searchViewport
   } = useContext(Context);
 
   const onSubmit = (e) => {
@@ -39,7 +37,7 @@ const AutocompleteForm = () => {
       try {
         const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(formattedAddress ? formattedAddress : searchAutocomplete)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
         const { results } = await res.json();
-        
+
         if(result.address.number) {
           setNewLocation({
             ...result,
@@ -96,7 +94,7 @@ const AutocompleteForm = () => {
       data.address_components && data.address_components.forEach(e => e.types.forEach(type => Object.assign(address, {[type]: e.long_name})));
       setFormattedAddress(data.formatted_address);
       setResult({
-        name: '',
+        name: data.name ? data.name : '',
         address: {
           street: address.route ? address.route : '',
           number: address.street_number ? parseInt(address.street_number) : '',
@@ -130,7 +128,7 @@ const AutocompleteForm = () => {
           fill="clear" 
           onClick={() => { 
             setAutocompleteModal(false);
-            // setNewLocation(null);
+            setNewLocation(null);
           }}>
           <IonIcon icon={closeCircleOutline}/>
         </IonButton>
@@ -146,7 +144,7 @@ const AutocompleteForm = () => {
               onLoad={ onAutocompleteLoad }
               onPlaceChanged={ onPlaceChanged }
               restrictions={ { country: 'de' } }
-              fields={ ['address_components', 'formatted_address', 'place_id', 'website']}
+              fields={ ['name', 'address_components', 'formatted_address', 'place_id', 'website']}
             >
               <input 
                 type="text"

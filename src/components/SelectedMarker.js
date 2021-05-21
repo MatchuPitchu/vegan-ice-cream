@@ -115,13 +115,15 @@ const SelectedMarker = () => {
                     />
                   </div>
               ) : (
-                <p>Noch keine Bewertungen vorhanden</p>
+                <div>Noch keine Bewertungen vorhanden</div>
               )}
               </IonItem>
+              {selected.location_rating_quality ? (
               <IonItem lines="none">
                 <IonIcon className="me-2" color="primary" icon={iceCream} />
                 <IonLabel>Alle bewerteten Eissorten</IonLabel>
               </IonItem>
+              ) : null}
               <IonItem lines="full">
                 <div className="d-flex justify-content-around flex-wrap px-3 py-2">
                 {selected.flavors_listed ? selected.flavors_listed.map(flavor => {
@@ -132,7 +134,7 @@ const SelectedMarker = () => {
                         <div className="icecreamBottom" style={{background: flavor.ice_color.color_primary}}></div>
                         <div className="cone"></div>
                       </div>
-                      <div className="p-weak text-center">{flavor.name}</div>
+                      <div className="labelFlavor">{flavor.name}</div>
                     </div>
                   )}
                   ) : null}

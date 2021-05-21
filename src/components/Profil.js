@@ -154,7 +154,7 @@ const Profil = () => {
                       <div className="icecreamBottom" style={{background: flavor.ice_color.color_primary}}></div>
                       <div className="cone"></div>
                     </div>
-                    <div className="p-weak text-center">{flavor.name}</div>
+                    <div className="labelFlavor">{flavor.name}</div>
                   </div>
                 )}
                 ) : null }

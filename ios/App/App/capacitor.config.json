@@ -1,1 +1,13 @@
-{}
+{
+  "appId": "io.ionic.starter",
+  "appName": "frontend-vegan-icecream",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "build",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
+}

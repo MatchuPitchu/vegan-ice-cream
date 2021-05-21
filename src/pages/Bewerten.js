@@ -59,30 +59,27 @@ const Bewerten = () => {
   }
 
   // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
-  const { control, handleSubmit, watch, reset, formState: { errors } } = useForm({
+  const { control, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues
   });
 
-  // console.log('Watch:', watch()); 
-  // console.log('Errors:', errors);
-
-  const createFlavor = async (data, commentID, comment) => {
+  const createFlavor = (data, commentID, comment) => {
     setLoading(true);
     const token = localStorage.getItem('token');
     try {
-      if(data.name1) {
+      const setFlavor = async (name, type_fruit_ice, type_cream_ice, color_primary, color_secondary) => {
         const body = {
           location_id: searchSelected._id,
           user_id: user._id,
-          name: data.name1,
-          type_fruit_ice: data.name1_type_fruit_ice,
-          type_cream_ice: data.name1_type_cream_ice,
+          name,
+          type_fruit_ice,
+          type_cream_ice,
           ice_color: {
-            color_primary: data.name1color1,
-            color_secondary: data.name1color2
+            color_primary,
+            color_secondary
           },
         };
-
+        
         const options = {
           method: "POST",
           headers: {
@@ -92,47 +89,21 @@ const Bewerten = () => {
           body: JSON.stringify(body),
           credentials: "include",
         };
-
+        
         const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors/${commentID}`, options);
-        const newFlavor1 = await res.json();
-        console.log('newFla1:', newFlavor1);
-        if (!newFlavor1) {
+        const newFlavor = await res.json();
+        if (!newFlavor) {
           setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
           setTimeout(() => setError(null), 5000);
         }
       }
-      console.log(searchSelected._id)
-      if(data.name2) {
-        const body = {
-          location_id: searchSelected._id,
-          user_id: user._id,
-          name: data.name2,
-          type_fruit_ice: data.name2_type_fruit_ice,
-          type_cream_ice: data.name2_type_cream_ice,
-          ice_color: {
-            color_primary: data.name2color1,
-            color_secondary: data.name2color2 ? data.name2color2 : null,
-          },
-        };
 
-        const options = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            token
-          },
-          body: JSON.stringify(body),
-          credentials: "include",
-        };
+      const { name1, name1_type_fruit_ice, name1_type_cream_ice, name1color1, name1color2 } = data
+      if(name1) setFlavor(name1, name1_type_fruit_ice, name1_type_cream_ice, name1color1, name1color2);
+      
+      const { name2, name2_type_fruit_ice, name2_type_cream_ice, name2color1, name2color2 } = data
+      if(name2) setFlavor(name2, name2_type_fruit_ice, name2_type_cream_ice, name2color1, name2color2)
 
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors/${commentID}`, options);
-        const newFlavor2 = await res.json();
-        console.log('newFla2:', newFlavor2);
-        if (!newFlavor2) {
-          setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
-          setTimeout(() => setError(null), 5000);
-        }
-      }
     } catch (error) {
       setError(error)
       setTimeout(() => setError(null), 5000);
@@ -166,15 +137,13 @@ const Bewerten = () => {
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${searchSelected._id}`, options);
       const newComment = await res.json();
-
-      console.log('new comment:', newComment)
       
       if (!newComment) {
         setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
         setTimeout(() => setError(null), 5000);
       }
       createFlavor(data, newComment._id, newComment);
-      // reset();
+
     } catch (error) {
       setError(error)
       setTimeout(() => setError(null), 5000);
@@ -215,7 +184,7 @@ const Bewerten = () => {
               rules={{ required: true }}
             />
           </IonItem>
-          {showError("text", errors)}
+          {searchSelected && showError("text", errors)}
           
           <IonItem lines="none">
             <IonLabel position='stacked' htmlFor="rating_quality">Eis-Erlebnis</IonLabel>

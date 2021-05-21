@@ -71,27 +71,11 @@ const Entdecken = () => {
 
   const onMapLoad = useCallback((map) => {
     setMap(map);
-    initControl(map);
   }, []);
 
   const onUnmount = useCallback(() => {
-    setMap(null)
+    setMap(null);
   }, [])
-
-  const initControl = (map) => {
-    // Add customs zoom control https://developers.google.com/maps/documentation/javascript/examples/control-replacement#maps_control_replacement-javascript
-    document.querySelector(".zoom-control-in").onclick = () => {
-      map.setZoom(map.getZoom() + 1);
-    };
-    document.querySelector(".zoom-control-out").onclick = () => {
-      map.setZoom(map.getZoom() - 1);
-    };
-    // Add custom center control https://developers.google.com/maps/documentation/javascript/examples/control-custom
-    const controlDiv = document.querySelector(".center-control");
-    controlDiv.addEventListener('click', () => { map.setCenter(center); map.setZoom(11)});
-  }
-
-  
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -123,10 +107,19 @@ const Entdecken = () => {
           <div className="containerMap">
             <div className="control-left">
               <div className="col">
-                <IonButton className="d-flex justify-content-start zoom-control-in zoomIcons" fill="clear" >
+                <IonButton 
+                  className="d-flex justify-content-start zoom-control-in zoomIcons" 
+                  fill="clear"
+                  // Add customs zoom control https://developers.google.com/maps/documentation/javascript/examples/control-replacement#maps_control_replacement-javascript
+                  onclick={() => map.setZoom(map.getZoom() + 1)}
+                >
                   <IonIcon icon={addCircleOutline} />
                 </IonButton>
-                <IonButton className="d-flex justify-content-start zoom-control-out zoomIcons" fill="clear">
+                <IonButton 
+                  className="d-flex justify-content-start zoom-control-out zoomIcons" 
+                  fill="clear"
+                  onclick ={() => map.setZoom(map.getZoom() - 1)}
+                >
                   <IonIcon icon={removeCircleOutline} />
                 </IonButton>
               </div>
@@ -158,7 +151,14 @@ const Entdecken = () => {
                   </IonButton>
                 </div>
                 <div className="d-flex justify-content-end">
-                  <IonButton className="center-control" title="Karte auf Anfangspunkt zentrieren" >
+                  <IonButton 
+                    className="center-control" 
+                    title="Karte auf Anfangspunkt zentrieren"
+                    onClick={() => { 
+                      map.setCenter(center); 
+                      map.setZoom(12)
+                    }}
+                  >
                     <IonIcon icon={refreshCircle} />
                   </IonButton>
                 </div>
@@ -172,9 +172,7 @@ const Entdecken = () => {
               options={options}
               onLoad={onMapLoad}
               onUnmount={onUnmount}
-              zIndex={10}
             >
-
               <MarkerClusterer 
                 options={clusterOptions}
                 imageExtension='png'
@@ -182,31 +180,40 @@ const Entdecken = () => {
               >
                 {(clusterer) =>
                   locationsMap ? locationsMap.map(loc => (
-                    <Marker
-                      key={loc._id} 
-                      position={{ lat: loc.address.geo.lat, lng: loc.address.geo.lng }} 
-                      clusterer={clusterer}
-                      icon={{
-                        url: './assets/icons/ice-cream-icon-dark.svg',
-                        scaledSize: new window.google.maps.Size(30, 30),
-                        origin: new window.google.maps.Point(0, 0),
-                        anchor: new window.google.maps.Point(15, 15)
-                      }}
-                      shape={{
-                        coords: [1, 1, 1, 28, 26, 28, 26, 1],
-                        type: "poly",
-                      }}
-                      optimized={false}
-                      title={`${loc.name}, ${loc.address.street} ${loc.address.number}`}                     cursor='pointer'
-                      onClick={() => {
-                        setOpenComments(false); 
-                        setSelected(loc); 
-                        setInfoModal(true) 
-                      }}
-                    />
+                    // if searchSelected exists, than normal marker at this position is null 
+                    searchSelected &&
+                    searchSelected.address.geo.lat === loc.address.geo.lat &&
+                    searchSelected.address.geo.lng === loc.address.geo.lng ? (
+                      null ) : (
+                        <Marker
+                          key={loc._id} 
+                          position={{ lat: loc.address.geo.lat, lng: loc.address.geo.lng }} 
+                          clusterer={clusterer}
+                          icon={{
+                            url: './assets/icons/ice-cream-icon-dark.svg',
+                            scaledSize: searchSelected &&
+                              searchSelected.address.geo.lat === loc.address.geo.lat &&
+                              searchSelected.address.geo.lng === loc.address.geo.lng ?             
+                              new window.google.maps.Size(0, 0) : new window.google.maps.Size(30, 30),
+                            origin: new window.google.maps.Point(0, 0),
+                            anchor: new window.google.maps.Point(15, 15)
+                          }}
+                          shape={{
+                            coords: [1, 1, 1, 28, 26, 28, 26, 1],
+                            type: "poly",
+                          }}
+                          optimized={false}
+                          title={`${loc.name}, ${loc.address.street} ${loc.address.number}`}                     cursor='pointer'
+                          onClick={() => {
+                            setOpenComments(false); 
+                            setSelected(loc); 
+                            setInfoModal(true) 
+                          }}
+                          zIndex={1}
+                        />
+                      )
                     )
                   ) : null}
-
               </MarkerClusterer>
 
               {searchSelected ? (
@@ -254,7 +261,7 @@ const Entdecken = () => {
                     title={`${newLocation.address.street} ${newLocation.address.number} ${newLocation.address.zipcode} ${newLocation.address.city}`}
                     cursor='pointer'
                     onClick={() => setNewLocModal(true)}
-                    zIndex={2}
+                    zIndex={3}
                   />
                   <NewLocationForm />
                 </>

@@ -9,6 +9,7 @@ import LoadingError from './LoadingError';
 const NewLocationForm = () => {
   const { 
     setError,
+    locations, setLocations,
     newLocation, setNewLocation,
     newLocModal, setNewLocModal,
     enterAnimation, leaveAnimation,
@@ -16,15 +17,15 @@ const NewLocationForm = () => {
   } = useContext(Context);
   
   const defaultValues = { 
-    name: '',
+    name: newLocation ? newLocation.name : '',
     street: newLocation ? newLocation.address.street : '',
     number: newLocation ? newLocation.address.number : '',
     zipcode: newLocation ? newLocation.address.zipcode : '',
     city: newLocation ? newLocation.address.city : '',
     country: 'Deutschland',
-    location_url: ''
+    location_url: newLocation.location_url ? newLocation.location_url : ''
   }
-  
+
   const { control, handleSubmit, formState: { errors } } = useForm({defaultValues});
 
   const onSubmit = async (data) => {
@@ -56,6 +57,8 @@ const NewLocationForm = () => {
 
       const res = await fetch(`${process.env.REACT_APP_API_URL}/locations`, options);
       const newData = await res.json();
+      console.log(newData);
+      setLocations([...locations, newData])
       if (!newData) {
         setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
         setTimeout(() => setError(null), 5000);
