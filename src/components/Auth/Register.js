@@ -17,17 +17,30 @@ const Register = () => {
   const [endRegister, setEndRegister] = useState(false);
 
   const onSubmit = async data => {
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-      credentials: "include",
-    };
     try {
+      const city = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(data.home_city)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
+      const { results } = await city.json();
+      const home_city = {
+        city: data.home_city,
+        geo: {
+          lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
+          lng: results[0].geometry.location ? results[0].geometry.location.lng : null
+        }
+      }
+
+      const newData = { ...data, home_city }
+
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newData),
+        credentials: "include",
+      };
+
       const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/register`, options);
-      const { error, success, user, token } = await res.json();
+      const { error } = await res.json();
       if (error) {
         setError('E-Mail ist bereits im System hinterlegt');
         return setTimeout(() => setError(''), 5000);
@@ -35,11 +48,6 @@ const Register = () => {
 
       setEndRegister(true);
       
-      // if (token && user) {
-      //   localStorage.setItem('token', token);
-      //   setIsAuth(true);
-      //   setUser(user);
-      // }
     } catch (error) {
       setError(error)
       setTimeout(() => setError(null), 5000);
@@ -59,10 +67,7 @@ const Register = () => {
                 <Controller 
                   control={control}
                   defaultValue=""
-                  render={({ 
-                    field: { onChange, value },
-                    fieldState: { invalid, isTouched, isDirty, error },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <IonInput type="text" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
                     )}
                     name="name"
@@ -70,15 +75,13 @@ const Register = () => {
                     />
               </IonItem>
               {showError("name", errors)}
+
               <IonItem lines="none" className="mb-1">
                 <IonLabel position='floating' htmlFor="email">E-Mail</IonLabel>
                 <Controller 
                   control={control}
                   defaultValue=""
-                  render={({ 
-                    field: { onChange, value },
-                    fieldState: { invalid, isTouched, isDirty, error },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <IonInput type="email" inputmode="email" value={value} onIonChange={e => onChange(e.detail.value)} />
                     )}
                     name="email"
@@ -92,10 +95,7 @@ const Register = () => {
                 <Controller 
                   control={control}
                   defaultValue=""
-                  render={({ 
-                    field: { onChange, value },
-                    fieldState: { invalid, isTouched, isDirty, error },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <IonInput type="password" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
                     )}
                     name="password"
@@ -109,15 +109,13 @@ const Register = () => {
                     />
               </IonItem>
               {showError("password", errors)}
+
               <IonItem lines="none" className="mb-1">
                 <IonLabel position='floating' htmlFor="repeatPassword">Passwort wiederholen</IonLabel>
                 <Controller 
                   control={control}
                   defaultValue=""
-                  render={({ 
-                    field: { onChange, value },
-                    fieldState: { invalid, isTouched, isDirty, error },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <IonInput type="password" id="repeatPassword" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
                     )}
                     name="repeatPassword"
@@ -131,7 +129,20 @@ const Register = () => {
                     />
               </IonItem>
               {showError("repeatPassword", errors)}
-              {error && <div className='alertMsg'>{error}</div>}       
+              {error && <div className='alertMsg'>{error}</div>}
+
+              <IonItem lines="none" className="mb-1">
+                <IonLabel position='floating' htmlFor="home_city">Stadt (Startpunkt der Karte)</IonLabel>
+                <Controller 
+                  control={control}
+                  defaultValue=""
+                  render={({ field: { onChange, value } }) => (
+                    <IonInput type="text" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
+                    )}
+                    name="home_city"
+                    rules={{ required: true }}
+                    />
+              </IonItem>    
             
               <IonButton className="my-3 confirm-btn" type="submit" expand="block">
                 <IonIcon className="pe-1" icon={logIn}/>Registrieren
