@@ -46,6 +46,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './theme/variables.css';
 import './App.css'
 import ResetPassword from './components/Auth/ResetPassword';
+import SetNewPassword from './components/Auth/SetNewPassword';
 
 const App: React.FC = () => {
   const { searchText, setSearchText, user } = useContext(Context);
@@ -69,6 +70,7 @@ const App: React.FC = () => {
               <Route path="/logout" component={Logout} exact/>
               <Route path="/auth/activate/user/:id" component={ActivateUser} exact/>
               <Route path="/auth/reset-password" component={ResetPassword} exact/>
+              <Route path="/auth/reset-password/user/:id" component={SetNewPassword} exact/>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
               <IonTabButton tab="home" href="/home">
