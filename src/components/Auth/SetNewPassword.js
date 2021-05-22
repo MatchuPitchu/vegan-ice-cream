@@ -63,10 +63,7 @@ const SetNewPassword = () => {
             <Controller 
               control={control}
               defaultValue=""
-              render={({ 
-                field: { onChange, value },
-                fieldState: { invalid, isTouched, isDirty, error },
-              }) => (
+              render={({ field: { onChange, value } }) => (
                 <IonInput type="password" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
                 )}
                 name="password"
@@ -86,10 +83,7 @@ const SetNewPassword = () => {
             <Controller 
               control={control}
               defaultValue=""
-              render={({ 
-                field: { onChange, value },
-                fieldState: { invalid, isTouched, isDirty, error },
-              }) => (
+              render={({ field: { onChange, value } }) => (
                 <IonInput type="password" id="repeatPassword" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
                 )}
                 name="repeatPassword"
@@ -106,16 +100,15 @@ const SetNewPassword = () => {
           {error && <div className='alertMsg'>{error}</div>}       
         
           <IonButton className="my-3 confirm-btn" type="submit" expand="block">
-            <IonIcon className="pe-1" icon={logIn}/>Registrieren
+            <IonIcon className="pe-1" icon={logIn}/>Passwort erneuern
           </IonButton>
           {endReset && (
-            <IonButton className="check-btn" routerLink="/home" color="success" expand="block">
-              Du hast dein Passwort erfolgreich erneuert und kannst dich damit einloggen.
+            <IonButton className="check-btn" routerLink="/login" color="success" expand="block">
+              Du hast dein Passwort erfolgreich erneuert und kannst dich wieder einloggen.
             </IonButton>
           )}
         </form>
 
-        <p className="text-center">Nach der Registrierung kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
         <p className="mt-4">
           <IonList>
             <IonItem lines="full">
