@@ -12,6 +12,7 @@ const AppState = ({children}) => {
   const [locations, setLocations] = useState([]);
   const [locationsMap, setLocationsMap] = useState([]);
   const [locationsList, setLocationsList] = useState([]);
+  const [listResults, setListResults] = useState([]);
   const [autocomplete, setAutocomplete] = useState(null);
   const [searchAutocomplete, setSearchAutocomplete] = useState('');
   const [result, setResult] = useState(null);
@@ -21,6 +22,7 @@ const AppState = ({children}) => {
   const [all, setAll] = useState(false);
   const [disableInfScroll, setDisableInfScroll] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [segment, setSegment]= useState('map');
   const [map, setMap]= useState(null);
   const [viewport, setViewport] = useState({});
   const [center, setCenter] = useState({ lat:  52.524, lng: 13.410 });
@@ -317,6 +319,7 @@ const AppState = ({children}) => {
         locations, setLocations,
         locationsMap, setLocationsMap,
         locationsList, setLocationsList,
+        listResults, setListResults,
         autocomplete, setAutocomplete,
         searchAutocomplete, setSearchAutocomplete,
         result, setResult,
@@ -325,6 +328,7 @@ const AppState = ({children}) => {
         all, setAll,
         disableInfScroll, setDisableInfScroll,
         searchText, setSearchText,
+        segment, setSegment,
         map, setMap,
         viewport, setViewport,
         searchViewport,
