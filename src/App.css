@@ -302,11 +302,14 @@ mark {
 
 .hightlighter-wrapper {
   font-size: 0.8rem;
+  font-weight: 400;
+  padding: 0 10px;
 }
 
 .highlight {
-  color: var(--ion-color-primary);
+  font-weight: 600;
   background-color: transparent;
+  color: var(--ion-color-primary);
 }
 
 /* Searchbar Autocomplete Google */
@@ -319,7 +322,7 @@ mark {
 .search-autocomplete {
   background: var(--ion-background-color);
   background-position: left 8px center;
-  font-size: 16px;
+  font-size: 0.8rem;
   font-weight: 400;
   height: auto;
   line-height: 30px;
@@ -361,8 +364,9 @@ mark {
 }
 
 .pac-item-query {
-  font-weight: 300;
-  color: var(--ion-color-primary-tint);
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--ion-text-color);
 }
 
 .pac-matched {
