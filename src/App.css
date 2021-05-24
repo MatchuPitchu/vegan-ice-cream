@@ -295,6 +295,20 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   background-color: var(--ion-background-color);
 }
 
+.mark,
+mark {
+  padding: 0;
+}
+
+.hightlighter-wrapper {
+  font-size: 0.8rem;
+}
+
+.highlight {
+  color: var(--ion-color-primary);
+  background-color: transparent;
+}
+
 /* Searchbar Autocomplete Google */
 .container-autocomplete {
   display: flex;
