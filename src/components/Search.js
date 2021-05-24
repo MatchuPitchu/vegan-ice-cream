@@ -6,15 +6,17 @@ import { informationCircle } from 'ionicons/icons';
 
 const Search = () => {
   const { 
+    segment,
     setCenter,
     setZoom,
     locations,
+    setListResults,
     setSearchSelected,
     searchText, setSearchText,
   } = useContext(Context);
-  const [ predictions, setPredictions ] = useState([]);
-  const [ popoverShow, setPopoverShow ] = useState({ show: false, event: undefined });
-  const [ searchWords, setSearchWords ] = useState([]);
+  const [predictions, setPredictions] = useState([]);
+  const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
+  const [searchWords, setSearchWords] = useState([]);
 
   const onSubmit = e => e.preventDefault();
 
@@ -39,9 +41,12 @@ const Search = () => {
       });
       const result = res.slice(0, 4);
       setPredictions(result);
+      // if user is on map list page and uses search than resultsList is displayed
+      if(segment === 'list') setListResults(res);
     }
     if(!value) {
-      setPredictions([])
+      setPredictions([]);
+      setListResults([]);
       setSearchSelected(null)
     }
   };
@@ -88,10 +93,10 @@ const Search = () => {
           isOpen={popoverShow.show}
           onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
         >
-          Nichts gefunden? Trage den Eisladen zuerst auf der Karte ganz unten ein
+          Nichts gefunden? Trage den Eisladen auf der Karte ein.
         </IonPopover>
       </IonItem>
-      {predictions ? (
+      {predictions && segment === 'map' ? (
         <IonList className="py-0">
           {predictions.map(loc => (
             <IonItem 

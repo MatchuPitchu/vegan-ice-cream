@@ -19,6 +19,7 @@ const Entdecken = () => {
     locationsMap,
     center, setCenter,
     zoom,
+    segment, setSegment,
     map, setMap,
     setAutocompleteModal,
     searchViewport,
@@ -32,7 +33,6 @@ const Entdecken = () => {
     setOpenComments
   } = useContext(Context);
   const [libraries] = useState(['places']);
-  const [segment, setSegment] = useState('map');
 
   useEffect(() => {
     if(map) setTimeout(() => searchViewport(), 2000);
@@ -276,7 +276,7 @@ const Entdecken = () => {
 
       {segment === 'list' && <ListMap /> }
 
-    <LoadingError />
+      <LoadingError />
     
     </IonPage>
   ) : (
