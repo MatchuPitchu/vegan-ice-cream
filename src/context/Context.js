@@ -127,6 +127,11 @@ const AppState = ({children}) => {
   }, [])
 
   useEffect(() => {
+    // if user changes segment ('map' or 'list') than value of searchbar is reseted
+    setSearchText('');
+  }, [segment])
+
+  useEffect(() => {
     const updateLocInViewport = async () => {
       try {
         const limit = 50;

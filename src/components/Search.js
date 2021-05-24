@@ -32,7 +32,6 @@ const Search = () => {
           const reg = "(" + word + ")(?![^<]*>|[^<>]*</)";
           // i means case-insensitive mode
           const regex = new RegExp(reg, "i");
-          console.log('regex test:', loc.name, regex.test(`${loc.name} ${loc.address.street} ${loc.address.number} ${loc.address.city}`) )
           return regex.test(`${loc.name} ${loc.address.street} ${loc.address.number} ${loc.address.city}`)
         });
         // found is array with as many items as there are search words
@@ -99,8 +98,7 @@ const Search = () => {
       {predictions && segment === 'map' ? (
         <IonList className="py-0">
           {predictions.map(loc => (
-            <IonItem 
-              className="autocompleteListItem" 
+            <IonItem
               key={loc._id} 
               button 
               onClick={() => {
