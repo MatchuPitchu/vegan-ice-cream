@@ -6,6 +6,8 @@ import { informationCircle } from 'ionicons/icons';
 
 const Search = () => {
   const { 
+    setLoading,
+    setError,
     segment,
     setCenter,
     setZoom,
@@ -18,7 +20,28 @@ const Search = () => {
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
   const [searchWords, setSearchWords] = useState([]);
 
-  const onSubmit = e => e.preventDefault();
+  const onSubmit = async e => {
+    e.preventDefault();
+    if(e.target.elements[0].value.length > 3 && segment === 'map') {
+      setLoading(true);
+      try {
+        const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(e.target.elements[0].value)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
+        const { results } = await res.json();
+       
+        if(results[0].geometry.location) {
+          setCenter({
+            lat: results[0].geometry.location.lat,
+            lng: results[0].geometry.location.lng
+          });
+          setZoom(13);
+        }
+      } catch (error) {
+        setError('Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in Deutschland eintragen.')
+        setTimeout(() => setError(null), 5000);
+      }
+      setLoading(false);
+    }
+  }
 
   const forAutocompleteChange = async value => {
     if(value.length >= 3 && locations) {
@@ -53,7 +76,10 @@ const Search = () => {
   const initMarker = (loc) => {
     setSearchSelected(loc); 
     setPredictions([]);
-    setCenter({lat: loc.address.geo.lat, lng: loc.address.geo.lng})
+    setCenter({
+      lat: loc.address.geo.lat, 
+      lng: loc.address.geo.lng
+    })
     setZoom(14);
   }
 
@@ -64,7 +90,7 @@ const Search = () => {
           className="searchbar container" 
           type="search"
           inputMode="search"
-          placeholder="Eisladen suchen" 
+          placeholder="Eisladen oder Stadt suchen" 
           showCancelButton="always" 
           cancel-button-text=""
           value={searchText}
