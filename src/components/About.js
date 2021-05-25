@@ -12,7 +12,7 @@ const About = () => {
         <IonLabel color="primary">About</IonLabel>
         <IonButton slot="end" fill="clear" onClick={() => setShowAbout(false)}><IonIcon icon={closeCircleOutline}/></IonButton>
       </IonItem>
-      <img className="headerMap" src={`${toggle ? "./assets/map-header-graphic-ice-dark.svg" : "./assets/map-header-graphic-ice-light.svg"}`} />
+      <img className="headerMap" src={`${toggle ? "./assets/header-about-dark.svg" : "./assets/header-about-light.svg"}`} />
       <IonContent className="ion-padding">
         <IonCard>
           <IonCardHeader>
