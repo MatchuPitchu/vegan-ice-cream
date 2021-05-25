@@ -38,10 +38,10 @@ const Menu: React.FC = () => {
 
   return (
     <IonPage>
+      <IonToolbar color="primary">
+        <div className='text-center'>Einstellungen</div>
+      </IonToolbar>
       <IonContent fullscreen>
-        <IonToolbar color="primary">
-          <div className='text-center'>Einstellungen</div>
-        </IonToolbar>
         <IonList id="inbox-list">
           <IonItem className="labelMenu pe-2" lines="none">
             <IonLabel >Farbstil</IonLabel>
@@ -50,25 +50,19 @@ const Menu: React.FC = () => {
           <IonListHeader>
             <img className="headerGraphic" src={`${toggle ? "./assets/header-graphic-ice-dark.svg" : "./assets/header-graphic-ice-light.svg"}`} />
           </IonListHeader>
-          <IonMenuToggle autoHide={false}>
-            <IonItem className="labelMenu" disabled={isAuth ? true : false} routerLink='/login' lines="none" detail={false} >
-              <IonLabel>Login</IonLabel>
-              <IonIcon slot="end" icon={logIn} />
-            </IonItem>
-          </IonMenuToggle>
-          <IonMenuToggle autoHide={false}>
+          <IonItem className="labelMenu" disabled={isAuth ? true : false} routerLink='/login' lines="none" detail={false} >
+            <IonLabel>Login</IonLabel>
+            <IonIcon slot="end" icon={logIn} />
+          </IonItem>
           <IonItem className="labelMenu" disabled={isAuth ? true : false} routerLink='/register' lines="none" detail={false}>
             <IonLabel>Registrieren</IonLabel>
             <IonIcon slot="end" icon={create} />
           </IonItem>
-          </IonMenuToggle>
           {isAuth && (
-          <IonMenuToggle autoHide={false}>
             <IonItem className="labelMenu" button onClick={() => { setShowProfil(true)}} lines="full" detail={false}>
               <IonLabel>Profil</IonLabel>
               <IonIcon slot="end" icon={personCircle} />
             </IonItem>
-          </IonMenuToggle>
           )}
           {showProfil && (
             <IonModal cssClass={`${isPlatform('desktop') ? 'menuModalDesktop' : 'menuModal'}`} isOpen={showProfil} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowProfil(false)} enterAnimation={enterAnimationLft} leaveAnimation={leaveAnimationLft}>
@@ -94,12 +88,10 @@ const Menu: React.FC = () => {
             </IonModal>
           )}      
           {isAuth && (
-          <IonMenuToggle autoHide={false}>
             <IonItem button onClick={logout} className="labelMenu mt-3 pe-2" routerLink='/logout' lines="none" detail={false}>
               <IonIcon slot="start" icon={logOut} />
               <IonLabel>Logout</IonLabel>
             </IonItem>
-          </IonMenuToggle>
           )}
         </IonList>
       </IonContent>

@@ -65,6 +65,11 @@ ion-badge {
   height: 30px;
 }
 
+.headerImg {
+  width: 100%;
+  max-height: 120px;
+}
+
 /************ Header general ************/
 ion-toolbar .sc-ion-searchbar-ios-h {
   padding: 3px 0;
@@ -811,4 +816,15 @@ mark {
 .colorPicker > div > span > div {
   border-radius: 90%;
   box-shadow: 2px 2px 4px #000000;
+}
+
+.circle-picker > span:first-child > div {
+  background-color: #b53134;
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent,
+    transparent 3px,
+    #fff 3px,
+    #fff 6px
+  );
 }

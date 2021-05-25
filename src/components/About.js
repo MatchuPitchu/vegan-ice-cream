@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { Context } from "../context/Context";
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonIcon, IonItem, IonLabel, IonList, IonPage } from '@ionic/react';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonPage } from '@ionic/react';
 import { bulb, closeCircleOutline, documentLock, helpCircle, logoCss3, logoHtml5, logoIonic, logoJavascript, logoNodejs, logoReact } from 'ionicons/icons';
 
 const About = () => {
@@ -8,11 +8,13 @@ const About = () => {
 
   return (
     <IonPage>
-      <IonItem lines="none">
-        <IonLabel color="primary">About</IonLabel>
-        <IonButton slot="end" fill="clear" onClick={() => setShowAbout(false)}><IonIcon icon={closeCircleOutline}/></IonButton>
-      </IonItem>
-      <img className="headerMap" src={`${toggle ? "./assets/map-header-graphic-ice-dark.svg" : "./assets/map-header-graphic-ice-light.svg"}`} />
+      <IonHeader>
+        <IonItem color="background-color" lines="none">
+          <IonLabel size="" color="primary">About</IonLabel>
+          <IonButton slot="end" fill="clear" onClick={() => setShowAbout(false)}><IonIcon icon={closeCircleOutline}/></IonButton>
+        </IonItem>
+        <img className="headerMap" src={`${toggle ? "./assets/header-about-dark.svg" : "./assets/header-about-light.svg"}`} />
+      </IonHeader>
       <IonContent className="ion-padding">
         <IonCard>
           <IonCardHeader>

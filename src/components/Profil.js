@@ -14,18 +14,18 @@ const Profil = () => {
   return isAuth && user && locations ? (
     <IonPage>
       <IonHeader>
-        <IonItem color="tab-bar-background" lines="none">
+        <IonItem color="background-color" lines="none">
+          <IonLabel color="primary">Profil</IonLabel>
           <IonButton slot="end" fill="clear" onClick={() => setShowProfil(false)}>
             <IonIcon icon={closeCircleOutline}/>
           </IonButton>
         </IonItem>
-        <img className="headerMap" src={`${toggle ? "./assets/map-header-graphic-ice-dark.svg" : "./assets/map-header-graphic-ice-light.svg"}`} />
+        <img className="headerImg" src={`${toggle ? "./assets/header-profil-dark.svg" : "./assets/header-profil-light.svg"}`} />
       </IonHeader>
       <IonContent>
         <div className="container-sm mt-3">
           <IonCard>
             <IonCardHeader>
-              <IonCardSubtitle>Profil</IonCardSubtitle>
               <IonCardTitle>{user.name}</IonCardTitle>
             </IonCardHeader>
             <IonItem lines="none">
