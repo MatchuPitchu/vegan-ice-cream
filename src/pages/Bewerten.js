@@ -222,7 +222,7 @@ const Bewerten = () => {
         </div>
 
         <form className="container" onSubmit={handleSubmit(onSubmit)}>
-          <IonItem lines="none">
+          <IonItem lines="full">
             <IonLabel position='stacked' htmlFor="location">Name des Eisladens</IonLabel>
             <IonInput 
               disabled
@@ -232,66 +232,11 @@ const Bewerten = () => {
             />
           </IonItem>
 
-          <IonItem lines="none" className="mb-1">
-            <IonLabel position='floating' htmlFor="text">Kommentar</IonLabel>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <IonTextarea rows={6} value={value} onIonChange={e => onChange(e.detail.value)} />
-              )}
-              name="text"
-              rules={{ required: true }}
-            />
-          </IonItem>
-          {searchSelected && showError("text", errors)}
-          
-          <IonItem lines="none">
-            <IonLabel position='stacked' htmlFor="rating_quality">Eis-Erlebnis</IonLabel>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <ReactStars
-                  count={5}
-                  value={value}
-                  onChange={e => onChange(e)}
-                  edit={true}
-                  size={30}
-                  color='#9b9b9b'
-                  activeColor='#de9c01'
-                />
-              )}
-              name="rating_quality"
-              rules={{ required: true }}
-            />
-          </IonItem>
-          {showError("rating_quality", errors)}
-    
-          <IonItem lines="none" className="mb-1">
-            <IonLabel position='stacked' htmlFor="rating_vegan_offer">Veganes Angebot des Eisladens</IonLabel>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <ReactStars
-                  count={5}
-                  value={value}
-                  onChange={e => onChange(e)}
-                  edit={true}
-                  size={30}
-                  color='#9b9b9b'
-                  activeColor='#de9c01'
-                />
-              )}
-              name="rating_vegan_offer"
-              rules={{ required: true }}
-            />
-          </IonItem>
-          {showError("rating_vegan_offer", errors)}
-
           <IonItem lines="full">
-            <IonLabel color="primary">Infos zu deiner Bewertung</IonLabel>
+            <IonLabel className="ion-text-wrap" color="warning">Hinweis: Beziehe deine Bewertung bitte auf 1 Eissorte deiner Wahl</IonLabel>
             <IonIcon
-              className="infoIcon ms-auto"
-              color="primary"
+              className="warningIcon ms-5"
+              color="warning"
               button 
               onClick={e => {
                 e.persist();
@@ -306,13 +251,13 @@ const Bewerten = () => {
               isOpen={popoverInfo.show}
               onDidDismiss={() => setPopoverInfo({ show: false, event: undefined })}
             >
-              mind. 1 Eissorte angeben
+              Damit eine Bewertung fix abzusenden ist, bezieht sie sich immer auf 1 Eissorte. Hast du mehrere Sorten probiert, kannst du natürlich weitere Bewertungen abgeben.
             </IonPopover>
           </IonItem>
 
           {/* FIRST ICE CREAM FLAVOR STARTS */}
           <IonItem lines="none">
-            <IonLabel ref={flav1Ref} htmlFor="name1">1. Eissorte</IonLabel>
+            <IonLabel ref={flav1Ref} htmlFor="name1">Eissorte</IonLabel>
             <IonIcon
               className="infoIcon ms-auto"
               color="primary"
@@ -482,8 +427,63 @@ const Bewerten = () => {
           </IonItem>
           {showError("ice-color", errors)}
           
-          {/* SECOND ICE CREAM FLAVOR STARTS */}
+          <IonItem lines="none" className="mb-1">
+            <IonLabel position='floating' htmlFor="text">Kommentar</IonLabel>
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <IonTextarea rows={6} value={value} onIonChange={e => onChange(e.detail.value)} />
+              )}
+              name="text"
+              rules={{ required: true }}
+            />
+          </IonItem>
+          {searchSelected && showError("text", errors)}
+          
           <IonItem lines="none">
+            <IonLabel position='stacked' htmlFor="rating_quality">Eis-Erlebnis</IonLabel>
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <ReactStars
+                  count={5}
+                  value={value}
+                  onChange={e => onChange(e)}
+                  edit={true}
+                  size={30}
+                  color='#9b9b9b'
+                  activeColor='#de9c01'
+                />
+              )}
+              name="rating_quality"
+              rules={{ required: true }}
+            />
+          </IonItem>
+          {showError("rating_quality", errors)}
+    
+          <IonItem lines="none" className="mb-1">
+            <IonLabel position='stacked' htmlFor="rating_vegan_offer">Veganes Angebot des Eisladens</IonLabel>
+            <Controller
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <ReactStars
+                  count={5}
+                  value={value}
+                  onChange={e => onChange(e)}
+                  edit={true}
+                  size={30}
+                  color='#9b9b9b'
+                  activeColor='#de9c01'
+                />
+              )}
+              name="rating_vegan_offer"
+              rules={{ required: true }}
+            />
+          </IonItem>
+          {showError("rating_vegan_offer", errors)}
+
+          {/* SECOND ICE CREAM FLAVOR STARTS */}
+          {/* <IonItem lines="none">
             <IonLabel ref={flav2Ref} htmlFor="name2">2. Eissorte</IonLabel>
             <IonIcon
               className="infoIcon ms-auto"
@@ -650,7 +650,7 @@ const Bewerten = () => {
                 name="name2color2"
                 />
           </IonItem>
-          {showError("ice-color", errors)}
+          {showError("ice-color", errors)} */}
 
           <IonItem lines="none" className="mb-1">
             <IonLabel position='floating' htmlFor="date">Datum</IonLabel>

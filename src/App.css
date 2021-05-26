@@ -301,6 +301,12 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   background-color: var(--ion-background-color);
 }
 
+.warningIcon:hover {
+  border: 1px solid var(--ion-color-warning);
+  border-radius: 90%;
+  background-color: var(--ion-background-color);
+}
+
 .mark,
 mark {
   padding: 0;
