@@ -1,9 +1,10 @@
-import { useContext, useState, useRef } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { Context } from "../context/Context";
 import ReactStars from "react-rating-stars-component";
+import Highlighter from "react-highlight-words";
 import { CirclePicker } from "react-color";
 import { Controller, useForm } from 'react-hook-form';
-import { IonButton, IonContent, IonDatetime, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonPage, IonPopover, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToast, IonToggle, IonToolbar } from '@ionic/react';
+import { IonButton, IonContent, IonDatetime, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonPopover, IonSearchbar, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToast, IonToggle, IonToolbar } from '@ionic/react';
 import { add, colorPaletteOutline, informationCircle, search } from 'ionicons/icons';
 import showError from '../components/showError';
 import Search from '../components/Search';
@@ -22,11 +23,24 @@ const Bewerten = () => {
     setNewComment
   } = useContext(Context);
   
-  const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
+  const [popoverInfo, setPopoverInfo] = useState({ show: false, event: undefined });
+  const [popoverFlav1, setPopoverFlav1] = useState({ show: false, event: undefined });
+  const [popoverFlav2, setPopoverFlav2] = useState({ show: false, event: undefined });
   const [colorPicker1, setColorPicker1] = useState({field1: false, field2: false});
   const [colorPicker2, setColorPicker2] = useState({field1: false, field2: false});
-  const name1Ref = useRef(null);
-  const name2Ref = useRef(null);
+  const flav1Ref = useRef(null);
+  const flav2Ref = useRef(null);
+
+  const [flavors, setFlavors] = useState([]);
+  const [flavorsPredict, setFlavorsPredict] = useState([]);
+  const [searchWords, setSearchWords] = useState([]);
+  const [flavor1, setFlavor1] = useState({});
+  const [flavor2, setFlavor2] = useState({});
+  const [searchFlav1, setSearchFlav1] = useState('');
+  const [searchFlav2, setSearchFlav2] = useState('');
+  const [flav1Active, setFlav1Active] = useState(false);
+  const [flav2Active, setFlav2Active] = useState(false);
+
 
   const colorArr = [
     "TRANSPARENT", "#b71c1c", "#f44336", "#e57373", "#ffcdd2",
@@ -58,10 +72,25 @@ const Bewerten = () => {
     text: ''
   }
 
+  useEffect(() => {
+    const fetchFlavors = async () => {
+      try {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors`)
+        const data = await res.json();
+        setFlavors(data);
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+    fetchFlavors();
+  }, [])
+
   // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
-  const { control, handleSubmit, reset, formState: { errors } } = useForm({
+  const { control, handleSubmit, watch, reset, formState: { errors } } = useForm({
     defaultValues
   });
+
+  console.log('watch', watch())
 
   const createFlavor = (data, commentID, comment) => {
     setLoading(true);
@@ -116,39 +145,69 @@ const Bewerten = () => {
   };
 
   const onSubmit = async (data) => {
-    setLoading(true);
-    const token = localStorage.getItem('token');
-    try {
-      const body = {
-        user_id: user._id,
-        text: data.text, 
-        rating_quality: data.rating_quality, 
-        rating_vegan_offer: data.rating_vegan_offer, 
-        date: data.date ? data.date : undefined,
-      };
-      const options = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          token
-        },
-        body: JSON.stringify(body),
-        credentials: "include",
-      };
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${searchSelected._id}`, options);
-      const newComment = await res.json();
-      
-      if (!newComment) {
-        setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
-        setTimeout(() => setError(null), 5000);
-      }
-      createFlavor(data, newComment._id, newComment);
+    console.log(data);
 
-    } catch (error) {
-      setError(error)
-      setTimeout(() => setError(null), 5000);
-    };
-    setLoading(false)
+
+    // setLoading(true);
+    // const token = localStorage.getItem('token');
+    // try {
+    //   const body = {
+    //     user_id: user._id,
+    //     text: data.text, 
+    //     rating_quality: data.rating_quality, 
+    //     rating_vegan_offer: data.rating_vegan_offer, 
+    //     date: data.date ? data.date : undefined,
+    //   };
+    //   const options = {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       token
+    //     },
+    //     body: JSON.stringify(body),
+    //     credentials: "include",
+    //   };
+    //   const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${searchSelected._id}`, options);
+    //   const newComment = await res.json();
+      
+    //   if (!newComment) {
+    //     setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
+    //     setTimeout(() => setError(null), 5000);
+    //   }
+    //   createFlavor(data, newComment._id, newComment);
+
+    // } catch (error) {
+    //   setError(error)
+    //   setTimeout(() => setError(null), 5000);
+    // };
+    // setLoading(false)
+  };
+
+  const forAutocompleteChange = value => {
+    if(value.length >= 3 && flavors) {
+      // make array from input string -> each item is created after one space " "
+      const searchQuery = value.split(' ').filter(word => word);
+      const res = flavors.filter(flavor => {
+        const found = searchQuery.map(word => {
+          // return if exists just a space or a space and then nothing
+          if (word === " " || word === "") return;
+          // explanation: http://stackoverflow.com/a/18622606/1147859
+          const reg = "(" + word + ")(?![^<]*>|[^<>]*</)";
+          // i means case-insensitive mode
+          const regex = new RegExp(reg, "i");
+          return regex.test(flavor.name)
+        });
+        // found is array with as many items as there are search words
+        // if every item is true, than this location is returned
+        if(found.every(v => v === true)) return flavor;
+      });
+      const result = res.slice(0, 4);
+      setFlavorsPredict(result);
+    }
+    if(!value) {
+      setFlavorsPredict([]);
+      setSearchSelected(null)
+    }
   };
 
   return isAuth && user ? (
@@ -236,37 +295,107 @@ const Bewerten = () => {
               button 
               onClick={e => {
                 e.persist();
-                setPopoverShow({ show: true, event: e })
+                setPopoverInfo({ show: true, event: e })
               }}
               icon={informationCircle} 
             />
             <IonPopover
               color="primary"
               cssClass='info-popover'
-              event={popoverShow.event}
-              isOpen={popoverShow.show}
-              onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
+              event={popoverInfo.event}
+              isOpen={popoverInfo.show}
+              onDidDismiss={() => setPopoverInfo({ show: false, event: undefined })}
             >
-              mind. 1 gewählte Eissorte angeben
+              mind. 1 Eissorte angeben
             </IonPopover>
           </IonItem>
 
+          {/* FIRST ICE CREAM FLAVOR STARTS */}
           <IonItem lines="none">
-            <IonLabel ref={name1Ref} position='stacked' htmlFor="name1">1. Eissorte</IonLabel>
+            <IonLabel ref={flav1Ref} htmlFor="name1">1. Eissorte</IonLabel>
+            <IonIcon
+              className="infoIcon ms-auto"
+              color="primary"
+              slot="end"
+              button 
+              onClick={e => {
+                e.persist();
+                setPopoverFlav1({ show: true, event: e })
+              }}
+              icon={informationCircle} 
+            />
+            <IonPopover
+              color="primary"
+              cssClass='info-popover'
+              event={popoverFlav1.event}
+              isOpen={popoverFlav1.show}
+              onDidDismiss={() => setPopoverFlav1({ show: false, event: undefined })}
+            >
+              Du siehst keine Vorschläge oder die Vorschläge passen nicht zu deiner Eissorte? Dann tippe einfach den vollständigen Namen der neuen Eissorte ein.
+            </IonPopover>
+          </IonItem>
+          <IonItem lines="none">
+            <IonSearchbar
+              className="searchbar" 
+              type="search"
+              inputMode="search"
+              placeholder="Was hast du probiert?" 
+              showCancelButton="always" 
+              cancel-button-text=""
+              value={searchFlav1}
+              debounce={100}
+              onIonChange={e => {
+                setFlav1Active(true);
+                setFlav2Active(false);
+                setSearchFlav1(e.detail.value);
+                forAutocompleteChange(e.detail.value);
+                setSearchWords(() => e.detail.value.split(' ').filter(word => word))
+              }}
+            />
+          </IonItem>
+          {flavorsPredict && flav1Active && searchFlav1 !== flavor1.name ? (
+            <IonList className="py-0">
+              {flavorsPredict.map(flavor => (
+                <IonItem
+                  key={flavor._id}
+                  button 
+                  onClick={() => {
+                    setFlavor1(flavor);
+                    setFlavorsPredict([]);
+                    setSearchFlav1(flavor.name);
+                    // initFlavor(flavor)
+                  }}
+                  lines="full"
+                >
+                  <Highlighter
+                    className="hightlighter-wrapper"
+                    activeIndex={-1}
+                    highlightClassName="highlight"
+                    searchWords={searchWords}
+                    caseSensitive={false}
+                    textToHighlight={`${flavor.name} ${flavor.type_fruit_ice ? '| Fruchteis' : ''} ${flavor.type_cream_ice ? '| Cremeeis' : ''}`}
+                  />
+                </IonItem>
+              ))}
+            </IonList>
+          ) : null}
+
+          <IonItem lines="none">
             <Controller 
               control={control}
               render={({ field: { onChange, value } }) => (
-                <IonInput 
-                  type="text" 
-                  inputmode="text"
-                  placeholder="Was hast du probiert?"
-                  value={value} 
-                  onIonChange={e => onChange(e.detail.value)} 
+                <IonInput
+                  type="text"
+                  value={value = searchFlav1 || undefined}
+                  onIonChange={e => {
+                    setSearchFlav1(e.detail.value);
+                    onChange(e.detail.value)
+                  }} 
                 />
-                )}
-                name="name1"
-                rules={{ required: true }}
-                />
+              )}
+              name="name1"
+              rules={{ required: true }}
+            />
           </IonItem>
           {showError("name", errors)}
 
@@ -284,7 +413,7 @@ const Bewerten = () => {
                 />
               </div>
               <div className="col">
-                <IonLabel position='stacked' htmlFor="name1_type_cream_ice">Milch- oder Cremeeis</IonLabel>
+                <IonLabel position='stacked' htmlFor="name1_type_cream_ice">Milch- bzw. Cremeeis</IonLabel>
                 <Controller 
                   control={control}
                   defaultValue={false}
@@ -314,7 +443,7 @@ const Bewerten = () => {
                           colors={colorArr}
                           circleSpacing={15}
                           circleSize={25} 
-                          onChangeComplete={e => { onChange(e.hex); name1Ref.current.scrollIntoView(); setColorPicker1(prev => ({ ...prev, field1: !prev.field1 })) }}
+                          onChangeComplete={e => { onChange(e.hex); flav1Ref.current.scrollIntoView(); setColorPicker1(prev => ({ ...prev, field1: !prev.field1 })) }}
                         />
                       </div>
                     )}
@@ -327,7 +456,7 @@ const Bewerten = () => {
           {showError("ice-color", errors)}
 
           <IonItem lines="none" className="mb-1">
-            <IonLabel ref={name2Ref} className="mb-1" position='stacked' htmlFor="name1color2"></IonLabel>
+            <IonLabel ref={flav2Ref} className="mb-1" position='stacked' htmlFor="name1color2"></IonLabel>
             <Controller
                 control={control}
                 render={( { field: { onChange, value } }) => (
@@ -342,7 +471,7 @@ const Bewerten = () => {
                           colors={colorArr}
                           circleSpacing={15}
                           circleSize={25}
-                          onChangeComplete={e => { onChange(e.hex); name1Ref.current.scrollIntoView(); setColorPicker1(prev => ({  field1: false, field2: !prev.field2 })) }}
+                          onChangeComplete={e => { onChange(e.hex); flav1Ref.current.scrollIntoView(); setColorPicker1(prev => ({  field1: false, field2: !prev.field2 })) }}
                           />
                       </div>
                     )}
@@ -352,23 +481,92 @@ const Bewerten = () => {
                 />
           </IonItem>
           {showError("ice-color", errors)}
-
           
+          {/* SECOND ICE CREAM FLAVOR STARTS */}
           <IonItem lines="none">
-            <IonLabel position='stacked' htmlFor="name2">2. Eissorte</IonLabel>
+            <IonLabel ref={flav2Ref} htmlFor="name2">2. Eissorte</IonLabel>
+            <IonIcon
+              className="infoIcon ms-auto"
+              color="primary"
+              slot="end"
+              button 
+              onClick={e => {
+                e.persist();
+                setPopoverFlav2({ show: true, event: e })
+              }}
+              icon={informationCircle} 
+            />
+            <IonPopover
+              color="primary"
+              cssClass='info-popover'
+              event={popoverFlav2.event}
+              isOpen={popoverFlav2.show}
+              onDidDismiss={() => setPopoverFlav2({ show: false, event: undefined })}
+            >
+              Du siehst keine Vorschläge oder die Vorschläge passen nicht zu deiner Eissorte? Dann tippe einfach den vollständigen Namen der neuen Eissorte ein.
+            </IonPopover>
+          </IonItem>
+          <IonItem lines="none">
+            <IonSearchbar
+              className="searchbar container mt-2" 
+              type="search"
+              inputMode="search"
+              placeholder="Was hast du probiert?" 
+              showCancelButton="always" 
+              cancel-button-text=""
+              value={searchFlav2}
+              debounce={100}
+              onIonChange={e => {
+                setFlav1Active(false);
+                setFlav2Active(true);
+                setSearchFlav2(e.detail.value);
+                forAutocompleteChange(e.detail.value);
+                setSearchWords(() => e.detail.value.split(' ').filter(word => word))
+              }}
+            />
+          </IonItem>
+          {flavorsPredict && flav2Active && searchFlav2 !== flavor2.name ? (
+            <IonList className="py-0">
+              {flavorsPredict.map(flavor => (
+                <IonItem
+                  key={flavor._id}
+                  button 
+                  onClick={() => {
+                    setFlavor2(flavor);
+                    setFlavorsPredict([]);
+                    setSearchFlav2(flavor.name)
+                    // initFlavor(flavor)
+                  }}
+                  lines="full"
+                >
+                  <Highlighter
+                    className="hightlighter-wrapper"
+                    activeIndex={-1}
+                    highlightClassName="highlight"
+                    searchWords={searchWords}
+                    caseSensitive={false}
+                    textToHighlight={`${flavor.name} ${flavor.type_fruit_ice ? '| Fruchteis' : ''} ${flavor.type_cream_ice ? '| Cremeeis' : ''}`}
+                  />
+                </IonItem>
+              ))}
+            </IonList>
+          ) : null}
+
+          <IonItem lines="none">
             <Controller 
               control={control}
               render={({ field: { onChange, value } }) => (
-                <IonInput 
-                  type="text" 
-                  inputmode="text"
-                  placeholder="Was hast du probiert?"
-                  value={value} 
-                  onIonChange={e => onChange(e.detail.value)} 
+                <IonInput
+                  type="text"
+                  value={value = searchFlav2 || undefined}
+                  onIonChange={e => {
+                    setSearchFlav2(e.detail.value);
+                    onChange(e.detail.value)
+                  }} 
                 />
-                )}
-                name="name2"
-                />
+              )}
+              name="name2"
+            />
           </IonItem>
           {showError("name", errors)}
 
@@ -386,7 +584,7 @@ const Bewerten = () => {
                 />
               </div>
               <div className="col">
-                <IonLabel position='stacked' htmlFor="name2_type_cream_ice">Milch- oder Cremeeis</IonLabel>
+                <IonLabel position='stacked' htmlFor="name2_type_cream_ice">Milch- bzw. Cremeeis</IonLabel>
                 <Controller 
                   control={control}
                   defaultValue={false}
@@ -416,7 +614,7 @@ const Bewerten = () => {
                           colors={colorArr}
                           circleSpacing={15}
                           circleSize={25}
-                          onChangeComplete={e => { onChange(e.hex); name2Ref.current.scrollIntoView(); setColorPicker2(prev => ({ field1: !prev.field1, field2: false })) }}
+                          onChangeComplete={e => { onChange(e.hex); flav2Ref.current.scrollIntoView(); setColorPicker2(prev => ({ field1: !prev.field1, field2: false })) }}
                         />
                       </div>
                     )}
@@ -443,7 +641,7 @@ const Bewerten = () => {
                           colors={colorArr}
                           circleSpacing={15}
                           circleSize={25}
-                          onChangeComplete={e => { onChange(e.hex); name2Ref.current.scrollIntoView(); setColorPicker2(prev => ({ ...prev, field2: !prev.field2 })) }}
+                          onChangeComplete={e => { onChange(e.hex); flav2Ref.current.scrollIntoView(); setColorPicker2(prev => ({ ...prev, field2: !prev.field2 })) }}
                           />
                       </div>
                     )}

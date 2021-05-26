@@ -288,6 +288,7 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 
 .searchbar-input::placeholder {
   background-color: var(--ion-item-background);
+  font-size: 0.8rem;
 }
 
 .sc-ion-searchbar-ios-h {
