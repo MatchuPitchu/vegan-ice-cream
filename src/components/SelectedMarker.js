@@ -130,8 +130,8 @@ const SelectedMarker = () => {
                   return (
                     <div key={flavor._id}>
                       <div className="iceContainer">
-                        <div className="icecream" style={{background: `linear-gradient(to bottom, ${flavor.ice_color.color_primary}, ${flavor.ice_color.color_secondary} )`}}></div>
-                        <div className="icecreamBottom" style={{background: flavor.ice_color.color_primary}}></div>
+                        <div className="icecream" style={{background: `linear-gradient(to bottom, ${flavor.color.primary}, ${flavor.color.secondary} )`}}></div>
+                        <div className="icecreamBottom" style={{background: flavor.color.primary}}></div>
                         <div className="cone"></div>
                       </div>
                       <div className="labelFlavor">{flavor.name}</div>

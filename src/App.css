@@ -288,6 +288,7 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 
 .searchbar-input::placeholder {
   background-color: var(--ion-item-background);
+  font-size: 0.8rem;
 }
 
 .sc-ion-searchbar-ios-h {
@@ -296,6 +297,12 @@ ion-toolbar .sc-ion-searchbar-ios-h {
 
 .infoIcon:hover {
   border: 1px solid var(--ion-color-primary);
+  border-radius: 90%;
+  background-color: var(--ion-background-color);
+}
+
+.warningIcon:hover {
+  border: 1px solid var(--ion-color-warning);
   border-radius: 90%;
   background-color: var(--ion-background-color);
 }

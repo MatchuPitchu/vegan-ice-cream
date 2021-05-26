@@ -1,12 +1,13 @@
-import { useContext, useState, useRef } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { Context } from "../context/Context";
 import ReactStars from "react-rating-stars-component";
 import { CirclePicker } from "react-color";
 import { Controller, useForm } from 'react-hook-form';
-import { IonButton, IonContent, IonDatetime, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonPage, IonPopover, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToast, IonToggle, IonToolbar } from '@ionic/react';
-import { add, colorPaletteOutline, informationCircle, search } from 'ionicons/icons';
+import { IonButton, IonContent, IonDatetime, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonPopover, IonSearchbar, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToast, IonToggle, IonToolbar } from '@ionic/react';
+import { add, bulb, colorPaletteOutline, informationCircle, search } from 'ionicons/icons';
 import showError from '../components/showError';
 import Search from '../components/Search';
+import SearchFlavors from '../components/SearchFlavors';
 import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
 
@@ -19,14 +20,15 @@ const Bewerten = () => {
     user,
     searchSelected, setSearchSelected,
     setSearchText,
-    setNewComment
+    setNewComment,
+    searchFlavor, setSearchFlavor,
+    flavor
   } = useContext(Context);
   
-  const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
-  const [colorPicker1, setColorPicker1] = useState({field1: false, field2: false});
-  const [colorPicker2, setColorPicker2] = useState({field1: false, field2: false});
-  const name1Ref = useRef(null);
-  const name2Ref = useRef(null);
+  const [popoverInfo, setPopoverInfo] = useState({ show: false, event: undefined });
+  const [showColorPicker, setShowColorPicker] = useState({field1: false, field2: false});
+  const flav1Ref = useRef(null);
+  const flav2Ref = useRef(null);
 
   const colorArr = [
     "TRANSPARENT", "#b71c1c", "#f44336", "#e57373", "#ffcdd2",
@@ -43,40 +45,57 @@ const Bewerten = () => {
   ]
   
   const defaultValues = { 
-    name1: undefined,
-    name1_type_cream_ice: false,
-    name1_type_fruit_ice: false,
-    name1color1: undefined,
-    name1color2: undefined,
-    name2: undefined,
-    name2_type_cream_ice: false,
-    name2_type_fruit_ice: false,
-    name2color1: undefined,
-    name2color2: undefined,
+    name: undefined,
+    type_cream: false,
+    type_fruit: false,
+    color1: undefined,
+    color2: undefined,
+    text: '',
     rating_quality: 0,
+    bio: false,
+    vegan: false,
+    lactose_free: false,
+    not_specified: false,
     rating_vegan_offer: 0,
-    text: ''
   }
 
   // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
-  const { control, handleSubmit, reset, formState: { errors } } = useForm({
+  const { control, handleSubmit, reset, setValue, formState: { errors } } = useForm({
     defaultValues
   });
 
-  const createFlavor = (data, commentID, comment) => {
+  useEffect(() => {
+    setValue("name", flavor.name ? searchFlavor : undefined);
+    setValue("type_fruit", flavor.name ? flavor.type_fruit : undefined);
+    setValue("type_cream", flavor.name ? flavor.type_cream : undefined);
+    setValue("color1", flavor.name ? flavor.color.primary : undefined);
+    setValue("color2", flavor.name ? flavor.color.secondary : undefined);
+  }, [flavor]);
+
+  const unCheckToggles = () => {
+    setValue("bio", false);
+    setValue("vegan", false);
+    setValue("lactose_free", false);
+  }
+
+  const unCheckNotSpecified = () => {
+    setValue("not_specified", false);
+  }
+
+  const createFlavor = (data, comment) => {
     setLoading(true);
     const token = localStorage.getItem('token');
     try {
-      const setFlavor = async (name, type_fruit_ice, type_cream_ice, color_primary, color_secondary) => {
+      const uploadFlavor = async (name, type_fruit, type_cream, primary, secondary) => {
         const body = {
           location_id: searchSelected._id,
           user_id: user._id,
           name,
-          type_fruit_ice,
-          type_cream_ice,
-          ice_color: {
-            color_primary,
-            color_secondary
+          type_fruit,
+          type_cream,
+          color: {
+            primary,
+            secondary
           },
         };
         
@@ -90,39 +109,43 @@ const Bewerten = () => {
           credentials: "include",
         };
         
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors/${commentID}`, options);
-        const newFlavor = await res.json();
-        if (!newFlavor) {
-          setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
-          setTimeout(() => setError(null), 5000);
-        }
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors/${comment._id}`, options);
+        await res.json();
       }
 
-      const { name1, name1_type_fruit_ice, name1_type_cream_ice, name1color1, name1color2 } = data
-      if(name1) setFlavor(name1, name1_type_fruit_ice, name1_type_cream_ice, name1color1, name1color2);
+      const { name, type_fruit, type_cream, color1, color2 } = data
+      uploadFlavor(name, type_fruit, type_cream, color1, color2);
       
-      const { name2, name2_type_fruit_ice, name2_type_cream_ice, name2color1, name2color2 } = data
-      if(name2) setFlavor(name2, name2_type_fruit_ice, name2_type_cream_ice, name2color1, name2color2)
-
     } catch (error) {
-      setError(error)
+      console.log(error);
+      setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
       setTimeout(() => setError(null), 5000);
     };
 
     setNewComment(comment);
     setSearchText('');
+    setSearchFlavor('');
     setSearchSelected(null);
     reset(defaultValues);
   };
 
   const onSubmit = async (data) => {
+    if(!searchSelected) {
+      setError('Der Name des Eisladens fehlt.');
+      setTimeout(() => setError(null), 5000);
+    }
+
     setLoading(true);
     const token = localStorage.getItem('token');
     try {
       const body = {
         user_id: user._id,
         text: data.text, 
-        rating_quality: data.rating_quality, 
+        rating_quality: data.rating_quality,
+        bio: data.bio,
+        vegan: data.vegan,
+        lactose_free: data.lactose_free,
+        not_specified: data.not_specified,
         rating_vegan_offer: data.rating_vegan_offer, 
         date: data.date ? data.date : undefined,
       };
@@ -142,7 +165,7 @@ const Bewerten = () => {
         setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
         setTimeout(() => setError(null), 5000);
       }
-      createFlavor(data, newComment._id, newComment);
+      createFlavor(data, newComment);
 
     } catch (error) {
       setError(error)
@@ -163,7 +186,7 @@ const Bewerten = () => {
         </div>
 
         <form className="container" onSubmit={handleSubmit(onSubmit)}>
-          <IonItem lines="none">
+          <IonItem lines="full">
             <IonLabel position='stacked' htmlFor="location">Name des Eisladens</IonLabel>
             <IonInput 
               disabled
@@ -173,6 +196,146 @@ const Bewerten = () => {
             />
           </IonItem>
 
+          <IonItem lines="full">
+            <IonIcon icon={bulb} slot="start" color="warning"/>
+            <IonLabel className="ion-text-wrap" color="warning">
+              Beziehe deine Bewertung bitte nur auf 1 Eissorte deiner Wahl
+            </IonLabel>
+            
+            <IonIcon
+              className="warningIcon ms-5"
+              color="warning"
+              button 
+              onClick={e => {
+                e.persist();
+                setPopoverInfo({ show: true, event: e })
+              }}
+              icon={informationCircle} 
+            />
+            <IonPopover
+              color="primary"
+              cssClass='info-popover'
+              event={popoverInfo.event}
+              isOpen={popoverInfo.show}
+              onDidDismiss={() => setPopoverInfo({ show: false, event: undefined })}
+            >
+              Damit eine Bewertung fix abzusenden ist, bezieht sie sich immer auf 1 Eissorte. Hast du mehrere Sorten probiert, kannst du natürlich weitere Bewertungen abgeben.
+            </IonPopover>
+          </IonItem>
+
+          <SearchFlavors />
+          
+          <IonItem lines="none">
+            <Controller 
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <IonInput
+                  disabled
+                  type="text"
+                  value={value = searchFlavor}
+                  onIonChange={e => {
+                    onChange(e.detail.value)
+                  }} 
+                />
+              )}
+              name="name"
+              rules={{ required: true }}
+            />
+          </IonItem>
+          {showError("name", errors)}
+
+          <IonItem lines="none">
+            <div className="row">
+              <div className="col">
+                <IonLabel position='stacked' htmlFor="type_fruit">Fruchteis</IonLabel>
+                <Controller
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <IonToggle
+                      disabled={flavor.name ? true : false}
+                      onIonChange={e => onChange(e.detail.checked)} 
+                      checked={value} />
+                    )}
+                  name="type_fruit"
+                />
+              </div>
+              <div className="col">
+                <IonLabel position='stacked' htmlFor="type_cream">Cremeeis</IonLabel>
+                <Controller 
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <IonToggle 
+                      disabled={flavor.name ? true : false}
+                      onIonChange={e => onChange(e.detail.checked)} 
+                      checked={value} 
+                    />
+                  )}
+                  name="type_cream"
+                />
+              </div>
+            </div>
+            {showError("type_cream", errors)}
+          </IonItem>
+
+          <IonItem lines="none">
+            <IonLabel ref={flav1Ref} className="mb-1" position='stacked' htmlFor="color1">Farbmischung deiner Eiskugel</IonLabel>
+            <Controller
+              control={control}
+              render={( { field: { onChange, value } }) => (
+                <>
+                  <IonButton color="primary" fill="clear" onClick={() => setShowColorPicker(prev => ({ ...prev, field1: !prev.field1 }))}>
+                    <IonIcon icon={colorPaletteOutline} />
+                    <div className="ms-1" style={{width: "20px", height: "20px", borderRadius: "100%", backgroundColor: value}}></div>
+                  </IonButton>
+                  {showColorPicker.field1 && (
+                    <div className="colorPicker ion-padding">
+                      <CirclePicker
+                        colors={colorArr}
+                        circleSpacing={15}
+                        circleSize={25} 
+                        onChangeComplete={e => {
+                          onChange(e.hex); 
+                          flav1Ref.current.scrollIntoView(); 
+                          setShowColorPicker(prev => ({ ...prev, field1: !prev.field1 })) 
+                        }}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+              name="color1"
+              rules={{ required: true }}
+            />
+          </IonItem>
+          {showError("ice-color", errors)}
+
+          <IonItem lines="none" className="mb-1">
+            <IonLabel ref={flav2Ref} className="mb-1" position='stacked' htmlFor="color2"></IonLabel>
+            <Controller
+              control={control}
+              render={( { field: { onChange, value } }) => (
+                <>
+                  <IonButton className="mb-3" color="primary" fill="clear" onClick={() => setShowColorPicker(prev => ({ field1: false, field2: !prev.field2 }))}>
+                    <IonIcon icon={colorPaletteOutline} />
+                    <div className="ms-1" style={{width: "20px", height: "20px", borderRadius: "100%", backgroundColor: value}}></div>
+                  </IonButton>
+                  {showColorPicker.field2 && (
+                    <div className="colorPicker ion-padding">
+                      <CirclePicker
+                        colors={colorArr}
+                        circleSpacing={15}
+                        circleSize={25}
+                        onChangeComplete={e => { onChange(e.hex); flav2Ref.current.scrollIntoView(); setShowColorPicker(prev => ({  field1: false, field2: !prev.field2 })) }}
+                        />
+                    </div>
+                  )}
+                </>
+              )}
+              name="color2"
+            />
+          </IonItem>
+          {showError("ice-color", errors)}
+          
           <IonItem lines="none" className="mb-1">
             <IonLabel position='floating' htmlFor="text">Kommentar</IonLabel>
             <Controller
@@ -207,6 +370,76 @@ const Bewerten = () => {
           </IonItem>
           {showError("rating_quality", errors)}
     
+          {/* NEU CHECKEN MIT ERROR HANDLUNG UND BACKEND -> SOLL ALS ERGÄNZUNG ZU COMMENT GESPEICHERT WERDEN, NICHT IN FLAVOR */}
+          <IonItem lines="full">
+            <IonLabel position='stacked'>Mein Eis-Erlebnis war ...</IonLabel>
+            <div className="row">
+              <div className="col">
+                <IonLabel position='stacked' htmlFor="bio">bio</IonLabel>
+                <Controller
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <IonToggle
+                      onIonChange={e => {
+                        onChange(e.detail.checked);
+                        e.detail.checked && unCheckNotSpecified();
+                      }} 
+                      checked={value} />
+                    )}
+                  name="bio"
+                />
+              </div>
+              <div className="col">
+                <IonLabel position='stacked' htmlFor="vegan">vegan</IonLabel>
+                <Controller 
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <IonToggle 
+                      onIonChange={e => {
+                        onChange(e.detail.checked);
+                        e.detail.checked && unCheckNotSpecified();
+                      }} 
+                      checked={value} 
+                    />
+                  )}
+                  name="vegan"
+                />
+              </div>
+              <div className="col">
+                <IonLabel position='stacked' htmlFor="lactose_free">laktosefrei</IonLabel>
+                <Controller 
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <IonToggle 
+                      onIonChange={e => {
+                        onChange(e.detail.checked);
+                        e.detail.checked && unCheckNotSpecified();
+                      }} 
+                      checked={value} 
+                    />
+                  )}
+                  name="lactose_free"
+                />
+              </div>
+              <div className="col">
+                <IonLabel position='stacked' htmlFor="not_specified ">weiß nicht</IonLabel>
+                <Controller 
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <IonToggle 
+                      onIonChange={e => {
+                        onChange(e.detail.checked);
+                        e.detail.checked && unCheckToggles();
+                      }} 
+                      checked={value} 
+                    />
+                  )}
+                  name="not_specified"
+                />
+              </div>
+            </div>
+          </IonItem>
+
           <IonItem lines="none" className="mb-1">
             <IonLabel position='stacked' htmlFor="rating_vegan_offer">Veganes Angebot des Eisladens</IonLabel>
             <Controller
@@ -227,232 +460,6 @@ const Bewerten = () => {
             />
           </IonItem>
           {showError("rating_vegan_offer", errors)}
-
-          <IonItem lines="full">
-            <IonLabel color="primary">Infos zu deiner Bewertung</IonLabel>
-            <IonIcon
-              className="infoIcon ms-auto"
-              color="primary"
-              button 
-              onClick={e => {
-                e.persist();
-                setPopoverShow({ show: true, event: e })
-              }}
-              icon={informationCircle} 
-            />
-            <IonPopover
-              color="primary"
-              cssClass='info-popover'
-              event={popoverShow.event}
-              isOpen={popoverShow.show}
-              onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
-            >
-              mind. 1 gewählte Eissorte angeben
-            </IonPopover>
-          </IonItem>
-
-          <IonItem lines="none">
-            <IonLabel ref={name1Ref} position='stacked' htmlFor="name1">1. Eissorte</IonLabel>
-            <Controller 
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <IonInput 
-                  type="text" 
-                  inputmode="text"
-                  placeholder="Was hast du probiert?"
-                  value={value} 
-                  onIonChange={e => onChange(e.detail.value)} 
-                />
-                )}
-                name="name1"
-                rules={{ required: true }}
-                />
-          </IonItem>
-          {showError("name", errors)}
-
-          <IonItem lines="none">
-            <div className="row">
-              <div className="col">
-                <IonLabel position='stacked' htmlFor="name1_type_fruit_ice">Fruchteis</IonLabel>
-                <Controller
-                  control={control}
-                  defaultValue={false}
-                  render={({ field: { onChange, value } }) => (
-                      <IonToggle onIonChange={e => onChange(e.detail.checked)} checked={value} />
-                    )}
-                  name="name1_type_fruit_ice"
-                />
-              </div>
-              <div className="col">
-                <IonLabel position='stacked' htmlFor="name1_type_cream_ice">Milch- oder Cremeeis</IonLabel>
-                <Controller 
-                  control={control}
-                  defaultValue={false}
-                  render={({ field: { onChange, value } }) => (
-                      <IonToggle onIonChange={e => onChange(e.detail.checked)} checked={value} />
-                    )}
-                  name="name1_type_cream_ice"
-                />
-              </div>
-            </div>
-          </IonItem>
-          {showError("type_cream_ice", errors)}
-
-          <IonItem lines="none">
-            <IonLabel className="mb-1" position='stacked' htmlFor="name1color1">Farbmischung deiner Eiskugel</IonLabel>
-            <Controller
-                control={control}
-                render={( { field: { onChange, value } }) => (
-                  <>
-                    <IonButton color="primary" fill="clear" onClick={() => setColorPicker1(prev => ({ ...prev, field1: !prev.field1 }))}>
-                      <IonIcon icon={colorPaletteOutline} />
-                      <div className="ms-1" style={{width: "20px", height: "20px", borderRadius: "100%", backgroundColor: value}}></div>
-                    </IonButton>
-                    {colorPicker1.field1 && (
-                      <div className="colorPicker ion-padding">
-                        <CirclePicker
-                          colors={colorArr}
-                          circleSpacing={15}
-                          circleSize={25} 
-                          onChangeComplete={e => { onChange(e.hex); name1Ref.current.scrollIntoView(); setColorPicker1(prev => ({ ...prev, field1: !prev.field1 })) }}
-                        />
-                      </div>
-                    )}
-                  </>
-                )}
-                name="name1color1"
-                rules={{ required: true }}
-              />
-          </IonItem>
-          {showError("ice-color", errors)}
-
-          <IonItem lines="none" className="mb-1">
-            <IonLabel ref={name2Ref} className="mb-1" position='stacked' htmlFor="name1color2"></IonLabel>
-            <Controller
-                control={control}
-                render={( { field: { onChange, value } }) => (
-                  <>
-                    <IonButton className="mb-3" color="primary" fill="clear" onClick={() => setColorPicker1(prev => ({ field1: false, field2: !prev.field2 }))}>
-                      <IonIcon icon={colorPaletteOutline} />
-                      <div className="ms-1" style={{width: "20px", height: "20px", borderRadius: "100%", backgroundColor: value}}></div>
-                    </IonButton>
-                    {colorPicker1.field2 && (
-                      <div className="colorPicker ion-padding">
-                        <CirclePicker
-                          colors={colorArr}
-                          circleSpacing={15}
-                          circleSize={25}
-                          onChangeComplete={e => { onChange(e.hex); name1Ref.current.scrollIntoView(); setColorPicker1(prev => ({  field1: false, field2: !prev.field2 })) }}
-                          />
-                      </div>
-                    )}
-                  </>
-                )}
-                name="name1color2"
-                />
-          </IonItem>
-          {showError("ice-color", errors)}
-
-          
-          <IonItem lines="none">
-            <IonLabel position='stacked' htmlFor="name2">2. Eissorte</IonLabel>
-            <Controller 
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <IonInput 
-                  type="text" 
-                  inputmode="text"
-                  placeholder="Was hast du probiert?"
-                  value={value} 
-                  onIonChange={e => onChange(e.detail.value)} 
-                />
-                )}
-                name="name2"
-                />
-          </IonItem>
-          {showError("name", errors)}
-
-          <IonItem lines="none">
-            <div className="row">
-              <div className="col">
-                <IonLabel position='stacked' htmlFor="name2_type_fruit_ice">Fruchteis</IonLabel>
-                <Controller 
-                  control={control}
-                  defaultValue={false}
-                  render={({ field: { onChange, value } }) => (
-                      <IonToggle onIonChange={e => onChange(e.detail.checked)} checked={value} />
-                    )}
-                  name="name2_type_fruit_ice"
-                />
-              </div>
-              <div className="col">
-                <IonLabel position='stacked' htmlFor="name2_type_cream_ice">Milch- oder Cremeeis</IonLabel>
-                <Controller 
-                  control={control}
-                  defaultValue={false}
-                  render={({ field: { onChange, value } }) => (
-                      <IonToggle onIonChange={e => onChange(e.detail.checked)} checked={value} />
-                    )}
-                  name="name2_type_cream_ice"
-                />
-              </div>
-            </div>
-          </IonItem>
-          {showError("type_cream_ice", errors)}
-
-          <IonItem lines="none">
-            <IonLabel className="mb-1" position='stacked' htmlFor="name2color1">Farbmischung deiner Eiskugel</IonLabel>
-            <Controller
-                control={control}
-                render={( { field: { onChange, value } }) => (
-                  <>
-                    <IonButton color="primary" fill="clear" onClick={() => setColorPicker2(prev => ({ field1: !prev.field1, field2: false }))}>
-                      <IonIcon icon={colorPaletteOutline} />
-                      <div className="ms-1" style={{width: "20px", height: "20px", borderRadius: "100%", backgroundColor: value}}></div>
-                    </IonButton>
-                    {colorPicker2.field1 && (
-                      <div className="colorPicker ion-padding">
-                        <CirclePicker
-                          colors={colorArr}
-                          circleSpacing={15}
-                          circleSize={25}
-                          onChangeComplete={e => { onChange(e.hex); name2Ref.current.scrollIntoView(); setColorPicker2(prev => ({ field1: !prev.field1, field2: false })) }}
-                        />
-                      </div>
-                    )}
-                  </>
-                )}
-                name="name2color1"
-              />
-          </IonItem>
-          {showError("ice-color", errors)}
-
-          <IonItem lines="none" className="mb-1">
-            <IonLabel className="mb-1" position='stacked' htmlFor="name2color2"></IonLabel>
-            <Controller
-                control={control}
-                render={( { field: { onChange, value } }) => (
-                  <>
-                    <IonButton className="mb-3" color="primary" fill="clear" onClick={() => setColorPicker2(prev => ({ ...prev, field2: !prev.field2 }))}>
-                      <IonIcon icon={colorPaletteOutline} />
-                      <div className="ms-1" style={{width: "20px", height: "20px", borderRadius: "100%", backgroundColor: value}}></div>
-                    </IonButton>
-                    {colorPicker2.field2 && (
-                      <div className="colorPicker ion-padding">
-                        <CirclePicker
-                          colors={colorArr}
-                          circleSpacing={15}
-                          circleSize={25}
-                          onChangeComplete={e => { onChange(e.hex); name2Ref.current.scrollIntoView(); setColorPicker2(prev => ({ ...prev, field2: !prev.field2 })) }}
-                          />
-                      </div>
-                    )}
-                  </>
-                )}
-                name="name2color2"
-                />
-          </IonItem>
-          {showError("ice-color", errors)}
 
           <IonItem lines="none" className="mb-1">
             <IonLabel position='floating' htmlFor="date">Datum</IonLabel>
@@ -492,4 +499,3 @@ const Bewerten = () => {
 };
 
 export default Bewerten;
-
