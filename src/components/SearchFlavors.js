@@ -1,60 +1,35 @@
 import { useContext, useState, useEffect } from 'react';
 import { Context } from '../context/Context';
 import Highlighter from "react-highlight-words";
-import { IonIcon, IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/react';
+import { IonIcon, IonItem, IonLabel, IonList, IonPopover, IonSearchbar } from '@ionic/react';
 import { informationCircle } from 'ionicons/icons';
+import LoadingError from '../components/LoadingError';
 
 const SearchFlavors = () => {
   const { 
     setLoading,
-    setError,
-    setCenter,
-    setZoom,
-    setSearchSelected,
-    searchFlavor, setSearchFlavor
+    searchFlavor, setSearchFlavor,
+    flavor, setFlavor
   } = useContext(Context);
-  const [flavors, setFlavors] = useState([]);
-  const [flavorsPredict, setFlavorsPredict] = useState([]);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
+  const [flavors, setFlavors] = useState([]);
   const [searchWords, setSearchWords] = useState([]);
+  const [flavorsPredict, setFlavorsPredict] = useState([]);
 
   useEffect(() => {
+    setLoading(true);
     const fetchFlavors = async () => {
       try {
         const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors`)
         const data = await res.json();
-        console.log(data);
         setFlavors(data);
       } catch (error) {
         console.log(error.message);
       }
     }
     fetchFlavors();
+    setLoading(false);
   }, [])
-
-
-  // const onSubmit = async e => {
-  //   e.preventDefault();
-  //   if(e.target.elements[0].value.length > 3) {
-  //     setLoading(true);
-  //     try {
-  //       const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(e.target.elements[0].value)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
-  //       const { results } = await res.json();
-       
-  //       if(results[0].geometry.location) {
-  //         setCenter({
-  //           lat: results[0].geometry.location.lat,
-  //           lng: results[0].geometry.location.lng
-  //         });
-  //         setZoom(13);
-  //       }
-  //     } catch (error) {
-  //       setError('Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in Deutschland eintragen.')
-  //       setTimeout(() => setError(null), 5000);
-  //     }
-  //     setLoading(false);
-  //   }
-  // }
 
   const forAutocompleteChange = value => {
     if(value.length >= 3 && flavors) {
@@ -77,40 +52,13 @@ const SearchFlavors = () => {
       const result = res.slice(0, 4);
       setFlavorsPredict(result);
     }
-    if(!value) {
-      setFlavorsPredict([]);
-      setSearchSelected(null)
-    }
+    if(!value) setFlavorsPredict([]);
   };
-
-  const initFlavor = (loc) => {
-    // setSearchSelected(loc); 
-    setFlavorsPredict([]);
-    // setCenter({
-    //   lat: loc.address.geo.lat, 
-    //   lng: loc.address.geo.lng
-    // })
-    // setZoom(14);
-  }
 
   return (
     <>
       <IonItem lines="none">
-        <IonSearchbar
-          className="searchbar container" 
-          type="search"
-          inputMode="search"
-          placeholder="Was hast du probiert?" 
-          showCancelButton="always" 
-          cancel-button-text=""
-          value={searchFlavor}
-          debounce={100}
-          onIonChange={e => {
-            setSearchFlavor(e.detail.value);
-            forAutocompleteChange(e.detail.value);
-            setSearchWords(() => e.detail.value.split(' ').filter(word => word))
-          }}
-        />
+        <IonLabel htmlFor="name1">Eissorte</IonLabel>
         <IonIcon
           className="infoIcon ms-auto"
           color="primary"
@@ -129,20 +77,38 @@ const SearchFlavors = () => {
           isOpen={popoverShow.show}
           onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
         >
-          Werden dir keine Vorschläge angezeigt? Dann tippe einfach den vollständigen Namen der neuen Eissorte ein.
+          Du siehst keine Vorschläge oder die Vorschläge passen nicht zu deiner Eissorte? Dann tippe einfach den vollständigen Namen der neuen Eissorte ein.
         </IonPopover>
-
       </IonItem>
-      {flavorsPredict ? (
+      <IonItem lines="none">
+        <IonSearchbar
+          className="searchbar" 
+          type="search"
+          inputMode="search"
+          placeholder="Was hast du probiert?" 
+          showCancelButton="always" 
+          cancel-button-text=""
+          value={searchFlavor}
+          debounce={100}
+          onIonChange={e => {
+            setSearchFlavor(e.detail.value);
+            forAutocompleteChange(e.detail.value);
+            setSearchWords(() => e.detail.value.split(' ').filter(word => word))
+          }}
+          onIonCancel={() => setFlavor({})}
+          onIonClear={() => setFlavor({})}
+        />
+      </IonItem>
+      {flavorsPredict && searchFlavor !== flavor.name ? (
         <IonList className="py-0">
           {flavorsPredict.map(flavor => (
             <IonItem
               key={flavor._id}
               button 
               onClick={() => {
-                setSearchFlavor(flavor.name);
+                setFlavor(flavor);
                 setFlavorsPredict([]);
-                // initFlavor(flavor)
+                setSearchFlavor(flavor.name);
               }}
               lines="full"
             >
@@ -152,14 +118,14 @@ const SearchFlavors = () => {
                 highlightClassName="highlight"
                 searchWords={searchWords}
                 caseSensitive={false}
-                textToHighlight={flavor.name}
+                textToHighlight={`${flavor.name} ${flavor.type_fruit ? '| Fruchteis' : ''} ${flavor.type_cream ? '| Cremeeis' : ''}`}
               />
             </IonItem>
-          ))}
+          ))} 
         </IonList>
       ) : null}
+      <LoadingError />
     </>
-
   )
 }
 

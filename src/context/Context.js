@@ -46,8 +46,10 @@ const AppState = ({children}) => {
     addStatus: false, 
     location: {}
   });
-  const [ openComments, setOpenComments ] = useState(false);
-  const [ newComment, setNewComment ] = useState(null);
+  const [openComments, setOpenComments] = useState(false);
+  const [newComment, setNewComment] = useState(null);
+  const [searchFlavor, setSearchFlavor] = useState('');
+  const [flavor, setFlavor] = useState({});
 
   useEffect(() => {
     setLoading(true);
@@ -361,7 +363,9 @@ const AppState = ({children}) => {
         removeFavLoc,
         addFavLoc,
         openComments, setOpenComments,
-        newComment, setNewComment
+        newComment, setNewComment,
+        searchFlavor, setSearchFlavor,
+        flavor, setFlavor
       }}
     >
       {children}
