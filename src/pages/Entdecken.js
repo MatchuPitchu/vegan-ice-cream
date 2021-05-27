@@ -36,7 +36,9 @@ const Entdecken = () => {
 
   useEffect(() => {
     if(map) setTimeout(() => searchViewport(), 2000);
-  }, [map])
+    if(user && user.home_city.geo.lat) setCenter({ lat:  user.home_city.geo.lat, lng: user.home_city.geo.lng });
+      else setCenter({ lat:  52.524, lng: 13.410 })
+  }, [map, user])
 
   const getLocation = async () => {
     try {

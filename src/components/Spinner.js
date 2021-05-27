@@ -39,11 +39,11 @@ const Spinner = () => {
       </h3>
       {!isAuth ? (
         <div>
-          <IonButton routerLink='/login' fill="solid" className="disabled-btn my-3">
+          <IonButton routerLink='/login' fill="solid" className="click-btn my-3">
             <IonLabel>Login</IonLabel>
             <IonIcon className="pe-1" icon={logIn} />
           </IonButton>
-          <IonButton routerLink='/register' fill="solid" className="disabled-btn my-3">
+          <IonButton routerLink='/register' fill="solid" className="click-btn my-3">
             <IonLabel>Registrieren</IonLabel>
             <IonIcon className="pe-1" icon={create} />
           </IonButton>
