@@ -119,6 +119,16 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   width: 400px;
 }
 
+.rotateIcon90Forward {
+  transform: rotate(90deg);
+  transition: transform 2s;
+}
+
+.rotateIcon90Back {
+  transform: rotate(0deg);
+  transition: transform 2s;
+}
+
 /************ Feedback Form ************/
 .alertMsg {
   color: var(--ion-color-danger);
@@ -299,12 +309,14 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   border: 1px solid var(--ion-color-primary);
   border-radius: 90%;
   background-color: var(--ion-background-color);
+  cursor: pointer;
 }
 
 .warningIcon:hover {
   border: 1px solid var(--ion-color-warning);
   border-radius: 90%;
   background-color: var(--ion-background-color);
+  cursor: pointer;
 }
 
 .mark,
@@ -707,7 +719,8 @@ mark {
 }
 
 .all-control,
-.viewport-control {
+.viewport-control,
+.update-btn {
   --background: var(--ion-item-background);
   color: var(--ion-text-color);
   font-size: 0.7rem;
@@ -719,7 +732,8 @@ mark {
 
 .add-control,
 .where-control,
-.center-control {
+.center-control,
+.update-btn {
   --background: var(--ion-item-background);
   font-size: 0.7rem;
   text-transform: none;
@@ -728,7 +742,8 @@ mark {
 }
 
 .add-control,
-.where-control {
+.where-control,
+.update-btn {
   color: var(--ion-color-primary);
 }
 
@@ -784,7 +799,7 @@ mark {
   align-self: center;
 }
 
-.disabled-btn {
+.click-btn {
   font-size: 0.7rem;
   text-transform: none;
   min-height: 33px;

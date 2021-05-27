@@ -25,6 +25,7 @@ const SelectedMarker = () => {
       try {
         const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/${selected._id}/all-comments-flavors`)
         const { comments_list, flavors_listed } = await res.json();
+        console.log( flavors_listed);
         setSelected({
           ...selected,
           comments_list,
@@ -125,20 +126,23 @@ const SelectedMarker = () => {
               </IonItem>
               ) : null}
               <IonItem lines="full">
-                <div className="d-flex justify-content-around flex-wrap px-3 py-2">
-                {selected.flavors_listed ? selected.flavors_listed.map(flavor => {
-                  return (
-                    <div key={flavor._id}>
-                      <div className="iceContainer">
-                        <div className="icecream" style={{background: `linear-gradient(to bottom, ${flavor.color.primary}, ${flavor.color.secondary} )`}}></div>
-                        <div className="icecreamBottom" style={{background: flavor.color.primary}}></div>
-                        <div className="cone"></div>
-                      </div>
-                      <div className="labelFlavor">{flavor.name}</div>
-                    </div>
-                  )}
-                  ) : null}
+                {selected.flavors_listed.length ? (
+                  <div className="d-flex justify-content-around flex-wrap px-3 py-2">
+                    {selected.flavors_listed.map(flavor => {
+                      return (
+                        <div key={flavor._id}>
+                          <div className="iceContainer">
+                            <div className="icecream" style={{background: `linear-gradient(to bottom, ${flavor.color.primary}, ${flavor.color.secondary} )`}}></div>
+                            <div className="icecreamBottom" style={{background: flavor.color.primary}}></div>
+                            <div className="cone"></div>
+                          </div>
+                          <div className="labelFlavor">{flavor.name}</div>
+                        </div>
+                        )
+                      })
+                    }
                   </div>
+                ) : null}
               </IonItem>
               
               {selected.comments_list.length > 0 ? (
@@ -152,7 +156,13 @@ const SelectedMarker = () => {
                     }}
                   />
                   <IonLabel className="ms-1">Alle Bewertungen anzeigen</IonLabel>
-                  <IonButton disabled fill="solid" className="disabled-btn my-3">
+                  <IonButton 
+                    fill="solid" 
+                    className="click-btn my-3"
+                    onClick={() => {
+                      setOpenComments(prev => !prev);
+                    }}
+                  >
                     {selected.comments_list.length} 
                   </IonButton>
                 </IonItem>
@@ -169,7 +179,7 @@ const SelectedMarker = () => {
                         <div className="d-flex align-items-center">
                           {comment.flavors_referred.map(flavor => {
                             return (
-                              <IonButton key={flavor._id} disabled fill="solid" className="disabled-btn my-3">
+                              <IonButton key={flavor._id} disabled fill="solid" className="click-btn my-3">
                                 <IonIcon color={`${toggle ? "warning" : "secondary"}`} className="pe-1" icon={iceCream} />
                                 {flavor.name}
                               </IonButton>

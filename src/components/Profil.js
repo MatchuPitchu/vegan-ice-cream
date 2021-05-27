@@ -3,13 +3,15 @@ import { Context } from "../context/Context";
 // https://www.npmjs.com/package/react-rating-stars-component
 import ReactStars from "react-rating-stars-component";
 import { IonButton, IonContent, IonPage, IonHeader, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonIcon, IonLabel, IonItem, IonItemGroup, IonPopover } from "@ionic/react";
-import { add, caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, iceCream, idCard, informationCircle, mail, star } from "ionicons/icons";
+import { add, caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, footsteps, iceCream, idCard, informationCircle, mail, refreshCircle, star, trailSign } from "ionicons/icons";
 import Spinner from '../components/Spinner';
 
 const Profil = () => {
   const { isAuth, toggle, user, setShowProfil, locations } = useContext(Context);
   const [showComments, setShowComments] = useState(false);
+  const [showFlavors, setShowFlavors] = useState(false);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
+  const [popoverCity, setPopoverCity] = useState({ show: false, event: undefined });
 
   return isAuth && user && locations ? (
     <IonPage>
@@ -25,36 +27,59 @@ const Profil = () => {
       <IonContent>
         <div className="container-sm mt-3">
           <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>{user.name}</IonCardTitle>
+            <IonCardHeader className="d-flex align-items-center">
+              <IonCardTitle className="me-2">{user.name}</IonCardTitle>
+              <IonButton className="update-btn ms-auto">
+                <IonIcon className="me-1" icon={refreshCircle}/>Update
+              </IonButton>
             </IonCardHeader>
             <IonItem lines="none">
               <IonIcon icon={mail} slot="start" />
-              <IonLabel>E-Mail</IonLabel>
+              <IonLabel>{user.email}</IonLabel>
             </IonItem>
-            <IonCardContent>
-              {user.email}
-            </IonCardContent>
-            <IonItem lines="none">
-              <IonIcon icon={idCard} slot="start" />
-              <IonLabel>Deine User ID</IonLabel>
+            <IonItem lines="full">
+              <IonIcon icon={trailSign} slot="start" />
+              <IonLabel>{user.home_city.city ? user.home_city.city : 'keinen Ort angegeben'}</IonLabel>
+              <div>
+                <IonIcon
+                  className="infoIcon"
+                  color="primary"
+                  button 
+                  onClick={e => {
+                    e.persist();
+                    setPopoverCity({ show: true, event: e })
+                  }}
+                  icon={informationCircle} 
+                />
+              </div>
+              <IonPopover
+                color="primary"
+                cssClass='info-popover'
+                event={popoverCity.event}
+                isOpen={popoverCity.show}
+                onDidDismiss={() => setPopoverCity({ show: false, event: undefined })}
+              >
+                Dieser Ort wird dir immer beim ersten Öffnen der Karte angezeigt.
+              </IonPopover>
             </IonItem>
-            <IonCardContent>
-              {user._id}
-           </IonCardContent>
-
             <IonItemGroup>
               <IonItem lines="full">
                 <IonIcon 
                   slot="start"
-                  color={`${showComments ? "tertiary" : "primary"}`} 
+                  color="primary"
                   icon={showComments ? caretDownCircle : caretForwardCircle} 
                   button onClick={() => {
                     setShowComments(prev => !prev);
                   }}
                 />
                 <IonLabel>Meine Bewertungen</IonLabel>
-                <IonButton disabled fill="solid" className="disabled-btn my-3">
+                <IonButton 
+                  onClick={() => {
+                    setShowComments(prev => !prev);
+                  }}
+                  fill="solid" 
+                  className="click-btn my-3"
+                >
                   {user.comments_list.length ? user.comments_list.length : '0'} 
                 </IonButton>
               </IonItem>
@@ -72,7 +97,7 @@ const Profil = () => {
                         <div className="d-flex align-items-center">
                           {comment.flavors_referred.map(flavor => {
                             return (
-                              <IonButton key={flavor._id} disabled fill="solid" className="disabled-btn my-3">
+                              <IonButton key={flavor._id} disabled fill="solid" className="click-btn my-3">
                                 <IonIcon color={`${toggle ? "warning" : "secondary"}`} className="pe-1" icon={iceCream} />
                                 {flavor.name}
                               </IonButton>
@@ -115,10 +140,14 @@ const Profil = () => {
               ) : null}
 
               <IonItem color="card-background" lines="none">
-                <IonIcon 
+                <IonIcon
+                  className={showFlavors ? 'rotateIcon90Forward' : 'rotateIcon90Back'}
                   slot="start"
                   color="primary"
                   icon={iceCream}
+                  button onClick={() => {
+                    setShowFlavors(prev => !prev);
+                  }}
                 />
                 <IonLabel>Meine Eissorten</IonLabel>
                 <div>
@@ -145,20 +174,23 @@ const Profil = () => {
                 </IonPopover>
               </IonItem>
               
-              <div className="d-flex justify-content-around flex-wrap px-3 py-2">
-              {user.favorite_flavors ? user.favorite_flavors.map(flavor => {
-                return (
-                  <div key={flavor._id}>
-                    <div className="iceContainer">
-                      <div className="icecream" style={{background: `linear-gradient(to bottom, ${flavor.color.primary}, ${flavor.color.secondary} )`}}></div>
-                      <div className="icecreamBottom" style={{background: flavor.color.primary}}></div>
-                      <div className="cone"></div>
-                    </div>
-                    <div className="labelFlavor">{flavor.name}</div>
-                  </div>
-                )}
-                ) : null }
-              </div>
+              {showFlavors && user.favorite_flavors.length ? (
+                <div className="d-flex justify-content-around flex-wrap px-3 py-2">
+                  {user.favorite_flavors.map(flavor => {
+                    return (
+                      <div key={flavor._id}>
+                        <div className="iceContainer">
+                          <div className="icecream" style={{background: `linear-gradient(to bottom, ${flavor.color.primary}, ${flavor.color.secondary} )`}}></div>
+                          <div className="icecreamBottom" style={{background: flavor.color.primary}}></div>
+                          <div className="cone"></div>
+                        </div>
+                        <div className="labelFlavor">{flavor.name}</div>
+                      </div>
+                      )
+                    })
+                  }
+                </div>
+              ) : null}
 
             </IonItemGroup>
           </IonCard>

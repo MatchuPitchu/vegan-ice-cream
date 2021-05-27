@@ -203,8 +203,9 @@ const Bewerten = () => {
             </IonLabel>
             
             <IonIcon
-              className="warningIcon ms-5"
+              className="warningIcon ms-3"
               color="warning"
+              slot="end"
               button 
               onClick={e => {
                 e.persist();

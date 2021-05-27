@@ -25,7 +25,7 @@ const AppState = ({children}) => {
   const [segment, setSegment]= useState('map');
   const [map, setMap]= useState(null);
   const [viewport, setViewport] = useState({});
-  const [center, setCenter] = useState({ lat:  52.524, lng: 13.410 });
+  const [center, setCenter] = useState({});
   const [zoom, setZoom] = useState(12);
   const [selected, setSelected] = useState(null);
   const [searchSelected, setSearchSelected] = useState(null);

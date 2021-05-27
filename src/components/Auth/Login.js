@@ -7,7 +7,7 @@ import showError from '../showError';
 import { logIn, refreshCircle } from "ionicons/icons";
 
 const Login = () => {
-  const { isAuth, setIsAuth, error, setError, user, setUser, toggle } = useContext(Context);
+  const { isAuth, setIsAuth, error, setError, user, setUser, toggle, setCenter } = useContext(Context);
   const { control, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async data => {
