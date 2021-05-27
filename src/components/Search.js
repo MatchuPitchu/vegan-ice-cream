@@ -12,6 +12,7 @@ const Search = () => {
     setCenter,
     setZoom,
     locations,
+    searchViewport,
     setListResults,
     setSearchSelected,
     searchText, setSearchText,
@@ -39,6 +40,9 @@ const Search = () => {
         setError('Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in Deutschland eintragen.')
         setTimeout(() => setError(null), 5000);
       }
+      searchViewport();
+      setPredictions([]);
+      setListResults([]);
       setLoading(false);
     }
   }
