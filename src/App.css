@@ -40,6 +40,10 @@ ion-icon {
   opacity: 0.4;
 }
 
+.span-small {
+  font-size: 0.8rem;
+}
+
 a {
   text-decoration: none;
   color: var(--ion-color-primary);

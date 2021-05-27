@@ -2,12 +2,14 @@ import { useContext, useState } from "react";
 import { Context } from "../context/Context";
 // https://www.npmjs.com/package/react-rating-stars-component
 import ReactStars from "react-rating-stars-component";
-import { IonButton, IonContent, IonPage, IonHeader, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonIcon, IonLabel, IonItem, IonItemGroup, IonPopover } from "@ionic/react";
-import { add, caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, footsteps, iceCream, idCard, informationCircle, mail, refreshCircle, star, trailSign } from "ionicons/icons";
+import { IonButton, IonContent, IonPage, IonHeader, IonCard, IonCardHeader,  IonCardTitle, IonIcon, IonLabel, IonItem, IonItemGroup, IonPopover } from "@ionic/react";
+import { caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, iceCream, informationCircle, mail, refreshCircle, trailSign } from "ionicons/icons";
+import ProfilUpdate from '../components/ProfilUpdate';
 import Spinner from '../components/Spinner';
 
 const Profil = () => {
   const { isAuth, toggle, user, setShowProfil, locations } = useContext(Context);
+  const [showUpdate, setShowUpdate] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [showFlavors, setShowFlavors] = useState(false);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
@@ -29,10 +31,18 @@ const Profil = () => {
           <IonCard>
             <IonCardHeader className="d-flex align-items-center">
               <IonCardTitle className="me-2">{user.name}</IonCardTitle>
-              <IonButton className="update-btn ms-auto">
+              <IonButton  
+                className="update-btn ms-auto"
+                onClick={() => setShowUpdate(prev => !prev)}
+              >
                 <IonIcon className="me-1" icon={refreshCircle}/>Update
               </IonButton>
             </IonCardHeader>
+
+            {showUpdate && (
+              <ProfilUpdate />
+            )}
+
             <IonItem lines="none">
               <IonIcon icon={mail} slot="start" />
               <IonLabel>{user.email}</IonLabel>
@@ -68,15 +78,11 @@ const Profil = () => {
                   slot="start"
                   color="primary"
                   icon={showComments ? caretDownCircle : caretForwardCircle} 
-                  button onClick={() => {
-                    setShowComments(prev => !prev);
-                  }}
+                  button onClick={() => setShowComments(prev => !prev)}
                 />
                 <IonLabel>Meine Bewertungen</IonLabel>
                 <IonButton 
-                  onClick={() => {
-                    setShowComments(prev => !prev);
-                  }}
+                  onClick={() => setShowComments(prev => !prev)}
                   fill="solid" 
                   className="click-btn my-3"
                 >
@@ -145,9 +151,7 @@ const Profil = () => {
                   slot="start"
                   color="primary"
                   icon={iceCream}
-                  button onClick={() => {
-                    setShowFlavors(prev => !prev);
-                  }}
+                  button onClick={() => setShowFlavors(prev => !prev)}
                 />
                 <IonLabel>Meine Eissorten</IonLabel>
                 <div>
