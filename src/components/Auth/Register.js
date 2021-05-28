@@ -21,7 +21,7 @@ const Register = () => {
       const city = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(data.home_city)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
       const { results } = await city.json();
       const home_city = {
-        city: data.home_city,
+        city: data.city,
         geo: {
           lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
           lng: results[0].geometry.location ? results[0].geometry.location.lng : null
@@ -132,16 +132,16 @@ const Register = () => {
               {error && <div className='alertMsg'>{error}</div>}
 
               <IonItem lines="none" className="mb-1">
-                <IonLabel position='floating' htmlFor="home_city">Stadt (Startpunkt der Karte)</IonLabel>
+                <IonLabel position='floating' htmlFor="city">Stadt <span className="span-small">(für deine Kartenansicht)</span></IonLabel>
                 <Controller 
                   control={control}
                   defaultValue=""
                   render={({ field: { onChange, value } }) => (
                     <IonInput type="text" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
                     )}
-                    name="home_city"
-                    rules={{ required: true }}
-                    />
+                  name="city"
+                  rules={{ required: true }}
+                />
               </IonItem>    
             
               <IonButton className="my-3 confirm-btn" type="submit" expand="block">
