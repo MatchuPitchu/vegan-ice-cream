@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { Context } from "../context/Context";
+import { menuController } from '@ionic/core';
 import { 
   IonContent, 
   IonIcon, 
@@ -7,7 +8,6 @@ import {
   IonLabel, 
   IonList, 
   IonListHeader,
-  IonMenuToggle, 
   IonModal, 
   IonPage, 
   IonToolbar,
@@ -50,11 +50,11 @@ const Menu: React.FC = () => {
           <IonListHeader>
             <img className="headerGraphic" src={`${toggle ? "./assets/header-graphic-ice-dark.svg" : "./assets/header-graphic-ice-light.svg"}`} />
           </IonListHeader>
-          <IonItem className="labelMenu" disabled={isAuth ? true : false} routerLink='/login' lines="none" detail={false} >
+          <IonItem className="labelMenu" disabled={isAuth ? true : false} routerLink='/login' lines="none" detail={false} button onClick={ async () => await menuController.toggle()}>
             <IonLabel>Login</IonLabel>
             <IonIcon slot="end" icon={logIn} />
           </IonItem>
-          <IonItem className="labelMenu" disabled={isAuth ? true : false} routerLink='/register' lines="none" detail={false}>
+          <IonItem className="labelMenu" disabled={isAuth ? true : false} routerLink='/register' lines="none" detail={false} button onClick={ async () => await menuController.toggle()}>
             <IonLabel>Registrieren</IonLabel>
             <IonIcon slot="end" icon={create} />
           </IonItem>

@@ -8,8 +8,16 @@ import ProfilUpdate from '../components/ProfilUpdate';
 import Spinner from '../components/Spinner';
 
 const Profil = () => {
-  const { isAuth, toggle, user, setShowProfil, locations } = useContext(Context);
-  const [showUpdate, setShowUpdate] = useState(false);
+  const { 
+    isAuth, 
+    toggle, 
+    user, 
+    setShowProfil, 
+    locations, 
+    showUpdate, 
+    setShowUpdate, 
+    successMsg 
+  } = useContext(Context);
   const [showComments, setShowComments] = useState(false);
   const [showFlavors, setShowFlavors] = useState(false);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
@@ -41,6 +49,13 @@ const Profil = () => {
 
             {showUpdate && (
               <ProfilUpdate />
+            )}
+
+            {successMsg && (
+              <div className='successMsg text-center ion-padding'>
+                <div>{successMsg}</div>
+                <div>Wechselst du deine E-Mail, dann klicke noch auf den Link in deinem Mail-Postfach. Schau auch in den Spam-Ordner.</div>
+              </div>
             )}
 
             <IonItem lines="none">

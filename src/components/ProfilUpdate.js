@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Context } from "../context/Context";
 import { IonInput, IonItem, IonLabel, IonButton, IonIcon } from "@ionic/react";
@@ -7,13 +7,8 @@ import { refreshCircle } from "ionicons/icons";
 import LoadingError from "./LoadingError";
 
 const ProfilUpdate = () => {
-  const { error, setError, setLoading, user, setUser } = useContext(Context);
+  const { error, setError, setLoading, user, setUser, setShowUpdate, setSuccessMsg } = useContext(Context);
   const { control, handleSubmit, formState: { errors } } = useForm();
-  const [successMsg, setSuccessMsg] = useState('');
-
-  useEffect(() => {
-    setSuccessMsg('')
-  }, [])
 
   const onSubmit = async data => {
     if(data.newPassword && data.newPassword !== data.repeatPassword) {
@@ -34,7 +29,7 @@ const ProfilUpdate = () => {
         try {
           const city = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(data.city)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
           const { results } = await city.json();
-          body.home_city = {
+          if(data.city !== undefined) body.home_city = {
             city: data.city,
             geo: {
               lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
@@ -65,9 +60,15 @@ const ProfilUpdate = () => {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}`, options);
       const { success } = await res.json();
       if(success) {
-        setUser({...user, name: body.name, email: body.email, home_city: body.home_city })
+        setUser({
+          ...user, 
+          name: body.name || user.name,
+          email: body.email || user.email, 
+          home_city: body.home_city || user.home_city 
+        })
         setSuccessMsg('Update erfolgreich');
-        setTimeout(() => setSuccessMsg(''), 10000);
+        setTimeout(() => setSuccessMsg(''), 12000);
+        setShowUpdate(false);
       } else {
         setError('Da ist etwas schief gelaufen. Versuche es später nochmal.');
         setTimeout(() => setError(null), 5000);
@@ -175,12 +176,7 @@ const ProfilUpdate = () => {
             </IonItem>
           {showError("password", errors)}
           {error && <div className='alertMsg'>{error}</div>}
-          {successMsg && (
-            <div className='successMsg'>
-              <div>{successMsg}</div>
-              <div>Wechselst du deine E-Mail, dann hast du einen Bestätigungs-Link in deinem Postfach. Schau auch in den Spam-Ordner.</div>
-            </div>
-          )}
+
         <IonButton className="my-3 confirm-btn" type="submit" routerLink='/login' expand="block">
           <IonIcon slot="end" className="pe-1"icon={refreshCircle}/>Profil updaten
         </IonButton>

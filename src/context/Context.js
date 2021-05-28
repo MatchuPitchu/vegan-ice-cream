@@ -7,6 +7,7 @@ export const Context = createContext();
 const AppState = ({children}) => {
   const [isAuth, setIsAuth] = useState(false);
   const [activateMessage, setActivateMessage] = useState('Waiting');
+  const [successMsg, setSuccessMsg] = useState('');
   const [user, setUser] = useState(null);
   const [numNewLoc, setNumNewLoc] = useState();
   const [locations, setLocations] = useState([]);
@@ -35,6 +36,7 @@ const AppState = ({children}) => {
   const [error, setError] = useState('');
   const [toggle, setToggle] = useState(null);
   const [mapStyles, setMapStyles] = useState(null);
+  const [showUpdate, setShowUpdate ] = useState(false);
   const [showProfil, setShowProfil] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
@@ -321,6 +323,7 @@ const AppState = ({children}) => {
       value={{
         isAuth, setIsAuth,
         activateMessage, setActivateMessage,
+        successMsg, setSuccessMsg,
         user, setUser,
         numNewLoc, setNumNewLoc,
         locations, setLocations,
@@ -353,6 +356,7 @@ const AppState = ({children}) => {
         mapStyles,
         enterAnimationBtm, leaveAnimationBtm,
         enterAnimationLft, leaveAnimationLft,
+        showUpdate, setShowUpdate,
         showProfil, setShowProfil,
         showFeedback, setShowFeedback,
         showAbout, setShowAbout,
