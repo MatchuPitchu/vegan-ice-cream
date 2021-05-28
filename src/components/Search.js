@@ -23,6 +23,7 @@ const Search = () => {
 
   const onSubmit = async e => {
     e.preventDefault();
+    setSearchText(e.target[0].value);
     if(e.target.elements[0].value.length > 3 && segment === 'map') {
       setLoading(true);
       try {
@@ -98,7 +99,7 @@ const Search = () => {
           showCancelButton="always" 
           cancel-button-text=""
           value={searchText}
-          debounce={100}
+          debounce={500}
           onIonChange={e => {
             setSearchText(e.detail.value);
             forAutocompleteChange(e.detail.value);

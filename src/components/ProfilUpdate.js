@@ -74,7 +74,7 @@ const ProfilUpdate = () => {
           home_city: body.home_city || user.home_city 
         })
         setSuccessMsg('Update erfolgreich');
-        setTimeout(() => setSuccessMsg(''), 12000);
+        setTimeout(() => setSuccessMsg(''), 10000);
         setShowUpdate(false);
         if(data.email) {
           setShowProfil(false);
