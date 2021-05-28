@@ -18,7 +18,7 @@ const Register = () => {
 
   const onSubmit = async data => {
     try {
-      const city = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(data.home_city)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
+      const city = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(data.city)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
       const { results } = await city.json();
       const home_city = {
         city: data.city,
@@ -27,7 +27,7 @@ const Register = () => {
           lng: results[0].geometry.location ? results[0].geometry.location.lng : null
         }
       }
-
+      delete data.city;
       const newData = { ...data, home_city }
 
       const options = {
@@ -132,7 +132,7 @@ const Register = () => {
               {error && <div className='alertMsg'>{error}</div>}
 
               <IonItem lines="none" className="mb-1">
-                <IonLabel position='floating' htmlFor="city">Stadt <span className="span-small">(für deine Kartenansicht)</span></IonLabel>
+                <IonLabel position='floating' htmlFor="city">Stadt <span className="span-small">(für Startpunkt Karte)</span></IonLabel>
                 <Controller 
                   control={control}
                   defaultValue=""
@@ -143,13 +143,13 @@ const Register = () => {
                   rules={{ required: true }}
                 />
               </IonItem>    
-            
-              <IonButton className="my-3 confirm-btn" type="submit" expand="block">
-                <IonIcon className="pe-1" icon={logIn}/>Registrieren
-              </IonButton>
-              {endRegister && (
-                <IonButton className="check-btn" routerLink="/home" color="success" expand="block">
-                  Du solltest eine Bestätigungs-Mail erhalten haben.
+              {!endRegister ? (
+                <IonButton className="my-3 confirm-btn" type="submit" expand="block">
+                  <IonIcon className="pe-1" icon={logIn}/>Registrieren
+                </IonButton>
+              ) : ( 
+                <IonButton className="my-3 check-btn" routerLink="/home" color="success" expand="block">
+                  Du hast eine Mail erhalten. Schau bitte auch in deinen Spam-Ordner.
                 </IonButton>
               )}
           </form>
