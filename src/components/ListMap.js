@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Context } from '../context/Context';
 import ReactStars from "react-rating-stars-component";
-import { IonAvatar, IonButton, IonCard, IonCardContent, IonCardSubtitle, IonContent, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel } from '@ionic/react';
+import { IonAvatar, IonButton, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonContent, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel } from '@ionic/react';
 import SelectedMarker from './SelectedMarker';
 import { open } from "ionicons/icons";
 
@@ -9,14 +9,13 @@ const ListMap = () => {
   const { 
     locationsList,
     listResults,
-    disableInfScroll, 
+    disableInfScroll,
     loadMore,
     selected, setSelected,
     setInfoModal,
     setOpenComments,
+    searchText, 
   } = useContext(Context);
-
-  console.log(locationsList)
 
   return (
     <IonContent>
@@ -83,7 +82,7 @@ const ListMap = () => {
         </IonCard>
       )) : null}
 
-      {locationsList && !listResults.length ? locationsList.map(loc => (
+      {!searchText && !listResults.length && locationsList ? locationsList.map(loc => (
         <IonCard key={loc._id} >
           <IonItem lines="full">
             <IonAvatar slot='start'>
@@ -147,6 +146,17 @@ const ListMap = () => {
           
         </IonCard>
       )) : null}
+
+      {searchText && !listResults.length ? (
+        <div className="container text-center">
+          <IonCard>
+            <IonCardContent>
+            <IonCardTitle className="mb-3">Nichts gefunden ...</IonCardTitle>
+              Hilf mit, neue Eisläden auf der Karte einzutragen.
+            </IonCardContent>
+          </IonCard>
+        </div>
+      ) : null}
 
       {selected ? <SelectedMarker /> : null}
 
