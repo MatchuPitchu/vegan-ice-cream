@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { Context } from "../context/Context";
+import { menuController } from '@ionic/core';
 import { 
   IonContent, 
   IonIcon, 
@@ -7,7 +8,6 @@ import {
   IonLabel, 
   IonList, 
   IonListHeader,
-  IonMenuToggle, 
   IonModal, 
   IonPage, 
   IonToolbar,
@@ -22,19 +22,15 @@ import Profil from './Profil';
 const Menu: React.FC = () => {
   const {
     setUser,
-    isAuth, setIsAuth, 
+    isAuth, setIsAuth,
+    logout,
     toggle,
     enterAnimationLft, leaveAnimationLft, 
     showProfil, setShowProfil,
     showFeedback, setShowFeedback, 
-    showAbout, setShowAbout
+    showAbout, setShowAbout,
+    successMsg
   } = useContext(Context);
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    setIsAuth(false);
-    setUser(null);
-  }
 
   return (
     <IonPage>
@@ -50,11 +46,11 @@ const Menu: React.FC = () => {
           <IonListHeader>
             <img className="headerGraphic" src={`${toggle ? "./assets/header-graphic-ice-dark.svg" : "./assets/header-graphic-ice-light.svg"}`} />
           </IonListHeader>
-          <IonItem className="labelMenu" disabled={isAuth ? true : false} routerLink='/login' lines="none" detail={false} >
+          <IonItem className="labelMenu" disabled={isAuth ? true : false} routerLink='/login' lines="none" detail={false} button onClick={ async () => await menuController.toggle()}>
             <IonLabel>Login</IonLabel>
             <IonIcon slot="end" icon={logIn} />
           </IonItem>
-          <IonItem className="labelMenu" disabled={isAuth ? true : false} routerLink='/register' lines="none" detail={false}>
+          <IonItem className="labelMenu" disabled={isAuth ? true : false} routerLink='/register' lines="none" detail={false} button onClick={ async () => await menuController.toggle()}>
             <IonLabel>Registrieren</IonLabel>
             <IonIcon slot="end" icon={create} />
           </IonItem>
@@ -92,6 +88,12 @@ const Menu: React.FC = () => {
               <IonIcon slot="start" icon={logOut} />
               <IonLabel>Logout</IonLabel>
             </IonItem>
+          )}
+          {successMsg && (
+            <div className='successMsg text-center ion-padding'>
+              <div>{successMsg}</div>
+              <div>Du wurdest ausgeloggt, da du deine E-Mail wechseln möchtest. Klicke auf den Link in deinem Postfach und logge dich wieder ein. Schau auch in den Spam-Ordner.</div>
+            </div>
           )}
         </IonList>
       </IonContent>
