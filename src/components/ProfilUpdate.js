@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Context } from "../context/Context";
 import { IonInput, IonItem, IonLabel, IonButton, IonIcon } from "@ionic/react";
@@ -7,9 +7,13 @@ import { refreshCircle } from "ionicons/icons";
 import LoadingError from "./LoadingError";
 
 const ProfilUpdate = () => {
-  const { error, setError, setLoading, user } = useContext(Context);
+  const { error, setError, setLoading, user, setUser } = useContext(Context);
   const { control, handleSubmit, formState: { errors } } = useForm();
   const [successMsg, setSuccessMsg] = useState('');
+
+  useEffect(() => {
+    setSuccessMsg('')
+  }, [])
 
   const onSubmit = async data => {
     if(data.newPassword && data.newPassword !== data.repeatPassword) {
@@ -45,9 +49,9 @@ const ProfilUpdate = () => {
       }
       if(data.newPassword) body.newPassword = data.newPassword;
       if(data.repeatPassword) body.repeatPassword = data.repeatPassword;
-
-      console.log('body', body);
       
+      console.log(body);
+
       const options = {
         method: "PUT",
         headers: {
@@ -58,11 +62,12 @@ const ProfilUpdate = () => {
         body: JSON.stringify(body),
         credentials: "include",
       };
-      console.log(options);
       const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}`, options);
       const { success } = await res.json();
       if(success) {
-        setSuccessMsg('Update erfolgreich')
+        setUser({...user, name: body.name, email: body.email, home_city: body.home_city })
+        setSuccessMsg('Update erfolgreich');
+        setTimeout(() => setSuccessMsg(''), 10000);
       } else {
         setError('Da ist etwas schief gelaufen. Versuche es später nochmal.');
         setTimeout(() => setError(null), 5000);
@@ -105,7 +110,7 @@ const ProfilUpdate = () => {
         {showError("email", errors)}
 
         <IonItem lines="full">
-          <IonLabel position='floating' htmlFor="city">Stadt <span className="span-small">(für deine Kartenansicht)</span></IonLabel>
+          <IonLabel position='floating' htmlFor="city">Stadt <span className="span-small">(für Startpunkt Karte)</span></IonLabel>
           <Controller 
             control={control}
             defaultValue=""
@@ -170,13 +175,16 @@ const ProfilUpdate = () => {
             </IonItem>
           {showError("password", errors)}
           {error && <div className='alertMsg'>{error}</div>}
-          {successMsg && <div className='successMsg'>{successMsg}</div>}
-
+          {successMsg && (
+            <div className='successMsg'>
+              <div>{successMsg}</div>
+              <div>Wechselst du deine E-Mail, dann hast du einen Bestätigungs-Link in deinem Postfach. Schau auch in den Spam-Ordner.</div>
+            </div>
+          )}
         <IonButton className="my-3 confirm-btn" type="submit" routerLink='/login' expand="block">
           <IonIcon slot="end" className="pe-1"icon={refreshCircle}/>Profil updaten
         </IonButton>
       </form>
-      <div>Falls du eine neue E-Mail eingetragen hast, solltest du einen Link zum Bestätigen deiner neuen Mailadresse erhalten haben.</div>
       <LoadingError />
     </div>
   );
