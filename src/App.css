@@ -175,6 +175,12 @@ ion-toolbar .sc-ion-searchbar-ios-h {
   margin-bottom: 10px;
 }
 
+.successMsg {
+  color: var(--ion-color-success);
+  padding-bottom: 10px;
+  font-size: 0.7rem;
+}
+
 /************ Toggler Day and Night ************/
 .toggle {
   height: 30px;
