@@ -54,7 +54,6 @@ const Profil = () => {
             {successMsg && (
               <div className='successMsg text-center ion-padding'>
                 <div>{successMsg}</div>
-                <div>Wechselst du deine E-Mail, dann klicke noch auf den Link in deinem Mail-Postfach. Schau auch in den Spam-Ordner.</div>
               </div>
             )}
 

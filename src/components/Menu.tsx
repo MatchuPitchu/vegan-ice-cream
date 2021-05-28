@@ -22,19 +22,15 @@ import Profil from './Profil';
 const Menu: React.FC = () => {
   const {
     setUser,
-    isAuth, setIsAuth, 
+    isAuth, setIsAuth,
+    logout,
     toggle,
     enterAnimationLft, leaveAnimationLft, 
     showProfil, setShowProfil,
     showFeedback, setShowFeedback, 
-    showAbout, setShowAbout
+    showAbout, setShowAbout,
+    successMsg
   } = useContext(Context);
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    setIsAuth(false);
-    setUser(null);
-  }
 
   return (
     <IonPage>
@@ -92,6 +88,12 @@ const Menu: React.FC = () => {
               <IonIcon slot="start" icon={logOut} />
               <IonLabel>Logout</IonLabel>
             </IonItem>
+          )}
+          {successMsg && (
+            <div className='successMsg text-center ion-padding'>
+              <div>{successMsg}</div>
+              <div>Du wurdest ausgeloggt, da du deine E-Mail wechseln möchtest. Klicke auf den Link in deinem Postfach und logge dich wieder ein. Schau auch in den Spam-Ordner.</div>
+            </div>
           )}
         </IonList>
       </IonContent>

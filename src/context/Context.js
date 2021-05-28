@@ -81,6 +81,12 @@ const AppState = ({children}) => {
     setLoading(false);
   }, [newComment]);
 
+  const logout = () => {
+    localStorage.removeItem('token');
+    setIsAuth(false);
+    setUser(null);
+  }
+
   useEffect(() => {
     const updateNewNumLoc = async () => {
       try {
@@ -322,6 +328,7 @@ const AppState = ({children}) => {
     <Context.Provider
       value={{
         isAuth, setIsAuth,
+        logout,
         activateMessage, setActivateMessage,
         successMsg, setSuccessMsg,
         user, setUser,

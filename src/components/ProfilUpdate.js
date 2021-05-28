@@ -7,7 +7,16 @@ import { refreshCircle } from "ionicons/icons";
 import LoadingError from "./LoadingError";
 
 const ProfilUpdate = () => {
-  const { error, setError, setLoading, user, setUser, setShowUpdate, setSuccessMsg } = useContext(Context);
+  const { 
+    error, setError, 
+    setLoading, 
+    user, 
+    setUser, 
+    setShowProfil,
+    setShowUpdate, 
+    setSuccessMsg,
+    logout,
+  } = useContext(Context);
   const { control, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async data => {
@@ -44,8 +53,6 @@ const ProfilUpdate = () => {
       }
       if(data.newPassword) body.newPassword = data.newPassword;
       if(data.repeatPassword) body.repeatPassword = data.repeatPassword;
-      
-      console.log(body);
 
       const options = {
         method: "PUT",
@@ -69,6 +76,10 @@ const ProfilUpdate = () => {
         setSuccessMsg('Update erfolgreich');
         setTimeout(() => setSuccessMsg(''), 12000);
         setShowUpdate(false);
+        if(data.email) {
+          setShowProfil(false);
+          logout();
+        }
       } else {
         setError('Da ist etwas schief gelaufen. Versuche es später nochmal.');
         setTimeout(() => setError(null), 5000);
