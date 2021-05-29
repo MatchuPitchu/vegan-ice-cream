@@ -53,19 +53,12 @@ const Feedback = () => {
         </IonItem>
       </IonHeader>
       <IonContent className="ion-padding">
-
-        {/* // See input fields in console
-        // <form onSubmit={handleSubmit(data => console.log(data))}>
-        // "handleSubmit" will validate your inputs before invoking "onSubmit" */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <IonItem lines="none" className="mb-1">
             <IonLabel position='floating' htmlFor="name">Name</IonLabel>
             <Controller
                 control={control}
-                render={({ 
-                  field: { onChange, value },
-                  fieldState: { invalid, isTouched, isDirty, error },
-                }) => (
+                render={({ field: { onChange, value } }) => (
                   <IonInput type="text" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
                 )}
                 name="name"
