@@ -27,7 +27,7 @@ const Search = () => {
     setCityName(city);
 
     try {
-      const limit = 20;
+      const limit = 15;
       const options = {
         method: "POST",
         headers: {
@@ -69,7 +69,7 @@ const Search = () => {
         // if every item is true, than this location is returned
         if(found.every(v => v === true)) return city;
       });
-      const result = res.slice(0, 3);
+      const result = res.slice(0, 2);
       setPredictions(result);
     }
     if(!value) {
@@ -87,7 +87,7 @@ const Search = () => {
             className="searchbar"
             type="search"
             inputMode="search"
-            placeholder="Top Läden in deiner Stadt anzeigen" 
+            placeholder="Top Eisläden in deiner Stadt anzeigen" 
             showCancelButton="always" 
             cancel-button-text=""
             value={value}
