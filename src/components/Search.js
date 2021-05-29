@@ -90,7 +90,7 @@ const Search = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      <IonItem className="searchbar" lines="none">
+      <IonItem color="background" lines="none">
         <IonSearchbar 
           className="searchbar container" 
           type="search"
