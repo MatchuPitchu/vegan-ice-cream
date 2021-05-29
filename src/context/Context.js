@@ -11,6 +11,8 @@ const AppState = ({children}) => {
   const [user, setUser] = useState(null);
   const [numNewLoc, setNumNewLoc] = useState();
   const [locations, setLocations] = useState([]);
+  const [topLocations, setTopLocations] = useState([]);
+  const [cities, setCities] = useState([]);
   const [locationsMap, setLocationsMap] = useState([]);
   const [locationsList, setLocationsList] = useState([]);
   const [listResults, setListResults] = useState([]);
@@ -76,7 +78,6 @@ const AppState = ({children}) => {
         console.log(error.message);
       }
     }
-
     if (token) verifySession();   
     setLoading(false);
   }, [newComment]);
@@ -110,10 +111,8 @@ const AppState = ({children}) => {
     if(locations && user) {
       const timer = setTimeout(() => updateNewNumLoc(), 25000);
       setNumNewLoc(locations.length - user.num_loc_last_visit);
-      
       return () => clearTimeout(timer);
     }
-
   }, [locations, user])
 
   useEffect(() => {
@@ -132,8 +131,20 @@ const AppState = ({children}) => {
         console.log(error.message);
       }
     }
-
     fetchLoc();
+  }, [])
+  
+  useEffect(() => {
+    const fetchAllCitiesWithLoc = async () => {
+      try {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/cities-with-locations`)
+        const data = await res.json();
+        setCities(data);
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+    fetchAllCitiesWithLoc();
   }, [])
 
   useEffect(() => {
@@ -166,7 +177,6 @@ const AppState = ({children}) => {
         console.log(error.message);
       }
     }
-
     if(viewport) updateLocInViewport();
   }, [viewport, searchSelected])
 
@@ -194,7 +204,6 @@ const AppState = ({children}) => {
         setToggle(false);
       } 
     };
-    
     initTheme()
   }, [])
 
@@ -334,6 +343,8 @@ const AppState = ({children}) => {
         user, setUser,
         numNewLoc, setNumNewLoc,
         locations, setLocations,
+        topLocations, setTopLocations,
+        cities, setCities,
         locationsMap, setLocationsMap,
         locationsList, setLocationsList,
         listResults, setListResults,

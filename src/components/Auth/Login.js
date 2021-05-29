@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Context } from "../../context/Context";
-import { IonContent, IonInput, IonItem, IonLabel, IonList, IonButton, IonPage, IonHeader, IonTitle, IonIcon } from "@ionic/react";
+import { IonContent, IonInput, IonItem, IonLabel, IonButton, IonPage, IonHeader, IonTitle, IonIcon } from "@ionic/react";
 import { Redirect } from "react-router-dom";
 import showError from '../showError';
 import { logIn, refreshCircle } from "ionicons/icons";
