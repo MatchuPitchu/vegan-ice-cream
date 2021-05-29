@@ -57,7 +57,6 @@ const NewLocationForm = () => {
 
       const res = await fetch(`${process.env.REACT_APP_API_URL}/locations`, options);
       const newData = await res.json();
-      console.log(newData);
       setLocations([...locations, newData])
       if (!newData) {
         setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
@@ -86,18 +85,12 @@ const NewLocationForm = () => {
       </IonItem>
       {newLocation ? (
         <IonContent className="ion-padding">
-          {/* // See input fields in console
-          // <form onSubmit={handleSubmit(data => console.log(data))}>
-          // "handleSubmit" will validate your inputs before invoking "onSubmit" */}
           <form onSubmit={handleSubmit(onSubmit)}>
             <IonItem lines="none" className="mb-1">
               <IonLabel position='floating' htmlFor="name">Name</IonLabel>
               <Controller
                   control={control}
-                  render={({ 
-                    field: { onChange, value },
-                    fieldState: { invalid, isTouched, isDirty, error },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <IonInput inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
                   )}
                   name="name"
@@ -110,10 +103,7 @@ const NewLocationForm = () => {
               <IonLabel position='floating' htmlFor="street">Straße</IonLabel>
               <Controller
                 control={control}
-                render={({ 
-                  field: { onChange, value },
-                  fieldState: { invalid, isTouched, isDirty, error },
-                }) => (
+                render={({ field: { onChange, value } }) => (
                   <IonInput type="text" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
                 )}
                 name="street"
@@ -126,10 +116,7 @@ const NewLocationForm = () => {
               <IonLabel position='floating' htmlFor="number">Nummer</IonLabel>
               <Controller
                 control={control}
-                render={({ 
-                  field: { onChange, value },
-                  fieldState: { invalid, isTouched, isDirty, error },
-                }) => (
+                render={({ field: { onChange, value } }) => (
                   <IonInput type="number" inputmode="numeric" value={value} onIonChange={e => onChange(e.detail.value)} />
                 )}
                 name="number"
@@ -146,10 +133,7 @@ const NewLocationForm = () => {
               <IonLabel position='floating' htmlFor="zipcode">PLZ</IonLabel>
               <Controller
                 control={control}
-                render={({ 
-                  field: { onChange, value },
-                  fieldState: { invalid, isTouched, isDirty, error },
-                }) => (
+                render={({ field: { onChange, value } }) => (
                   <IonInput type="text" inputmode="numeric" value={value} onIonChange={e => onChange(e.detail.value)} />
                 )}
                 name="zipcode"
@@ -166,10 +150,7 @@ const NewLocationForm = () => {
               <IonLabel position='floating' htmlFor="city">Stadt</IonLabel>
               <Controller
                 control={control}
-                render={({ 
-                  field: { onChange, value },
-                  fieldState: { invalid, isTouched, isDirty, error },
-                }) => (
+                render={({ field: { onChange, value } }) => (
                   <IonInput type="text" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
                 )}
                 name="city"
@@ -182,10 +163,7 @@ const NewLocationForm = () => {
               <IonLabel position='floating' htmlFor="country">Land</IonLabel>
               <Controller
                 control={control}
-                render={({ 
-                  field: { onChange, value },
-                  fieldState: { invalid, isTouched, isDirty, error },
-                }) => (
+                render={({ field: { onChange, value } }) => (
                   <IonInput type="text" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
                 )}
                 name="country"
@@ -198,10 +176,7 @@ const NewLocationForm = () => {
               <IonLabel position='stacked' htmlFor="location_url">Website Eisladen</IonLabel>
               <Controller
                 control={control}
-                render={({ 
-                  field: { onChange, value },
-                  fieldState: { invalid, isTouched, isDirty, error },
-                }) => (
+                render={({ field: { onChange, value } }) => (
                   <IonInput type="text" inputmode="url" value={value} onIonChange={e => onChange(e.detail.value)} placeholder="http://" />
                 )}
                 name="location_url"

@@ -25,7 +25,6 @@ const SelectedMarker = () => {
       try {
         const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/${selected._id}/all-comments-flavors`)
         const { comments_list, flavors_listed } = await res.json();
-        console.log( flavors_listed);
         setSelected({
           ...selected,
           comments_list,
@@ -215,7 +214,7 @@ const SelectedMarker = () => {
                           </div>
                         </div>
                         <p className="p-weak mt-1">Datum: {comment.date.replace('T', ' // ').slice(0, 19)}</p>
-                        <p className="p-weak">User: {comment.user_id.name}</p>
+                        <p className="p-weak">User: {`${comment.user_id ? comment.user_id.name : 'Konto inaktiv'}`}</p>
                       </IonLabel>
                     </IonItem>
                   </div>
