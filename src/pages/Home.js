@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef } from "react";
 import { Context } from "../context/Context";
-import { IonButton, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonLabel, IonPage } from '@ionic/react';
+import { IonButton, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonLabel, IonPage, IonSlides } from '@ionic/react';
 import { gift, iceCream, logoPaypal } from 'ionicons/icons';
 import SearchTopLocations from '../components/SearchTopLocations';
 import TopLocations from '../components/TopLocations';
@@ -8,20 +8,21 @@ import TopLocations from '../components/TopLocations';
 
 const Home = () => {
   const { toggle, cities, topLocations } = useContext(Context);
+  const contentRef = useRef(null);
 
-  // useEffect(() => {
-  //   // const scrollToBottom = () => {
-  //   //   console.log('Test')
-  //   // }
-  //   // if(topLocations) scrollToBottom()
-  //   // if(slides) slides.current
-  // // console.log(document.documentElement.scrollHeight)
-  // //     const scrollToBottom = () =>{ 
-  // //       window.scroll(0, document.documentElement.scrollHeight)
-  // //     }
+  useEffect(() => {
+    const scrollDown = () => {
+      // (number) means duration
+      contentRef.current && contentRef.current.scrollToBottom(1000);
+    };
 
-  // //   scrollToBottom();
-  // }, [topLocations])
+    setTimeout(() => scrollDown(), 500);
+  }, [topLocations])
+
+  const slideOpts = {
+    initialSlide: 1,
+    speed: 400
+  };
 
   return (
     <IonPage>
@@ -30,6 +31,7 @@ const Home = () => {
       </IonHeader>
       <IonContent 
         className="home ion-content"
+        ref={contentRef}
         scrollEvents
         style={{backgroundImage: `url(./assets/images/${toggle ? 'ice-cream-red-dark-pablo-merchan-montes-unsplash.jpg' : 'ice-cream-yellow-light-wesual-click-unsplash.jpg'})`}}
       >
@@ -63,7 +65,11 @@ const Home = () => {
 
         {cities ? <SearchTopLocations /> : null}
 
-        {topLocations.length ? <TopLocations /> : null}
+        {topLocations.length ? (
+          <IonSlides key={topLocations.length} className="slideContainer" pager={true} options={slideOpts}>
+            <TopLocations /> 
+          </IonSlides> 
+        ): null}
 
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
           <IonFabButton size="small">

@@ -1,7 +1,8 @@
 import { useContext, useState } from 'react';
 import { Context } from '../context/Context';
+import { Controller, useForm } from "react-hook-form";
 import Highlighter from "react-highlight-words";
-import { IonItem, IonList, IonSearchbar, isPlatform } from '@ionic/react';
+import { IonItem, IonSearchbar, isPlatform } from '@ionic/react';
 import LoadingError from './LoadingError';
 
 const Search = () => {
@@ -18,12 +19,13 @@ const Search = () => {
   const [searchWords, setSearchWords] = useState([]);
   const [cityName, setCityName] = useState('');
   
+  const { control, handleSubmit, formState: { errors } } = useForm();
 
-  const onSubmit = async e => {
-    e.preventDefault()
+   const onSubmit = async ({city}) => {
     setLoading(true);
-    const city = e.target[0].value;
-    
+    setSearchText(city);
+    setCityName(city);
+
     try {
       const limit = 20;
       const options = {
@@ -44,38 +46,15 @@ const Search = () => {
     }
 
     setPredictions([]);
-    setLoading(false);
-  };
-
-  const selectCity = async city => {
-    setLoading(true);
-    try {
-      const limit = 20;
-      const options = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // converts JS data into JSON string.
-        body: JSON.stringify({ city }),
-        credentials: "include",
-      };
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/top-in-city?limit=${limit}`, options)
-      const data = await res.json();
-      setTopLocations(data);
-    } catch (error) {
-      setError('Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in Deutschland eintragen.')
-      setTimeout(() => setError(null), 5000);
-    }
-
-    setPredictions([]);
+    setShowPredict(false);
     setLoading(false);  
   }
 
-  const forAutocompleteChange = async () => {
-    if(searchText.length >= 2) {
+  const forAutocompleteChange = async (value) => {
+    setSearchText(value);
+    if(value) {
       // make array from input string -> each item is created after one space " "
-      const searchQuery = searchText.split(' ').filter(word => word);
+      const searchQuery = value.split(' ').filter(word => word);
       const res = await cities.filter(city => {
         const found = searchQuery.map(word => {
           // return if exists just a space or a space and then nothing
@@ -93,28 +72,34 @@ const Search = () => {
       const result = res.slice(0, 3);
       setPredictions(result);
     }
-    if(!searchText) {
+    if(!value) {
       setPredictions([]);
     }
   };
 
   return (
-    <form className="container" onSubmit={onSubmit}>
-      <IonSearchbar 
-        className="searchbar"
-        type="search"
-        inputMode="search"
-        placeholder="Top Läden in deiner Stadt anzeigen" 
-        showCancelButton="always" 
-        cancel-button-text=""
-        value={searchText}
-        debounce={500}
-        onIonChange={e => {
-          setSearchText(e.detail.value);
-          forAutocompleteChange();
-          setSearchWords(() => e.detail.value.split(' ').filter(word => word));
-          searchText !== cityName && setShowPredict(true);
-        }}
+    <form className="container" onSubmit={handleSubmit(onSubmit)}>
+      <Controller 
+        name="city"
+        control={control}
+        render={({ field: { onChange, value } }) => (
+          <IonSearchbar
+            className="searchbar"
+            type="search"
+            inputMode="search"
+            placeholder="Top Läden in deiner Stadt anzeigen" 
+            showCancelButton="always" 
+            cancel-button-text=""
+            value={value}
+            debounce={500}
+            onIonChange={e => {
+              forAutocompleteChange(e.detail.value);
+              setSearchWords(() => e.detail.value.split(' ').filter(word => word));
+              searchText !== cityName && setShowPredict(true);
+              onChange(e.detail.value);
+            }}
+          />
+        )}
       />
       {predictions && showPredict ? (
         <div className={`py-0 d-flex flex-row container ${isPlatform('desktop') ? "" : "justify-content-center"}`}>
@@ -123,12 +108,7 @@ const Search = () => {
               key={i}
               className="predictItem"
               button 
-              onClick={() => {
-                setSearchText(city);
-                selectCity(city);
-                setCityName(city);
-                setShowPredict(false);
-              }}
+              onClick={() => onSubmit({ city }) }
               lines="none"
               color={`${toggle ? "" : "secondary"}`}
             >
