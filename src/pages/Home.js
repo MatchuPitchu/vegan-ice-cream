@@ -16,7 +16,7 @@ const Home = () => {
       contentRef.current && contentRef.current.scrollToBottom(1000);
     };
 
-    setTimeout(() => scrollDown(), 500);
+    if(topLocations) setTimeout(() => scrollDown(), 500);
   }, [topLocations])
 
   const slideOpts = {
@@ -66,7 +66,12 @@ const Home = () => {
         {cities ? <SearchTopLocations /> : null}
 
         {topLocations.length ? (
-          <IonSlides key={topLocations.length} className="slideContainer" pager={true} options={slideOpts}>
+          <IonSlides 
+            key={topLocations.length} 
+            className="slideContainer" 
+            pager={true} 
+            options={slideOpts}
+          >
             <TopLocations /> 
           </IonSlides> 
         ): null}

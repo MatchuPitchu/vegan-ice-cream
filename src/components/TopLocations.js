@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Context } from '../context/Context';
 import ReactStars from "react-rating-stars-component";
-import { IonSlides, IonSlide, IonCard, IonAvatar, IonLabel, IonCardContent, IonCardSubtitle, IonItem, IonButton, IonIcon } from '@ionic/react';
+import { IonSlide, IonCard, IonAvatar, IonLabel, IonCardContent, IonCardSubtitle, IonItem, IonButton, IonIcon } from '@ionic/react';
 import { open } from "ionicons/icons";
 import SelectedMarker from "./SelectedMarker";
 
