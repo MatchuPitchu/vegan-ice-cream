@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { Context } from '../context/Context';
-import { IonButton, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonIcon, IonImg, IonItem, IonItemGroup, IonLabel, IonModal } from "@ionic/react";
+import { IonButton, IonCard, IonContent, IonIcon, IonImg, IonItem, IonItemGroup, IonLabel, IonModal } from "@ionic/react";
 import ReactStars from "react-rating-stars-component";
 import { add, caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, iceCream } from "ionicons/icons";
 import FavLocBtn from "./FavLocBtn";
