@@ -13,11 +13,10 @@ const TopLocations = () => {
     topLocations,
     selected, setSelected,
     setInfoModal,
-    setOpenComments,
-    locations,
+    setOpenComments
   } = useContext(Context);
 
-  return topLocations.length && locations.map(loc => (
+  return topLocations.length && topLocations.map(loc => (
       <IonSlide
         key={loc._id}
         className="text-start"
