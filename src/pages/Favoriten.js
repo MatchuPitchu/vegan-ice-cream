@@ -1,19 +1,22 @@
 import { useContext } from "react";
 import { Context } from "../context/Context";
-// https://www.npmjs.com/package/react-rating-stars-component
-import ReactStars from "react-rating-stars-component";
-import { IonContent, IonPage, IonHeader, IonCard, IonCardSubtitle, IonCardContent, IonIcon, IonLabel, IonButton, IonItem, IonAlert, IonToast, IonBadge } from "@ionic/react";
-import { bookmarks, removeCircle } from "ionicons/icons";
+import { IonContent, IonPage, IonHeader, IonCard, IonCardSubtitle, IonCardContent, IonIcon, IonLabel, IonButton, IonItem, IonAvatar } from "@ionic/react";
+import { add, open } from "ionicons/icons";
 import Spinner from '../components/Spinner';
 import LoadingError from "../components/LoadingError";
+import FavLocBtn from "../components/FavLocBtn";
+import Ratings from "../components/Ratings";
+import SelectedMarker from "../components/SelectedMarker";
 
 const Favoriten = () => {
   const { 
     isAuth, 
     user,
     toggle,
-    removeFavLoc,
-    alertUpdateFav, setAlertUpdateFav,
+    setOpenComments,
+    setSearchSelected,
+    selected, setSelected, 
+    setInfoModal,
   } = useContext(Context);
 
   return isAuth && user ? (
@@ -26,67 +29,61 @@ const Favoriten = () => {
           {user.favorite_locations && user.favorite_locations.map((loc) => (
           <IonCard key={loc._id} >
             <IonItem lines="full">
+              <IonAvatar slot='start'>
+                <img src='./assets/icons/ice-cream-icon-dark.svg' />
+              </IonAvatar>
               <IonLabel >
                 {loc.name}
                 <p>{loc.address.street} {loc.address.number}</p>
                 <p className="mb-2">{loc.address.zipcode} {loc.address.city}</p>
                 <p><a href={loc.location_url}>Webseite</a></p>
               </IonLabel>
-              <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: true, location: loc})}>
-                <IonIcon icon={bookmarks}/>
-                <IonBadge slot="end" color="danger">-</IonBadge>
-              </IonButton>
-              <IonAlert
-                isOpen={alertUpdateFav.removeStatus}
-                onDidDismiss={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: false })}
-                header={'Favoriten entfernen'}
-                message={'Möchtest du den Eisladen wirklich von deiner Liste entfernen?'}
-                buttons={[
-                  { text: 'Abbrechen', role: 'cancel' },
-                  { text: 'Bestätigen', handler: removeFavLoc }
-                ]}
-              />
+              {user ? <FavLocBtn selectedLoc={loc}/> : null}
             </IonItem>
             
             <IonCardContent>
-              <IonCardSubtitle color='primary'>Bewertung Community</IonCardSubtitle>
+              <div className="d-flex align-items-center">
+                <IonCardSubtitle color='primary'>Bewertung schreiben</IonCardSubtitle>
+                <IonButton
+                  onClick={() => {
+                    setSearchSelected(loc);
+                    setOpenComments(false);
+                    setSelected(null);
+                    setInfoModal(false);
+                  }} 
+                  fill="clear" 
+                  routerLink="/bewerten" 
+                  routerDirection="forward"
+                >
+                  <IonIcon icon={add}/>
+                </IonButton>
+              </div>
+
               {loc.location_rating_quality ? (
-                <>
-                  <div className="d-flex align-items-center">
-                    <div className="me-2">Eis-Erlebnis</div>
-                    <div>
-                      <ReactStars
-                        count={5}
-                        value={loc.location_rating_quality}
-                        edit={false}
-                        size={18}
-                        color='#9b9b9b'
-                        activeColor='#de9c01'
-                      />
-                    </div>
-                  </div>
-                  <div className="d-flex align-items-center">
-                    <div className="me-2">Veganes Angebot</div>
-                    <div>
-                      <ReactStars 
-                        count={5}
-                        value={loc.location_rating_vegan_offer}
-                        edit={false}
-                        size={18}
-                        color='#9b9b9b'
-                        activeColor='#de9c01'
-                      />
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <p>Noch keine Bewertungen vorhanden</p>
-              )}
+              <>
+                <Ratings selectedLoc={loc}/> 
+                <IonButton 
+                  className="more-infos mt-2" 
+                  title="Mehr Infos"
+                  onClick={() => {
+                    setOpenComments(false);
+                    setSelected(loc); 
+                    setInfoModal(true) 
+                  }}
+                >
+                  <IonIcon className="me-1" icon={open} />Mehr Infos
+                </IonButton>
+              </>
+              ) : <div className="py-1">Schreib die erste Bewertung</div>}
+            
+              
             </IonCardContent>
           </IonCard>
           ))}
         </div>
         
+        {selected ? <SelectedMarker /> : null}
+
         <LoadingError />
 
       </IonContent>

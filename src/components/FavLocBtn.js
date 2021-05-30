@@ -3,7 +3,7 @@ import { bookmarks, bookmarksOutline } from "ionicons/icons";
 import { useContext } from "react";
 import { Context } from '../context/Context';
 
-const FavLocBtn = () => {
+const FavLocBtn = ({selectedLoc}) => {
   const { 
     user,
     selected,
@@ -14,7 +14,7 @@ const FavLocBtn = () => {
 
   return (
     <>
-      {user.favorite_locations.find(loc => loc._id === selected._id) ? (
+      {user.favorite_locations.find(loc => loc._id === selectedLoc._id) ? (
         <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: true, location: selected})}>
           <IonIcon icon={bookmarks}/>
           <IonBadge slot="end" color="danger">-</IonBadge>

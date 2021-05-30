@@ -1,8 +1,8 @@
 import { useContext, useState, useEffect } from 'react';
 import { Context } from '../context/Context';
 import Highlighter from "react-highlight-words";
-import { IonIcon, IonItem, IonLabel, IonList, IonPopover, IonSearchbar } from '@ionic/react';
-import { informationCircle } from 'ionicons/icons';
+import { IonIcon, IonItem, IonList, IonSearchbar } from '@ionic/react';
+import { checkmarkCircle, iceCream } from 'ionicons/icons';
 import LoadingError from '../components/LoadingError';
 
 const SearchFlavors = () => {
@@ -11,7 +11,6 @@ const SearchFlavors = () => {
     searchFlavor, setSearchFlavor,
     flavor, setFlavor
   } = useContext(Context);
-  const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
   const [flavors, setFlavors] = useState([]);
   const [searchWords, setSearchWords] = useState([]);
   const [flavorsPredict, setFlavorsPredict] = useState([]);
@@ -58,36 +57,16 @@ const SearchFlavors = () => {
   return (
     <>
       <IonItem lines="none">
-        <IonLabel htmlFor="name1">Eissorte</IonLabel>
-        <IonIcon
-          className="infoIcon ms-auto"
-          color="primary"
-          slot="end"
-          button 
-          onClick={e => {
-            e.persist();
-            setPopoverShow({ show: true, event: e })
-          }}
-          icon={informationCircle} 
-        />
-        <IonPopover
-          color="primary"
-          cssClass='info-popover'
-          event={popoverShow.event}
-          isOpen={popoverShow.show}
-          onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
-        >
-          Du siehst keine Vorschläge oder die Vorschläge passen nicht zu deiner Eissorte? Dann tippe einfach den vollständigen Namen der neuen Eissorte ein.
-        </IonPopover>
-      </IonItem>
-      <IonItem lines="none">
         <IonSearchbar
           className="searchbar" 
           type="search"
-          inputMode="search"
-          placeholder="Was hast du probiert?" 
-          showCancelButton="always" 
+          inputMode="text"
+          placeholder="Name Eissorte eintippen"
+          showCancelButton="always"
+          searchIcon={iceCream}
           cancel-button-text=""
+          spellcheck={true}
+          autocorrect="on"
           value={searchFlavor}
           debounce={100}
           onIonChange={e => {
@@ -97,10 +76,12 @@ const SearchFlavors = () => {
           }}
           onIonCancel={() => setFlavor({})}
           onIonClear={() => setFlavor({})}
+          onKeyUp={(e) => e.key === 'Enter' && setFlavorsPredict([])}
         />
       </IonItem>
-      {flavorsPredict && searchFlavor !== flavor.name ? (
+      {flavorsPredict.length && searchFlavor !== flavor.name ? (
         <IonList className="py-0">
+          <div className="infoText mt-2" >... Auswahl bereits von anderen Usern eingetragener Sorten</div>
           {flavorsPredict.map(flavor => (
             <IonItem
               key={flavor._id}
