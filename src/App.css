@@ -81,6 +81,12 @@ ion-badge {
   font-weight: bold;
 }
 
+.infoText {
+  font-size: 0.8rem;
+  padding: 0 25px;
+  color: var(--ion-color-primary);
+}
+
 /************ Header general ************/
 ion-toolbar .sc-ion-searchbar-ios-h {
   padding: 3px 0;

@@ -38,14 +38,14 @@ const TopLocations = () => {
             {loc.location_rating_quality ? (
               <div className="d-flex align-items-center">
                 <div className="me-2">
-                  <div className="ratingContainer">Eis-Erlebnis</div>
-                  <div>Veganes Angebot</div>
+                  <div className="ratingContainer">Veganes Angebot</div>
+                  <div>Eis-Erlebnis</div>
                 </div>
                 <div>
                   <div>
-                    <ReactStars
+                    <ReactStars 
                       count={5}
-                      value={loc.location_rating_quality}
+                      value={loc.location_rating_vegan_offer}
                       edit={false}
                       size={18}
                       color='#9b9b9b'
@@ -53,9 +53,9 @@ const TopLocations = () => {
                     />
                   </div>
                   <div>
-                    <ReactStars 
+                    <ReactStars
                       count={5}
-                      value={loc.location_rating_vegan_offer}
+                      value={loc.location_rating_quality}
                       edit={false}
                       size={18}
                       color='#9b9b9b'

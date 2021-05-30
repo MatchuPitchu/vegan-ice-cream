@@ -10,13 +10,9 @@ const Home = () => {
   const { toggle, cities, topLocations } = useContext(Context);
   const contentRef = useRef(null);
 
-  useEffect(() => {
-    const scrollDown = () => {
-      // (number) means duration
-      contentRef.current && contentRef.current.scrollToBottom(1000);
-    };
-
-    if(topLocations) setTimeout(() => scrollDown(), 500);
+  useEffect(() => {    
+    // (number) means duration
+    setTimeout(() => contentRef.current && contentRef.current.scrollToBottom(500), 500);
   }, [topLocations])
 
   const slideOpts = {

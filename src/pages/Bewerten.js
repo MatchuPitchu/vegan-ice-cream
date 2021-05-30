@@ -24,7 +24,7 @@ const Bewerten = () => {
     searchFlavor, setSearchFlavor,
     flavor
   } = useContext(Context);
-  
+  const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
   const [popoverInfo, setPopoverInfo] = useState({ show: false, event: undefined });
   const [showColorPicker, setShowColorPicker] = useState({field1: false, field2: false});
   const flav1Ref = useRef(null);
@@ -189,7 +189,7 @@ const Bewerten = () => {
           <IonItem lines="full">
             <IonLabel position='stacked' htmlFor="location">Name des Eisladens</IonLabel>
             <IonInput 
-              disabled
+              readonly
               type="text"
               placeholder="Nutze die obere Suche"
               value={searchSelected ? searchSelected.name : ''}
@@ -197,15 +197,14 @@ const Bewerten = () => {
           </IonItem>
 
           <IonItem lines="full">
-            <IonIcon icon={bulb} slot="start" color="warning"/>
-            <IonLabel className="ion-text-wrap" color="warning">
-              Beziehe deine Bewertung bitte nur auf 1 Eissorte deiner Wahl
+            <IonIcon icon={bulb} color="warning"/>
+            <IonLabel className="ion-text-wrap ms-1" color="warning">
+              Beziehe deine Bewertung bitte nur auf 1 Eissorte
             </IonLabel>
             
             <IonIcon
               className="warningIcon ms-3"
               color="warning"
-              slot="end"
               button 
               onClick={e => {
                 e.persist();
@@ -224,14 +223,40 @@ const Bewerten = () => {
             </IonPopover>
           </IonItem>
 
+          <IonItem lines="none">
+            <IonLabel htmlFor="name1">Eissorte</IonLabel>
+            <IonIcon
+              className="infoIcon ms-auto"
+              color="primary"
+              slot="end"
+              button 
+              onClick={e => {
+                e.persist();
+                setPopoverShow({ show: true, event: e })
+              }}
+              icon={informationCircle} 
+            />
+            <IonPopover
+              color="primary"
+              cssClass='info-popover'
+              event={popoverShow.event}
+              isOpen={popoverShow.show}
+              onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
+            >
+              Du siehst keine Vorschläge oder die Vorschläge passen nicht zu deiner Eissorte? Dann tippe einfach den vollständigen Namen der neuen Eissorte ein.
+            </IonPopover>
+          </IonItem>
+
           <SearchFlavors />
           
-          <IonItem lines="none">
+          {/* Hide Input Item because it only doubles searchbar value */}
+          <IonItem hidden lines="none">
             <Controller 
               control={control}
               render={({ field: { onChange, value } }) => (
                 <IonInput
-                  disabled
+                  readonly
+                  autocapitalize='words'
                   type="text"
                   value={value = searchFlavor}
                   onIonChange={e => {
@@ -337,12 +362,17 @@ const Bewerten = () => {
           </IonItem>
           {showError("ice-color", errors)}
           
-          <IonItem lines="none" className="mb-1">
+          <IonItem lines="none" className="my-1">
             <IonLabel position='floating' htmlFor="text">Kommentar</IonLabel>
             <Controller
               control={control}
               render={({ field: { onChange, value } }) => (
-                <IonTextarea rows={6} value={value} onIonChange={e => onChange(e.detail.value)} />
+                <IonTextarea
+                  className="pb-3"
+                  autoGrow={true} 
+                  value={value} 
+                  onIonChange={e => onChange(e.detail.value)} 
+                />
               )}
               name="text"
               rules={{ required: true }}

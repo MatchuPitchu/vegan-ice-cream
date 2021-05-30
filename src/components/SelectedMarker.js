@@ -5,6 +5,7 @@ import ReactStars from "react-rating-stars-component";
 import { add, caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, iceCream } from "ionicons/icons";
 import FavLocBtn from "./FavLocBtn";
 import LoadingError from "./LoadingError";
+import Ratings from "./Ratings";
 
 const SelectedMarker = () => {
   const {
@@ -49,7 +50,7 @@ const SelectedMarker = () => {
       enterAnimation={enterAnimation} 
       leaveAnimation={leaveAnimation}>
       <IonItem lines='full'>
-        {user ? <FavLocBtn /> : null}
+        {user ? <FavLocBtn selectedLoc={selected}/> : null}
         <IonLabel>{selected.name}</IonLabel>
         <IonButton fill="clear" onClick={() => {setOpenComments(false); setSelected(null); setInfoModal(false)}} >
           <IonIcon icon={closeCircleOutline}/>
@@ -63,7 +64,9 @@ const SelectedMarker = () => {
           <IonItemGroup>
             <IonItem className="modalItem" lines="full">
               <IonLabel color="text-color">
-                {selected.address.street} {selected.address.number}, {selected.address.zipcode} {selected.address.city}
+                {selected.address.street} {selected.address.number}
+                <br/>
+                {selected.address.zipcode} {selected.address.city}
                 <br/>
                 <a href={selected.location_url} target="_blank">Webseite</a>
               </IonLabel>
@@ -89,139 +92,117 @@ const SelectedMarker = () => {
       
         <IonCard>
           <div style={toggle ? {backgroundColor: '#233033' } : {backgroundColor: '#fff'}}>          
-            <IonItemGroup>
-              <IonItem className="d-flex modalItem" lines="full">
-                {selected.location_rating_quality ? (
-                  <div className="pe-3 py-2">Eis-Erlebnis
-                    <ReactStars
-                      count={5}
-                      value={selected.location_rating_quality}
-                      edit={false}
-                      size={18}
-                      color='#9b9b9b'
-                      activeColor='#de9c01'
-                    />
-                  </div>
-                ) : null}
-                {selected.location_rating_quality ? (
-                  <div className="py-2">Veganes Angebot
-                    <ReactStars 
-                      count={5}
-                      value={selected.location_rating_vegan_offer}
-                      edit={false}
-                      size={18}
-                      color='#9b9b9b'
-                      activeColor='#de9c01'
-                    />
-                  </div>
-              ) : (
-                <div>Noch keine Bewertungen vorhanden</div>
-              )}
-              </IonItem>
-              {selected.location_rating_quality ? (
-              <IonItem lines="none">
-                <IonIcon className="me-2" color="primary" icon={iceCream} />
-                <IonLabel>Alle bewerteten Eissorten</IonLabel>
-              </IonItem>
-              ) : null}
-              <IonItem lines="full">
-                {selected.flavors_listed.length ? (
-                  <div className="d-flex justify-content-around flex-wrap px-3 py-2">
-                    {selected.flavors_listed.map(flavor => {
-                      return (
-                        <div key={flavor._id}>
-                          <div className="iceContainer">
-                            <div className="icecream" style={{background: `linear-gradient(to bottom, ${flavor.color.primary}, ${flavor.color.secondary} )`}}></div>
-                            <div className="icecreamBottom" style={{background: flavor.color.primary}}></div>
-                            <div className="cone"></div>
-                          </div>
-                          <div className="labelFlavor">{flavor.name}</div>
-                        </div>
-                        )
-                      })
-                    }
-                  </div>
-                ) : null}
-              </IonItem>
-              
-              {selected.comments_list.length > 0 ? (
-                <IonItem color="background-color" lines="none">
-                  <IonIcon 
-                    className="me-2"
-                    color="primary" 
-                    icon={openComments ? caretDownCircle : caretForwardCircle} 
-                    button onClick={() => {
-                      setOpenComments(prev => !prev);
-                    }}
-                  />
-                  <IonLabel className="ms-1">Alle Bewertungen anzeigen</IonLabel>
-                  <IonButton 
-                    fill="solid" 
-                    className="click-btn my-3"
-                    onClick={() => {
-                      setOpenComments(prev => !prev);
-                    }}
-                  >
-                    {selected.comments_list.length} 
-                  </IonButton>
+            {selected.location_rating_quality ? (
+              <IonItemGroup>
+                <IonItem className="d-flex modalItem" lines="full">
+                  <Ratings selectedLoc={selected}/>
                 </IonItem>
-              ) : null}
-              {openComments ? selected.comments_list.map((comment, i) => {
-                return (
-                  <div key={comment._id}>
-                    <IonItem color="background-color" lines="full">
-                      <IonLabel className="ion-text-wrap mt-3 ms-1">
-                        <p>
-                          <IonIcon className="me-2" color={`${toggle ? '' : 'primary'}`} icon={chatboxEllipses}/> {comment.text}
-                        </p>
 
-                        <div className="d-flex align-items-center">
-                          {comment.flavors_referred.map(flavor => {
-                            return (
-                              <IonButton key={flavor._id} disabled fill="solid" className="click-btn my-3">
-                                <IonIcon color={`${toggle ? "warning" : "secondary"}`} className="pe-1" icon={iceCream} />
-                                {flavor.name}
-                              </IonButton>
-                              )
-                            })
-                          }
-                        </div>
-                      
-                        <div className="d-flex align-items-center">
-                          <div className="me-2">Eis-Erlebnis</div>
-                          <div>
-                            <ReactStars
-                              count={5}
-                              value={comment.rating_quality}
-                              edit={false}
-                              size={18}
-                              color='#9b9b9b'
-                              activeColor='#de9c01'
-                            />
-                          </div>
-                        </div>
-                        <div className="d-flex align-items-center">
-                          <div className="me-2">Veganes Angebot</div>
-                          <div>
-                            <ReactStars 
-                              count={5}
-                              value={comment.rating_vegan_offer}
-                              edit={false}
-                              size={18}
-                              color='#9b9b9b'
-                              activeColor='#de9c01'
-                            />
-                          </div>
-                        </div>
-                        <p className="p-weak mt-1">Datum: {comment.date.replace('T', ' // ').slice(0, 19)}</p>
-                        <p className="p-weak">User: {`${comment.user_id ? comment.user_id.name : 'Konto inaktiv'}`}</p>
-                      </IonLabel>
+                {selected.comments_list[0].text && selected.flavors_listed[0].color.primary ? (
+                  <>
+                    <IonItem color="background-color" lines="none">
+                      <IonIcon 
+                        className="me-2"
+                        color="primary" 
+                        icon={openComments ? caretDownCircle : caretForwardCircle} 
+                        button onClick={() => {
+                          setOpenComments(prev => !prev);
+                        }}
+                      />
+                      <IonLabel className="ms-1">Alle Bewertungen anzeigen</IonLabel>
+                      <IonButton 
+                        fill="solid" 
+                        className="click-btn my-3"
+                        onClick={() => {
+                          setOpenComments(prev => !prev);
+                        }}
+                      >
+                        {selected.comments_list.length} 
+                      </IonButton>
                     </IonItem>
-                  </div>
-                )
-              }
-              ) : null}
-            </IonItemGroup>
+    
+                    {openComments ? selected.comments_list.map(comment => {
+                      return (
+                        <div key={comment._id}>
+                          <IonItem color="background-color" lines="full">
+                            <IonLabel className="ion-text-wrap mt-3 ms-1">
+                              <p>
+                                <IonIcon className="me-2" color={`${toggle ? '' : 'primary'}`} icon={chatboxEllipses}/> {comment.text}
+                              </p>
+    
+                              <div className="d-flex align-items-center">
+                                {comment.flavors_referred.map(flavor => {
+                                  return (
+                                    <IonButton key={flavor._id} disabled fill="solid" className="click-btn my-3">
+                                      <IonIcon color={`${toggle ? "warning" : "secondary"}`} className="pe-1" icon={iceCream} />
+                                      {flavor.name}
+                                    </IonButton>
+                                    )
+                                  })
+                                }
+                              </div>
+                            
+                              <div className="d-flex align-items-center">
+                                <div className="me-2">Eis-Erlebnis</div>
+                                <div>
+                                  <ReactStars
+                                    count={5}
+                                    value={comment.rating_quality}
+                                    edit={false}
+                                    size={18}
+                                    color='#9b9b9b'
+                                    activeColor='#de9c01'
+                                  />
+                                </div>
+                              </div>
+                              <div className="d-flex align-items-center">
+                                <div className="me-2">Veganes Angebot</div>
+                                <div>
+                                  <ReactStars 
+                                    count={5}
+                                    value={comment.rating_vegan_offer}
+                                    edit={false}
+                                    size={18}
+                                    color='#9b9b9b'
+                                    activeColor='#de9c01'
+                                  />
+                                </div>
+                              </div>
+                              <p className="p-weak mt-1">Datum: {comment.date.replace('T', ' // ').slice(0, 19)}</p>
+                              <p className="p-weak">User: {`${comment.user_id ? comment.user_id.name : 'Konto inaktiv'}`}</p>
+                            </IonLabel>
+                          </IonItem>
+                        </div>
+                      )
+                    }) : null}
+    
+                    <IonItem lines="none">
+                      <IonIcon className="me-2" color="primary" icon={iceCream} />
+                      <IonLabel>Alle bewerteten Eissorten</IonLabel>
+                    </IonItem>
+                    <IonItem lines="none">
+                      <div className="d-flex justify-content-around flex-wrap px-3 py-2">
+                        {selected.flavors_listed.map(flavor => {
+                          return (
+                            <div key={flavor._id}>
+                              <div className="iceContainer">
+                                <div className="icecream" style={{background: `linear-gradient(to bottom, ${flavor.color.primary}, ${flavor.color.secondary} )`}}></div>
+                                <div className="icecreamBottom" style={{background: flavor.color.primary}}></div>
+                                <div className="cone"></div>
+                              </div>
+                              <div className="labelFlavor">{flavor.name}</div>
+                            </div>
+                            )
+                          })
+                        }
+                      </div>
+                    </IonItem>
+                  </>
+                  ) : null}
+                </IonItemGroup>
+              ) : (
+                <IonItem lines="none">Schreib die erste Bewertung</IonItem>
+              )}
           </div>
         </IonCard>
         

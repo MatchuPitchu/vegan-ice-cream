@@ -87,7 +87,7 @@ const Search = () => {
             className="searchbar"
             type="search"
             inputMode="search"
-            placeholder="Top Eisläden in deiner Stadt anzeigen" 
+            placeholder="Top Eisläden in deiner Stadt" 
             showCancelButton="always" 
             cancel-button-text=""
             value={value}
