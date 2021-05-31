@@ -1,13 +1,19 @@
 import { useContext, useEffect, useRef } from "react";
 import { Context } from "../context/Context";
-import { IonButton, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonLabel, IonPage, IonSlides } from '@ionic/react';
-import { gift, iceCream, logoPaypal } from 'ionicons/icons';
+import { getPlatforms, IonButton, IonCard, IonCardContent, IonCardTitle, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonItem, IonLabel, IonPage, IonSlides, isPlatform } from '@ionic/react';
+import { gift, iceCream, logoPaypal, star } from 'ionicons/icons';
 import SearchTopLocations from '../components/SearchTopLocations';
 import TopLocations from '../components/TopLocations';
 
 
 const Home = () => {
-  const { toggle, cities, topLocations } = useContext(Context);
+  const { 
+    toggle, 
+    cities,
+    searchTopLoc,
+    topLocations,
+    noTopLoc,
+  } = useContext(Context);
   const contentRef = useRef(null);
 
   useEffect(() => {    
@@ -64,7 +70,7 @@ const Home = () => {
         {topLocations.length ? (
           <IonSlides 
             key={topLocations.length} 
-            className="slideContainer" 
+            className={`${isPlatform('desktop') ? 'slideDesktop' : 'slideMobile'}`} 
             pager={true} 
             options={slideOpts}
           >
@@ -72,7 +78,21 @@ const Home = () => {
           </IonSlides> 
         ): null}
 
-        <IonFab vertical="bottom" horizontal="end" slot="fixed">
+        {noTopLoc && (
+          <div className="container text-center">
+            <IonCard>
+              <div className="noTopLocCard">
+                Noch keine Top Eisläden mit 3+
+                <IonIcon size="small" color="primary" icon={star}/>
+                <br/>
+                in <span className="highlightSpan">{searchTopLoc}</span> gefunden.
+                <br/>
+              </div>
+            </IonCard>
+          </div>
+        )}
+
+        <IonFab className="me-2" vertical="bottom" horizontal="end" slot="fixed">
           <IonFabButton size="small">
             <IonIcon icon={gift} />
           </IonFabButton>

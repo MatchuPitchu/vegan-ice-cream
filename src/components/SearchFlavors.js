@@ -63,6 +63,7 @@ const SearchFlavors = () => {
           inputMode="text"
           placeholder="Name Eissorte eintippen"
           showCancelButton="always"
+          showClearButton="always"
           searchIcon={iceCream}
           cancel-button-text=""
           spellcheck={true}

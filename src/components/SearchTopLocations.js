@@ -12,7 +12,8 @@ const Search = () => {
     setError,
     cities,
     setTopLocations,
-    searchText, setSearchText,
+    searchTopLoc, setSearchTopLoc,
+    noTopLoc, setNoTopLoc,
   } = useContext(Context);
   const [predictions, setPredictions] = useState([]);
   const [showPredict, setShowPredict] = useState(false);
@@ -21,9 +22,9 @@ const Search = () => {
   
   const { control, handleSubmit, formState: { errors } } = useForm();
 
-   const onSubmit = async ({city}) => {
+  const onSubmit = async ({city}) => {
     setLoading(true);
-    setSearchText(city);
+    setSearchTopLoc(city);
     setCityName(city);
 
     try {
@@ -39,7 +40,12 @@ const Search = () => {
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/top-in-city?limit=${limit}`, options)
       const data = await res.json();
-      setTopLocations(data);
+      if(data.length) {
+        setTopLocations(data);
+      } else {
+        setTopLocations([]);
+        setNoTopLoc(true);
+      }
     } catch (error) {
       setError('Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in Deutschland eintragen.')
       setTimeout(() => setError(null), 5000);
@@ -51,7 +57,6 @@ const Search = () => {
   }
 
   const forAutocompleteChange = async (value) => {
-    setSearchText(value);
     if(value) {
       // make array from input string -> each item is created after one space " "
       const searchQuery = value.split(' ').filter(word => word);
@@ -71,6 +76,7 @@ const Search = () => {
       });
       const result = res.slice(0, 2);
       setPredictions(result);
+      value !== cityName && setShowPredict(true);
     }
     if(!value) {
       setPredictions([]);
@@ -88,15 +94,17 @@ const Search = () => {
             type="search"
             inputMode="search"
             placeholder="Top Eisläden in deiner Stadt" 
-            showCancelButton="always" 
+            showCancelButton="always"
+            showClearButton="always"
             cancel-button-text=""
             value={value}
             debounce={500}
             onIonChange={e => {
+              onChange(e.detail.value);
+              setSearchTopLoc(value);
               forAutocompleteChange(e.detail.value);
               setSearchWords(() => e.detail.value.split(' ').filter(word => word));
-              searchText !== cityName && setShowPredict(true);
-              onChange(e.detail.value);
+              noTopLoc && setNoTopLoc(false);
             }}
           />
         )}

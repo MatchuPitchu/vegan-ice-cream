@@ -25,6 +25,8 @@ const AppState = ({children}) => {
   const [all, setAll] = useState(false);
   const [disableInfScroll, setDisableInfScroll] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [searchTopLoc, setSearchTopLoc] = useState('');
+  const [noTopLoc, setNoTopLoc] = useState(false);
   const [segment, setSegment]= useState('map');
   const [map, setMap]= useState(null);
   const [viewport, setViewport] = useState({});
@@ -356,6 +358,8 @@ const AppState = ({children}) => {
         all, setAll,
         disableInfScroll, setDisableInfScroll,
         searchText, setSearchText,
+        searchTopLoc, setSearchTopLoc,
+        noTopLoc, setNoTopLoc,
         segment, setSegment,
         map, setMap,
         viewport, setViewport,
