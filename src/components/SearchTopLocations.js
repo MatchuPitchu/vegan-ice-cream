@@ -12,19 +12,17 @@ const Search = () => {
     setError,
     cities,
     setTopLocations,
-    searchTopLoc, setSearchTopLoc,
+    cityName, setCityName,
     noTopLoc, setNoTopLoc,
   } = useContext(Context);
   const [predictions, setPredictions] = useState([]);
   const [showPredict, setShowPredict] = useState(false);
   const [searchWords, setSearchWords] = useState([]);
-  const [cityName, setCityName] = useState('');
   
   const { control, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async ({city}) => {
     setLoading(true);
-    setSearchTopLoc(city);
     setCityName(city);
 
     try {
@@ -98,10 +96,10 @@ const Search = () => {
             showClearButton="always"
             cancel-button-text=""
             value={value}
-            debounce={500}
+            debounce={0}
             onIonChange={e => {
               onChange(e.detail.value);
-              setSearchTopLoc(value);
+              setCityName(e.detail.value);
               forAutocompleteChange(e.detail.value);
               setSearchWords(() => e.detail.value.split(' ').filter(word => word));
               noTopLoc && setNoTopLoc(false);

@@ -25,7 +25,7 @@ const AppState = ({children}) => {
   const [all, setAll] = useState(false);
   const [disableInfScroll, setDisableInfScroll] = useState(false);
   const [searchText, setSearchText] = useState('');
-  const [searchTopLoc, setSearchTopLoc] = useState('');
+  const [cityName, setCityName] = useState('');
   const [noTopLoc, setNoTopLoc] = useState(false);
   const [segment, setSegment]= useState('map');
   const [map, setMap]= useState(null);
@@ -358,7 +358,7 @@ const AppState = ({children}) => {
         all, setAll,
         disableInfScroll, setDisableInfScroll,
         searchText, setSearchText,
-        searchTopLoc, setSearchTopLoc,
+        cityName, setCityName,
         noTopLoc, setNoTopLoc,
         segment, setSegment,
         map, setMap,

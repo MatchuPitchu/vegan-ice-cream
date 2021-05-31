@@ -10,7 +10,7 @@ const Home = () => {
   const { 
     toggle, 
     cities,
-    searchTopLoc,
+    cityName,
     topLocations,
     noTopLoc,
   } = useContext(Context);
@@ -85,7 +85,7 @@ const Home = () => {
                 Noch keine Top Eisläden mit 3+
                 <IonIcon size="small" color="primary" icon={star}/>
                 <br/>
-                in <span className="highlightSpan">{searchTopLoc}</span> gefunden.
+                in <span className="highlightSpan">{cityName}</span> gefunden.
                 <br/>
               </div>
             </IonCard>
