@@ -42,7 +42,7 @@ const Favoriten = () => {
             </IonItem>
             
             <IonCardContent>
-              <div className="d-flex align-items-center">
+              <div className="d-flex align-items-center height20">
                 <IonCardSubtitle color='primary'>Bewertung schreiben</IonCardSubtitle>
                 <IonButton
                   onClick={() => {
@@ -63,7 +63,7 @@ const Favoriten = () => {
               <>
                 <Ratings selectedLoc={loc}/> 
                 <IonButton 
-                  className="more-infos mt-2" 
+                  className="more-infos mt-1" 
                   title="Mehr Infos"
                   onClick={() => {
                     setOpenComments(false);
@@ -90,7 +90,7 @@ const Favoriten = () => {
     </IonPage>
   ) : (
   <IonPage>
-    <Spinner />;
+    <Spinner />
   </IonPage>
   )
 };

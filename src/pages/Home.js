@@ -96,14 +96,18 @@ const Home = () => {
           <IonFabButton size="small">
             <IonIcon icon={gift} />
           </IonFabButton>
-          <IonFabList side="start">
+          <IonFabList color="dark" side="start">
             <IonFabButton
               className="donate-btn"
+              href="https://paypal.me/eismitstil"
+              target="_blank"
               routerDirection="forward"
               color="primary"
             >
-              <IonIcon className="donateIcon" icon={logoPaypal} />
-              <IonLabel className="ms-1">Donate</IonLabel>
+              <div className="d-flex flex-column align-items-center mt-3">
+                <div className="mx-3 ion-text-wrap">Gefällt dir die App? Ich bin dankbar für jede kleine Unterstützung, um die Betriebskosten decken und die App weiterentwickeln zu können.</div>
+                <IonIcon className="mt-2 donateIcon" icon={logoPaypal} />
+              </div>
             </IonFabButton>
           </IonFabList>
         </IonFab>
