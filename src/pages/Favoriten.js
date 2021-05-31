@@ -32,8 +32,8 @@ const Favoriten = () => {
               <IonAvatar slot='start'>
                 <img src='./assets/icons/ice-cream-icon-dark.svg' />
               </IonAvatar>
-              <IonLabel >
-                {loc.name}
+              <IonLabel className="ion-text-wrap">
+                <p style={{"color":"var(--ion-text-color)"}}>{loc.name}</p>
                 <p>{loc.address.street} {loc.address.number}</p>
                 <p className="mb-2">{loc.address.zipcode} {loc.address.city}</p>
                 <p><a href={loc.location_url}>Webseite</a></p>

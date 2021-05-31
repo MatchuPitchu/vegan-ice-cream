@@ -25,6 +25,7 @@ const Entdecken = () => {
     searchViewport,
     selected, setSelected,
     searchSelected,
+    setSearchText,
     position, setPosition,
     newLocation,
     mapStyles, 

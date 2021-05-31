@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Context } from '../context/Context';
 import Highlighter from "react-highlight-words";
 import { IonIcon, IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/react';
@@ -96,7 +96,8 @@ const Search = () => {
           type="search"
           inputMode="search"
           placeholder="Eisladen oder Stadt suchen" 
-          showCancelButton="always" 
+          showCancelButton="always"
+          showClearButton="always"
           cancel-button-text=""
           value={searchText}
           debounce={500}

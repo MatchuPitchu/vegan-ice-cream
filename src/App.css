@@ -681,11 +681,29 @@ mark {
     0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
 
-.slideContainer {
+.slideMobile {
   width: 100%;
   height: 120%;
   margin-top: 100px;
   background: transparent;
+}
+
+.slideDesktop {
+  width: 100%;
+  margin: 50px 0;
+  padding-bottom: 30px;
+  background: transparent;
+}
+
+.noTopLocCard {
+  padding: 5px 5px 10px 5px;
+  background-color: var(--ion-background-color);
+  color: var(--ion-text-color);
+}
+
+.highlightSpan {
+  font-weight: bold;
+  border-bottom: 3px solid var(--ion-color-primary);
 }
 
 /********** Tab Entdecken & Map **********/
