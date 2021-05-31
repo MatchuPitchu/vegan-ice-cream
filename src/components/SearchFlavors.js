@@ -82,7 +82,7 @@ const SearchFlavors = () => {
       </IonItem>
       {flavorsPredict.length && searchFlavor !== flavor.name ? (
         <IonList className="py-0">
-          <div className="infoText mt-2" >... Auswahl bereits von anderen Usern eingetragener Sorten</div>
+          <div className="infoText mt-2" >... Auswahl bereits von anderen eingetragene Sorten</div>
           {flavorsPredict.map(flavor => (
             <IonItem
               key={flavor._id}

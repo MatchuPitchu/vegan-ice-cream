@@ -75,16 +75,22 @@ ion-badge {
 }
 
 .donate-btn {
-  width: 100px;
-  height: 50px;
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  top: -145px;
   font-size: 0.8rem;
-  font-weight: bold;
+  text-align: center;
 }
 
 .infoText {
   font-size: 0.8rem;
   padding: 0 25px;
   color: var(--ion-color-primary);
+}
+
+.height20 {
+  height: 20px;
 }
 
 /************ Header general ************/
