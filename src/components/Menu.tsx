@@ -92,7 +92,7 @@ const Menu: React.FC = () => {
           {successMsg && (
             <div className='successMsg text-center ion-padding'>
               <div>{successMsg}</div>
-              <div>Du wurdest ausgeloggt, da du deine E-Mail wechseln möchtest. Klicke auf den Link in deinem Postfach und logge dich wieder ein. Schau auch in den Spam-Ordner.</div>
+              <div>Du wurdest ausgeloggt, da du deine E-Mail wechselst. Klicke auf den Bestätigungs-Link in deinem Postfach. Kontrolliere auch den Spam-Ordner.</div>
             </div>
           )}
         </IonList>

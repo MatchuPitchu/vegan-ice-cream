@@ -9,7 +9,10 @@ import LoadingError from './LoadingError';
 const NewLocationForm = () => {
   const { 
     setError,
+    setLoading,
     locations, setLocations,
+    locationsMap, setLocationsMap,
+    locationsList, setLocationsList,
     newLocation, setNewLocation,
     newLocModal, setNewLocModal,
     enterAnimation, leaveAnimation,
@@ -29,6 +32,7 @@ const NewLocationForm = () => {
   const { control, handleSubmit, formState: { errors } } = useForm({defaultValues});
 
   const onSubmit = async (data) => {
+    setLoading(true);
     try {
       const body = {
         name: data.name,
@@ -57,7 +61,9 @@ const NewLocationForm = () => {
 
       const res = await fetch(`${process.env.REACT_APP_API_URL}/locations`, options);
       const newData = await res.json();
-      setLocations([...locations, newData])
+      setLocations([...locations, newData]);
+      setLocationsMap([...locationsMap, newData]);
+      setLocationsList([...locationsList, newData]);
       if (!newData) {
         setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
         setTimeout(() => setError(null), 5000);
@@ -68,6 +74,7 @@ const NewLocationForm = () => {
     };
     setNewLocation(null);
     searchViewport();
+    setLoading(false);
   };
 
   return (
@@ -89,13 +96,13 @@ const NewLocationForm = () => {
             <IonItem lines="none" className="mb-1">
               <IonLabel position='floating' htmlFor="name">Name</IonLabel>
               <Controller
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <IonInput inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
-                  )}
-                  name="name"
-                  rules={{ required: true }}
-                />
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <IonInput inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
+                )}
+                name="name"
+                rules={{ required: true }}
+              />
             </IonItem>
             {showError("name", errors)}
 
@@ -184,8 +191,8 @@ const NewLocationForm = () => {
             </IonItem>
             {showError("location_url", errors)}
             
-            <IonButton className="my-3" type="submit" expand="block">
-              <IonIcon className="pe-1"icon={add}/>Neu eintragen
+            <IonButton className="my-3 confirm-btn" type="submit" expand="block">
+              <IonIcon className="pe-1" icon={add}/>Neu eintragen
             </IonButton>
           </form>
 
@@ -193,6 +200,7 @@ const NewLocationForm = () => {
       ) : <IonContent>Vielen Dank!</IonContent> }
 
       <LoadingError />
+      
     </IonModal>
   )
 };

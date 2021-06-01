@@ -1,6 +1,6 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { Context } from "../context/Context";
-import { getPlatforms, IonButton, IonCard, IonCardContent, IonCardTitle, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonItem, IonLabel, IonPage, IonSlides, isPlatform } from '@ionic/react';
+import { IonButton, IonCard, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonItem, IonLabel, IonPage, IonSlides, isPlatform } from '@ionic/react';
 import { gift, iceCream, logoPaypal, star } from 'ionicons/icons';
 import SearchTopLocations from '../components/SearchTopLocations';
 import TopLocations from '../components/TopLocations';
@@ -14,6 +14,7 @@ const Home = () => {
     topLocations,
     noTopLoc,
   } = useContext(Context);
+  const [show, setShow] = useState(false);
   const contentRef = useRef(null);
 
   useEffect(() => {    
@@ -32,7 +33,7 @@ const Home = () => {
         <img className="headerMap" src={`${toggle ? "./assets/header-home-dark.svg" : "./assets/header-home-light.svg"}`} />
       </IonHeader>
       <IonContent 
-        className="home ion-content"
+        className={`home ${show && "fabOpen"}`}
         ref={contentRef}
         scrollEvents
         style={{backgroundImage: `url(./assets/images/${toggle ? 'ice-cream-red-dark-pablo-merchan-montes-unsplash.jpg' : 'ice-cream-yellow-light-wesual-click-unsplash.jpg'})`}}
@@ -65,7 +66,7 @@ const Home = () => {
           </IonButton>
         </div>
 
-        {cities.length ? <SearchTopLocations /> : null}
+        <SearchTopLocations />
 
         {topLocations.length ? (
           <IonSlides 
@@ -92,27 +93,28 @@ const Home = () => {
           </div>
         )}
 
-        <IonFab className="me-2" vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton size="small">
-            <IonIcon icon={gift} />
-          </IonFabButton>
-          <IonFabList color="dark" side="start">
-            <IonFabButton
-              className="donate-btn"
-              href="https://paypal.me/eismitstil"
-              target="_blank"
-              routerDirection="forward"
-              color="primary"
-            >
-              <div className="d-flex flex-column align-items-center mt-3">
-                <div className="mx-3 ion-text-wrap">Gefällt dir die App?</div>
-                <div className="mx-3 ion-text-wrap">Ich bin dankbar für jede Unterstützung, um die Betriebskosten decken und die App weiterentwickeln zu können.</div>
-                <IonIcon className="mt-2 donateIcon" icon={logoPaypal} />
-              </div>
-            </IonFabButton>
-          </IonFabList>
-        </IonFab>
       </IonContent>
+
+      <IonFab className="me-2" vertical="bottom" horizontal="end" slot="fixed">
+        <IonFabButton onClick={() => setShow(prev => !prev)} size="small">
+          <IonIcon icon={gift} />
+        </IonFabButton>
+        <IonFabList color="dark" side="start">
+          <IonFabButton
+            className="donate-btn"
+            href="https://paypal.me/eismitstil"
+            target="_blank"
+            routerDirection="forward"
+            color="primary"
+          >
+            <div className="d-flex flex-column align-items-center mt-3">
+              <div className="mx-3 ion-text-wrap">Gefällt dir die App?</div>
+              <div className="mx-3 ion-text-wrap">Ich bin dankbar für jede Unterstützung, um die Betriebskosten decken und die App weiterentwickeln zu können.</div>
+              <IonIcon className="mt-2 donateIcon" icon={logoPaypal} />
+            </div>
+          </IonFabButton>
+        </IonFabList>
+      </IonFab>
     </IonPage>
   );
 };

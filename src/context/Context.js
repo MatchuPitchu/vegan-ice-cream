@@ -36,6 +36,7 @@ const AppState = ({children}) => {
   const [searchSelected, setSearchSelected] = useState(null);
   const [position, setPosition] = useState();
   const [newLocation, setNewLocation] = useState(null);
+  const [checkMsgNewLoc, setCheckMsgNewLoc] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [toggle, setToggle] = useState(null);
@@ -54,6 +55,7 @@ const AppState = ({children}) => {
   });
   const [openComments, setOpenComments] = useState(false);
   const [newComment, setNewComment] = useState(null);
+  const [finishComment, setFinishComment] = useState(false);
   const [searchFlavor, setSearchFlavor] = useState('');
   const [flavor, setFlavor] = useState({});
 
@@ -370,6 +372,7 @@ const AppState = ({children}) => {
         searchSelected, setSearchSelected,
         position, setPosition,
         newLocation, setNewLocation,
+        checkMsgNewLoc, setCheckMsgNewLoc,
         loading, setLoading,
         loadMore,
         error, setError,
@@ -390,6 +393,7 @@ const AppState = ({children}) => {
         addFavLoc,
         openComments, setOpenComments,
         newComment, setNewComment,
+        finishComment, setFinishComment,
         searchFlavor, setSearchFlavor,
         flavor, setFlavor
       }}

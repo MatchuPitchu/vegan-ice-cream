@@ -1,16 +1,18 @@
 import { useContext, useState, useEffect } from 'react';
 import { Context } from '../context/Context';
 import Highlighter from "react-highlight-words";
-import { IonIcon, IonItem, IonList, IonSearchbar } from '@ionic/react';
-import { checkmarkCircle, iceCream } from 'ionicons/icons';
+import { IonIcon, IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/react';
+import { iceCream, informationCircle } from 'ionicons/icons';
 import LoadingError from '../components/LoadingError';
 
 const SearchFlavors = () => {
   const { 
     setLoading,
     searchFlavor, setSearchFlavor,
-    flavor, setFlavor
+    flavor, setFlavor,
+    finishComment, setFinishComment,
   } = useContext(Context);
+  const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
   const [flavors, setFlavors] = useState([]);
   const [searchWords, setSearchWords] = useState([]);
   const [flavorsPredict, setFlavorsPredict] = useState([]);
@@ -28,7 +30,7 @@ const SearchFlavors = () => {
     }
     fetchFlavors();
     setLoading(false);
-  }, [])
+  }, [finishComment])
 
   const forAutocompleteChange = value => {
     if(value.length >= 3 && flavors) {
@@ -56,7 +58,7 @@ const SearchFlavors = () => {
 
   return (
     <>
-      <IonItem lines="none">
+      <div className="d-flex align-items-center" style={{backgroundColor: 'var(--ion-item-background)'}}>
         <IonSearchbar
           className="searchbar" 
           type="search"
@@ -79,10 +81,32 @@ const SearchFlavors = () => {
           onIonClear={() => setFlavor({})}
           onKeyUp={(e) => e.key === 'Enter' && setFlavorsPredict([])}
         />
-      </IonItem>
+        <div>
+          <IonIcon
+            className="infoIcon me-3"
+            color="primary"
+            button 
+            onClick={e => {
+              e.persist();
+              setPopoverShow({ show: true, event: e })
+            }}
+            icon={informationCircle} 
+          />
+          <IonPopover
+            color="primary"
+            cssClass='info-popover'
+            event={popoverShow.event}
+            isOpen={popoverShow.show}
+            onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
+          >
+            Du siehst keine Vorschläge oder die Vorschläge passen nicht zu deiner Eissorte? Dann tippe einfach den vollständigen Namen der neuen Eissorte ein.
+          </IonPopover>
+        </div>
+      </div>
+      
       {flavorsPredict.length && searchFlavor !== flavor.name ? (
         <IonList className="py-0">
-          <div className="infoText mt-2" >... Auswahl bereits von anderen eingetragene Sorten</div>
+          <div className="infoText mt-2" >... Auswahl bereits von anderen eingetragener Sorten</div>
           {flavorsPredict.map(flavor => (
             <IonItem
               key={flavor._id}

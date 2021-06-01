@@ -25,7 +25,7 @@ const Favoriten = () => {
         <img className="headerMap" src={`${toggle ? "./assets/header-favoriten-dark.svg" : "./assets/header-favoriten-light.svg"}`} />
       </IonHeader>
       <IonContent>
-        <div className="container-sm mt-3">
+        <div className="mt-3">
           {user.favorite_locations && user.favorite_locations.map((loc) => (
           <IonCard key={loc._id} >
             <IonItem lines="full">
@@ -41,43 +41,56 @@ const Favoriten = () => {
               {user ? <FavLocBtn selectedLoc={loc}/> : null}
             </IonItem>
             
-            <IonCardContent>
-              <div className="d-flex align-items-center height20">
-                <IonCardSubtitle color='primary'>Bewertung schreiben</IonCardSubtitle>
+            <div className="px-3 py-2">
+              {loc.location_rating_quality ? (
+              <>
+                <Ratings selectedLoc={loc}/> 
+                <div className="d-flex align-items-center">
+                  <IonButton 
+                    className="more-infos mt-1" 
+                    title="Mehr Infos"
+                    fill="solid"
+                    onClick={() => {
+                      setOpenComments(false);
+                      setSelected(loc); 
+                      setInfoModal(true) 
+                    }}
+                  >
+                    <IonIcon className="me-1" icon={open} />Mehr Infos
+                  </IonButton>
+                  <IonButton
+                    className="more-infos mt-1" 
+                    onClick={() => {
+                      setSearchSelected(loc);
+                      setOpenComments(false);
+                      setSelected(null);
+                      setInfoModal(false);
+                    }}
+                    fill="solid"
+                    routerLink="/bewerten" 
+                    routerDirection="forward"
+                  >
+                    <IonIcon icon={add}/>Bewertung schreiben
+                  </IonButton>
+                </div>
+              </>
+              ) : (
                 <IonButton
+                  className="more-infos mt-1"
+                  fill="solid"
                   onClick={() => {
                     setSearchSelected(loc);
                     setOpenComments(false);
                     setSelected(null);
                     setInfoModal(false);
-                  }} 
-                  fill="clear" 
+                  }}
                   routerLink="/bewerten" 
                   routerDirection="forward"
                 >
-                  <IonIcon icon={add}/>
+                  <IonIcon icon={add}/>Erste Bewertung schreiben
                 </IonButton>
-              </div>
-
-              {loc.location_rating_quality ? (
-              <>
-                <Ratings selectedLoc={loc}/> 
-                <IonButton 
-                  className="more-infos mt-1" 
-                  title="Mehr Infos"
-                  onClick={() => {
-                    setOpenComments(false);
-                    setSelected(loc); 
-                    setInfoModal(true) 
-                  }}
-                >
-                  <IonIcon className="me-1" icon={open} />Mehr Infos
-                </IonButton>
-              </>
-              ) : <div className="py-1">Schreib die erste Bewertung</div>}
-            
-              
-            </IonCardContent>
+              )}
+            </div>
           </IonCard>
           ))}
         </div>

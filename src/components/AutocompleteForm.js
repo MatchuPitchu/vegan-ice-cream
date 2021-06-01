@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { Context } from "../context/Context";
 import { Autocomplete } from '@react-google-maps/api';
-import { IonButton, IonContent, IonIcon, IonItem, IonLabel, IonModal, isPlatform } from '@ionic/react';
-import { add, closeCircleOutline } from 'ionicons/icons';
+import { IonButton, IonCardSubtitle, IonContent, IonIcon, IonItem, IonLabel, IonModal, isPlatform } from '@ionic/react';
+import { checkbox, closeCircleOutline } from 'ionicons/icons';
 import LoadingError from './LoadingError';
 
 const AutocompleteForm = () => {
@@ -17,6 +17,7 @@ const AutocompleteForm = () => {
     result, setResult,
     formattedAddress, setFormattedAddress,
     setNewLocation,
+    setCheckMsgNewLoc,
     setNewLocModal,
     enterAnimation, leaveAnimation,
   } = useContext(Context);
@@ -83,6 +84,7 @@ const AutocompleteForm = () => {
     };
     if(!duplicate) fetchData();
     setSearchAutocomplete('');
+    setCheckMsgNewLoc('Klicke auf das neue grüne Icon und bestätige die Daten des neuen Eisladens')
     setLoading(false);
     setAutocompleteModal(false);
   };
@@ -133,12 +135,15 @@ const AutocompleteForm = () => {
           <IonIcon icon={closeCircleOutline}/>
         </IonButton>
       </IonItem>
-      <IonContent className="ion-padding">
-        <form onSubmit={onSubmit}>
+      <IonContent>
+        <form className="d-flex flex-column" onSubmit={onSubmit}>
+          <IonItem className="mt-3 addLocForm" lines="none">
+            <div className="container ion-text-wrap" position="stacked">
+              <IonCardSubtitle>Welchen Eisladen hast du entdeckt?</IonCardSubtitle>
+              <p style={{fontSize: '0.8rem'}}>Name und Stadt reichen zumeist. Sonst trage die korrekte Adresse ein.</p>
+            </div>
+          </IonItem>
           <IonItem className="addLocForm" lines="none">
-            <IonLabel className={`container ion-text-wrap ${isPlatform('desktop') ? 'mb-4' : 'my-2'}`} position="stacked">
-              Welchen Eisladen hast du entdeckt? Name und Stadt reichen zumeist. Sonst trage die korrekte Adresse ein.
-            </IonLabel>
             <Autocomplete
               className='container-autocomplete'
               onLoad={ onAutocompleteLoad }
@@ -154,10 +159,10 @@ const AutocompleteForm = () => {
                 onChange={(e) => setSearchAutocomplete(e.target.value)}
               />
             </Autocomplete>
-            <IonButton fill="solid" className="check-btn my-3" type="submit">
-              <IonIcon icon={add} />Check: Klicke auf neues grünes Icon auf Karte
-            </IonButton>
           </IonItem>
+          <IonButton fill="solid" className="check-btn my-3" type="submit">
+            <IonIcon className="me-1" icon={checkbox} />Checke deine Eingabe
+          </IonButton>
         </form>
       </IonContent>
       <LoadingError />

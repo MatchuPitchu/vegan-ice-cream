@@ -29,42 +29,57 @@ const ListResultComponent = ({loc}) => {
         {user ? <FavLocBtn selectedLoc={loc}/> : null}
       </IonItem>
       
-      <IonCardContent>
-        <div className="d-flex align-items-center">
-          <IonCardSubtitle color='primary'>Bewertung schreiben</IonCardSubtitle>
+      <div className="px-3 py-2">     
+        {loc.location_rating_quality ? (
+        <>
+          <Ratings selectedLoc={loc}/> 
+          <div className="d-flex align-items-center">
+            <IonButton 
+              className="more-infos mt-1" 
+              title="Mehr Infos"
+              fill="solid"
+              onClick={() => {
+                setOpenComments(false);
+                setSelected(loc); 
+                setInfoModal(true) 
+              }}
+            >
+              <IonIcon className="me-1" icon={open} />Mehr Infos
+            </IonButton>
+            <IonButton
+              className="more-infos mt-1" 
+              onClick={() => {
+                setSearchSelected(loc);
+                setOpenComments(false);
+                setSelected(null);
+                setInfoModal(false);
+              }} 
+              fill="solid"
+              routerLink="/bewerten" 
+              routerDirection="forward"
+            >
+              <IonIcon icon={add}/>Bewertung schreiben
+            </IonButton>
+          </div>
+        </> 
+        ) : (
           <IonButton
+            className="more-infos mt-1" 
             onClick={() => {
               setSearchSelected(loc);
               setOpenComments(false);
               setSelected(null);
               setInfoModal(false);
             }} 
-            fill="clear" 
+            fill="solid"
             routerLink="/bewerten" 
             routerDirection="forward"
           >
-            <IonIcon icon={add}/>
-          </IonButton>
-        </div>
+            <IonIcon icon={add}/>Erste Bewertung schreiben
+          </IonButton>       
+        )}
         
-        {loc.location_rating_quality ? (
-        <>
-          <Ratings selectedLoc={loc}/> 
-          <IonButton 
-            className="more-infos mt-2" 
-            title="Mehr Infos"
-            onClick={() => {
-              setOpenComments(false);
-              setSelected(loc); 
-              setInfoModal(true) 
-            }}
-          >
-            <IonIcon className="me-1" icon={open} />Mehr Infos
-          </IonButton>
-        </> 
-        ) : <div className="py-1">Schreib die erste Bewertung</div>}
-        
-      </IonCardContent>
+      </div>
     </IonCard>
   )
 }

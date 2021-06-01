@@ -93,10 +93,12 @@ const ProfilUpdate = () => {
   };
 
   return (
-    <div className="ion-padding text-center">
-      <div>Aktualisiere die Felder deiner Wahl und bestätige mit deinem Passwort</div>
+    <div className="text-center">
+      <IonItem color="--ion-card-background" lines="none">
+        <IonLabel className="ion-text-wrap">Aktualisiere die Felder deiner Wahl und bestätige mit deinem Passwort</IonLabel>
+      </IonItem>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <IonItem lines="full">
+        <IonItem color="--ion-card-background" lines="full">
           <IonLabel position='floating' htmlFor="name">Name</IonLabel>
           <Controller 
             control={control}
@@ -109,88 +111,87 @@ const ProfilUpdate = () => {
         </IonItem>
         {showError("name", errors)}
 
-        <IonItem lines="full">
+        <IonItem color="--ion-card-background" lines="full">
           <IonLabel position='floating' htmlFor="email">E-Mail</IonLabel>
           <Controller 
             control={control}
             render={({ field: { onChange, value } }) => (
               <IonInput type="email" inputmode="email" value={value} onIonChange={e => onChange(e.detail.value)} />
-              )}
-              name="email"
-            />
+            )}
+            name="email"
+          />
         </IonItem>
         {showError("email", errors)}
 
-        <IonItem lines="full">
+        <IonItem color="--ion-card-background" lines="full">
           <IonLabel position='floating' htmlFor="city">Stadt <span className="span-small">(für Startpunkt Karte)</span></IonLabel>
           <Controller 
             control={control}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
               <IonInput type="text" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
-              )}
+            )}
             name="city"
           />
         </IonItem>
 
-        <IonItem lines="full">
+        <IonItem color="--ion-card-background" lines="full">
           <IonLabel position='floating' htmlFor="newPassword">Neues Passwort</IonLabel>
           <Controller 
             control={control}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
               <IonInput type="password" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
-              )}
-              name="newPassword"
-              rules={{ 
-                pattern: {
-                  value: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,32}$/,
-                  message: "Bitte überprüfe, ob die unteren Hinweise auf dein Passwort zutreffen"
-                } 
-              }}
-            />
-          </IonItem>
-          {showError("newPassword", errors)}
+            )}
+            name="newPassword"
+            rules={{ 
+              pattern: {
+                value: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,32}$/,
+                message: "Bitte überprüfe, ob die unteren Hinweise auf dein Passwort zutreffen"
+              } 
+            }}
+          />
+        </IonItem>
+        {showError("newPassword", errors)}
 
-          <IonItem lines="full">
-            <IonLabel position='floating' htmlFor="repeatPassword">Passwort wiederholen</IonLabel>
-            <Controller 
-              control={control}
-              defaultValue=""
-              render={({ field: { onChange, value } }) => (
-                <IonInput type="password" id="repeatPassword" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
-                )}
-                name="repeatPassword"
-                rules={{
-                  pattern: {
-                    value: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,32}$/,
-                    message: "Bitte überprüfe, ob die unteren Hinweise auf dein Passwort zutreffen"
-                  } 
-                }}
-              />
-          </IonItem>
-          {showError("repeatPassword", errors)}
+        <IonItem color="--ion-card-background" lines="full">
+          <IonLabel position='floating' htmlFor="repeatPassword">Passwort wiederholen</IonLabel>
+          <Controller 
+            control={control}
+            defaultValue=""
+            render={({ field: { onChange, value } }) => (
+              <IonInput type="password" id="repeatPassword" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
+            )}
+            name="repeatPassword"
+            rules={{
+              pattern: {
+                value: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,32}$/,
+                message: "Bitte überprüfe, ob die unteren Hinweise auf dein Passwort zutreffen"
+              } 
+            }}
+          />
+        </IonItem>
+        {showError("repeatPassword", errors)}
         
-          <IonItem lines="none">
-            <IonLabel position='floating' htmlFor="password">Aktuelles Passwort</IonLabel>
-            <Controller 
-              control={control}
-              render={({ 
-                field: { onChange, value },
-                fieldState: { invalid, isTouched, isDirty, error },
-              }) => (
-                <IonInput type="password" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
-                )}
-                name="password"
-                rules={{ required: true }}
-                />
-            </IonItem>
-          {showError("password", errors)}
-          {error && <div className='alertMsg'>{error}</div>}
-
-        <IonButton className="my-3 confirm-btn" type="submit" routerLink='/login' expand="block">
-          <IonIcon slot="end" className="pe-1"icon={refreshCircle}/>Profil updaten
-        </IonButton>
+        <IonItem color="--ion-card-background" lines="none">
+          <IonLabel position='floating' htmlFor="password">Aktuelles Passwort</IonLabel>
+          <Controller 
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <IonInput type="password" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
+              )}
+            name="password"
+            rules={{ required: true }}
+          />
+        </IonItem>
+        {showError("password", errors)}
+        {error && <div className='alertMsg'>{error}</div>}
+          
+        <IonItem color="--ion-card-background" lines="none">
+          <IonButton className="my-3 confirm-btn" type="submit" routerLink='/login' expand="block">
+            <IonIcon slot="end" className="pe-1" icon={refreshCircle}/>Profil updaten
+          </IonButton>
+        </IonItem>
       </form>
       <LoadingError />
     </div>

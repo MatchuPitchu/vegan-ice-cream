@@ -4,6 +4,7 @@ import ReactStars from "react-rating-stars-component";
 import { IonSlide, IonCard, IonAvatar, IonLabel, IonCardContent, IonCardSubtitle, IonItem, IonButton, IonIcon } from '@ionic/react';
 import { open, sunny } from "ionicons/icons";
 import SelectedMarker from "./SelectedMarker";
+import Ratings from "./Ratings";
 
 // Optional parameters to pass to the swiper instance.
 // See http://idangero.us/swiper/api/ for valid options.
@@ -34,54 +35,24 @@ const TopLocations = () => {
                 <p><a href={loc.location_url} target="_blank">Webseite</a></p>
               </IonLabel>
             </IonItem>
-            <IonCardContent>
-              <IonCardSubtitle color='primary'>Bewertung der Community</IonCardSubtitle>
-              {loc.location_rating_quality ? (
-                <div className="d-flex align-items-center">
-                  <div className="me-2">
-                    <div className="ratingContainer">Veganes Angebot</div>
-                    <div>Eis-Erlebnis</div>
-                  </div>
-                  <div>
-                    <div>
-                      <ReactStars 
-                        count={5}
-                        value={loc.location_rating_vegan_offer}
-                        edit={false}
-                        size={18}
-                        color='#9b9b9b'
-                        activeColor='#de9c01'
-                      />
-                    </div>
-                    <div>
-                      <ReactStars
-                        count={5}
-                        value={loc.location_rating_quality}
-                        edit={false}
-                        size={18}
-                        color='#9b9b9b'
-                        activeColor='#de9c01'
-                      />
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div>Noch keine Bewertungen vorhanden</div>
-              )}  
-
-              <IonButton 
-                className="more-infos mt-2" 
-                title="Mehr Infos"
-                onClick={() => {
-                  setOpenComments(false);
-                  setSelected(loc);
-                  setInfoModal(true) 
-                }}
-              >
-                <IonIcon className="me-1" icon={open} />Mehr Infos
-              </IonButton>
-
-            </IonCardContent>
+            <div className="px-3 py-2">
+              {loc.location_rating_quality && (
+                <>
+                  <Ratings selectedLoc={loc}/> 
+                  <IonButton 
+                  className="more-infos mt-2" 
+                  title="Mehr Infos"
+                  onClick={() => {
+                    setOpenComments(false);
+                    setSelected(loc);
+                    setInfoModal(true) 
+                  }}
+                  >
+                    <IonIcon className="me-1" icon={open} />Mehr Infos
+                  </IonButton>
+                </>
+              )}
+            </div>
           </IonCard>
         </div>
 
