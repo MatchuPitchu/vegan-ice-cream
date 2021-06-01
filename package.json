@@ -1,6 +1,7 @@
 {
   "name": "frontend-vegan-icecream",
   "version": "0.0.1",
+  "author": "Michael Flohr",
   "private": true,
   "dependencies": {
     "@capacitor/android": "^2.4.7",

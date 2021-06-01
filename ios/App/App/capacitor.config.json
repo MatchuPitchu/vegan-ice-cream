@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "frontend-vegan-icecream",
+  "appId": "eis-mit-stil.netlify.app",
+  "appName": "Eis mit Stil",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",
