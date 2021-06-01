@@ -23,7 +23,7 @@ const Search = () => {
 
   const onSubmit = async e => {
     e.preventDefault();
-    setSearchText(e.target[0].value);
+    setSearchText('');
     if(e.target.elements[0].value.length > 3 && segment === 'map') {
       setLoading(true);
       try {

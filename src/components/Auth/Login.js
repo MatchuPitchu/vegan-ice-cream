@@ -85,12 +85,14 @@ const Login = () => {
             {showError("password", errors)}
             {error && <div className='alertMsg'>{error}</div>}
             
-            <IonButton className="my-3 confirm-btn" type="submit" expand="block">
-              <IonIcon className="pe-1"icon={logIn}/>Login
-            </IonButton>
-            <IonButton routerLink="/auth/reset-password" size="small" fill="clear" expand="block">
-              <IonIcon slot="end" icon={refreshCircle}/>Passwort vergessen?
-            </IonButton>
+            <div className="d-flex flex-column">
+              <IonButton className="my-3 confirm-btn" type="submit">
+                <IonIcon className="pe-1"icon={logIn}/>Login
+              </IonButton>
+              <IonButton routerLink="/auth/reset-password" size="small" fill="clear">
+                <IonIcon slot="end" icon={refreshCircle}/>Passwort vergessen?
+              </IonButton>
+            </div>
           </form>
           <p className="text-center">Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
         </div>

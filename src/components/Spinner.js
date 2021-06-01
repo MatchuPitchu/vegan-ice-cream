@@ -32,12 +32,13 @@ const Spinner = () => {
   );
 
   return (
-    <div className="d-flex flex-column align-items-center">
+    <div className="d-flex flex-column align-items-center text-center">
       <RingLoader color="var(--ion-color-primary)" css={override} size={120} />
       <h3 style={{ fontSize: "1.3em" }} className="display-3">
         {isAuth ? 'Loading ...' : 'Nur für eingeloggte User sichtbar'} 
       </h3>
       {!isAuth ? (
+      <>
         <div>
           <IonButton routerLink='/login' fill="solid" className="click-btn my-3">
             <IonLabel>Login</IonLabel>
@@ -48,6 +49,8 @@ const Spinner = () => {
             <IonIcon className="pe-1" icon={create} />
           </IonButton>
         </div>
+        <div className="mx-3">Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</div>
+      </>
       ) : null}
     </div>
   );

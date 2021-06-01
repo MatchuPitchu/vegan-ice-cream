@@ -20,11 +20,11 @@ const About = () => {
           <IonCardHeader>
             <IonCardTitle>Über die App</IonCardTitle>
           </IonCardHeader>
+          <IonItem lines="none">
+            <IonIcon icon={helpCircle} slot="start" />
+            <IonLabel className="ion-text-wrap">... warum diese App?</IonLabel>
+          </IonItem>
           <IonCardContent>
-            <IonItem lines="none">
-              <IonIcon icon={helpCircle} slot="start" />
-              <IonLabel className="ion-text-wrap">... warum diese App?</IonLabel>
-            </IonItem>
             <p className="my-2">
               Regelmäßig - und nicht nur im Sommer - begebe ich mich auf die Suche nach veganem Eis. 
               Egal an welchem Ort ich mich befinde. Ich liebe veganes Eis. Damit meine ich aber nicht 
@@ -45,51 +45,51 @@ const About = () => {
             </p>
             <p className="mb-2">Macht mit und genießt das Eis!</p> 
           </IonCardContent>
-          <IonItem lines="full">
+          <IonItem lines="none">
             <IonLabel className="ion-text-wrap">... genutzte Sprachen, Frameworks und Libraries</IonLabel>
           </IonItem>
-          <IonCardContent>
+          
             <IonList>
               <IonItem>
-                <IonLabel color="primary">HTML5</IonLabel>
+                <IonLabel color="primary" className="ion-text-wrap">HTML5</IonLabel>
                 <IonIcon color="primary" slot="start" icon={logoHtml5} />
               </IonItem>
               <IonItem>
-                <IonLabel color="primary">CSS und Bootstrap 5</IonLabel>
+                <IonLabel color="primary" className="ion-text-wrap">CSS und Bootstrap 5</IonLabel>
                 <IonIcon color="primary" slot="start" icon={logoCss3} />
               </IonItem>
               <IonItem>
-                <IonLabel color="primary">JavaScript</IonLabel>
+                <IonLabel color="primary" className="ion-text-wrap">JavaScript</IonLabel>
                 <IonIcon color="primary" slot="start" icon={logoJavascript} />
               </IonItem>
               <IonItem>
-                <IonLabel color="primary">ReactJS</IonLabel>
+                <IonLabel color="primary" className="ion-text-wrap">ReactJS</IonLabel>
                 <IonIcon color="primary" slot="start" icon={logoReact} />
               </IonItem>
               <IonItem>
-                <IonLabel color="primary">Ionic</IonLabel>
+                <IonLabel color="primary" className="ion-text-wrap">Ionic</IonLabel>
                 <IonIcon color="primary" slot="start" icon={logoIonic} />
               </IonItem>
               <IonItem>
-                <IonLabel color="primary">NodeJS mit Express</IonLabel>
+                <IonLabel color="primary" className="ion-text-wrap">NodeJS mit Express</IonLabel>
                 <IonIcon color="primary" slot="start" icon={logoNodejs} />
               </IonItem>
-              <IonItem>
-                <IonLabel color="primary">MongoDB mit Mongoose</IonLabel>
+              <IonItem lines="none">
+                <IonLabel color="primary" className="ion-text-wrap">MongoDB mit Mongoose</IonLabel>
                 <IonIcon color="primary" slot="start" icon={documentLock} />
               </IonItem>
             </IonList>
-          </IonCardContent>
+        
         </IonCard>
         <IonCard>
           <IonCardHeader>
             <IonCardTitle>Über mich</IonCardTitle>
           </IonCardHeader>
+          <IonItem lines="none">
+            <IonIcon icon={bulb} slot="start" />
+            <IonLabel className="ion-text-wrap">... ein persönlicher Gedanke</IonLabel>
+          </IonItem>
           <IonCardContent>
-            <IonItem lines="none">
-              <IonIcon icon={bulb} slot="start" />
-              <IonLabel className="ion-text-wrap">... ein persönlicher Gedanke</IonLabel>
-            </IonItem>
             <p className="my-2">
               Seit vielen Jahren beschäftige ich mich mit Nachhaltigkeit und versuche, in meinem eigenen Leben kleine Schritte nach vorne zu gehen, 
               um meinen ökologischen Fußabdruck auf diesem Planeten möglichst klein zu halten.

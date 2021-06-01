@@ -37,9 +37,12 @@ const Entdecken = () => {
 
   useEffect(() => {
     if(map) setTimeout(() => searchViewport(), 2000);
+  }, [map])
+  
+  useEffect(() => {
     if(user && user.home_city.geo.lat) setCenter({ lat:  user.home_city.geo.lat, lng: user.home_city.geo.lng });
       else setCenter({ lat:  52.524, lng: 13.410 })
-  }, [map, user])
+  }, [user])
 
   const getLocation = async () => {
     try {
@@ -100,72 +103,58 @@ const Entdecken = () => {
             </IonSegmentButton>
           </IonSegment>
         </IonToolbar>
-        
         <Search />
-
       </IonHeader>
 
       {segment === 'map' && (
         <IonContent>
           <div className="containerMap">
-            <div className="control-left">
-              <div className="col">
-                <IonButton 
-                  className="d-flex justify-content-start zoom-control-in zoomIcons" 
-                  fill="clear"
-                  // Add customs zoom control https://developers.google.com/maps/documentation/javascript/examples/control-replacement#maps_control_replacement-javascript
-                  onclick={() => map.setZoom(map.getZoom() + 1)}
-                >
-                  <IonIcon icon={addCircleOutline} />
-                </IonButton>
-                <IonButton 
-                  className="d-flex justify-content-start zoom-control-out zoomIcons" 
-                  fill="clear"
-                  onclick ={() => map.setZoom(map.getZoom() - 1)}
-                >
-                  <IonIcon icon={removeCircleOutline} />
-                </IonButton>
-              </div>
+            <div className="control-left d-flex flex-column">
+              <IonButton 
+                className="zoomIcons" 
+                fill="clear"
+                // Add customs zoom control https://developers.google.com/maps/documentation/javascript/examples/control-replacement#maps_control_replacement-javascript
+                onclick={() => map.setZoom(map.getZoom() + 1)}
+              >
+                <IonIcon icon={addCircleOutline} />
+              </IonButton>
+              <IonButton 
+                className="zoom-control-out zoomIcons" 
+                fill="clear"
+                onclick ={() => map.setZoom(map.getZoom() - 1)}
+              >
+                <IonIcon icon={removeCircleOutline} />
+              </IonButton>
             </div>
-            <div className="control-right-top">
-              <div className="col">
-                <div className="d-flex justify-content-end">
-                  <IonButton className="viewport-control" onClick={searchViewport}>
-                    <IonLabel className="me-1">Eisläden im Gebiet</IonLabel>
-                    <IonIcon slot="start" icon={search} />
-                  </IonButton>
-                </div>
-              </div>
-           </div>
-           <div className="control-right-bottom">
-              <div className="col">
-                { user ? ( 
-                  <div className="d-flex justify-content-end">
-                  <IonButton className="add-control" onClick={() => setAutocompleteModal(true)} title="Neue Adresse hinzufügen">
-                    <IonLabel className="me-1">Neuer Laden</IonLabel>
-                    <IonIcon slot="start" icon={add} />
-                  </IonButton>
-                  <AutocompleteForm />
-                </div>
-                ) : null}
-                <div className="d-flex justify-content-end">
-                  <IonButton className="where-control" onClick={getLocation} title="Mein Standort">
-                    <IonIcon icon={myPos} />
-                  </IonButton>
-                </div>
-                <div className="d-flex justify-content-end">
-                  <IonButton 
-                    className="center-control" 
-                    title="Karte auf Anfangspunkt zentrieren"
-                    onClick={() => { 
-                      map.setCenter(center); 
-                      map.setZoom(12)
-                    }}
-                  >
-                    <IonIcon icon={refreshCircle} />
-                  </IonButton>
-                </div>
-              </div>
+            <div className="d-flex flex-column align-items-end control-right-top">
+              <IonButton className="viewport-control" onClick={searchViewport}>
+                <IonLabel className="me-1">Eisläden im Gebiet</IonLabel>
+                <IonIcon slot="start" icon={search} />
+              </IonButton>
+
+              { user ? ( 
+                <IonButton className="add-control" onClick={() => setAutocompleteModal(true)} title="Neue Adresse hinzufügen">
+                  <IonLabel className="me-1">Neuer Laden</IonLabel>
+                  <IonIcon slot="start" icon={add} />
+                </IonButton>
+               ) : null}
+               
+              <AutocompleteForm />
+
+              <IonButton className="where-control" onClick={getLocation} title="Mein Standort">
+                <IonIcon icon={myPos} />
+              </IonButton>
+            
+              <IonButton 
+                className="center-control" 
+                title="Karte auf Anfangspunkt zentrieren"
+                onClick={() => { 
+                  map.setCenter(center); 
+                  map.setZoom(12)
+                }}
+              >
+                <IonIcon icon={refreshCircle} />
+              </IonButton>
             </div>
 
             <GoogleMap 
@@ -246,7 +235,7 @@ const Entdecken = () => {
                     url: './assets/icons/current-position-marker.svg',
                     scaledSize: new window.google.maps.Size(60, 60),
                   }}
-                  zIndex={0}
+                  zIndex={1}
                 />
                 ) : null}
 
