@@ -4,7 +4,7 @@ import { Context } from "../../context/Context";
 import { IonContent, IonInput, IonItem, IonLabel, IonButton, IonPage, IonHeader, IonTitle, IonIcon } from "@ionic/react";
 import { Redirect } from "react-router-dom";
 import showError from '../showError';
-import { logIn, refreshCircle } from "ionicons/icons";
+import { create, logIn, refreshCircle } from "ionicons/icons";
 
 const Login = () => {
   const { isAuth, setIsAuth, error, setError, user, setUser, toggle, setCenter } = useContext(Context);
@@ -91,6 +91,26 @@ const Login = () => {
             <IonButton routerLink="/auth/reset-password" size="small" fill="clear" expand="block">
               <IonIcon slot="end" icon={refreshCircle}/>Passwort vergessen?
             </IonButton>
+
+
+            <IonButton routerLink='/login' fill="solid" className="click-btn my-3">
+                <IonLabel>Login</IonLabel>
+                <IonIcon className="pe-1" icon={logIn} />
+              </IonButton>
+              <IonButton routerLink='/register' fill="solid" className="click-btn my-3">
+                <IonLabel>Registrieren</IonLabel>
+                <IonIcon className="pe-1" icon={create} />
+              </IonButton>
+            <div>
+              <IonButton routerLink='/login' fill="solid" className="click-btn my-3">
+                <IonLabel>Login</IonLabel>
+                <IonIcon className="pe-1" icon={logIn} />
+              </IonButton>
+              <IonButton routerLink='/register' fill="solid" className="click-btn my-3">
+                <IonLabel>Registrieren</IonLabel>
+                <IonIcon className="pe-1" icon={create} />
+              </IonButton>
+            </div>
           </form>
           <p className="text-center">Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
         </div>
