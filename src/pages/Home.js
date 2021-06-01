@@ -65,7 +65,7 @@ const Home = () => {
           </IonButton>
         </div>
 
-        {cities ? <SearchTopLocations /> : null}
+        {cities.length ? <SearchTopLocations /> : null}
 
         {topLocations.length ? (
           <IonSlides 
@@ -74,7 +74,7 @@ const Home = () => {
             pager={true} 
             options={slideOpts}
           >
-            <TopLocations /> 
+            <TopLocations />
           </IonSlides> 
         ): null}
 
@@ -105,7 +105,8 @@ const Home = () => {
               color="primary"
             >
               <div className="d-flex flex-column align-items-center mt-3">
-                <div className="mx-3 ion-text-wrap">Gefällt dir die App? Ich bin dankbar für jede kleine Unterstützung, um die Betriebskosten decken und die App weiterentwickeln zu können.</div>
+                <div className="mx-3 ion-text-wrap">Gefällt dir die App?</div>
+                <div className="mx-3 ion-text-wrap">Ich bin dankbar für jede Unterstützung, um die Betriebskosten decken und die App weiterentwickeln zu können.</div>
                 <IonIcon className="mt-2 donateIcon" icon={logoPaypal} />
               </div>
             </IonFabButton>

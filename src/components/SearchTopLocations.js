@@ -112,7 +112,7 @@ const Search = () => {
           {predictions.map((city, i) => (
             <IonItem
               key={i}
-              className="predictItem"
+              className="predictItem mx-1"
               button 
               onClick={() => onSubmit({ city }) }
               lines="none"
