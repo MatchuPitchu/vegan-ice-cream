@@ -86,7 +86,7 @@ const Login = () => {
             {error && <div className='alertMsg'>{error}</div>}
             
             <div className="d-flex flex-column">
-              <IonButton className="my-3 confirm-btn" type="submit">
+              <IonButton className="my-3" type="submit">
                 <IonIcon className="pe-1"icon={logIn}/>Login
               </IonButton>
               <IonButton routerLink="/auth/reset-password" size="small" fill="clear">
