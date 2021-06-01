@@ -524,7 +524,7 @@ const Bewerten = () => {
     </IonPage>
    ) : (
     <IonPage>
-      <Spinner />;
+      <Spinner />
     </IonPage>
   )
 };
