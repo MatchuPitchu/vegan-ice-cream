@@ -26,6 +26,12 @@ ion-icon {
   font-size: 24px;
 }
 
+ion-button[type="submit"] {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+
 .labelTabs {
   font-size: 0.7rem;
 }
