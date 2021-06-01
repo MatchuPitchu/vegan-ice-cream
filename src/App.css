@@ -66,9 +66,8 @@ ion-badge {
 }
 
 .confirm-btn {
-  /* height: 30px; */
+  height: 33px;
   text-transform: none;
-  min-height: 33px;
   align-self: center;
   opacity: 1;
 }

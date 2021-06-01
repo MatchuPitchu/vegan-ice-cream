@@ -85,30 +85,12 @@ const Login = () => {
             {showError("password", errors)}
             {error && <div className='alertMsg'>{error}</div>}
             
-            <IonButton className="my-3 confirm-btn" type="submit" fill="solid" expand="block">
-              <IonIcon className="pe-1" icon={logIn}/>Login
-            </IonButton>
-            <IonButton routerLink="/auth/reset-password" size="small" fill="clear" expand="block">
-              <IonIcon slot="end" icon={refreshCircle}/>Passwort vergessen?
-            </IonButton>
-
-
-            <IonButton routerLink='/login' fill="solid" className="click-btn my-3">
-                <IonLabel>Login</IonLabel>
-                <IonIcon className="pe-1" icon={logIn} />
+            <div className="d-flex justify-content-around align-items-center">
+              <IonButton className="my-3 confirm-btn" type="submit" fill="solid">
+                <IonIcon className="pe-1" icon={logIn}/>Login
               </IonButton>
-              <IonButton routerLink='/register' fill="solid" className="click-btn my-3">
-                <IonLabel>Registrieren</IonLabel>
-                <IonIcon className="pe-1" icon={create} />
-              </IonButton>
-            <div>
-              <IonButton routerLink='/login' fill="solid" className="click-btn my-3">
-                <IonLabel>Login</IonLabel>
-                <IonIcon className="pe-1" icon={logIn} />
-              </IonButton>
-              <IonButton routerLink='/register' fill="solid" className="click-btn my-3">
-                <IonLabel>Registrieren</IonLabel>
-                <IonIcon className="pe-1" icon={create} />
+              <IonButton className="my-3 confirm-btn" routerLink="/auth/reset-password" size="small" fill="clear">
+                <IonIcon slot="end" icon={refreshCircle}/>Passwort vergessen?
               </IonButton>
             </div>
           </form>
