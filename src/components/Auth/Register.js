@@ -144,7 +144,7 @@ const Register = () => {
                 />
               </IonItem>    
               {!endRegister ? (
-                <IonButton className="my-3 confirm-btn" type="submit" expand="block">
+                <IonButton className="my-3 confirm-btn" type="submit" fill="solid" expand="block">
                   <IonIcon className="pe-1" icon={logIn}/>Registrieren
                 </IonButton>
               ) : ( 

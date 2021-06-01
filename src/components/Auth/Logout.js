@@ -11,7 +11,6 @@ const Login = () => {
         <img className="headerMap" src={`${toggle ? "./assets/header-home-dark.svg" : "./assets/header-home-light.svg"}`} />
       </IonHeader>
       <IonContent>
-      </IonContent>
         <div className="container text-center">
           <IonCard>
             <IonCardContent>
@@ -20,6 +19,7 @@ const Login = () => {
             </IonCardContent>
           </IonCard>
         </div>
+      </IonContent>
     </IonPage>
   );
 };

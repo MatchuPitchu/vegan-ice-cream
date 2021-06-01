@@ -9,19 +9,19 @@ import { create, logIn } from "ionicons/icons";
 // Can be a string as well. Need to ensure each key-value pair ends with ;
 const override = css`
   display: flex;
-  margin: 30px auto;
+  margin: 20px auto;
   background-color: transparent;
   opacity: 0.8;
 `;
 
 const Spinner = () => {
-  const { isAuth, toggle, activateMessage } = useContext(Context);
+  const { isAuth, activateMessage } = useContext(Context);
 
   if (activateMessage === 'Aktivierung des Mail-Accounts erfolgreich') 
     return (
     <div className="d-flex flex-column align-items-center">
-      <RingLoader color="var(--ion-color-primary)" css={override} size={120} />
-      <h3 style={{ fontSize: "1.3em" }} className="display-3">
+      <RingLoader color="var(--ion-color-primary)" css={override} size={90} />
+      <h3 style={{ fontSize: "1.2em" }} className="display-3">
         {activateMessage}
       </h3>
       <IonButton routerLink='/login' fill="solid" className="disabled-btn my-3">
@@ -33,8 +33,8 @@ const Spinner = () => {
 
   return (
     <div className="d-flex flex-column align-items-center text-center">
-      <RingLoader color="var(--ion-color-primary)" css={override} size={120} />
-      <h3 style={{ fontSize: "1.3em" }} className="display-3">
+      <RingLoader color="var(--ion-color-primary)" css={override} size={90} />
+      <h3 style={{ fontSize: "1.2em" }} className="display-3">
         {isAuth ? 'Loading ...' : 'Nur für eingeloggte User sichtbar'} 
       </h3>
       {!isAuth ? (
@@ -49,7 +49,7 @@ const Spinner = () => {
             <IonIcon className="pe-1" icon={create} />
           </IonButton>
         </div>
-        <div className="mx-3">Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</div>
+        <div className="mx-3" style={{ fontWeight: 'light'}}>Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</div>
       </>
       ) : null}
     </div>
