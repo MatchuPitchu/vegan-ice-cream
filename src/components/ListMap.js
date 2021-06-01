@@ -27,10 +27,12 @@ const ListMap = () => {
       {searchText && !listResults.length ? (
         <div className="container text-center">
           <IonCard>
-            <IonCardContent>
-            <IonCardTitle className="mb-3">Nichts gefunden ...</IonCardTitle>
-              Hilf mit, neue Eisläden auf der Karte einzutragen.
-            </IonCardContent>
+            <div className="noTopLocCard">
+              Noch keine Eisläden
+              <br/>
+              in <span className="highlightSpan">{searchText}</span> gefunden.
+              <br/>
+            </div>
           </IonCard>
         </div>
       ) : null}

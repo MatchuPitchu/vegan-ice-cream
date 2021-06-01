@@ -186,7 +186,7 @@ const SelectedMarker = () => {
                           return (
                             <div key={flavor._id}>
                               <div className="iceContainer">
-                                <div className="icecream" style={{background: `linear-gradient(to bottom, ${flavor.color.primary}, ${flavor.color.secondary} )`}}></div>
+                                <div className="icecream" style={{background: `linear-gradient(to bottom, ${flavor.color.primary}, ${flavor.color.secondary ? flavor.color.secondary : flavor.color.primary})`}}></div>
                                 <div className="icecreamBottom" style={{background: flavor.color.primary}}></div>
                                 <div className="cone"></div>
                               </div>
@@ -201,7 +201,7 @@ const SelectedMarker = () => {
                   ) : null}
                 </IonItemGroup>
               ) : (
-                <IonItem lines="none">Schreib die erste Bewertung</IonItem>
+                <IonItem lines="none">... wartet auf die erste Bewertung</IonItem>
               )}
           </div>
         </IonCard>

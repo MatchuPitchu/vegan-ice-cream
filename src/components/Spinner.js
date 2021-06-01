@@ -49,7 +49,7 @@ const Spinner = () => {
             <IonIcon className="pe-1" icon={create} />
           </IonButton>
         </div>
-        <div className="mx-3" style={{ fontWeight: 'light'}}>Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</div>
+        <div className="mx-3" style={{ fontWeight: '300'}}>Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</div>
       </>
       ) : null}
     </div>

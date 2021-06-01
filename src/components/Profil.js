@@ -37,24 +37,24 @@ const Profil = () => {
       <IonContent>
         <div className="container-sm mt-3">
           <IonCard>
-            <IonCardHeader className="d-flex align-items-center">
-              <IonCardTitle className="me-2">{user.name}</IonCardTitle>
+            <IonItem className="d-flex align-items-center" lines="full">
+              <IonCardTitle className="me-2 my-3 ion-text-wrap">{user.name}</IonCardTitle>
               <IonButton  
                 className="update-btn ms-auto"
                 onClick={() => setShowUpdate(prev => !prev)}
               >
                 <IonIcon className="me-1" icon={refreshCircle}/>Update
               </IonButton>
-            </IonCardHeader>
+            </IonItem>
 
             {showUpdate && (
               <ProfilUpdate />
             )}
 
             {successMsg && (
-              <div className='successMsg text-center ion-padding'>
-                <div>{successMsg}</div>
-              </div>
+              <IonItem className='successMsg text-center' lines="full">
+                {successMsg}
+              </IonItem>
             )}
 
             <IonItem lines="none">
@@ -159,7 +159,7 @@ const Profil = () => {
                 )}
               ) : null}
 
-              <IonItem color="card-background" lines="none">
+              <IonItem lines="none">
                 <IonIcon
                   className={showFlavors ? 'rotateIcon90Forward' : 'rotateIcon90Back'}
                   slot="start"
@@ -198,7 +198,7 @@ const Profil = () => {
                     return (
                       <div key={flavor._id}>
                         <div className="iceContainer">
-                          <div className="icecream" style={{background: `linear-gradient(to bottom, ${flavor.color.primary}, ${flavor.color.secondary} )`}}></div>
+                          <div className="icecream" style={{background: `linear-gradient(to bottom right, ${flavor.color.primary}, ${flavor.color.secondary ? flavor.color.secondary : flavor.color.primary})`}}></div>
                           <div className="icecreamBottom" style={{background: flavor.color.primary}}></div>
                           <div className="cone"></div>
                         </div>

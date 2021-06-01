@@ -40,27 +40,25 @@ const ResetPassword = () => {
       <IonContent>
         <div className="container mt-3">
           <IonCard className="text-center">
-            <IonCardContent>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <IonItem lines="none">
-                  <IonLabel position='floating' htmlFor="email">E-Mail</IonLabel>
-                  <Controller 
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <IonInput type="email" inputmode="email" value={value} onIonChange={e => onChange(e.detail.value)} />
-                      )}
-                      name="email"
-                      rules={{ required: true }}
-                      />
-                </IonItem>
-                {showError("email", errors)}
-                
-                <IonButton className="my-3 confirm-btn" type="submit" routerLink='/login' expand="block">
-                  <IonIcon slot="end" className="pe-1"icon={refreshCircle}/>Passwort zurücksetzen
-                </IonButton>
-              </form>
-              <div>Schau nach dem Klick auf den Button in dein Mailpostfach. Du solltest einen Link zum Zurücksetzen deines Passworts erhalten haben.</div>
-            </IonCardContent>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <IonItem lines="none">
+                <IonLabel position='floating' htmlFor="email">E-Mail</IonLabel>
+                <Controller 
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <IonInput type="email" inputmode="email" value={value} onIonChange={e => onChange(e.detail.value)} />
+                    )}
+                    name="email"
+                    rules={{ required: true }}
+                    />
+              </IonItem>
+              {showError("email", errors)}
+              
+              <IonButton className="my-3 mx-3 confirm-btn" type="submit" routerLink='/login' expand="block">
+                <IonIcon slot="end" className="pe-1"icon={refreshCircle}/>Passwort zurücksetzen
+              </IonButton>
+            </form>
+            <div className="my-3 mx-3" >Schau nach dem Klick auf den Button in dein Mailpostfach. Du hast einen Link zum Zurücksetzen deines Passworts erhalten. Kontrolliere auch deinen Spam-Ordner.</div>
           </IonCard>
         </div>
         <LoadingError />

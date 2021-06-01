@@ -90,9 +90,9 @@ const Search = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      <IonItem color="background" lines="none">
+      <div className="d-flex align-items-center">
         <IonSearchbar 
-          className="searchbar container" 
+          className="searchbar" 
           type="search"
           inputMode="search"
           placeholder="Eisladen oder Stadt suchen" 
@@ -107,26 +107,28 @@ const Search = () => {
             setSearchWords(() => e.detail.value.split(' ').filter(word => word))
           }}
         />
-        <IonIcon
-          className="infoIcon"
-          color="primary"
-          button 
-          onClick={e => {
-            e.persist();
-            setPopoverShow({ show: true, event: e })
-          }}
-          icon={informationCircle} 
-        />
-        <IonPopover
-          color="primary"
-          cssClass='info-popover'
-          event={popoverShow.event}
-          isOpen={popoverShow.show}
-          onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
-        >
-          Nichts gefunden? Trage den Eisladen auf der Karte ein.
-        </IonPopover>
-      </IonItem>
+        <div>
+          <IonIcon
+            className="infoIcon me-3"
+            color="primary"
+            button 
+            onClick={e => {
+              e.persist();
+              setPopoverShow({ show: true, event: e })
+            }}
+            icon={informationCircle} 
+          />
+          <IonPopover
+            color="primary"
+            cssClass='info-popover'
+            event={popoverShow.event}
+            isOpen={popoverShow.show}
+            onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
+          >
+            Nichts gefunden? Trage den Eisladen auf der Karte ein.
+          </IonPopover>
+        </div>
+      </div>
       {predictions && segment === 'map' ? (
         <IonList className="py-0">
           {predictions.map(loc => (

@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect, useCallback } from "react";
 import { Context } from '../context/Context';
 import { Geolocation } from '@ionic-native/geolocation';
-import { IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonPage, IonSegment, IonSegmentButton, IonToolbar } from '@ionic/react';
+import { IonButton, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonPage, IonSegment, IonSegmentButton, IonToolbar } from '@ionic/react';
 import { GoogleMap, Marker, MarkerClusterer, useJsApiLoader } from '@react-google-maps/api';
 import { add, addCircleOutline, listCircle, location as myPos, map as mapIcon, refreshCircle, removeCircleOutline, search } from "ionicons/icons";
 import NewLocationForm from "../components/NewLocationForm";
@@ -25,11 +25,12 @@ const Entdecken = () => {
     searchViewport,
     selected, setSelected,
     searchSelected,
-    setSearchText,
     position, setPosition,
     newLocation,
+    checkMsgNewLoc, setCheckMsgNewLoc,
     mapStyles, 
     setInfoModal,
+    setNewLocation,
     setNewLocModal,
     setOpenComments
   } = useContext(Context);
@@ -103,7 +104,9 @@ const Entdecken = () => {
             </IonSegmentButton>
           </IonSegment>
         </IonToolbar>
+        
         <Search />
+
       </IonHeader>
 
       {segment === 'map' && (
@@ -133,7 +136,14 @@ const Entdecken = () => {
               </IonButton>
 
               { user ? ( 
-                <IonButton className="add-control" onClick={() => setAutocompleteModal(true)} title="Neue Adresse hinzufügen">
+                <IonButton 
+                  className="add-control" 
+                  onClick={() => {
+                    setNewLocation(null);
+                    setAutocompleteModal(true)
+                  }} 
+                  title="Neue Adresse hinzufügen"
+                >
                   <IonLabel className="me-1">Neuer Laden</IonLabel>
                   <IonIcon slot="start" icon={add} />
                 </IonButton>
@@ -252,7 +262,10 @@ const Entdecken = () => {
                     optimized={false}
                     title={`${newLocation.address.street} ${newLocation.address.number} ${newLocation.address.zipcode} ${newLocation.address.city}`}
                     cursor='pointer'
-                    onClick={() => setNewLocModal(true)}
+                    onClick={() => {
+                      setCheckMsgNewLoc('');
+                      setNewLocModal(true)
+                    }}
                     zIndex={3}
                   />
                   <NewLocationForm />
@@ -261,8 +274,16 @@ const Entdecken = () => {
 
               {selected ? <SelectedMarker /> : null}
 
+
             </GoogleMap>
+            
+            {checkMsgNewLoc && (
+              <div className="checkMsg">
+                {checkMsgNewLoc}
+              </div>
+            )}
           </div>
+
         </IonContent>
       )}
 

@@ -56,10 +56,7 @@ const Login = () => {
               <IonLabel position='floating' htmlFor="email">E-Mail</IonLabel>
               <Controller 
                 control={control}
-                render={({ 
-                  field: { onChange, value },
-                  fieldState: { invalid, isTouched, isDirty, error },
-                }) => (
+                render={({ field: { onChange, value } }) => (
                   <IonInput type="email" inputmode="email" value={value} onIonChange={e => onChange(e.detail.value)} />
                   )}
                   name="email"
@@ -72,10 +69,7 @@ const Login = () => {
               <IonLabel position='floating' htmlFor="password">Passwort</IonLabel>
               <Controller 
                 control={control}
-                render={({ 
-                  field: { onChange, value },
-                  fieldState: { invalid, isTouched, isDirty, error },
-                }) => (
+                render={({ field: { onChange, value } }) => (
                   <IonInput type="password" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
                   )}
                   name="password"

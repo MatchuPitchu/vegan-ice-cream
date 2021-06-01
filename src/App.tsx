@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { Context } from "./context/Context";
 import { Redirect, Route } from 'react-router-dom';
 import { IonReactRouter } from '@ionic/react-router';
@@ -49,7 +49,7 @@ import ResetPassword from './components/Auth/ResetPassword';
 import SetNewPassword from './components/Auth/SetNewPassword';
 
 const App: React.FC = () => {
-  const { searchText, setSearchText, user } = useContext(Context);
+  const { user } = useContext(Context);
 
   return (
     <IonApp>
@@ -89,7 +89,7 @@ const App: React.FC = () => {
                 <IonIcon icon={bookmarks} />
                 <IonLabel className="labelTabs">Favoriten</IonLabel>
                 {user && (
-                  <IonBadge color="secondary">{user.favorite_locations && user.favorite_locations.length ? user.favorite_locations.length : ''}</IonBadge>
+                  <IonBadge color="secondary">{user.favorite_locations.length || 0}</IonBadge>
                 )}
               </IonTabButton>
             </IonTabBar>

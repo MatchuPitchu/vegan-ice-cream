@@ -6,21 +6,19 @@ import { Context } from '../context/Context';
 const FavLocBtn = ({selectedLoc}) => {
   const { 
     user,
-    selected,
     alertUpdateFav, setAlertUpdateFav,
-    addFavLoc,
-    removeFavLoc
+    addFavLoc, removeFavLoc,
   } = useContext(Context);
 
   return (
     <>
       {user.favorite_locations.find(loc => loc._id === selectedLoc._id) ? (
-        <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: true, location: selected})}>
+        <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: true, location: selectedLoc})}>
           <IonIcon icon={bookmarks}/>
           <IonBadge slot="end" color="danger">-</IonBadge>
         </IonButton>
         ) : (
-        <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, addStatus: true, location: selected})}>
+        <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, addStatus: true, location: selectedLoc})}>
           <IonIcon icon={bookmarksOutline}/>
           <IonBadge slot="end" color="success">+</IonBadge>  
         </IonButton>
