@@ -1,7 +1,8 @@
 import { useContext } from 'react';
 import { Context } from "../context/Context";
+import { menuController } from '@ionic/core';
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonPage } from '@ionic/react';
-import { bulb, closeCircleOutline, documentLock, helpCircle, logoCss3, logoHtml5, logoIonic, logoJavascript, logoNodejs, logoReact } from 'ionicons/icons';
+import { bulb, closeCircleOutline, documentLock, helpCircle, lockClosed, logoCss3, logoHtml5, logoIonic, logoJavascript, logoNodejs, logoReact } from 'ionicons/icons';
 
 const About = () => {
   const { setShowAbout, toggle } = useContext(Context);
@@ -119,7 +120,15 @@ const About = () => {
             <p>Michael Flohr</p>
             <p>Ehrenfelsstraße 13, 10318 Berlin</p>
           </IonCardContent>
-        </IonCard>       
+        </IonCard>
+        <IonCard>  
+          <IonCardContent>
+            <IonItem button onClick={() => { setShowAbout(false); menuController.toggle() }} className="my-1" routerLink='/datenschutz' lines="none" detail={false}>
+              <IonIcon slot="start" icon={lockClosed} />
+              <IonLabel>Datenschutzhinweise</IonLabel>
+            </IonItem>
+          </IonCardContent>
+        </IonCard>  
       </IonContent>
     </IonPage>
   );
