@@ -1,8 +1,7 @@
 import { useContext } from "react";
 import { Context } from '../context/Context';
-import ReactStars from "react-rating-stars-component";
-import { IonSlide, IonCard, IonAvatar, IonLabel, IonCardContent, IonCardSubtitle, IonItem, IonButton, IonIcon } from '@ionic/react';
-import { open, sunny } from "ionicons/icons";
+import { isPlatform, IonSlide, IonCard, IonLabel, IonSlides, IonItem, IonButton, IonIcon } from '@ionic/react';
+import { open } from "ionicons/icons";
 import SelectedMarker from "./SelectedMarker";
 import Ratings from "./Ratings";
 
@@ -14,10 +13,25 @@ const TopLocations = () => {
     topLocations,
     selected, setSelected,
     setInfoModal,
-    setOpenComments
+    setOpenComments,
+    showTopLoc,
   } = useContext(Context);
 
-  return topLocations.length && topLocations.map((loc, i) => (
+  const slideOpts = {
+    initialSlide: 0,
+    speed: 400
+  };
+
+  return (
+    <IonSlides
+      hidden={showTopLoc ? false : true}
+      // key important, otherwise IonSlides is breaking: https://github.com/ionic-team/ionic-framework/issues/18782
+      key={topLocations[0]._id} 
+      className={`${isPlatform('desktop') ? 'slideDesktop' : 'slideMobile'}`} 
+      pager={true} 
+      options={slideOpts}
+    >
+    {topLocations.map((loc, i) => (
       <IonSlide
         key={loc._id}
         className="text-start"
@@ -59,8 +73,9 @@ const TopLocations = () => {
         {selected ? <SelectedMarker /> : null}
       
       </IonSlide>
-      )
-    )
-};
+      ))}
+    </IonSlides>
+  )
+}
 
 export default TopLocations;
