@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package eismitstil.app;
 
 import android.os.Bundle;
 

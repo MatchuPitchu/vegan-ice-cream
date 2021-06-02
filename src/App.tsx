@@ -47,6 +47,7 @@ import './theme/variables.css';
 import './App.css'
 import ResetPassword from './components/Auth/ResetPassword';
 import SetNewPassword from './components/Auth/SetNewPassword';
+import Datenschutz from './pages/Datenschutz';
 
 const App: React.FC = () => {
   const { user } = useContext(Context);
@@ -71,6 +72,7 @@ const App: React.FC = () => {
               <Route path="/auth/activate/user/:id" component={ActivateUser} exact/>
               <Route path="/auth/reset-password" component={ResetPassword} exact/>
               <Route path="/auth/reset-password/user/:id" component={SetNewPassword} exact/>
+              <Route path="/datenschutz" component={Datenschutz} exact/>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
               <IonTabButton tab="home" href="/home">
