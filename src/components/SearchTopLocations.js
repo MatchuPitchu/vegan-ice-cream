@@ -78,6 +78,8 @@ const Search = () => {
     }
     if(!value) {
       setPredictions([]);
+      setTopLocations([]);
+      setNoTopLoc(true);
     }
   };
 

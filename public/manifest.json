@@ -2,20 +2,68 @@
   "short_name": "Eis mit Stil",
   "name": "Eis mit Stil",
   "icons": [
-    {
-      "src": "assets/icon/favicon.png",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "assets/icon/icon.png",
-      "type": "image/png",
-      "sizes": "512x512",
-      "purpose": "maskable"
-    }
+      {
+          "src": "https://eis-mit-stil.netlify.app/assets/icon/favicon.png",
+          "sizes": "64x64 32x32 24x24 16x16",
+          "type": "image/x-icon"
+      },
+      {
+          "src": "https://eis-mit-stil.netlify.app/assets/icon/icon.png",
+          "type": "image/png",
+          "sizes": "512x512",
+          "purpose": "maskable"
+      }
   ],
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#ffffff",
-  "background_color": "#ffffff"
+  "background_color": "#f9ce64",
+  "url": "https://eis-mit-stil.netlify.app",
+  "manifestUrl": "https://eis-mit-stil.netlify.app/manifest.json",
+  "lang": "de",
+  "description": "Eis mit Stil lässt dich Eisläden mit veganem Angebot entdecken, eintragen und bewerten. Genieße dein Eis und lasse andere an deinem Genuß teilhaben. Mit der Vegan Ice Cream App bleibt dir der Sommer das ganze Jahr über erhalten.",
+  "orientation": "portrait",
+  "screenshots" : [
+    {
+      "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-home-light.png",
+      "sizes": "801x1248",
+      "type": "image/png"
+    },
+    {
+      "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-home-dark.png",
+      "sizes": "801x1248",
+      "type": "image/png"
+    },
+    {
+      "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-profil.png",
+      "sizes": "801x1248",
+      "type": "image/png"
+    },
+    {
+      "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-entdecken.png",
+      "sizes": "801x1248",
+      "type": "image/png"
+    },
+    {
+      "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-entdecken-liste.png",
+      "sizes": "801x1248",
+      "type": "image/png"
+    },
+    {
+      "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-info-modal.png",
+      "sizes": "801x1248",
+      "type": "image/png"
+    },
+    {
+      "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-entdecken-liste.png",
+      "sizes": "801x1248",
+      "type": "image/png"
+    },
+    {
+      "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-bewerten.png",
+      "sizes": "801x1248",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["food", "lifestyle", "navigation"]
 }
