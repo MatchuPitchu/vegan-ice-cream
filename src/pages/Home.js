@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import { Context } from "../context/Context";
-import { IonButton, IonCard, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonItem, IonLabel, IonPage, IonSlides, isPlatform } from '@ionic/react';
+import { IonButton, IonCard, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonItem, IonLabel, IonPage, IonSlide, IonSlides, isPlatform } from '@ionic/react';
 import { gift, iceCream, logoPaypal, star } from 'ionicons/icons';
 import SearchTopLocations from '../components/SearchTopLocations';
 import TopLocations from '../components/TopLocations';
@@ -9,7 +9,6 @@ import TopLocations from '../components/TopLocations';
 const Home = () => {
   const { 
     toggle, 
-    cities,
     cityName,
     topLocations,
     noTopLoc,
@@ -21,11 +20,6 @@ const Home = () => {
     // (number) means duration
     setTimeout(() => contentRef.current && contentRef.current.scrollToBottom(500), 500);
   }, [topLocations])
-
-  const slideOpts = {
-    initialSlide: 0,
-    speed: 400
-  };
 
   return (
     <IonPage>
@@ -68,17 +62,6 @@ const Home = () => {
 
         <SearchTopLocations />
 
-        {topLocations.length ? (
-          <IonSlides 
-            key={topLocations.length} 
-            className={`${isPlatform('desktop') ? 'slideDesktop' : 'slideMobile'}`} 
-            pager={true} 
-            options={slideOpts}
-          >
-            <TopLocations />
-          </IonSlides> 
-        ): null}
-
         {noTopLoc && (
           <div className="container text-center">
             <IonCard>
@@ -92,6 +75,8 @@ const Home = () => {
             </IonCard>
           </div>
         )}
+
+        {topLocations.length ? <TopLocations /> : null}
 
       </IonContent>
 

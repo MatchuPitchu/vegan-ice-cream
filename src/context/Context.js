@@ -27,6 +27,7 @@ const AppState = ({children}) => {
   const [searchText, setSearchText] = useState('');
   const [cityName, setCityName] = useState('');
   const [noTopLoc, setNoTopLoc] = useState(false);
+  const [showTopLoc, setShowTopLoc] = useState(false);
   const [segment, setSegment]= useState('map');
   const [map, setMap]= useState(null);
   const [viewport, setViewport] = useState({});
@@ -362,6 +363,7 @@ const AppState = ({children}) => {
         searchText, setSearchText,
         cityName, setCityName,
         noTopLoc, setNoTopLoc,
+        showTopLoc, setShowTopLoc,
         segment, setSegment,
         map, setMap,
         viewport, setViewport,

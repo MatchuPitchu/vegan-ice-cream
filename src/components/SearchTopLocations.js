@@ -14,6 +14,7 @@ const Search = () => {
     setTopLocations,
     cityName, setCityName,
     noTopLoc, setNoTopLoc,
+    showTopLoc, setShowTopLoc,
   } = useContext(Context);
   const [predictions, setPredictions] = useState([]);
   const [showPredict, setShowPredict] = useState(false);
@@ -40,9 +41,11 @@ const Search = () => {
       const data = await res.json();
       if(data.length) {
         setTopLocations(data);
+        setShowTopLoc(true)
       } else {
-        setTopLocations([]);
+        // setTopLocations([]);
         setNoTopLoc(true);
+        setShowTopLoc(false)
       }
     } catch (error) {
       setError('Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in Deutschland eintragen.')
@@ -78,8 +81,8 @@ const Search = () => {
     }
     if(!value) {
       setPredictions([]);
-      setTopLocations([]);
-      setNoTopLoc(true);
+      setNoTopLoc(false);
+      setShowTopLoc(false);
     }
   };
 
