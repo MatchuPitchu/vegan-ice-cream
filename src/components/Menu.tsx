@@ -21,8 +21,7 @@ import Profil from './Profil';
 
 const Menu: React.FC = () => {
   const {
-    setUser,
-    isAuth, setIsAuth,
+    isAuth,
     logout,
     toggle,
     enterAnimationLft, leaveAnimationLft, 

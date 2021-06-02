@@ -50,7 +50,7 @@ const SearchFlavors = () => {
         // if every item is true, than this location is returned
         if(found.every(v => v === true)) return flavor;
       });
-      const result = res.slice(0, 4);
+      const result = res.slice(0, 5);
       setFlavorsPredict(result);
     }
     if(!value) setFlavorsPredict([]);

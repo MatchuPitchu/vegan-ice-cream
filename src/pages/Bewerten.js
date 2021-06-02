@@ -67,8 +67,8 @@ const Bewerten = () => {
 
   useEffect(() => {
     setValue("name", flavor.name ? searchFlavor : undefined);
-    setValue("type_fruit", flavor.name ? flavor.type_fruit : undefined);
-    setValue("type_cream", flavor.name ? flavor.type_cream : undefined);
+    setValue("type_fruit", flavor.name ? flavor.type_fruit : false);
+    setValue("type_cream", flavor.name ? flavor.type_cream : false);
     setValue("color1", flavor.name ? flavor.color.primary : undefined);
     setValue("color2", flavor.name ? flavor.color.secondary : undefined);
   }, [flavor]);
@@ -84,6 +84,10 @@ const Bewerten = () => {
   }
 
   const createFlavor = (data, comment) => {
+    console.log('DATA', data)
+    console.log('newComment', comment)
+    console.log('SEARCHSELECTED', searchSelected._id)
+
     setLoading(true);
     const token = localStorage.getItem('token');
     try {
@@ -111,10 +115,12 @@ const Bewerten = () => {
         };
         
         const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors/${comment._id}`, options);
-        await res.json();
+        const result = await res.json();
+        console.log('DATA', result)
       }
-
+      
       const { name, type_fruit, type_cream, color1, color2 } = data
+      console.log(name, type_fruit, type_cream, color1, color2)
       uploadFlavor(name, type_fruit, type_cream, color1, color2);
       
     } catch (error) {
@@ -151,7 +157,7 @@ const Bewerten = () => {
         lactose_free: data.lactose_free,
         not_specified: data.not_specified,
         rating_vegan_offer: data.rating_vegan_offer, 
-        date: data.date ? data.date : undefined,
+        date: data.date || undefined,
       };
       const options = {
         method: "POST",
