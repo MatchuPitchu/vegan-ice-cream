@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect, useCallback } from "react";
 import { Context } from '../context/Context';
 import { Geolocation } from '@ionic-native/geolocation';
-import { IonButton, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonPage, IonSegment, IonSegmentButton, IonToolbar } from '@ionic/react';
+import { IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonPage, IonSegment, IonSegmentButton, IonToolbar } from '@ionic/react';
 import { GoogleMap, Marker, MarkerClusterer, useJsApiLoader } from '@react-google-maps/api';
 import { add, addCircleOutline, listCircle, location as myPos, map as mapIcon, refreshCircle, removeCircleOutline, search } from "ionicons/icons";
 import NewLocationForm from "../components/NewLocationForm";
@@ -39,7 +39,7 @@ const Entdecken = () => {
   useEffect(() => {
     if(map) setTimeout(() => searchViewport(), 2000);
   }, [map])
-  
+
   useEffect(() => {
     if(user && user.home_city.geo.lat) setCenter({ lat:  user.home_city.geo.lat, lng: user.home_city.geo.lng });
       else setCenter({ lat:  52.524, lng: 13.410 })

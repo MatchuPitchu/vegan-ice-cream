@@ -186,16 +186,16 @@ const AppState = ({children}) => {
   }, [viewport, searchSelected])
 
   const searchViewport = () => {
-    let { Ua, La } = map.getBounds();
+    let { oc, Eb } = map.getBounds();
     const latLngBounds = {
-      southLat: Ua.g,
-      westLng: La.g,
-      northLat: Ua.i,
-      eastLng: La.i,
+      southLat: oc.g,
+      westLng: Eb.g,
+      northLat: oc.i,
+      eastLng: Eb.i,
     };
     setViewport(latLngBounds);
   }
-  
+
   useEffect(() => {
     const initTheme = () => {
       var darkSelected = (localStorage.getItem('themeSwitch') !== null && localStorage.getItem('themeSwitch') === 'dark');
