@@ -122,12 +122,10 @@ const About = () => {
           </IonCardContent>
         </IonCard>
         <IonCard>  
-          <IonCardContent>
-            <IonItem button onClick={() => { setShowAbout(false); menuController.toggle() }} className="my-1" routerLink='/datenschutz' lines="none" detail={false}>
-              <IonIcon slot="start" icon={lockClosed} />
-              <IonLabel>Datenschutzhinweise</IonLabel>
-            </IonItem>
-          </IonCardContent>
+          <IonItem button onClick={() => { setShowAbout(false); menuController.toggle() }} className="my-1" routerLink='/datenschutz' lines="none" detail={false}>
+            <IonIcon slot="start" icon={lockClosed} />
+            <IonLabel className="ion-text-wrap">Datenschutz</IonLabel>
+          </IonItem>
         </IonCard>  
       </IonContent>
     </IonPage>
