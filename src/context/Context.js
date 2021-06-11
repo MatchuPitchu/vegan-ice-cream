@@ -186,8 +186,6 @@ const AppState = ({children}) => {
   }, [viewport, searchSelected])
 
   const searchViewport = () => {
-    // let test = map.getBounds();
-    // console.log('TESTTTT', test)
     let { lc, Eb } = map.getBounds();
     const latLngBounds = {
       southLat: lc.g,

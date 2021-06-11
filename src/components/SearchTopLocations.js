@@ -24,8 +24,8 @@ const Search = () => {
 
   const onSubmit = async ({city}) => {
     setLoading(true);
-    setCityName(city);
-
+    const cityCapitalized = city.replace(/\b\w/g, l => l.toUpperCase())
+    setCityName(cityCapitalized);
     try {
       const limit = 15;
       const options = {
@@ -34,7 +34,7 @@ const Search = () => {
           "Content-Type": "application/json",
         },
         // converts JS data into JSON string.
-        body: JSON.stringify({ city }),
+        body: JSON.stringify({ cityCapitalized }),
         credentials: "include",
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/top-in-city?limit=${limit}`, options)

@@ -211,7 +211,7 @@ const Bewerten = () => {
             <IonItem lines="full">
               <IonIcon icon={bulb} color="warning"/>
               <IonLabel className="ion-text-wrap ms-1" color="warning">
-                Beziehe deine Bewertung bitte nur auf 1 Eissorte
+                Bewerte nur 1 Eissorte
               </IonLabel>
               
               <IonIcon
@@ -388,7 +388,7 @@ const Bewerten = () => {
                   />
                 )}
                 name="rating_quality"
-                rules={{ required: true }}
+                rules={{ required: true, min: 1 }}
               />
             </IonItem>
             {showError("rating_quality", errors)}
@@ -479,7 +479,7 @@ const Bewerten = () => {
                   />
                 )}
                 name="rating_vegan_offer"
-                rules={{ required: true }}
+                rules={{ required: true, min: 1 }}
               />
             </IonItem>
             {showError("rating_vegan_offer", errors)}

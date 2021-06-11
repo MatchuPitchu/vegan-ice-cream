@@ -873,6 +873,10 @@ mark {
   --background: transparent;
 }
 
+.websiteLink {
+  font-size: 0.8rem;
+}
+
 .newLocModal .modal-wrapper {
   height: 100%;
   width: 100%;
