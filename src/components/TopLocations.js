@@ -46,7 +46,11 @@ const TopLocations = () => {
                 {loc.name}
                 <p>{loc.address.street} {loc.address.number}</p>
                 <p className="mb-2">{loc.address.zipcode} {loc.address.city}</p>
-                <p><a href={loc.location_url} target="_blank">Webseite</a></p>
+                {loc.location_url && ( 
+                  <p>
+                    <a className="websiteLink" href={loc.location_url.includes("http") ? loc.location_url : `//${loc.location_url}`} target="_blank">{loc.location_url}</a>
+                  </p> 
+                )}
               </IonLabel>
             </IonItem>
             <div className="px-3 py-2">
