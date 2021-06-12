@@ -1,9 +1,9 @@
 import { useContext, useState, useEffect, useCallback } from "react";
 import { Context } from '../context/Context';
 import { Geolocation } from '@ionic-native/geolocation';
-import { IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonPage, IonSegment, IonSegmentButton, IonToolbar } from '@ionic/react';
+import { IonPopover, IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonPage, IonSegment, IonSegmentButton, IonToolbar } from '@ionic/react';
 import { GoogleMap, Marker, MarkerClusterer, useJsApiLoader } from '@react-google-maps/api';
-import { add, addCircleOutline, listCircle, location as myPos, map as mapIcon, refreshCircle, removeCircleOutline, search } from "ionicons/icons";
+import { add, addCircleOutline, create, listCircle, location as myPos, logIn, map as mapIcon, refreshCircle, removeCircleOutline, search } from "ionicons/icons";
 import NewLocationForm from "../components/NewLocationForm";
 import Search from "../components/Search";
 import SelectedMarker from '../components/SelectedMarker';
@@ -35,6 +35,7 @@ const Entdecken = () => {
     setOpenComments
   } = useContext(Context);
   const [libraries] = useState(['places']);
+  const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
 
   useEffect(() => {
     if(map) setTimeout(() => searchViewport(), 2000);
@@ -135,19 +136,41 @@ const Entdecken = () => {
                 <IonIcon slot="start" icon={search} />
               </IonButton>
 
-              { user ? ( 
-                <IonButton 
-                  className="add-control" 
-                  onClick={() => {
+              <IonButton 
+                className="add-control" 
+                onClick={(e) => {
+                  if (user) {
                     setNewLocation(null);
-                    setAutocompleteModal(true)
-                  }} 
-                  title="Neue Adresse hinzufügen"
+                    setAutocompleteModal(true);
+                  } else {
+                    e.persist();
+                    setPopoverShow({ show: true, event: e })
+                  }
+                }}
+                title="Neue Adresse hinzufügen"
+              >
+                <IonLabel className="me-1">Neuer Laden</IonLabel>
+                <IonIcon slot="start" icon={add} />
+              </IonButton>
+              <IonPopover
+                color="primary"
+                cssClass='info-popover'
+                event={popoverShow.event}
+                isOpen={popoverShow.show}
+                onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
                 >
-                  <IonLabel className="me-1">Neuer Laden</IonLabel>
-                  <IonIcon slot="start" icon={add} />
-                </IonButton>
-               ) : null}
+                <div className="my-2">
+                  <div>Nur für eingeloggte User</div>
+                  <IonButton routerLink='/login' fill="solid" className="click-btn mt-2">
+                    <IonLabel>Login</IonLabel>
+                    <IonIcon className="pe-1" icon={logIn} />
+                  </IonButton>
+                  <IonButton routerLink='/register' fill="solid" className="click-btn">
+                    <IonLabel>Registrieren</IonLabel>
+                    <IonIcon className="pe-1" icon={create} />
+                  </IonButton>
+                </div>
+              </IonPopover>
                
               <AutocompleteForm />
 
@@ -255,7 +278,7 @@ const Entdecken = () => {
                     position={{lat: newLocation.address.geo.lat, lng: newLocation.address.geo.lng}}
                     icon={{
                       url: './assets/icons/newLocation-marker.svg',
-                      scaledSize: new window.google.maps.Size(70, 70),
+                      scaledSize: new window.google.maps.Size(40, 40),
                       origin: new window.google.maps.Point(0, 0),
                       anchor: new window.google.maps.Point(15, 15)
                     }}

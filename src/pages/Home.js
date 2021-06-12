@@ -1,19 +1,23 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import { Context } from "../context/Context";
-import { IonButton, IonCard, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonItem, IonLabel, IonPage, IonSlide, IonSlides, isPlatform } from '@ionic/react';
-import { gift, iceCream, logoPaypal, star } from 'ionicons/icons';
+import { IonButton, IonCard, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonItem, IonLabel, IonPage, IonPopover, IonSlide, IonSlides, isPlatform } from '@ionic/react';
+import { add, addCircle, create, gift, iceCream, logIn, logoPaypal, star } from 'ionicons/icons';
 import SearchTopLocations from '../components/SearchTopLocations';
 import TopLocations from '../components/TopLocations';
 
 
 const Home = () => {
-  const { 
+  const {
+    user,
     toggle, 
     cityName,
     topLocations,
     noTopLoc,
+    setNewLocation,
+    setAutocompleteModal,
   } = useContext(Context);
   const [show, setShow] = useState(false);
+  const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
   const contentRef = useRef(null);
 
   useEffect(() => {    
@@ -49,15 +53,49 @@ const Home = () => {
           <div className={`${toggle ? "overlay" : "overlay-light"}`}>
             <IonIcon className="startIceIcon" icon={iceCream} />
           </div>
-          <IonButton className="start-btn-wrapper" routerLink="/entdecken" fill="clear">
+          <IonButton
+            className="start-btn-wrapper" 
+            routerLink={`${user ? "/entdecken" : ""}`}
+            fill="clear"
+            onClick={(e) => {
+              if(user) {
+                setNewLocation(null);
+                setAutocompleteModal(true);
+              } else { 
+                e.persist();
+                setPopoverShow({ show: true, event: e })
+              }
+            }} 
+          >
             <div className="start-btn-container">
-              <a role="button">
+              <a>
                 <span className="btn-ring"></span>
                 <span className="btn-border"></span>
-                <span className="btn-text">Start</span>
+                <span className="btn-text">
+                  <IonIcon icon={add}/><br/>Eisladen<br/>eintragen
+                </span>
               </a>
             </div>
           </IonButton>
+          <IonPopover
+            color="primary"
+            cssClass='info-popover'
+            event={popoverShow.event}
+            isOpen={popoverShow.show}
+            onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
+            >
+            <div className="my-2">
+              <div>Nur für eingeloggte User</div>
+              <IonButton routerLink='/login' fill="solid" className="click-btn mt-2">
+                <IonLabel>Login</IonLabel>
+                <IonIcon className="pe-1" icon={logIn} />
+              </IonButton>
+              <IonButton routerLink='/register' fill="solid" className="click-btn">
+                <IonLabel>Registrieren</IonLabel>
+                <IonIcon className="pe-1" icon={create} />
+              </IonButton>
+            </div>
+          </IonPopover>
         </div>
 
         <SearchTopLocations />

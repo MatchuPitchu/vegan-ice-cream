@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
 import { Context } from '../context/Context';
 import { menuController } from '@ionic/core';
-import { IonBadge, IonButton, IonButtons, IonIcon, IonMenu, IonPage, IonPopover, IonToolbar } from '@ionic/react';
-import { cog, storefront } from 'ionicons/icons';
+import { IonBadge, IonButton, IonButtons, IonIcon, IonLabel, IonMenu, IonPage, IonPopover, IonSegment, IonSegmentButton, IonToolbar } from '@ionic/react';
+import { cog, listCircle, storefront, map as mapIcon } from 'ionicons/icons';
 import Menu from './Menu';
 import Toggle from './Toggle';
 
@@ -10,18 +10,19 @@ const HeaderApp = () => {
   const {
     toggle,
     user,
-    numNewLoc
+    numNewLoc,
   } = useContext(Context);
 
   const [ popoverShow, setPopoverShow ] = useState({ show: false, event: undefined });
 
   return (
     <>
-      <IonToolbar className="headerImg">
-        <div className="ms-1">
+      <IonToolbar>
+        <IonButtons slot="start" >
           <Toggle />
-        </div>
-        <IonButtons slot="primary" >
+        </IonButtons>
+   
+        <IonButtons slot="end" >
           {user && (
             <>
               <IonIcon

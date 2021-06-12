@@ -84,7 +84,7 @@ const AutocompleteForm = () => {
     };
     if(!duplicate) fetchData();
     setSearchAutocomplete('');
-    setCheckMsgNewLoc('Klicke auf das grüne Icon und bestätige die Daten des neuen Eisladens')
+    setCheckMsgNewLoc('Bestätige noch die Daten - klicke auf das grüne Icon')
     setLoading(false);
     setAutocompleteModal(false);
   };
