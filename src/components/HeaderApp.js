@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
 import { Context } from '../context/Context';
 import { menuController } from '@ionic/core';
-import { IonBadge, IonButton, IonButtons, IonIcon, IonLabel, IonMenu, IonPage, IonPopover, IonSegment, IonSegmentButton, IonToolbar } from '@ionic/react';
-import { cog, listCircle, storefront, map as mapIcon } from 'ionicons/icons';
+import { IonBadge, IonButton, IonButtons, IonIcon, IonMenu, IonPage, IonPopover, IonToolbar } from '@ionic/react';
+import { cog, storefront } from 'ionicons/icons';
 import Menu from './Menu';
 import Toggle from './Toggle';
 
@@ -17,7 +17,7 @@ const HeaderApp = () => {
 
   return (
     <>
-      <IonToolbar>
+      <IonToolbar className="headerToolbar">
         <IonButtons slot="start" >
           <Toggle />
         </IonButtons>
@@ -52,7 +52,7 @@ const HeaderApp = () => {
             <IonIcon icon={cog} />
           </IonButton>
         </IonButtons>
-      </IonToolbar>   
+      </IonToolbar>
 
       <IonMenu contentId="settings" type="overlay" swipeGesture={true}>
         <Menu />
