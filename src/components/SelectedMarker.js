@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import { Context } from '../context/Context';
 import { IonButton, IonCard, IonContent, IonIcon, IonImg, IonItem, IonItemGroup, IonLabel, IonModal } from "@ionic/react";
 import ReactStars from "react-rating-stars-component";
-import { add, caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, iceCream } from "ionicons/icons";
+import { add, caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, iceCream, star, starHalfOutline, starOutline } from "ionicons/icons";
 import FavLocBtn from "./FavLocBtn";
 import LoadingError from "./LoadingError";
 import Ratings from "./Ratings";
@@ -161,6 +161,7 @@ const SelectedMarker = () => {
                                   <ReactStars 
                                     count={5}
                                     value={comment.rating_vegan_offer}
+                                    isHalf={true}
                                     edit={false}
                                     size={18}
                                     color='#9b9b9b'

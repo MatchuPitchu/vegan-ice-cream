@@ -33,12 +33,14 @@ const Search = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        // converts JS data into JSON string.
-        body: JSON.stringify({ cityCapitalized }),
+        // converts JS data into JSON string
+        // backend expects key city
+        body: JSON.stringify({ city: cityCapitalized }),
         credentials: "include",
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/top-in-city?limit=${limit}`, options)
       const data = await res.json();
+      console.log(data)
       if(data.length) {
         setTopLocations(data);
         setShowTopLoc(true)
