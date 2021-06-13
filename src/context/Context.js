@@ -160,7 +160,7 @@ const AppState = ({children}) => {
   useEffect(() => {
     const updateLocInViewport = async () => {
       try {
-        const limit = 50;
+        const limit = 500;
         const options = {
           method: "POST",
           headers: {
