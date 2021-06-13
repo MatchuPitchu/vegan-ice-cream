@@ -137,8 +137,8 @@ const AutocompleteForm = () => {
       </IonItem>
       <IonContent>
         <form className="d-flex flex-column" onSubmit={onSubmit}>
-          <IonItem className="mt-3 addLocForm" lines="none">
-            <div className="container ion-text-wrap" position="stacked">
+          <IonItem className="mt-3 px-2 addLocForm" lines="none">
+            <div className="ion-text-wrap" position="stacked">
               <IonCardSubtitle>Welchen Eisladen hast du entdeckt?</IonCardSubtitle>
               <p style={{fontSize: '0.8rem'}}>Name und Stadt reichen zumeist. Sonst trage die korrekte Adresse ein.</p>
             </div>
