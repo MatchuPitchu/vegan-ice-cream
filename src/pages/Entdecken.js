@@ -92,19 +92,23 @@ const Entdecken = () => {
 
   return (isLoaded) ? (
     <IonPage>
-      <IonToolbar className="segmentsToolbar">
-        <IonSegment onIonChange={(e) => setSegment(e.detail.value)} value={segment}>
-          <IonSegmentButton value='map' layout="icon-start">
+      <div>
+        <IonSegment
+          onIonChange={(e) => setSegment(e.detail.value)} 
+          value={segment}
+          swipe-gesture
+        >
+          <IonSegmentButton className="segmentBtn" value='map' layout="icon-start">
             <IonLabel>Karte</IonLabel>
             <IonIcon icon={mapIcon} />
           </IonSegmentButton>
-          <IonSegmentButton value='list' layout="icon-start">
+          <IonSegmentButton className="segmentBtn" value='list' layout="icon-start">
             <IonLabel>Liste</IonLabel>
             <IonIcon icon={listCircle} />
           </IonSegmentButton>
         </IonSegment>
-      </IonToolbar>
-      
+      </div>
+
       <Search />
 
       {segment === 'map' && (

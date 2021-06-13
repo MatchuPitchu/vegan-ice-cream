@@ -329,9 +329,13 @@ ion-badge {
 }
 
 /*********** Searchbar ************/
+.searchbar {
+  height: 50px;
+}
+
 .sc-ion-searchbar-ios-h {
-  height: 47px;
-  padding: 5px;
+  height: 43px;
+  padding: 2px;
 }
 
 .searchbar-input::placeholder {
@@ -344,14 +348,14 @@ ion-badge {
 
 .infoIcon:hover {
   border: 1px solid var(--ion-color-primary);
-  border-radius: 90%;
+  border-radius: 50%;
   background-color: var(--ion-background-color);
   cursor: pointer;
 }
 
 .warningIcon:hover {
   border: 1px solid var(--ion-color-warning);
-  border-radius: 90%;
+  border-radius: 50%;
   background-color: var(--ion-background-color);
   cursor: pointer;
 }
@@ -759,14 +763,9 @@ mark {
 }
 
 /********** Tab Entdecken & Map **********/
-
-.segmentsToolbar {
-  height: 39px;
-}
-
-.segments {
-  display: flex;
-  flex-direction: column;
+.segmentBtn {
+  --background-hover: transparent;
+  --color-hover: var(--ion-color-primary);
 }
 
 .headerMap {
