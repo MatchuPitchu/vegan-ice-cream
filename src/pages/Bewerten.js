@@ -4,7 +4,7 @@ import ReactStars from "react-rating-stars-component";
 import { CirclePicker } from "react-color";
 import { Controller, useForm } from 'react-hook-form';
 import { IonButton, IonCard, IonCardContent, IonCardTitle, IonContent, IonDatetime, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonPopover, IonSearchbar, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToast, IonToggle, IonToolbar } from '@ionic/react';
-import { add, bulb, colorPaletteOutline, informationCircle, search } from 'ionicons/icons';
+import { add, bulb, colorPaletteOutline, informationCircle, search, star, starHalfOutline, starOutline } from 'ionicons/icons';
 import showError from '../components/showError';
 import Search from '../components/Search';
 import SearchFlavors from '../components/SearchFlavors';
@@ -84,10 +84,6 @@ const Bewerten = () => {
   }
 
   const createFlavor = (data, comment) => {
-    console.log('DATA', data)
-    console.log('newComment', comment)
-    console.log('SEARCHSELECTED', searchSelected._id)
-
     setLoading(true);
     const token = localStorage.getItem('token');
     try {
@@ -113,14 +109,10 @@ const Bewerten = () => {
           body: JSON.stringify(body),
           credentials: "include",
         };
-        
         const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors/${comment._id}`, options);
-        const result = await res.json();
-        console.log('DATA', result)
+        await res.json();
       }
-      
       const { name, type_fruit, type_cream, color1, color2 } = data
-      console.log(name, type_fruit, type_cream, color1, color2)
       uploadFlavor(name, type_fruit, type_cream, color1, color2);
       
     } catch (error) {
@@ -380,6 +372,7 @@ const Bewerten = () => {
                   <ReactStars
                     count={5}
                     value={value}
+                    isHalf={true}
                     onChange={e => onChange(e)}
                     edit={true}
                     size={30}
@@ -471,6 +464,7 @@ const Bewerten = () => {
                   <ReactStars
                     count={5}
                     value={value}
+                    isHalf={true}
                     onChange={e => onChange(e)}
                     edit={true}
                     size={30}
