@@ -63,7 +63,7 @@ const SelectedMarker = () => {
         <div style={toggle ? {backgroundColor: '#23303390' } : {backgroundColor: '#ffffff90'}}>
           <IonItemGroup>
             <IonItem className="modalItem" lines="full">
-              <IonLabel color="text-color">
+              <IonLabel>
                 {selected.address.street} {selected.address.number}
                 <br/>
                 {selected.address.zipcode} {selected.address.city}
@@ -72,7 +72,7 @@ const SelectedMarker = () => {
               </IonLabel>
             </IonItem>
             <IonItem className="modalItem" lines="full">
-              <IonLabel color='primary'>Bewertung schreiben</IonLabel>
+              <IonLabel>Bewertung schreiben</IonLabel>
               <IonButton 
                 onClick={() => {
                   setSearchSelected(selected);
@@ -91,16 +91,16 @@ const SelectedMarker = () => {
         </div>
       
         <IonCard>
-          <div style={toggle ? {backgroundColor: '#233033' } : {backgroundColor: '#fff'}}>          
+          <div style={{backgroundColor: 'var(--ion-item-background)'}}>          
             {selected.location_rating_quality ? (
               <IonItemGroup>
-                <IonItem className="d-flex modalItem" lines="full">
+                <div className="px-3 py-2 borderBottom">
                   <Ratings selectedLoc={selected}/>
-                </IonItem>
+                </div>
 
                 {selected.comments_list[0].text && selected.flavors_listed[0].color.primary ? (
                   <>
-                    <IonItem color="background-color" lines="none">
+                    <IonItem color="background-color" className={`${!openComments && 'borderBottom'}`} lines="none">
                       <IonIcon 
                         className="me-2"
                         color="primary" 
@@ -109,13 +109,12 @@ const SelectedMarker = () => {
                           setOpenComments(prev => !prev);
                         }}
                       />
-                      <IonLabel className="ms-1">Alle Bewertungen anzeigen</IonLabel>
+                      <IonLabel>Alle Bewertungen</IonLabel>
                       <IonButton 
                         fill="solid" 
-                        className="click-btn my-3"
-                        onClick={() => {
-                          setOpenComments(prev => !prev);
-                        }}
+                        slot="end"
+                        className="ratingNum"
+                        onClick={() => setOpenComments(prev => !prev)}
                       >
                         {selected.comments_list.length} 
                       </IonButton>
@@ -142,21 +141,11 @@ const SelectedMarker = () => {
                                 }
                               </div>
                             
-                              <div className="d-flex align-items-center">
-                                <div className="me-2">Eis-Erlebnis</div>
-                                <div>
-                                  <ReactStars
-                                    count={5}
-                                    value={comment.rating_quality}
-                                    edit={false}
-                                    size={18}
-                                    color='#9b9b9b'
-                                    activeColor='#de9c01'
-                                  />
+                              <div className="d-flex align-items-center py-1">
+                                <div className="me-2">
+                                  <div className="ratingContainer">Veganes Angebot</div>
+                                  <div>Eis-Erlebnis</div>
                                 </div>
-                              </div>
-                              <div className="d-flex align-items-center">
-                                <div className="me-2">Veganes Angebot</div>
                                 <div>
                                   <ReactStars 
                                     count={5}
@@ -167,10 +156,19 @@ const SelectedMarker = () => {
                                     color='#9b9b9b'
                                     activeColor='#de9c01'
                                   />
+                                  <ReactStars
+                                    count={5}
+                                    value={comment.rating_quality}
+                                    isHalf={true}
+                                    edit={false}
+                                    size={18}
+                                    color='#9b9b9b'
+                                    activeColor='#de9c01'
+                                  />
                                 </div>
                               </div>
-                              <p className="p-weak mt-1">Datum: {comment.date.replace('T', ' // ').slice(0, 19)}</p>
-                              <p className="p-weak">User: {`${comment.user_id ? comment.user_id.name : 'Konto inaktiv'}`}</p>
+                              <p className="p-weak mt-1">{comment.date.replace('T', ' // ').slice(0, 19)}</p>
+                              <p className="p-weak">{`${comment.user_id ? comment.user_id.name : 'Konto inaktiv'}`}</p>
                             </IonLabel>
                           </IonItem>
                         </div>

@@ -56,7 +56,7 @@ a {
 }
 
 a:hover {
-  color: var(--ion-color-tertiary);
+  color: var(--ion-color-primary-shade);
 }
 
 .errorToast {
@@ -331,6 +331,7 @@ ion-badge {
 /*********** Searchbar ************/
 .searchbar {
   height: 50px;
+  margin-left: 5px;
 }
 
 .sc-ion-searchbar-ios-h {
@@ -763,6 +764,11 @@ mark {
 }
 
 /********** Tab Entdecken & Map **********/
+.segments {
+  margin: 0 auto;
+  width: 96%;
+}
+
 .segmentBtn {
   --background-hover: transparent;
   --color-hover: var(--ion-color-primary);
@@ -885,6 +891,14 @@ mark {
 
 .websiteLink {
   font-size: 0.8rem;
+  color: var(--ion-color-primary-shade);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.websiteLink:hover {
+  color: var(--ion-color-primary-tint);
 }
 
 .newLocModal .modal-wrapper {
@@ -940,6 +954,10 @@ mark {
   font-size: 0.7rem;
   height: 19px;
   width: 25px;
+}
+
+.borderBottom {
+  border-bottom: 1px solid var(--ion-toolbar-background);
 }
 
 .more-infos {
