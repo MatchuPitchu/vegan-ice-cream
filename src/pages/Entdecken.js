@@ -97,6 +97,7 @@ const Entdecken = () => {
           onIonChange={(e) => setSegment(e.detail.value)} 
           value={segment}
           swipe-gesture
+          className="segments"
         >
           <IonSegmentButton className="segmentBtn" value='map' layout="icon-start">
             <IonLabel>Karte</IonLabel>

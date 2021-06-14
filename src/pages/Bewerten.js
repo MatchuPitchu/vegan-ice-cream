@@ -207,7 +207,7 @@ const Bewerten = () => {
               </IonLabel>
               
               <IonIcon
-                className="warningIcon ms-3"
+                className="warningIcon"
                 color="warning"
                 button 
                 onClick={e => {

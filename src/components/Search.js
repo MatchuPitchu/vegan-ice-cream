@@ -109,7 +109,7 @@ const Search = () => {
         />
         <div>
           <IonIcon
-            className="infoIcon me-2"
+            className="infoIcon me-3"
             color="primary"
             button 
             onClick={e => {
