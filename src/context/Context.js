@@ -11,10 +11,10 @@ const AppState = ({children}) => {
   const [user, setUser] = useState(null);
   const [numNewLoc, setNumNewLoc] = useState();
   const [locations, setLocations] = useState([]);
-  const [topLocations, setTopLocations] = useState([]);
-  const [cities, setCities] = useState([]);
   const [locationsMap, setLocationsMap] = useState([]);
   const [locationsList, setLocationsList] = useState([]);
+  const [topLocations, setTopLocations] = useState([]);
+  const [cities, setCities] = useState([]);
   const [listResults, setListResults] = useState([]);
   const [autocomplete, setAutocomplete] = useState(null);
   const [searchAutocomplete, setSearchAutocomplete] = useState('');
@@ -348,10 +348,10 @@ const AppState = ({children}) => {
         user, setUser,
         numNewLoc, setNumNewLoc,
         locations, setLocations,
-        topLocations, setTopLocations,
-        cities, setCities,
         locationsMap, setLocationsMap,
         locationsList, setLocationsList,
+        topLocations, setTopLocations,
+        cities, setCities,
         listResults, setListResults,
         autocomplete, setAutocomplete,
         searchAutocomplete, setSearchAutocomplete,

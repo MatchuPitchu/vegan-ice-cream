@@ -970,6 +970,13 @@ mark {
 }
 
 /*********** Tab Bewerten ************/
+ion-range::part(knob) {
+  --knob-size: 17px;
+}
+
+.priceInfo {
+  font-size: 0.8rem;
+}
 
 .colorPicker {
   margin: 0 auto;

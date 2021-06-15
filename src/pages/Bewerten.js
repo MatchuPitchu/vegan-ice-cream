@@ -3,8 +3,8 @@ import { Context } from "../context/Context";
 import ReactStars from "react-rating-stars-component";
 import { CirclePicker } from "react-color";
 import { Controller, useForm } from 'react-hook-form';
-import { IonButton, IonCard, IonCardContent, IonCardTitle, IonContent, IonDatetime, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonPopover, IonSearchbar, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToast, IonToggle, IonToolbar } from '@ionic/react';
-import { add, bulb, colorPaletteOutline, informationCircle, search, star, starHalfOutline, starOutline } from 'ionicons/icons';
+import { IonButton, IonCard, IonCardContent, IonCardTitle, IonContent, IonDatetime, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonPicker, IonPopover, IonRange, IonSearchbar, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToast, IonToggle, IonToolbar } from '@ionic/react';
+import { add, bulb, cashOutline, colorPaletteOutline, informationCircle } from 'ionicons/icons';
 import showError from '../components/showError';
 import Search from '../components/Search';
 import SearchFlavors from '../components/SearchFlavors';
@@ -23,7 +23,9 @@ const Bewerten = () => {
     setNewComment,
     setFinishComment,
     searchFlavor, setSearchFlavor,
-    flavor
+    flavor,
+    locations, setLocations,
+    locationsList, setLocationsList,
   } = useContext(Context);
   const [popoverInfo, setPopoverInfo] = useState({ show: false, event: undefined });
   const [showColorPicker, setShowColorPicker] = useState({field1: false, field2: false});
@@ -45,7 +47,8 @@ const Bewerten = () => {
     "#000000", "#4d2119", "#693e18", "#c98850", "#ffffff",
   ]
   
-  const defaultValues = { 
+  const defaultValues = {
+    pricing: 0,
     name: undefined,
     type_cream: false,
     type_fruit: false,
@@ -136,9 +139,38 @@ const Bewerten = () => {
       setError('Der Name des Eisladens fehlt.');
       setTimeout(() => setError(null), 5000);
     }
-
     setLoading(true);
     const token = localStorage.getItem('token');
+
+    if(data.pricing && data.pricing > 0) {
+      const createPricing = async () => {
+        try {
+          const body = {
+            pricing: data.pricing 
+          };
+          const options = {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              token
+            },
+            body: JSON.stringify(body),
+            credentials: "include",
+          };
+          const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/pricing/${searchSelected._id}`, options);
+          const updatedLoc = await res.json();
+          const newArr1 = locations.filter(loc => loc._id !== updatedLoc._id);
+          setLocations([...newArr1, updatedLoc]);
+          const newArr2 = locationsList.filter(loc => loc._id !== updatedLoc._id);
+          setLocationsList([...newArr2, updatedLoc]);
+        } catch (error) {
+          setError(error);
+          setTimeout(() => setError(null), 5000);
+        };
+      }
+      createPricing();
+    }
+
     try {
       const body = {
         user_id: user._id,
@@ -173,6 +205,7 @@ const Bewerten = () => {
       setError(error)
       setTimeout(() => setError(null), 5000);
     };
+
     setLoading(false)
   };
 
@@ -185,7 +218,7 @@ const Bewerten = () => {
       <IonContent>
       {!endReset ? (
         <div className="container mt-2">
-          <div style={{backgroundColor: 'var(--ion-item-background)'}}>
+          <div className="mt-2" style={{backgroundColor: 'var(--ion-item-background)'}}>
             <Search />
           </div>
 
@@ -223,8 +256,35 @@ const Bewerten = () => {
                 isOpen={popoverInfo.show}
                 onDidDismiss={() => setPopoverInfo({ show: false, event: undefined })}
               >
-                Damit eine Bewertung fix abzusenden ist, bezieht sie sich immer auf 1 Eissorte. Hast du mehrere Sorten probiert, kannst du natürlich weitere Bewertungen abgeben.
+                Damit eine Bewertung fix zu tippen ist, bezieht sie sich nur auf 1 Eissorte. Hast du mehr probiert, kannst du auch eine weitere Bewertung abgeben.
               </IonPopover>
+            </IonItem>
+
+            <IonItem className="mb-1" lines="none">
+              
+              <Controller
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <div className="priceInfo text-center">
+                      <div>Preis Eiskugel</div>
+                      <div>{parseFloat(value).toFixed(2)} €</div>
+                    </div>
+                    <IonRange
+                      min={0} 
+                      max={3} 
+                      step={0.10}
+                      ticks
+                      value={value} 
+                      onIonChange={e => onChange(e.detail.value)} 
+                    >
+                      <IonIcon slot="start" size="small" icon={cashOutline} />
+                      <IonIcon slot="end" icon={cashOutline} />
+                    </IonRange>
+                  </>
+                )}
+                name="pricing"
+              />
             </IonItem>
 
             <IonItem lines="none">
