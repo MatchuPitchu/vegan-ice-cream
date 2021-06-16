@@ -6,6 +6,9 @@ import { IonButton, IonContent, IonPage, IonHeader, IonCard, IonCardHeader,  Ion
 import { caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, iceCream, informationCircle, mail, refreshCircle, trailSign } from "ionicons/icons";
 import ProfilUpdate from '../components/ProfilUpdate';
 import Spinner from '../components/Spinner';
+import Ratings from "./Ratings";
+import CommentsBlock from "./CommentsBlock";
+import FlavorsBlock from "./FlavorsBlock";
 
 const Profil = () => {
   const { 
@@ -57,11 +60,11 @@ const Profil = () => {
               </IonItem>
             )}
 
-            <IonItem lines="none">
+            <IonItem color="background-color" className="borderBottom" lines="none">
               <IonIcon icon={mail} slot="start" />
               <IonLabel>{user.email}</IonLabel>
             </IonItem>
-            <IonItem lines="full">
+            <IonItem color="background-color" className="borderBottom" lines="none">
               <IonIcon icon={trailSign} slot="start" />
               <IonLabel>{user.home_city.city ? user.home_city.city : 'keinen Ort angegeben'}</IonLabel>
               <div>
@@ -87,7 +90,7 @@ const Profil = () => {
               </IonPopover>
             </IonItem>
             <IonItemGroup>
-              <IonItem lines="full">
+              <IonItem color="background-color" className={`${!showComments && 'borderBottom'}`} lines="none">
                 <IonIcon 
                   slot="start"
                   color="primary"
@@ -96,70 +99,17 @@ const Profil = () => {
                 />
                 <IonLabel>Meine Bewertungen</IonLabel>
                 <IonButton 
+                  fill="solid"
+                  className="commentNum me-0"
                   onClick={() => setShowComments(prev => !prev)}
-                  fill="solid" 
-                  className="click-btn my-3"
                 >
                   {user.comments_list.length ? user.comments_list.length : '0'} 
                 </IonButton>
               </IonItem>
+    
+              {showComments && user.comments_list ? user.comments_list.map(comment => <CommentsBlock comment={comment} key={comment._id} />) : null}
 
-              {showComments && user.comments_list ? user.comments_list.map(comment => {
-                return (
-                  <div key={comment._id}>
-                    <IonItem className="ms-1" lines="none">
-                      <IonLabel color="primary">{comment.location_id.name}</IonLabel>
-                    </IonItem>
-                    <IonItem key={comment._id} lines="full">
-                      <IonLabel color="text-color" className="ion-text-wrap mt-0 ms-1">
-                        <p><IonIcon className="me-2" color={`${toggle ? '' : 'primary'}`} icon={chatboxEllipses}/>{comment.text}</p>
-                        
-                        <div className="d-flex align-items-center">
-                          {comment.flavors_referred.map(flavor => {
-                            return (
-                              <IonButton key={flavor._id} disabled fill="solid" className="click-btn my-3">
-                                <IonIcon color={`${toggle ? "warning" : "secondary"}`} className="pe-1" icon={iceCream} />
-                                {flavor.name}
-                              </IonButton>
-                              )
-                            })
-                          }
-                        </div>
-                      
-                        <div className="d-flex align-items-center">
-                          <div className="me-2">Eis-Erlebnis</div>
-                          <div>
-                            <ReactStars
-                              count={5}
-                              value={comment.rating_quality}
-                              edit={false}
-                              size={18}
-                              color='#9b9b9b'
-                              activeColor='#de9c01'
-                            />
-                          </div>
-                        </div>
-                        <div className="d-flex align-items-center">
-                          <div className="me-2">Veganes Angebot</div>
-                          <div>
-                            <ReactStars 
-                              count={5}
-                              value={comment.rating_vegan_offer}
-                              edit={false}
-                              size={18}
-                              color='#9b9b9b'
-                              activeColor='#de9c01'
-                            />
-                          </div>
-                        </div>
-                        <p className="p-weak mt-1">Datum: {comment.date.replace('T', ' // ').slice(0, 19)}</p>
-                      </IonLabel>
-                    </IonItem>
-                  </div>
-                )}
-              ) : null}
-
-              <IonItem lines="none">
+              <IonItem color="background-color" lines="none">
                 <IonIcon
                   className={showFlavors ? 'rotateIcon90Forward' : 'rotateIcon90Back'}
                   slot="start"
@@ -192,23 +142,7 @@ const Profil = () => {
                 </IonPopover>
               </IonItem>
               
-              {showFlavors && user.favorite_flavors.length ? (
-                <div className="d-flex justify-content-around flex-wrap px-3 py-2">
-                  {user.favorite_flavors.map(flavor => {
-                    return (
-                      <div key={flavor._id}>
-                        <div className="iceContainer">
-                          <div className="icecream" style={{background: `linear-gradient(to bottom right, ${flavor.color.primary}, ${flavor.color.secondary ? flavor.color.secondary : flavor.color.primary})`}}></div>
-                          <div className="icecreamBottom" style={{background: flavor.color.primary}}></div>
-                          <div className="cone"></div>
-                        </div>
-                        <div className="labelFlavor">{flavor.name}</div>
-                      </div>
-                      )
-                    })
-                  }
-                </div>
-              ) : null}
+              {showFlavors && user.favorite_flavors.length ? <FlavorsBlock flavorsList={user.favorite_flavors} /> : null}
 
             </IonItemGroup>
           </IonCard>

@@ -59,6 +59,7 @@ const TopLocations = () => {
                   <Ratings 
                     rating_vegan_offer={loc.location_rating_vegan_offer}
                     rating_quality={loc.location_rating_quality}
+                    showNum={true}
                   />
                   <IonButton 
                   className="more-infos mt-2" 

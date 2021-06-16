@@ -94,12 +94,12 @@ const ProfilUpdate = () => {
 
   return (
     <div className="text-center">
-      <IonItem color="--ion-card-background" lines="none">
+      <IonItem lines="none">
         <IonLabel className="ion-text-wrap">Aktualisiere die Felder deiner Wahl und bestätige mit deinem Passwort</IonLabel>
       </IonItem>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <IonItem color="--ion-card-background" lines="full">
-          <IonLabel position='floating' htmlFor="name">Name</IonLabel>
+        <IonItem lines="full">
+          <IonLabel position='stacked' htmlFor="name">Name</IonLabel>
           <Controller 
             control={control}
             defaultValue=""
@@ -111,8 +111,8 @@ const ProfilUpdate = () => {
         </IonItem>
         {showError("name", errors)}
 
-        <IonItem color="--ion-card-background" lines="full">
-          <IonLabel position='floating' htmlFor="email">E-Mail</IonLabel>
+        <IonItem lines="full">
+          <IonLabel position='stacked' htmlFor="email">E-Mail</IonLabel>
           <Controller 
             control={control}
             render={({ field: { onChange, value } }) => (
@@ -123,8 +123,8 @@ const ProfilUpdate = () => {
         </IonItem>
         {showError("email", errors)}
 
-        <IonItem color="--ion-card-background" lines="full">
-          <IonLabel position='floating' htmlFor="city">Stadt <span className="span-small">(für Startpunkt Karte)</span></IonLabel>
+        <IonItem lines="full">
+          <IonLabel position='stacked' htmlFor="city">Stadt <span className="span-small">(für Startpunkt Karte)</span></IonLabel>
           <Controller 
             control={control}
             defaultValue=""
@@ -135,8 +135,8 @@ const ProfilUpdate = () => {
           />
         </IonItem>
 
-        <IonItem color="--ion-card-background" lines="full">
-          <IonLabel position='floating' htmlFor="newPassword">Neues Passwort</IonLabel>
+        <IonItem lines="full">
+          <IonLabel position='stacked' htmlFor="newPassword">Neues Passwort</IonLabel>
           <Controller 
             control={control}
             defaultValue=""
@@ -154,8 +154,8 @@ const ProfilUpdate = () => {
         </IonItem>
         {showError("newPassword", errors)}
 
-        <IonItem color="--ion-card-background" lines="full">
-          <IonLabel position='floating' htmlFor="repeatPassword">Passwort wiederholen</IonLabel>
+        <IonItem lines="full">
+          <IonLabel position='stacked' htmlFor="repeatPassword">Passwort wiederholen</IonLabel>
           <Controller 
             control={control}
             defaultValue=""
@@ -173,8 +173,8 @@ const ProfilUpdate = () => {
         </IonItem>
         {showError("repeatPassword", errors)}
         
-        <IonItem color="--ion-card-background" lines="none">
-          <IonLabel position='floating' htmlFor="password">Aktuelles Passwort</IonLabel>
+        <IonItem lines="none">
+          <IonLabel position='stacked' htmlFor="password">Aktuelles Passwort</IonLabel>
           <Controller 
             control={control}
             render={({ field: { onChange, value } }) => (
@@ -187,8 +187,8 @@ const ProfilUpdate = () => {
         {showError("password", errors)}
         {error && <div className='alertMsg'>{error}</div>}
           
-        <IonItem color="--ion-card-background" lines="none">
-          <IonButton className="my-3 confirm-btn" type="submit" routerLink='/login' expand="block">
+        <IonItem lines="none">
+          <IonButton className="my-3 confirm-btn-block" type="submit" routerLink='/login' expand="block">
             <IonIcon slot="end" className="pe-1" icon={refreshCircle}/>Profil updaten
           </IonButton>
         </IonItem>
