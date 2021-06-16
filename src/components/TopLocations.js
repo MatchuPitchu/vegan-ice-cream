@@ -56,7 +56,10 @@ const TopLocations = () => {
             <div className="px-3 py-2">
               {loc.location_rating_quality && (
                 <>
-                  <Ratings selectedLoc={loc}/> 
+                  <Ratings 
+                    rating_vegan_offer={loc.location_rating_vegan_offer}
+                    rating_quality={loc.location_rating_quality}
+                  />
                   <IonButton 
                   className="more-infos mt-2" 
                   title="Mehr Infos"
