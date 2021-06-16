@@ -51,6 +51,7 @@ const Favoriten = () => {
                 <Ratings 
                   rating_vegan_offer={loc.location_rating_vegan_offer}
                   rating_quality={loc.location_rating_quality}
+                  showNum={true}
                 />
                 <div className="text-center">
                   <IonButton 

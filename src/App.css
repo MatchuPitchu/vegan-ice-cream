@@ -79,6 +79,15 @@ ion-badge {
   margin: 0 auto;
 }
 
+.confirm-btn-block {
+  height: 37px;
+  text-transform: none;
+  align-self: center;
+  opacity: 1;
+  margin: 0 auto;
+  width: 100%;
+}
+
 .headerImg {
   width: 100%;
   max-height: 120px;
@@ -908,6 +917,12 @@ mark {
   color: var(--ion-color-primary-tint);
 }
 
+.textSmallGrey {
+  font-size: 0.8rem;
+  line-height: 1rem;
+  opacity: 0.5;
+}
+
 .checkMsg {
   position: absolute;
   bottom: 0;
@@ -939,23 +954,49 @@ mark {
   opacity: 1;
 }
 
+.flavor-btn {
+  font-size: 0.7rem;
+  min-height: 28px;
+  opacity: 1;
+  color: var(--ion-color-primary);
+  border: 1px solid var(--ion-color-primary);
+  border-radius: 5px;
+}
+
+.coneIcon {
+  transform: rotate(10deg);
+}
+
 .addLocForm {
   --background: var(--ion-background-color);
 }
 
-/*********** Map Liste *************/
+/*********** Modal Selected Location *************/
 .ratingContainer {
-  height: 27px;
+  padding-top: 4px;
+  height: 20px;
+}
+
+.react-stars {
+  height: 20px;
 }
 
 .ratingNum {
-  border-radius: 50%;
+  border-radius: 5px;
   background-color: var(--ion-color-step-900);
   color: var(--ion-color-primary-contrast);
   opacity: 1;
   font-size: 0.7rem;
   height: 19px;
   width: 25px;
+  margin: 2px 0 0 0;
+}
+
+.commentNum {
+  font-size: 0.7rem;
+  height: 19px;
+  min-width: 25px;
+  margin-right: 7px;
 }
 
 .pricingInfo {
@@ -982,6 +1023,12 @@ mark {
   text-align: center;
   display: flex;
   align-items: center;
+}
+
+.commentText {
+  color: var(--ion-text-color);
+  font-size: 0.8rem;
+  line-height: 1rem;
 }
 
 .borderBottom {
