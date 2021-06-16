@@ -981,6 +981,10 @@ mark {
   height: 20px;
 }
 
+.itemRating .react-stars {
+  height: 50px;
+}
+
 .ratingNum {
   border-radius: 5px;
   background-color: var(--ion-color-step-900);
@@ -1051,6 +1055,10 @@ ion-range::part(knob) {
 
 .priceInfo {
   margin: 0 auto;
+}
+
+.itemLabelStacked {
+  height: 31px;
 }
 
 .colorPicker {
