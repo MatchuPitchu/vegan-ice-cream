@@ -274,6 +274,33 @@ const AppState = ({children}) => {
     setLoading(false);
   };
 
+  const createPricing = async (data) => {
+    const token = localStorage.getItem('token');
+    try {
+      const body = {
+        pricing: data.pricing 
+      };
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token
+        },
+        body: JSON.stringify(body),
+        credentials: "include",
+      };
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/pricing/${searchSelected._id}`, options);
+      const updatedLoc = await res.json();
+      const newArr1 = locations.filter(loc => loc._id !== updatedLoc._id);
+      setLocations([...newArr1, updatedLoc]);
+      const newArr2 = locationsList.filter(loc => loc._id !== updatedLoc._id);
+      setLocationsList([...newArr2, updatedLoc]);
+    } catch (error) {
+      setError(error);
+      setTimeout(() => setError(null), 5000);
+    };
+  }
+
   const handleToggleDN = () => {
     setToggle((prev) => !prev);
     if(!toggle) {
@@ -393,6 +420,7 @@ const AppState = ({children}) => {
         alertUpdateFav, setAlertUpdateFav,
         removeFavLoc,
         addFavLoc,
+        createPricing,
         openComments, setOpenComments,
         newComment, setNewComment,
         finishComment, setFinishComment,

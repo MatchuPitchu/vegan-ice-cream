@@ -70,9 +70,32 @@ const SelectedMarker = () => {
                 <br/>
                 <a className="websiteLink" href={selected.location_url.includes("http") ? selected.location_url : `//${selected.location_url}`} target="_blank">{selected.location_url}</a>
               </IonLabel>
+              {selected.pricing.length > 0 && (
+                <div className="pricingInfo">
+                  Eiskugel {selected.pricing[selected.pricing.length-1].toFixed(2).replace(/\./g, ',')} €
+                </div>
+              )}
             </IonItem>
-            <IonItem className="modalItem" lines="full">
-              <IonLabel>Bewertung schreiben</IonLabel>
+
+            <IonItem className="modalItemSmall itemTextSmall" lines="full">
+              <IonLabel>{selected.pricing.length === 0 ? 'Kugelpreis eintragen' : 'Kugelpreis aktualisieren'}</IonLabel>
+              <IonButton 
+                onClick={() => {
+                  setSearchSelected(selected);
+                  setOpenComments(false);
+                  setSelected(null);
+                  setInfoModal(false);
+                }} 
+                fill="clear" 
+                routerLink="/preis" 
+                routerDirection="forward"
+              >
+                <IonIcon icon={add}/>
+              </IonButton>
+            </IonItem>
+
+            <IonItem className="modalItemSmall itemTextSmall" lines="full">
+              <IonLabel>Bewerten</IonLabel>
               <IonButton 
                 onClick={() => {
                   setSearchSelected(selected);
@@ -94,8 +117,11 @@ const SelectedMarker = () => {
           <div style={{backgroundColor: 'var(--ion-item-background)'}}>          
             {selected.location_rating_quality ? (
               <IonItemGroup>
-                <div className="px-3 py-2 borderBottom">
-                  <Ratings selectedLoc={selected}/>
+                <div className="px-3 py-1 borderBottom">
+                  <Ratings 
+                    rating_vegan_offer={selected.location_rating_vegan_offer}
+                    rating_quality={selected.location_rating_quality}
+                  />
                 </div>
 
                 {selected.comments_list[0].text && selected.flavors_listed[0].color.primary ? (
@@ -109,10 +135,9 @@ const SelectedMarker = () => {
                           setOpenComments(prev => !prev);
                         }}
                       />
-                      <IonLabel>Alle Bewertungen</IonLabel>
+                      <IonLabel>Bewertungen</IonLabel>
                       <IonButton 
-                        fill="solid" 
-                        slot="end"
+                        fill="solid"
                         className="ratingNum"
                         onClick={() => setOpenComments(prev => !prev)}
                       >
@@ -141,6 +166,11 @@ const SelectedMarker = () => {
                                 }
                               </div>
                             
+                              <Ratings 
+                                rating_vegan_offer={comment.rating_vegan_offer}
+                                rating_quality={comment.rating_quality}
+                              />
+
                               <div className="d-flex align-items-center py-1">
                                 <div className="me-2">
                                   <div className="ratingContainer">Veganes Angebot</div>
@@ -177,7 +207,7 @@ const SelectedMarker = () => {
     
                     <IonItem lines="none">
                       <IonIcon className="me-2" color="primary" icon={iceCream} />
-                      <IonLabel>Alle bewerteten Eissorten</IonLabel>
+                      <IonLabel>Bewertete Eissorten</IonLabel>
                     </IonItem>
                     <IonItem lines="none">
                       <div className="d-flex justify-content-around flex-wrap px-3 py-2">

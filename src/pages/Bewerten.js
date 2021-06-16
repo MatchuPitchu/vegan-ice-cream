@@ -24,8 +24,7 @@ const Bewerten = () => {
     setFinishComment,
     searchFlavor, setSearchFlavor,
     flavor,
-    locations, setLocations,
-    locationsList, setLocationsList,
+    createPricing,
   } = useContext(Context);
   const [popoverInfo, setPopoverInfo] = useState({ show: false, event: undefined });
   const [showColorPicker, setShowColorPicker] = useState({field1: false, field2: false});
@@ -86,6 +85,7 @@ const Bewerten = () => {
     setValue("not_specified", false);
   }
 
+  // Create Flavor Post Function
   const createFlavor = (data, comment) => {
     setLoading(true);
     const token = localStorage.getItem('token');
@@ -142,35 +142,10 @@ const Bewerten = () => {
     setLoading(true);
     const token = localStorage.getItem('token');
 
-    if(data.pricing && data.pricing > 0) {
-      const createPricing = async () => {
-        try {
-          const body = {
-            pricing: data.pricing 
-          };
-          const options = {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              token
-            },
-            body: JSON.stringify(body),
-            credentials: "include",
-          };
-          const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/pricing/${searchSelected._id}`, options);
-          const updatedLoc = await res.json();
-          const newArr1 = locations.filter(loc => loc._id !== updatedLoc._id);
-          setLocations([...newArr1, updatedLoc]);
-          const newArr2 = locationsList.filter(loc => loc._id !== updatedLoc._id);
-          setLocationsList([...newArr2, updatedLoc]);
-        } catch (error) {
-          setError(error);
-          setTimeout(() => setError(null), 5000);
-        };
-      }
-      createPricing();
-    }
+    // Pricing Post Function
+    if(data.pricing && data.pricing > 0) createPricing(data);
 
+    // Create Comment Post Function
     try {
       const body = {
         user_id: user._id,
@@ -217,62 +192,60 @@ const Bewerten = () => {
 
       <IonContent>
       {!endReset ? (
-        <div className="container mt-2">
-          <div className="mt-2" style={{backgroundColor: 'var(--ion-item-background)'}}>
+        <div className="container mt-3">
+          <IonItem lines="none" className="mb-1 itemTextSmall">
+            <IonIcon color="primary" icon={bulb}/>
+            <IonLabel className="ion-text-wrap ms-1" >
+              Bewerte nur 1 Eissorte
+            </IonLabel>
+            
+            <IonIcon
+              className="infoIcon"
+              color="primary" 
+              button 
+              onClick={e => {
+                e.persist();
+                setPopoverInfo({ show: true, event: e })
+              }}
+              icon={informationCircle} 
+            />
+            <IonPopover
+              color="primary"
+              cssClass='info-popover'
+              event={popoverInfo.event}
+              isOpen={popoverInfo.show}
+              onDidDismiss={() => setPopoverInfo({ show: false, event: undefined })}
+            >
+              Damit eine Bewertung fix zu tippen ist, bezieht sie sich nur auf 1 Eissorte. Hast du mehr probiert, kannst du auch eine weitere Bewertung abgeben.
+            </IonPopover>
+          </IonItem>
+          
+          <div className="pt-2" style={{backgroundColor: 'var(--ion-item-background)'}}>
             <Search />
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            <IonItem lines="full">
+            <IonItem lines="none" className="mb-1">
               <IonLabel position='stacked' htmlFor="location">Name des Eisladens</IonLabel>
               <IonInput 
                 readonly
                 type="text"
-                placeholder="Nutze die obere Suche"
+                placeholder="Nutze die Suche"
                 value={searchSelected ? searchSelected.name : ''}
               />
             </IonItem>
 
-            <IonItem lines="full">
-              <IonIcon icon={bulb} color="warning"/>
-              <IonLabel className="ion-text-wrap ms-1" color="warning">
-                Bewerte nur 1 Eissorte
-              </IonLabel>
-              
-              <IonIcon
-                className="warningIcon"
-                color="warning"
-                button 
-                onClick={e => {
-                  e.persist();
-                  setPopoverInfo({ show: true, event: e })
-                }}
-                icon={informationCircle} 
-              />
-              <IonPopover
-                color="primary"
-                cssClass='info-popover'
-                event={popoverInfo.event}
-                isOpen={popoverInfo.show}
-                onDidDismiss={() => setPopoverInfo({ show: false, event: undefined })}
-              >
-                Damit eine Bewertung fix zu tippen ist, bezieht sie sich nur auf 1 Eissorte. Hast du mehr probiert, kannst du auch eine weitere Bewertung abgeben.
-              </IonPopover>
-            </IonItem>
-
-            <IonItem className="mb-1" lines="none">
-              
+            <IonItem className="mb-1" lines="none">  
               <Controller
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <>
-                    <div className="priceInfo text-center">
-                      <div>Preis Eiskugel</div>
-                      <div>{parseFloat(value).toFixed(2)} €</div>
-                    </div>
+                    <IonLabel position='stacked' className="pb-1">Preis Eiskugel</IonLabel>
+                    <div className="priceInfo">{parseFloat(value).toFixed(2)} €</div>
                     <IonRange
-                      min={0} 
-                      max={3} 
+                      className="px-0"
+                      min={0}
+                      max={3}
                       step={0.10}
                       ticks
                       value={value} 
@@ -288,7 +261,7 @@ const Bewerten = () => {
             </IonItem>
 
             <IonItem lines="none">
-              <IonLabel htmlFor="name1">Eissorte</IonLabel>
+              <IonLabel position='stacked' htmlFor="name1">Eissorte</IonLabel>
             </IonItem>
 
             <SearchFlavors />
@@ -407,7 +380,7 @@ const Bewerten = () => {
             {showError("ice-color", errors)}
             
             <IonItem lines="none" className="my-1">
-              <IonLabel position='floating' htmlFor="text">Kommentar</IonLabel>
+              <IonLabel position='stacked' htmlFor="text">Kommentar</IonLabel>
               <Controller
                 control={control}
                 render={({ field: { onChange, value } }) => (
@@ -447,7 +420,7 @@ const Bewerten = () => {
             {showError("rating_quality", errors)}
       
             {/* NEU CHECKEN MIT ERROR HANDLUNG UND BACKEND -> SOLL ALS ERGÄNZUNG ZU COMMENT GESPEICHERT WERDEN, NICHT IN FLAVOR */}
-            <IonItem lines="full">
+            <IonItem lines="none" className="mb-1">
               <IonLabel position='stacked'>Mein Eis-Erlebnis war ...</IonLabel>
               <div className="row">
                 <div className="col">
@@ -539,7 +512,7 @@ const Bewerten = () => {
             {showError("rating_vegan_offer", errors)}
 
             <IonItem lines="none" className="mb-1">
-              <IonLabel position='floating' htmlFor="date">Datum</IonLabel>
+              <IonLabel position='stacked' htmlFor="date">Datum</IonLabel>
               <Controller
                 control={control}
                 render={({ field: { onChange, value } }) => (

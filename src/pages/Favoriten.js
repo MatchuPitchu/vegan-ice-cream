@@ -48,8 +48,11 @@ const Favoriten = () => {
             <div className="px-3 py-2">
               {loc.location_rating_quality ? (
               <>
-                <Ratings selectedLoc={loc}/> 
-                <div className="d-flex align-items-center">
+                <Ratings 
+                  rating_vegan_offer={loc.location_rating_vegan_offer}
+                  rating_quality={loc.location_rating_quality}
+                />
+                <div className="text-center">
                   <IonButton 
                     className="more-infos mt-1" 
                     title="Mehr Infos"
@@ -74,7 +77,7 @@ const Favoriten = () => {
                     routerLink="/bewerten" 
                     routerDirection="forward"
                   >
-                    <IonIcon icon={add}/>Bewertung schreiben
+                    <IonIcon icon={add}/>Bewerten
                   </IonButton>
                 </div>
               </>
