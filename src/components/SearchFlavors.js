@@ -99,14 +99,14 @@ const SearchFlavors = () => {
             isOpen={popoverShow.show}
             onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
           >
-            Du siehst keine Vorschläge oder die Vorschläge passen nicht zu deiner Eissorte? Dann tippe einfach den vollständigen Namen der neuen Eissorte ein.
+            Keine passenden Vorschläge? Tippe einfach den Namen der neuen Eissorte ein.
           </IonPopover>
         </div>
       </div>
       
       {flavorsPredict.length && searchFlavor !== flavor.name ? (
         <IonList className="py-0">
-          <div className="infoText mt-2" >... Auswahl bereits von anderen eingetragener Sorten</div>
+          <div className="infoText pt-2" >... Auswahl bereits eingetragener Sorten</div>
           {flavorsPredict.map(flavor => (
             <IonItem
               key={flavor._id}
