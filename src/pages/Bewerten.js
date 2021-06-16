@@ -227,7 +227,7 @@ const Bewerten = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <IonItem lines="none" className="mb-1">
               <IonLabel position='stacked' htmlFor="location">Name des Eisladens</IonLabel>
-              <IonInput 
+              <IonInput
                 readonly
                 type="text"
                 placeholder="Nutze die Suche"
@@ -260,7 +260,7 @@ const Bewerten = () => {
               />
             </IonItem>
 
-            <IonItem lines="none">
+            <IonItem className="itemLabelStacked" lines="none">
               <IonLabel position='stacked' htmlFor="name1">Eissorte</IonLabel>
             </IonItem>
 
@@ -379,7 +379,7 @@ const Bewerten = () => {
             </IonItem>
             {showError("ice-color", errors)}
             
-            <IonItem lines="none" className="my-1">
+            <IonItem lines="none" className="mb-1">
               <IonLabel position='stacked' htmlFor="text">Kommentar</IonLabel>
               <Controller
                 control={control}
@@ -397,7 +397,7 @@ const Bewerten = () => {
             </IonItem>
             {searchSelected && showError("text", errors)}
             
-            <IonItem lines="none">
+            <IonItem lines="none" className="itemRating">
               <IonLabel position='stacked' htmlFor="rating_quality">Eis-Erlebnis</IonLabel>
               <Controller
                 control={control}
@@ -489,7 +489,7 @@ const Bewerten = () => {
               </div>
             </IonItem>
 
-            <IonItem lines="none" className="mb-1">
+            <IonItem lines="none" className="itemRating mb-1">
               <IonLabel position='stacked' htmlFor="rating_vegan_offer">Veganes Angebot des Eisladens</IonLabel>
               <Controller
                 control={control}
