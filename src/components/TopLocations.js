@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { Context } from '../context/Context';
-import { isPlatform, IonSlide, IonCard, IonLabel, IonSlides, IonItem, IonButton, IonIcon } from '@ionic/react';
-import { open } from "ionicons/icons";
+import { isPlatform, IonSlide, IonCard, IonLabel, IonSlides, IonItem, IonButton } from '@ionic/react';
 import SelectedMarker from "./SelectedMarker";
 import Ratings from "./Ratings";
+import BtnInfoRating from "./BtnInfoRating";
 
 // Optional parameters to pass to the swiper instance.
 // See http://idangero.us/swiper/api/ for valid options.
@@ -11,9 +11,7 @@ import Ratings from "./Ratings";
 const TopLocations = () => {
   const {
     topLocations,
-    selected, setSelected,
-    setInfoModal,
-    setOpenComments,
+    selected,
     showTopLoc,
   } = useContext(Context);
 
@@ -36,7 +34,7 @@ const TopLocations = () => {
         key={loc._id}
         className="text-start"
       >
-        <div>
+        <div className="slideCardContainer">
           <IonButton className="slideBtn">
             {i+1}.
           </IonButton>
@@ -45,7 +43,7 @@ const TopLocations = () => {
               <IonLabel>
                 {loc.name}
                 <p>{loc.address.street} {loc.address.number}</p>
-                <p className="mb-2">{loc.address.zipcode} {loc.address.city}</p>
+                <p className="mb-1">{loc.address.zipcode} {loc.address.city}</p>
                 {loc.location_url && ( 
                   <p>
                     <a className="websiteLink" href={loc.location_url.includes("http") ? loc.location_url : `//${loc.location_url}`} target="_blank">{loc.location_url}</a>
@@ -61,17 +59,7 @@ const TopLocations = () => {
                     rating_quality={loc.location_rating_quality}
                     showNum={true}
                   />
-                  <IonButton 
-                  className="more-infos mt-2" 
-                  title="Mehr Infos"
-                  onClick={() => {
-                    setOpenComments(false);
-                    setSelected(loc);
-                    setInfoModal(true) 
-                  }}
-                  >
-                    <IonIcon className="me-1" icon={open} />Mehr Infos
-                  </IonButton>
+                  <BtnInfoRating loc={loc} />
                 </>
               )}
             </div>

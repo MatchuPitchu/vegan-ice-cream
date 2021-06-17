@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { Context } from '../context/Context';
-import { IonButton, IonCard, IonContent, IonIcon, IonImg, IonItem, IonItemGroup, IonLabel, IonModal } from "@ionic/react";
+import { IonButton, IonCard, IonContent, IonIcon, IonImg, IonItem, IonItemGroup, IonLabel, IonModal, isPlatform } from "@ionic/react";
 import { add, caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, iceCream } from "ionicons/icons";
 import FavLocBtn from "./FavLocBtn";
 import LoadingError from "./LoadingError";
@@ -114,7 +114,7 @@ const SelectedMarker = () => {
           </IonItemGroup>
         </div>
       
-        <IonCard>
+        <IonCard className={`${isPlatform('desktop') ? "cardIonic" : ""}`}>
           <div style={{backgroundColor: 'var(--ion-item-background)'}}>          
             {selected.location_rating_quality ? (
               <IonItemGroup>
