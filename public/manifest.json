@@ -74,42 +74,37 @@
   "screenshots" : [
     {
       "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-home-light.png",
-      "sizes": "801x1248",
+      "sizes": "640x1136",
       "type": "image/png"
     },
     {
       "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-home-dark.png",
-      "sizes": "801x1248",
+      "sizes": "640x1136",
       "type": "image/png"
     },
     {
       "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-profil.png",
-      "sizes": "801x1248",
+      "sizes": "640x1136",
       "type": "image/png"
     },
     {
       "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-entdecken.png",
-      "sizes": "801x1248",
-      "type": "image/png"
-    },
-    {
-      "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-entdecken-liste.png",
-      "sizes": "801x1248",
+      "sizes": "640x1136",
       "type": "image/png"
     },
     {
       "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-info-modal.png",
-      "sizes": "801x1248",
+      "sizes": "640x1136",
       "type": "image/png"
     },
     {
-      "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-entdecken-liste.png",
-      "sizes": "801x1248",
+      "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-bewerten-1.png",
+      "sizes": "640x1136",
       "type": "image/png"
     },
     {
-      "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-bewerten.png",
-      "sizes": "801x1248",
+      "src": "https://eis-mit-stil.netlify.app/assets/screenshots/eis-mit-stil-bewerten-2.png",
+      "sizes": "640x1136",
       "type": "image/png"
     }
   ],
