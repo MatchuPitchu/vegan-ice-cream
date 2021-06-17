@@ -27,7 +27,7 @@ const Search = () => {
     const cityCapitalized = city.replace(/\b\w/g, l => l.toUpperCase())
     setCityName(cityCapitalized);
     try {
-      const limit = 15;
+      const limit = 20;
       const options = {
         method: "POST",
         headers: {
@@ -77,7 +77,7 @@ const Search = () => {
         // if every item is true, than this location is returned
         if(found.every(v => v === true)) return city;
       });
-      const result = res.slice(0, 2);
+      const result = res.slice(0, 4);
       setPredictions(result);
       value !== cityName && setShowPredict(true);
     }
@@ -115,7 +115,7 @@ const Search = () => {
         )}
       />
       {predictions && showPredict ? (
-        <div className={`py-0 d-flex flex-row container ${isPlatform('desktop') ? "" : "justify-content-center"}`}>
+        <div className={`py-0 d-flex flex-row flex-wrap container ${isPlatform('desktop') ? "" : "justify-content-center"}`}>
           {predictions.map((city, i) => (
             <IonItem
               key={i}
