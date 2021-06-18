@@ -2,9 +2,9 @@ import { useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Context } from "../../context/Context";
 import { IonContent, IonInput, IonItem, IonLabel, IonList, IonButton, IonPage, IonHeader, IonIcon, IonCardTitle, IonCardContent, IonCard } from "@ionic/react";
-import { Redirect } from "react-router-dom";
 import showError from '../showError';
 import { logIn } from "ionicons/icons";
+import { citiesArray } from '../arrayCitiesGermany';
 import LoadingError from "../LoadingError";
 
 const Register = () => {
@@ -56,6 +56,50 @@ const Register = () => {
     setLoading(false);
   };
 
+  // Autocomplete list and functionality 
+  // The active selection's index
+  const [activeSuggestion, setActiveSuggestion] = useState(0);
+  // The suggestions that match the user's input
+  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+  // Whether or not the suggestion list is shown
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  // What the user has entered
+  const [userInput, setUserInput] = useState('');
+
+  const valueChanged = value => {
+    // Filter our suggestions that don't contain the user's input + slice array to show only 5 cit
+    const newFilteredArr = citiesArray.filter(suggestion => suggestion.toLowerCase().indexOf(value.toLowerCase()) > -1).slice(0, 5);
+    setActiveSuggestion(0);
+    setFilteredSuggestions(newFilteredArr)
+    setShowSuggestions(true);
+  };
+
+  const onClick = e => {
+    setActiveSuggestion(0);
+    setFilteredSuggestions([])
+    setShowSuggestions(false);
+    setUserInput(e.currentTarget.innerText)
+  };
+
+  const onKeyDown = e => {
+    // User pressed the enter key
+    if (e.keyCode === 13) {
+      setActiveSuggestion(0);
+      setShowSuggestions(false);
+      setUserInput(filteredSuggestions[activeSuggestion])
+    }
+    // User pressed the up arrow
+    else if (e.keyCode === 38) {
+      if (activeSuggestion === 0) return;
+      setActiveSuggestion(activeSuggestion - 1);
+    }
+    // User pressed the down arrow
+    else if (e.keyCode === 40) {
+      if (activeSuggestion - 1 === filteredSuggestions.length) return;
+      setActiveSuggestion(activeSuggestion + 1);
+    }
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -66,7 +110,7 @@ const Register = () => {
         <div className="container mt-5">
           <form onSubmit={handleSubmit(onSubmit)}>
             <IonItem lines="none" className="mb-1">
-              <IonLabel position='floating' htmlFor="name">Name</IonLabel>
+              <IonLabel position='stacked' htmlFor="name">Name</IonLabel>
               <Controller 
                 control={control}
                 defaultValue=""
@@ -80,7 +124,7 @@ const Register = () => {
             {showError("name", errors)}
 
             <IonItem lines="none" className="mb-1">
-              <IonLabel position='floating' htmlFor="email">E-Mail</IonLabel>
+              <IonLabel position='stacked' htmlFor="email">E-Mail</IonLabel>
               <Controller 
                 control={control}
                 defaultValue=""
@@ -94,7 +138,7 @@ const Register = () => {
             {showError("email", errors)}
 
             <IonItem lines="none" className="mb-1">
-              <IonLabel position='floating' htmlFor="password">Passwort</IonLabel>
+              <IonLabel position='stacked' htmlFor="password">Passwort</IonLabel>
               <Controller 
                 control={control}
                 defaultValue=""
@@ -114,7 +158,7 @@ const Register = () => {
             {showError("password", errors)}
 
             <IonItem lines="none" className="mb-1">
-              <IonLabel position='floating' htmlFor="repeatPassword">Passwort wiederholen</IonLabel>
+              <IonLabel position='stacked' htmlFor="repeatPassword">Passwort wiederholen</IonLabel>
               <Controller 
                 control={control}
                 defaultValue=""
@@ -135,45 +179,59 @@ const Register = () => {
             {error && <div className='alertMsg'>{error}</div>}
 
             <IonItem lines="none" className="mb-1">
-              <IonLabel position='floating' htmlFor="city">Stadt <span className="span-small">(für Startpunkt der Karte)</span></IonLabel>
+              <IonLabel position='stacked' htmlFor="city">Stadt <span className="span-small">(für Startpunkt der Karte)</span></IonLabel>
               <Controller 
                 control={control}
                 defaultValue=""
                 render={({ field: { onChange, value } }) => (
-                  <IonInput type="text" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
-                  )}
+                  <>
+                    <IonInput 
+                      type="text" 
+                      inputmode="text" 
+                      value={value = userInput}
+                      onKeyDown={e => onKeyDown(e)}
+                      onIonChange={e => {
+                        onChange(e.detail.value);
+                        valueChanged(e.detail.value);
+                        setUserInput(e.detail.value);
+                      }}
+                    />
+                    {showSuggestions && userInput && (
+                      <ul className="suggestions">
+                        {filteredSuggestions.map((suggestion, i) => {
+                          return (
+                            <li className={i === activeSuggestion ? 'suggestion-active' : ''} key={i} onClick={onClick}>
+                              {suggestion}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </>
+                )}
                 name="city"
                 rules={{ required: true }}
               />
-            </IonItem>    
+            </IonItem>
+
             <IonButton className="my-3 confirm-btn" type="submit" fill="solid" expand="block">
               <IonIcon className="pe-1" icon={logIn}/>Registrieren
             </IonButton>
           </form>
 
-          <p className="text-center">Nach der Registrierung kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
-          <p className="mt-4">
-            <IonList>
-              <IonItem lines="full">
-                <IonLabel color="primary">Hinweise zur Wahl des Passworts</IonLabel>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel>mindestens eine Ziffer [0-9]</IonLabel>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel>mindestens einen kleinen Buchstaben [a-z]</IonLabel>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel>mindestens einen großen Buchstaben [A-Z]</IonLabel>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel>mindestens 6 Stellen lang, maximal 32</IonLabel>
-              </IonItem>
-              <IonItem lines="none">
-                <IonLabel className="ion-text-wrap" color="warning">Dein Passwort wird verschlüsselt in der Datenbank gespeichert und ist für niemanden einzusehen</IonLabel>
-              </IonItem>
-            </IonList>
-          </p>
+          <p className="text-center itemTextSmall ion-text-wrap">Nach der Registrierung kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
+          <IonCard>
+            <IonItem lines="full">
+              <IonLabel className="text-center ion-text-wrap" color="primary">Hinweise zur Wahl des Passworts</IonLabel>
+            </IonItem>
+            <div className="text-center px-4 my-2">
+              <div className="itemTextSmall">mindestens eine Ziffer [0-9]</div>
+              <div className="itemTextSmall">mindestens einen kleinen Buchstaben [a-z]</div>
+              <div className="itemTextSmall">mindestens einen großen Buchstaben [A-Z]</div>
+              <div className="itemTextSmall">mindestens 6 Stellen lang, maximal 32</div>
+              <div className="itemTextSmallWarning mt-3 ion-text-wrap">Dein Passwort wird verschlüsselt in der Datenbank gespeichert und ist für niemanden einzusehen</div>
+            </div>
+          </IonCard>
         </div>
         ) : (
           <div className="container text-center">

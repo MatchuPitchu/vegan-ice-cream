@@ -136,6 +136,7 @@ ion-badge {
 
 .rotateIcon {
   color: var(--ion-color-primary);
+  transition: transform 4s;
 }
 
 .rotateIcon:hover {
@@ -343,6 +344,10 @@ ion-badge {
 }
 
 /*********** Searchbar ************/
+ion-searchbar .searchbar-input-container .searchbar-input {
+  font-size: 0.9rem;
+}
+
 .searchbar {
   height: 50px;
   margin-left: 5px;
@@ -390,6 +395,33 @@ mark {
   font-weight: 600;
   background-color: transparent;
   color: var(--ion-color-primary);
+}
+
+/* Autocomplete Component User Input City */
+.suggestions {
+  border-top-width: 0;
+  list-style: none;
+  font-size: 0.8rem;
+  margin-top: 0;
+  max-height: 143px;
+  overflow-y: auto;
+  padding-left: 0;
+  width: 100%;
+}
+
+.suggestions li {
+  padding: 4px;
+}
+
+.suggestion-active,
+.suggestions li:hover {
+  background-color: var(--ion-card-background);
+  color: var(--ion-color-primary);
+  cursor: pointer;
+}
+
+.suggestions li:not(:last-of-type) {
+  border-bottom: 1px solid var(--ion-toolbar-background);
 }
 
 /* Searchbar Autocomplete Google */
@@ -666,7 +698,14 @@ mark {
   font-weight: 600;
   line-height: 1.1rem;
   color: var(--ion-text-over-background);
+  transform: rotate(10deg);
+  transition: all 1s;
   z-index: 1;
+}
+
+.start-btn-container a .btn-text:hover {
+  transform: scale(1) rotate(0deg);
+  transition: all 1s;
 }
 
 .start-btn-container a .btn-ring {
@@ -916,12 +955,17 @@ mark {
 }
 
 .websiteLink,
-.itemTextSmall {
+.itemTextSmall,
+.itemTextSmallWarning {
   font-size: 0.8rem;
   color: var(--ion-color-primary-shade);
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+}
+
+.itemTextSmallWarning {
+  color: var(--ion-color-warning);
 }
 
 .websiteLink:hover {

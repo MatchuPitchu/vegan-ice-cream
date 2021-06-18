@@ -55,7 +55,7 @@ const Feedback = () => {
       <IonContent className="ion-padding">
         <form onSubmit={handleSubmit(onSubmit)}>
           <IonItem lines="none" className="mb-1">
-            <IonLabel position='floating' htmlFor="name">Name</IonLabel>
+            <IonLabel position='stacked' htmlFor="name">Name</IonLabel>
             <Controller
                 control={control}
                 render={({ field: { onChange, value } }) => (
@@ -68,7 +68,7 @@ const Feedback = () => {
           {showError("name", errors)}
 
           <IonItem lines="none" className="mb-1">
-            <IonLabel position='floating' htmlFor="email">E-Mail</IonLabel>
+            <IonLabel position='stacked' htmlFor="email">E-Mail</IonLabel>
             <Controller 
               control={control}
               render={({ field: { onChange, value } }) => (
@@ -81,7 +81,7 @@ const Feedback = () => {
           {showError("email", errors)}
 
           <IonItem lines="none" className="mb-1">
-            <IonLabel position='floating' htmlFor="message">Nachricht</IonLabel>
+            <IonLabel position='stacked' htmlFor="message">Nachricht</IonLabel>
             <Controller 
               control={control}
               render={({ field: { onChange, value } }) => (

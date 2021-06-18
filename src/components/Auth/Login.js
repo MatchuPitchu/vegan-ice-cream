@@ -86,7 +86,7 @@ const Login = () => {
               <IonIcon slot="end" icon={refreshCircle}/>Passwort vergessen?
             </IonButton>
           </form>
-          <p className="text-center">Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
+          <p className="text-center itemTextSmall ion-text-wrap">Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
         </div>
       </IonContent>
     </IonPage>

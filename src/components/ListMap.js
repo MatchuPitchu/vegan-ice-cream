@@ -41,12 +41,12 @@ const ListMap = () => {
 
       {/* Infinite Scroll Ionic React: https://dev.to/daviddalbusco/infinite-scroll-with-ionic-react-3a3i */}
       {!listResults.length && (
-        <IonInfiniteScroll threshold="20%" disabled={disableInfScroll} onIonInfinite={(e) => loadMore(e)}>
+        <IonInfiniteScroll threshold="10%" disabled={disableInfScroll} onIonInfinite={(e) => loadMore(e)}>
           <IonInfiniteScrollContent loadingSpinner="dots">
           </IonInfiniteScrollContent>
         </IonInfiniteScroll>
       )}
-
+      
     </IonContent>
   )
 };

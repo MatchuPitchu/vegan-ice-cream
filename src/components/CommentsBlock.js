@@ -28,7 +28,7 @@ const CommentsBlock = ({comment}) => {
           )
         })
       }
-      <div className="textSmallGrey mt-2">{`${comment.user_id ? comment.user_id.name : 'Konto gelöscht'}`}, {comment.date.replace('T', ' um ').slice(0, 19)} Uhr</div>      
+      <div className="textSmallGrey mt-2">{comment.date.replace('T', ' um ').slice(0, 19)} Uhr von {`${comment.user_id ? comment.user_id.name : 'Konto deaktiviert'}`}</div>      
     </div>
   )
 }
