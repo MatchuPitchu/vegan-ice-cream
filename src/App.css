@@ -147,7 +147,7 @@ ion-badge {
 
 /************ Menu ************/
 .headerGraphic {
-  padding: 20px;
+  padding: 0 20px 0 10px;
 }
 
 .labelMenu {

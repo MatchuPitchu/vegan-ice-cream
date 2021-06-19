@@ -121,12 +121,6 @@ const About = () => {
             <p>Ehrenfelsstraße 13, 10318 Berlin</p>
           </IonCardContent>
         </IonCard>
-        <IonCard>  
-          <IonItem button onClick={() => { setShowAbout(false); menuController.toggle() }} className="my-1" routerLink='/datenschutz' lines="none" detail={false}>
-            <IonIcon slot="start" icon={lockClosed} />
-            <IonLabel className="ion-text-wrap">Datenschutz</IonLabel>
-          </IonItem>
-        </IonCard>  
       </IonContent>
     </IonPage>
   );

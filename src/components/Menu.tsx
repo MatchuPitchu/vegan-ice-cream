@@ -13,7 +13,7 @@ import {
   IonToolbar,
   isPlatform 
 } from '@ionic/react';
-import { create, informationCircle, logIn, logOut, pencil, personCircle } from 'ionicons/icons';
+import { create, informationCircle, lockClosed, logIn, logOut, pencil, personCircle } from 'ionicons/icons';
 import Toggle from './Toggle';
 import Feedback from './Feedback';
 import About from './About';
@@ -43,7 +43,7 @@ const Menu: React.FC = () => {
             <Toggle />
           </IonItem>
           <IonListHeader>
-            <img className="headerGraphic" src={`${toggle ? "./assets/header-graphic-ice-dark.svg" : "./assets/header-graphic-ice-light.svg"}`} />
+            <img className="headerGraphic" src={`${toggle ? "./assets/header-graphic-ice-dark-2.svg" : "./assets/header-graphic-ice-light-2.svg"}`} />
           </IonListHeader>
           <IonItem className="labelMenu" disabled={isAuth ? true : false} routerLink='/login' lines="none" detail={false} button onClick={ async () => await menuController.toggle()}>
             <IonLabel>Login</IonLabel>
@@ -53,6 +53,7 @@ const Menu: React.FC = () => {
             <IonLabel>Registrieren</IonLabel>
             <IonIcon slot="end" icon={create} />
           </IonItem>
+
           {isAuth && (
             <IonItem className="labelMenu" button onClick={() => { setShowProfil(true)}} lines="full" detail={false}>
               <IonLabel>Profil</IonLabel>
@@ -64,6 +65,7 @@ const Menu: React.FC = () => {
               <Profil />
             </IonModal>
           )}      
+
           <IonItem className="labelMenu" button onClick={() => { setShowFeedback(true)}} lines="none" detail={false} >
             <IonLabel>Feedback</IonLabel>
             <IonIcon slot="end" icon={pencil} />
@@ -72,8 +74,9 @@ const Menu: React.FC = () => {
             <IonModal cssClass={`${isPlatform('desktop') ? 'menuModalDesktop' : 'menuModal'}`} isOpen={showFeedback} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowFeedback(false)} enterAnimation={enterAnimationLft} leaveAnimation={leaveAnimationLft}>
               <Feedback />
             </IonModal>
-          )}      
-          <IonItem className="labelMenu" button onClick={() => { setShowAbout(true)}}  lines={isAuth ? "full" : "none"} detail={false} >
+          )}
+
+          <IonItem className="labelMenu" button onClick={() => { setShowAbout(true)}}  lines="none" detail={false} >
             <IonLabel>About</IonLabel>
             <IonIcon slot="end" icon={informationCircle} />
           </IonItem>
@@ -81,7 +84,13 @@ const Menu: React.FC = () => {
             <IonModal cssClass={`${isPlatform('desktop') ? 'menuModalDesktop' : 'menuModal'}`} isOpen={showAbout} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setShowAbout(false)} enterAnimation={enterAnimationLft} leaveAnimation={leaveAnimationLft}>
               <About />
             </IonModal>
-          )}      
+          )}
+
+          <IonItem className="labelMenu" button onClick={() => menuController.toggle()} routerLink='/datenschutz' lines={isAuth ? "full" : "none"} detail={false}>
+            <IonLabel>Datenschutz</IonLabel>
+            <IonIcon slot="end" icon={lockClosed} />
+          </IonItem>
+
           {isAuth && (
             <IonItem button onClick={logout} className="labelMenu mt-3 pe-2" routerLink='/logout' lines="none" detail={false}>
               <IonIcon slot="start" icon={logOut} />

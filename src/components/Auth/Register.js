@@ -3,7 +3,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Context } from "../../context/Context";
 import { IonContent, IonInput, IonItem, IonLabel, IonList, IonButton, IonPage, IonHeader, IonIcon, IonCardTitle, IonCardContent, IonCard } from "@ionic/react";
 import showError from '../showError';
-import { logIn } from "ionicons/icons";
+import { lockClosed, logIn } from "ionicons/icons";
 import { citiesArray } from '../arrayCitiesGermany';
 import LoadingError from "../LoadingError";
 
@@ -220,6 +220,7 @@ const Register = () => {
           </form>
 
           <p className="text-center itemTextSmall ion-text-wrap">Nach der Registrierung kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
+
           <IonCard>
             <IonItem lines="full">
               <IonLabel className="text-center ion-text-wrap" color="primary">Hinweise zur Wahl des Passworts</IonLabel>
@@ -231,6 +232,17 @@ const Register = () => {
               <div className="itemTextSmall">mindestens 6 Stellen lang, maximal 32</div>
               <div className="itemTextSmallWarning mt-3 ion-text-wrap">Dein Passwort wird verschlüsselt in der Datenbank gespeichert und ist für niemanden einzusehen</div>
             </div>
+          </IonCard>
+          <IonCard>
+            <p className="text-center itemTextSmall ion-text-wrap px-4 my-2 ">
+              Die Datenschutzhinweise, denen du mit der Registrierung zustimmst, findest du hier
+            </p>
+            <p className="text-center">
+              <IonButton className="add-control" button routerLink='/datenschutz' lines="none">
+                <IonLabel>Datenschutz</IonLabel>
+                <IonIcon slot="end" icon={lockClosed} />
+              </IonButton>
+            </p>
           </IonCard>
         </div>
         ) : (
