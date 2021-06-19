@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Context } from "../../context/Context";
-import { IonContent, IonInput, IonItem, IonLabel, IonButton, IonPage, IonHeader, IonTitle, IonIcon } from "@ionic/react";
+import { IonContent, IonInput, IonItem, IonLabel, IonButton, IonPage, IonHeader, IonTitle, IonIcon, IonCard } from "@ionic/react";
 import { Redirect } from "react-router-dom";
 import showError from '../showError';
-import { create, logIn, refreshCircle } from "ionicons/icons";
+import { create, lockClosed, logIn, refreshCircle } from "ionicons/icons";
 
 const Login = () => {
   const { isAuth, setIsAuth, error, setError, user, setUser, toggle, setCenter } = useContext(Context);
@@ -87,6 +87,15 @@ const Login = () => {
             </IonButton>
           </form>
           <p className="text-center itemTextSmall ion-text-wrap">Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
+          <p className="text-center itemTextSmall ion-text-wrap px-4 my-2 ">
+            Die Datenschutzhinweise, denen du mit dem Einloggen zustimmst, findest du hier
+          </p>
+          <p className="text-center">
+            <IonButton className="add-control" button routerLink='/datenschutz' lines="none">
+              <IonLabel>Datenschutz</IonLabel>
+              <IonIcon slot="end" icon={lockClosed} />
+            </IonButton>
+          </p>
         </div>
       </IonContent>
     </IonPage>
