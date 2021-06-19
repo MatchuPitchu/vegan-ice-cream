@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import { Context } from "../context/Context";
-import { IonButton, IonCard, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonLabel, IonPage, IonPopover } from '@ionic/react';
-import { add, create, gift, iceCream, logIn, logoPaypal, star } from 'ionicons/icons';
+import { IonButton, IonCard, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonLabel, IonPage, IonPopover, isPlatform } from '@ionic/react';
+import { add, create, gift, iceCream, logIn, logoApple, logoGooglePlaystore, logoPaypal, logoVimeo, phonePortraitOutline, settings, star } from 'ionicons/icons';
 import SearchTopLocations from '../components/SearchTopLocations';
 import TopLocations from '../components/TopLocations';
 
@@ -138,6 +138,23 @@ const Home = () => {
           </IonFabButton>
         </IonFabList>
       </IonFab>
+
+      {isPlatform('desktop') || isPlatform('mobileweb') ? ( 
+        <IonFab vertical="bottom" horizontal="start" slot="fixed">
+          <IonFabButton color="primary" className="logo-btn">
+            <IonIcon icon={phonePortraitOutline} />
+          </IonFabButton>
+          <IonFabList side="top">
+            <IonFabButton color="primary" className="logo-btn" routerDirection="forward" target="_blank" href='https://play.google.com/store/apps/details?id=eismitstil.app'>
+              <IonIcon icon={logoGooglePlaystore} />
+            </IonFabButton>
+            <IonFabButton color="primary" className="logo-btn" routerDirection="forward" routerLink='/ios'>
+              <IonIcon icon={logoApple} />
+            </IonFabButton>
+          </IonFabList>
+        </IonFab>
+      ) : null}
+
     </IonPage>
   );
 };

@@ -24,6 +24,7 @@ import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import ActivateUser from './components/Auth/ActivateUser';
 import Logout from './components/Auth/Logout';
+import IosDescription from './components/IosDescription';
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -75,6 +76,7 @@ const App: React.FC = () => {
               <Route path="/auth/reset-password" component={ResetPassword} exact/>
               <Route path="/auth/reset-password/user/:id" component={SetNewPassword} exact/>
               <Route path="/datenschutz" component={Datenschutz} exact/>
+              <Route path="/ios" component={IosDescription} exact/>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
               <IonTabButton tab="home" href="/home">
