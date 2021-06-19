@@ -76,6 +76,16 @@ ion-badge {
   margin: 15px auto;
 }
 
+ul,
+ol {
+  padding-left: 1rem;
+}
+
+li {
+  font-size: 0.9rem;
+  padding-bottom: 3px;
+}
+
 .confirm-btn {
   height: 37px;
   text-transform: none;
@@ -102,9 +112,14 @@ ion-badge {
   width: 200px;
   height: 200px;
   position: absolute;
-  top: -150px;
+  top: -190px;
+  left: -90px;
   font-size: 0.8rem;
   text-align: center;
+}
+
+.logo-btn {
+  font-size: 0.8rem;
 }
 
 .infoText {

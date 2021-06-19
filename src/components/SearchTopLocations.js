@@ -40,7 +40,6 @@ const Search = () => {
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/top-in-city?limit=${limit}`, options)
       const data = await res.json();
-      console.log(data)
       if(data.length) {
         setTopLocations(data);
         setShowTopLoc(true)
