@@ -136,6 +136,7 @@ const Home = () => {
             target="_blank"
             routerDirection="forward"
             color="primary"
+            onClick={() => setShow(prev => !prev)}
           >
             <div className="d-flex flex-column align-items-center mt-3">
               <div className="mx-3 ion-text-wrap">Gefällt dir die App?</div>

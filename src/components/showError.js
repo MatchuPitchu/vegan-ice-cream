@@ -15,6 +15,7 @@ const showError = (_fieldName, errors) => {
           {_fieldName === 'newPassword' && 'Bitte trage ein gültiges Passwort ein'}
           {_fieldName === 'password' && 'Bitte trage ein gültiges Passwort ein'}
           {_fieldName === 'repeatPassword' && `${errorMsg} Schau, ob die Eingaben übereinstimmen.`}
+          {_fieldName === 'city' && `Du kannst die Stadt jederzeit in deinem Profil ändern. Für deine Kartenansicht wird aber eine Angabe gebraucht.`}
           {_fieldName === 'street' && 'Bitte ergänze die Straße.'}
           {_fieldName === 'number' && 'Hast du eine korrekte Hausnummer eingetragen?'}
           {_fieldName === 'zipcode' && 'Überprüfe die Eingabe der Postleitzahl.'}
