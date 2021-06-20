@@ -31,11 +31,14 @@ const Home = () => {
         <img className="headerMap" src={`${toggle ? "./assets/header-home-dark.svg" : "./assets/header-home-light.svg"}`} />
       </IonHeader>
       <IonContent 
-        className={`home ${show && "fabOpen"}`}
+        className="home"
         ref={contentRef}
         scrollEvents
         style={{backgroundImage: `url(./assets/images/${toggle ? 'ice-cream-red-dark-pablo-merchan-montes-unsplash.jpg' : 'ice-cream-yellow-light-wesual-click-unsplash.jpg'})`}}
       >
+        
+        <div className={`${show && "fabOpen"}`}></div>
+
         <div className="run-text">
           <h1 className="title">
             veganes Eis<br />
@@ -119,7 +122,11 @@ const Home = () => {
       </IonContent>
 
       <IonFab className="me-2" vertical="bottom" horizontal="end" slot="fixed">
-        <IonFabButton onClick={() => setShow(prev => !prev)} size="small">
+        <IonFabButton 
+          size="small"
+          onClick={() => setShow(prev => !prev)}
+          activated={show ? true : false}
+        >
           <IonIcon icon={gift} />
         </IonFabButton>
         <IonFabList color="dark" side="start">
@@ -141,7 +148,7 @@ const Home = () => {
 
       {isPlatform('desktop') || isPlatform('mobileweb') ? ( 
         <IonFab vertical="bottom" horizontal="start" slot="fixed">
-          <IonFabButton color="primary" className="logo-btn">
+          <IonFabButton size="small" color="primary" className="logo-btn">
             <IonIcon icon={phonePortraitOutline} />
           </IonFabButton>
           <IonFabList side="top">
