@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Context } from "../../context/Context";
-import { IonContent, IonInput, IonItem, IonLabel, IonList, IonButton, IonPage, IonHeader, IonIcon, IonCardTitle, IonCardContent, IonCard } from "@ionic/react";
+import { IonContent, IonInput, IonItem, IonLabel, IonList, IonButton, IonPage, IonHeader, IonIcon, IonCardTitle, IonCardContent, IonCard, isPlatform } from "@ionic/react";
 import showError from '../showError';
 import { lockClosed, logIn } from "ionicons/icons";
 import { citiesArray } from '../arrayCitiesGermany';
@@ -179,7 +179,7 @@ const Register = () => {
             {error && <div className='alertMsg'>{error}</div>}
 
             <IonItem lines="none" className="mb-1">
-              <IonLabel position='stacked' htmlFor="city">Stadt <span className="span-small">(für Startpunkt der Karte)</span></IonLabel>
+              <IonLabel position='stacked' htmlFor="city">Stadt <span className="span-small">(nur für deinen Startpunkt der Karte)</span></IonLabel>
               <Controller 
                 control={control}
                 defaultValue=""
@@ -213,6 +213,7 @@ const Register = () => {
                 rules={{ required: true }}
               />
             </IonItem>
+            {showError("city", errors)}
 
             <IonButton className="my-3 confirm-btn" type="submit" fill="solid" expand="block">
               <IonIcon className="pe-1" icon={logIn}/>Registrieren
@@ -225,7 +226,7 @@ const Register = () => {
             <IonItem lines="full">
               <IonLabel className="text-center ion-text-wrap" color="primary">Hinweise zur Wahl des Passworts</IonLabel>
             </IonItem>
-            <div className="text-center px-4 my-2">
+            <div className="text-center px-2 my-2">
               <div className="itemTextSmall">mindestens eine Ziffer [0-9]</div>
               <div className="itemTextSmall">mindestens einen kleinen Buchstaben [a-z]</div>
               <div className="itemTextSmall">mindestens einen großen Buchstaben [A-Z]</div>
@@ -234,8 +235,8 @@ const Register = () => {
             </div>
           </IonCard>
           <IonCard>
-            <p className="text-center itemTextSmall ion-text-wrap px-4 my-2 ">
-              Die Datenschutzhinweise, denen du mit der Registrierung zustimmst, findest du hier
+            <p className="text-center itemTextSmall ion-text-wrap px-2 my-2 ">
+              Hier findest du die Datenschutzhinweise, denen du mit der Registrierung zustimmst
             </p>
             <p className="text-center">
               <IonButton className="add-control" button routerLink='/datenschutz' lines="none">

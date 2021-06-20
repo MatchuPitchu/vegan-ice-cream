@@ -87,8 +87,8 @@ const Login = () => {
             </IonButton>
           </form>
           <p className="text-center itemTextSmall ion-text-wrap">Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen.</p>
-          <p className="text-center itemTextSmall ion-text-wrap px-4 my-2 ">
-            Die Datenschutzhinweise, denen du mit dem Einloggen zustimmst, findest du hier
+          <p className="text-center itemTextSmall ion-text-wrap px-2 my-2 ">
+            Hier findest du die Datenschutzhinweise, denen du mit dem Login zustimmst
           </p>
           <p className="text-center">
             <IonButton className="add-control" button routerLink='/datenschutz' lines="none">

@@ -229,6 +229,7 @@ const Bewerten = () => {
               <IonLabel position='stacked' htmlFor="location">Name des Eisladens</IonLabel>
               <IonInput
                 readonly
+                className="inputField"
                 type="text"
                 placeholder="Nutze die Suche"
                 value={searchSelected ? searchSelected.name : ''}
@@ -241,7 +242,7 @@ const Bewerten = () => {
                 render={({ field: { onChange, value } }) => (
                   <>
                     <IonLabel position='stacked' className="pb-1">Preis Eiskugel</IonLabel>
-                    <div className="priceInfo">{parseFloat(value).toFixed(2)} €</div>
+                    <div className="priceInfo">{parseFloat(value) !== 0 && `${parseFloat(value).toFixed(2)} €`}</div>
                     <IonRange
                       className="px-0"
                       min={0}
