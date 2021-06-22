@@ -50,6 +50,11 @@ const TopLocations = () => {
                   </p> 
                 )}
               </IonLabel>
+              {loc.pricing.length > 0 && (
+                <div className="pricingInfo">
+                  Eiskugel {loc.pricing[loc.pricing.length-1].toFixed(2).replace(/\./g, ',')} €
+                </div>
+              )}
             </IonItem>
             <div className="px-3 py-2">
               {loc.location_rating_quality && (
