@@ -1142,6 +1142,13 @@ ion-range::part(knob) {
   height: 31px;
 }
 
+.flavor-search-preview {
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 100%;
+  box-shadow: 10px 5px 20px #4a4a4a;
+}
+
 .colorPicker {
   margin: 0 auto;
 }

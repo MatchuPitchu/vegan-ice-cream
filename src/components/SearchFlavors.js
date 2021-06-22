@@ -126,6 +126,7 @@ const SearchFlavors = () => {
                 caseSensitive={false}
                 textToHighlight={`${flavor.name} ${flavor.type_fruit ? '| Fruchteis' : ''} ${flavor.type_cream ? '| Cremeeis' : ''}`}
               />
+              <div className="flavor-search-preview" style={{background: `linear-gradient(to bottom, ${flavor.color.primary}, ${flavor.color.secondary ? flavor.color.secondary : flavor.color.primary})`}}></div>
             </IonItem>
           ))} 
         </IonList>
