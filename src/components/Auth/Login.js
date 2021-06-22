@@ -1,13 +1,13 @@
 import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Context } from "../../context/Context";
-import { IonContent, IonInput, IonItem, IonLabel, IonButton, IonPage, IonHeader, IonTitle, IonIcon, IonCard } from "@ionic/react";
+import { IonContent, IonInput, IonItem, IonLabel, IonButton, IonPage, IonHeader, IonIcon } from "@ionic/react";
 import { Redirect } from "react-router-dom";
 import showError from '../showError';
-import { create, lockClosed, logIn, refreshCircle } from "ionicons/icons";
+import { lockClosed, logIn, refreshCircle } from "ionicons/icons";
 
 const Login = () => {
-  const { isAuth, setIsAuth, error, setError, user, setUser, toggle, setCenter } = useContext(Context);
+  const { isAuth, setIsAuth, error, setError, setUser, toggle } = useContext(Context);
   const { control, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async data => {
@@ -33,12 +33,11 @@ const Login = () => {
         localStorage.setItem('token', token);
         setUser({ ...user, ...data});
         setIsAuth(true);
-      } else {
-        setError('Prüfe, ob du das richtige Passwort eingetippt hast oder ob du deine Mailadresse bestätigt hast.');
-        setTimeout(() => setError(null), 5000);
       }
     } catch (error) {
-      console.log(error);
+      setError('Prüfe, ob du das richtige Passwort eingetippt hast oder ob du deine Mailadresse bestätigt hast.');
+      setTimeout(() => setError(null), 5000);
+      console.log(error.message);
     }
   };
 
@@ -77,7 +76,7 @@ const Login = () => {
                   />
             </IonItem>
             {showError("password", errors)}
-            {error && <div className='alertMsg'>{error}</div>}
+            {error && <div className="alertMsg">{error}</div>}
             
             <IonButton className="my-3 confirm-btn" type="submit" fill="solid" expand="block">
               <IonIcon className="pe-1" icon={logIn}/>Login
