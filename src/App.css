@@ -109,11 +109,11 @@ li {
 }
 
 .donate-btn {
-  width: 200px;
-  height: 200px;
+  width: 230px;
+  height: 230px;
   position: absolute;
-  top: -190px;
-  left: -90px;
+  top: -220px;
+  left: -110px;
   font-size: 0.8rem;
   text-align: center;
 }

@@ -30,15 +30,15 @@ const Home = () => {
       <IonHeader>
         <img className="headerMap" src={`${toggle ? "./assets/header-home-dark.svg" : "./assets/header-home-light.svg"}`} />
       </IonHeader>
+
+      <div className={`${show && "fabOpen"}`}></div>
+
       <IonContent 
         className="home"
         ref={contentRef}
         scrollEvents
         style={{backgroundImage: `url(./assets/images/${toggle ? 'ice-cream-red-dark-pablo-merchan-montes-unsplash.jpg' : 'ice-cream-yellow-light-wesual-click-unsplash.jpg'})`}}
       >
-        
-        <div className={`${show && "fabOpen"}`}></div>
-
         <div className="run-text">
           <h1 className="title">
             veganes Eis<br />
@@ -139,8 +139,9 @@ const Home = () => {
             onClick={() => setShow(prev => !prev)}
           >
             <div className="d-flex flex-column align-items-center mt-3">
-              <div className="mx-3 ion-text-wrap">Gefällt dir die App?</div>
-              <div className="mx-3 ion-text-wrap">Ich bin dankbar für jede Unterstützung, um die Betriebskosten decken und die App weiterentwickeln zu können.</div>
+              <div className="mx-3 mb-2 ion-text-wrap"><b>Gefällt dir die App?</b></div>
+              <div className="mx-3 mb-2 ion-text-wrap">Teile die App mit Freund:innen.</div>
+              <div className="mx-3 mb-2 ion-text-wrap">Auch bin ich dankbar für jede Unterstützung, um die Betriebskosten decken und die App weiterentwickeln zu können.</div>
               <IonIcon className="mt-2 donateIcon" icon={logoPaypal} />
             </div>
           </IonFabButton>

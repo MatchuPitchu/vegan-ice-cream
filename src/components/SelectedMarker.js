@@ -160,7 +160,7 @@ const SelectedMarker = () => {
                   ) : null}
                 </IonItemGroup>
               ) : (
-                <IonItem lines="none">... wartet auf die erste Bewertung</IonItem>
+                <IonItem className="itemTextSmall" lines="none">... wartet auf die erste Bewertung</IonItem>
               )}
           </div>
         </IonCard>
