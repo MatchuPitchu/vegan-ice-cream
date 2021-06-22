@@ -85,6 +85,10 @@ const Bewerten = () => {
     setValue("not_specified", false);
   }
 
+  const checkLactoseFree = () => {
+    setValue("lactose_free", true);
+  }
+
   // Create Flavor Post Function
   const createFlavor = (data, comment) => {
     setLoading(true);
@@ -262,7 +266,7 @@ const Bewerten = () => {
             </IonItem>
 
             <IonItem className="itemLabelStacked" lines="none">
-              <IonLabel position='stacked' htmlFor="name1">Eissorte</IonLabel>
+              <IonLabel position='stacked' htmlFor="name">Eissorte</IonLabel>
             </IonItem>
 
             <SearchFlavors />
@@ -318,7 +322,6 @@ const Bewerten = () => {
                   />
                 </div>
               </div>
-              {showError("type_cream", errors)}
             </IonItem>
 
             <IonItem lines="none">
@@ -351,7 +354,7 @@ const Bewerten = () => {
                 rules={{ required: true }}
               />
             </IonItem>
-            {showError("ice-color", errors)}
+            {showError("color1", errors)}
 
             <IonItem lines="none" className="mb-1">
               <IonLabel ref={flav2Ref} className="mb-1" position='stacked' htmlFor="color2"></IonLabel>
@@ -378,7 +381,6 @@ const Bewerten = () => {
                 name="color2"
               />
             </IonItem>
-            {showError("ice-color", errors)}
             
             <IonItem lines="none" className="mb-1">
               <IonLabel position='stacked' htmlFor="text">Kommentar</IonLabel>
@@ -448,6 +450,7 @@ const Bewerten = () => {
                         onIonChange={e => {
                           onChange(e.detail.checked);
                           e.detail.checked && unCheckNotSpecified();
+                          e.detail.checked && checkLactoseFree();
                         }} 
                         checked={value} 
                       />

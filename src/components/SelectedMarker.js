@@ -78,35 +78,45 @@ const SelectedMarker = () => {
               )}
             </IonItem>
 
-            <IonItem className="modalItemSmall itemTextSmall" lines="full">
+            <IonItem
+              button
+              onClick={() => {
+                setSearchSelected(selected);
+                setOpenComments(false);
+                setSelected(null);
+                setInfoModal(false);
+              }} 
+              routerLink="/preis" 
+              routerDirection="forward"
+              className="modalItemSmall itemTextSmall" 
+              lines="full"
+              detail="false"
+            >
               <IonLabel>{selected.pricing.length === 0 ? 'Kugelpreis eintragen' : 'Kugelpreis aktualisieren'}</IonLabel>
               <IonButton 
-                onClick={() => {
-                  setSearchSelected(selected);
-                  setOpenComments(false);
-                  setSelected(null);
-                  setInfoModal(false);
-                }} 
                 fill="clear" 
-                routerLink="/preis" 
-                routerDirection="forward"
               >
                 <IonIcon icon={add}/>
               </IonButton>
             </IonItem>
 
-            <IonItem className="modalItemSmall itemTextSmall" lines="full">
+            <IonItem 
+              button
+              onClick={() => {
+                setSearchSelected(selected);
+                setOpenComments(false);
+                setSelected(null);
+                setInfoModal(false);
+              }} 
+              routerLink="/bewerten" 
+              routerDirection="forward"
+              className="modalItemSmall itemTextSmall" 
+              lines="full"
+              detail="false"
+            >
               <IonLabel>Bewerten</IonLabel>
               <IonButton 
-                onClick={() => {
-                  setSearchSelected(selected);
-                  setOpenComments(false);
-                  setSelected(null);
-                  setInfoModal(false);
-                }} 
-                fill="clear" 
-                routerLink="/bewerten" 
-                routerDirection="forward"
+                fill="clear"
               >
                 <IonIcon icon={add}/>
               </IonButton>
@@ -160,7 +170,20 @@ const SelectedMarker = () => {
                   ) : null}
                 </IonItemGroup>
               ) : (
-                <IonItem className="itemTextSmall" lines="none">... wartet auf die erste Bewertung</IonItem>
+                <IonItem 
+                  button
+                  onClick={() => {
+                    setSearchSelected(selected);
+                    setOpenComments(false);
+                    setSelected(null);
+                    setInfoModal(false);
+                  }} 
+                  routerLink="/bewerten" 
+                  routerDirection="forward"
+                  className="itemTextSmall"
+                  lines="none"
+                  detail="false"
+                >... wartet auf die erste Bewertung</IonItem>
               )}
           </div>
         </IonCard>

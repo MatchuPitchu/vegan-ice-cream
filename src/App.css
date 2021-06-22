@@ -196,7 +196,7 @@ li {
 
 /************ Feedback Form ************/
 .alertMsg {
-  color: var(--ion-color-danger);
+  color: var(--ion-color-danger-tint);
   padding-bottom: 10px;
   font-size: 0.7rem;
 }
