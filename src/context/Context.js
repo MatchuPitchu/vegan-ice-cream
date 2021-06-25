@@ -186,12 +186,16 @@ const AppState = ({children}) => {
   }, [viewport, searchSelected])
 
   const searchViewport = () => {
-    let { lc, Eb } = map.getBounds();
+    let southLat = map.getBounds().getSouthWest().lat();
+    let westLng = map.getBounds().getSouthWest().lng();
+    let northLat = map.getBounds().getNorthEast().lat();
+    let eastLng = map.getBounds().getNorthEast().lng();
+
     const latLngBounds = {
-      southLat: lc.g,
-      westLng: Eb.g,
-      northLat: lc.i,
-      eastLng: Eb.i,
+      southLat,
+      westLng,
+      northLat,
+      eastLng
     };
     setViewport(latLngBounds);
   }
