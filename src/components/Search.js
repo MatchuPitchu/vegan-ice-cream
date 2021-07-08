@@ -40,7 +40,7 @@ const Search = () => {
           setZoom(13);
         }
       } catch (error) {
-        setError('Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in Deutschland eintragen.')
+        setError('Ups, schief gelaufen. Nur Orte in Deutschland, Österreich und der Schweiz möglich')
         setTimeout(() => setError(null), 5000);
       }
       searchViewport();
