@@ -17,6 +17,7 @@ const AppState = ({children}) => {
   const [cities, setCities] = useState([]);
   const [listResults, setListResults] = useState([]);
   const [autocomplete, setAutocomplete] = useState(null);
+  const [autocompleteModal, setAutocompleteModal] = useState(false);
   const [searchAutocomplete, setSearchAutocomplete] = useState('');
   const [result, setResult] = useState(null);
   const [formattedAddress, setFormattedAddress] = useState(null);
@@ -48,7 +49,6 @@ const AppState = ({children}) => {
   const [showAbout, setShowAbout] = useState(false);
   const [infoModal, setInfoModal] = useState(false);
   const [newLocModal, setNewLocModal] = useState(false);
-  const [autocompleteModal, setAutocompleteModal] = useState(false);
   const [alertUpdateFav, setAlertUpdateFav] = useState({
     removeStatus: false, 
     addStatus: false, 
@@ -385,6 +385,7 @@ const AppState = ({children}) => {
         cities, setCities,
         listResults, setListResults,
         autocomplete, setAutocomplete,
+        autocompleteModal, setAutocompleteModal,
         searchAutocomplete, setSearchAutocomplete,
         result, setResult,
         formattedAddress, setFormattedAddress,
@@ -420,7 +421,6 @@ const AppState = ({children}) => {
         showAbout, setShowAbout,
         infoModal, setInfoModal,
         newLocModal, setNewLocModal,
-        autocompleteModal, setAutocompleteModal,
         alertUpdateFav, setAlertUpdateFav,
         removeFavLoc,
         addFavLoc,

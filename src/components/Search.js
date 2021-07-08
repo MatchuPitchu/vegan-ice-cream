@@ -27,10 +27,12 @@ const Search = () => {
     if(e.target.elements[0].value.length > 3 && segment === 'map') {
       setLoading(true);
       try {
-        const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(e.target.elements[0].value)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
+        // fetch results are restricted to countries DE, AT, CH, LI
+        const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(e.target.elements[0].value)}&components=country:DE|country:AT|country:CH|country:LI&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
         const { results } = await res.json();
        
         if(results[0].geometry.location) {
+          // set zoom and center map if user types in city or address
           setCenter({
             lat: results[0].geometry.location.lat,
             lng: results[0].geometry.location.lng
@@ -81,11 +83,12 @@ const Search = () => {
   const initMarker = (loc) => {
     setSearchSelected(loc); 
     setPredictions([]);
+    // set zoom and center map if user chooses item in prediction list
     setCenter({
       lat: loc.address.geo.lat, 
       lng: loc.address.geo.lng
     })
-    setZoom(14);
+    setZoom(16);
   }
 
   return (

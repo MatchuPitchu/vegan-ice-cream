@@ -24,7 +24,7 @@ const Search = () => {
 
   const onSubmit = async ({city}) => {
     setLoading(true);
-    const cityCapitalized = city.replace(/\b\w/g, l => l.toUpperCase())
+    const cityCapitalized = city.replace(/^(.)|\s+(.)/g, l => l.toUpperCase())
     setCityName(cityCapitalized);
     try {
       const limit = 20;
