@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect, useCallback } from "react";
 import { Context } from '../context/Context';
 import { Geolocation } from '@ionic-native/geolocation';
-import { IonPopover, IonButton, IonContent, IonHeader, IonIcon, IonLabel, IonPage, IonSegment, IonSegmentButton, IonToolbar } from '@ionic/react';
+import { IonPopover, IonButton, IonContent, IonIcon, IonLabel, IonPage, IonSegment, IonSegmentButton } from '@ionic/react';
 import { GoogleMap, Marker, MarkerClusterer, useJsApiLoader } from '@react-google-maps/api';
 import { add, addCircleOutline, create, listCircle, location as myPos, logIn, map as mapIcon, refreshCircle, removeCircleOutline, search } from "ionicons/icons";
 import NewLocationForm from "../components/NewLocationForm";
@@ -66,13 +66,13 @@ const Entdecken = () => {
     disableDefaultUI: true,
     gestureHandling: "cooperative",
     minZoom: 7,
-    // restricted to boundaries of germany
+    // restricted to boundaries of viewport DE, CH, AUT
     restriction: {
       latLngBounds: {
-        south: 47.1,
+        south: 45.75,
         west: 5.7,
-        north: 55.3,
-        east: 15.3,
+        north: 55.15,
+        east: 17.2,
       },
     },
   }
@@ -185,7 +185,7 @@ const Entdecken = () => {
                 title="Karte auf Anfangspunkt zentrieren"
                 onClick={() => { 
                   map.setCenter(center); 
-                  map.setZoom(12)
+                  map.setZoom(13)
                 }}
               >
                 <IonIcon icon={refreshCircle} />
@@ -194,7 +194,7 @@ const Entdecken = () => {
 
             <GoogleMap 
               mapContainerClassName="map" 
-              zoom={zoom} 
+              zoom={zoom}
               center={center}
               options={options}
               onLoad={onMapLoad}

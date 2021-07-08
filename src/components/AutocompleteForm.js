@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { Context } from "../context/Context";
 import { Autocomplete } from '@react-google-maps/api';
-import { IonButton, IonCardSubtitle, IonContent, IonIcon, IonItem, IonLabel, IonModal, isPlatform } from '@ionic/react';
-import { checkbox, closeCircleOutline } from 'ionicons/icons';
+import { IonButton, IonCardSubtitle, IonContent, IonIcon, IonItem, IonLabel, IonModal } from '@ionic/react';
+import { checkbox, closeCircleOutline, informationCircleOutline } from 'ionicons/icons';
 import LoadingError from './LoadingError';
 
 const AutocompleteForm = () => {
@@ -11,6 +11,7 @@ const AutocompleteForm = () => {
     setLoading,
     locations,
     setCenter,
+    setZoom,
     autocomplete, setAutocomplete,
     autocompleteModal, setAutocompleteModal,
     searchAutocomplete, setSearchAutocomplete,
@@ -36,7 +37,8 @@ const AutocompleteForm = () => {
 
     const fetchData = async () => {
       try {
-        const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(formattedAddress ? formattedAddress : searchAutocomplete)}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
+        // fetch results are restricted to countries DE, AT, CH, LI
+        const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(formattedAddress ? formattedAddress : searchAutocomplete)}&components=country:DE|country:AT|country:CH|country:LI&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`)
         const { results } = await res.json();
 
         if(result.address.number) {
@@ -76,6 +78,7 @@ const AutocompleteForm = () => {
             lat: results[0].geometry.location.lat,
             lng: results[0].geometry.location.lng
           });
+          setZoom(18);
         }
       } catch (error) {
         setError('Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in Deutschland eintragen.')
@@ -139,16 +142,17 @@ const AutocompleteForm = () => {
         <form className="d-flex flex-column" onSubmit={onSubmit}>
           <IonItem className="mt-3 px-2 addLocForm" lines="none">
             <div className="ion-text-wrap" position="stacked">
-              <IonCardSubtitle>Welchen Eisladen hast du entdeckt?</IonCardSubtitle>
-              <p style={{fontSize: '0.8rem'}}>Name und Stadt reichen zumeist. Sonst trage die korrekte Adresse ein.</p>
+              <IonCardSubtitle color="primary" className="mb-1">Welchen Eisladen hast du entdeckt?</IonCardSubtitle>
+              <p style={{fontSize: '0.8rem'}}><IonIcon size="small" icon={informationCircleOutline} /> Name und Stadt reichen zumeist. Sonst trage die korrekte Adresse ein. Deutschland, Schweiz, Österreich und Liechtenstein sind aktuell verfügbar.</p>
             </div>
           </IonItem>
           <IonItem className="addLocForm" lines="none">
+            {/* Restricts autocomplete to countries DE, AT, CH, LI*/}
             <Autocomplete
               className='container-autocomplete'
               onLoad={ onAutocompleteLoad }
               onPlaceChanged={ onPlaceChanged }
-              restrictions={ { country: 'de' } }
+              restrictions={ { country: ['de', 'at', 'ch', 'li'] } }
               fields={ ['name', 'address_components', 'formatted_address', 'place_id', 'website']}
             >
               <input 

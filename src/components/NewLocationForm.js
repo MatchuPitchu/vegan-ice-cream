@@ -25,7 +25,7 @@ const NewLocationForm = () => {
     number: newLocation ? newLocation.address.number : '',
     zipcode: newLocation ? newLocation.address.zipcode : '',
     city: newLocation ? newLocation.address.city : '',
-    country: 'Deutschland',
+    country: newLocation ? newLocation.address.country : '',
     location_url: newLocation.location_url ? newLocation.location_url : ''
   }
 
@@ -78,7 +78,15 @@ const NewLocationForm = () => {
   };
 
   return (
-    <IonModal cssClass='newLocModal' isOpen={newLocModal} swipeToClose={true} backdropDismiss={true} onDidDismiss={() => setNewLocModal(false)} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
+    <IonModal 
+      cssClass='newLocModal' 
+      isOpen={newLocModal} 
+      swipeToClose={true} 
+      backdropDismiss={true} 
+      onDidDismiss={() => setNewLocModal(false)} 
+      enterAnimation={enterAnimation} 
+      leaveAnimation={leaveAnimation}
+    >
       <IonItem lines='full'>
         <IonLabel>Eisladen eintragen</IonLabel>
         <IonButton 
@@ -147,7 +155,8 @@ const NewLocationForm = () => {
                 rules={{ 
                   required: true,
                   maxLength: 5,
-                  pattern: /^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$/
+                  // Regex accepts only digits, min 4 and max 5 digits
+                  pattern: /^[0-9]{4,5}$/
                 }}
               />
             </IonItem>
