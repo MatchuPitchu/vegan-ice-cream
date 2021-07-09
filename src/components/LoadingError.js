@@ -8,7 +8,6 @@ const LoadingError = () => {
     error, setError,
   } = useContext(Context);
 
-
   return (
     <>
       <IonToast

@@ -58,7 +58,7 @@ const SearchFlavors = () => {
 
   return (
     <>
-      <div className="d-flex align-items-center" style={{backgroundColor: 'var(--ion-item-background)'}}>
+      <div className="d-flex align-items-center pt-2" style={{backgroundColor: 'var(--ion-item-background)'}}>
         <IonSearchbar
           className="searchbar" 
           type="search"
@@ -124,7 +124,7 @@ const SearchFlavors = () => {
                 highlightClassName="highlight"
                 searchWords={searchWords}
                 caseSensitive={false}
-                textToHighlight={`${flavor.name} ${flavor.type_fruit ? '| Fruchteis' : ''} ${flavor.type_cream ? '| Cremeeis' : ''}`}
+                textToHighlight={`${flavor.name} ${flavor.type_fruit ? '• Sorbet' : ''} ${flavor.type_cream ? '• Cremeeis' : ''}`}
               />
               <div className="flavor-search-preview" style={{background: `linear-gradient(to bottom, ${flavor.color.primary}, ${flavor.color.secondary ? flavor.color.secondary : flavor.color.primary})`}}></div>
             </IonItem>

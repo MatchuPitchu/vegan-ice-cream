@@ -125,7 +125,8 @@ li {
 .infoText {
   font-size: 0.8rem;
   padding: 0 25px;
-  color: var(--ion-color-primary);
+  color: var(--ion-text-over-background);
+  opacity: 0.6;
 }
 
 .height20 {
@@ -978,7 +979,8 @@ mark {
 
 .websiteLink,
 .itemTextSmall,
-.itemTextSmallWarning {
+.itemTextSmallWarning,
+.textSmallLight {
   font-size: 0.8rem;
   color: var(--ion-color-primary-shade);
   text-overflow: ellipsis;
@@ -988,6 +990,13 @@ mark {
 
 .itemTextSmallWarning {
   color: var(--ion-color-warning);
+}
+
+.textSmallLight {
+  color: var(--ion-text-over-background);
+  opacity: 0.6;
+  line-height: 1.1rem;
+  margin-top: 4px;
 }
 
 .websiteLink:hover {
@@ -1136,10 +1145,6 @@ ion-range::part(knob) {
 
 .priceInfo {
   margin: 0 auto;
-}
-
-.itemLabelStacked {
-  height: 31px;
 }
 
 .flavor-search-preview {

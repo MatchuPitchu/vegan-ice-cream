@@ -6,6 +6,7 @@ import { IonContent, IonInput, IonItem, IonLabel, IonList, IonButton, IonPage, I
 import showError from '../showError';
 import { logIn } from "ionicons/icons";
 import LoadingError from '../LoadingError';
+import InfoTextRegister from './InfoTextRegister';
 
 const SetNewPassword = () => {
   const { toggle, setLoading, error, setError } = useContext(Context);
@@ -107,38 +108,18 @@ const SetNewPassword = () => {
               </IonButton>
             </form>
 
-            <p className="mt-4">
-              <IonList>
-                <IonItem lines="full">
-                  <IonLabel color="primary">Hinweise zur Wahl des Passworts</IonLabel>
-                </IonItem>
-                <IonItem lines="none">
-                  <IonLabel>mindestens eine Ziffer [0-9]</IonLabel>
-                </IonItem>
-                <IonItem lines="none">
-                  <IonLabel>mindestens einen kleinen Buchstaben [a-z]</IonLabel>
-                </IonItem>
-                <IonItem lines="none">
-                  <IonLabel>mindestens einen großen Buchstaben [A-Z]</IonLabel>
-                </IonItem>
-                <IonItem lines="none">
-                  <IonLabel>mindestens 6 Stellen lang, maximal 32</IonLabel>
-                </IonItem>
-                <IonItem lines="none">
-                  <IonLabel className="ion-text-wrap" color="warning">Dein Passwort wird verschlüsselt in der Datenbank gespeichert und ist für niemanden einzusehen</IonLabel>
-                </IonItem>
-              </IonList>
-            </p>
+            <InfoTextRegister />
+
           </div>
         ) : (
           <div className="container text-center">
             <IonCard>
-              <IonCardContent>
-              <IonCardTitle className="mb-3">Passwort erfolgreich erneuert</IonCardTitle>
-                <IonButton className="my-3 confirm-btn" routerLink="/login" fill="solid" expand="block">
-                  <IonIcon className="pe-1" icon={logIn}/>Login
-                </IonButton>
-              </IonCardContent>
+              <IonItem lines="full">
+                <IonLabel className="text-center ion-text-wrap" color="primary">Passwort erfolgreich erneuert</IonLabel>
+              </IonItem>
+              <IonButton className="my-3 confirm-btn" routerLink="/login" fill="solid">
+                <IonIcon className="pe-1" icon={logIn}/>Login
+              </IonButton>
             </IonCard>
           </div>
         )}

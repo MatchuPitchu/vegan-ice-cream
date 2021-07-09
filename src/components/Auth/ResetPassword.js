@@ -1,13 +1,14 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Context } from "../../context/Context";
-import { IonContent, IonInput, IonItem, IonLabel, IonButton, IonPage, IonHeader, IonIcon, IonCard, IonCardContent, IonCardTitle } from "@ionic/react";
+import { IonContent, IonInput, IonItem, IonLabel, IonButton, IonPage, IonHeader, IonIcon, IonCard } from "@ionic/react";
 import showError from '../showError';
 import { refreshCircle } from "ionicons/icons";
 import LoadingError from "../LoadingError";
 
 const ResetPassword = () => {
   const { setError, toggle } = useContext(Context);
+  const [success, setSuccess] = useState(false);
   const { control, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async data => {
@@ -26,6 +27,8 @@ const ResetPassword = () => {
       if(!message) {
         setError('Prüfe, ob du deine richtige Mailadresse eingetippt hast.');
         setTimeout(() => setError(null), 5000);
+      } else {
+        setSuccess(true);
       }
     } catch (error) {
       console.log(error);
@@ -39,32 +42,37 @@ const ResetPassword = () => {
       </IonHeader>
       <IonContent>
         <div className="container mt-3">
-          <IonCard className="text-center">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <IonItem lines="none">
-                <IonLabel position='floating' htmlFor="email">E-Mail</IonLabel>
-                <Controller 
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <IonInput type="email" inputmode="email" value={value} onIonChange={e => onChange(e.detail.value)} />
-                    )}
-                    name="email"
-                    rules={{ required: true }}
-                    />
-              </IonItem>
-              {showError("email", errors)}
-              
-              <IonButton className="my-3 mx-3 confirm-btn" type="submit" routerLink='/login' expand="block">
-                <IonIcon slot="end" className="pe-1"icon={refreshCircle}/>Passwort zurücksetzen
-              </IonButton>
-            </form>
-            <div className="my-3 mx-3" >Schau nach dem Klick auf den Button in dein Mailpostfach. Du hast einen Link zum Zurücksetzen deines Passworts erhalten. Kontrolliere auch deinen Spam-Ordner.</div>
-          </IonCard>
+          {!success ? (
+            <IonCard className="text-center">
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <IonItem lines="none">
+                  <IonLabel position='floating' htmlFor="email">E-Mail</IonLabel>
+                  <Controller 
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <IonInput type="email" inputmode="email" value={value} onIonChange={e => onChange(e.detail.value)} />
+                      )}
+                      name="email"
+                      rules={{ required: true }}
+                      />
+                </IonItem>
+                {showError("email", errors)}
+                
+                <IonButton className="my-3 mx-3 confirm-btn" type="submit">
+                  <IonIcon slot="end" className="pe-1"icon={refreshCircle}/>Passwort zurücksetzen
+                </IonButton>
+              </form>
+            </IonCard>
+          ) : (
+            <IonCard className="text-center successMsg">
+              <div className="my-3 mx-3" >Schau in dein Mailpostfach. Du hast einen Link zum Zurücksetzen deines Passworts erhalten. Kontrolliere auch deinen Spam-Ordner.</div>
+            </IonCard>
+          )}
         </div>
         <LoadingError />
       </IonContent>
     </IonPage>
-  );
+  )
 };
 
 export default ResetPassword;
