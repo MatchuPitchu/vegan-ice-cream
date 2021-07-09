@@ -198,13 +198,8 @@ const Bewerten = () => {
       {!endReset ? (
         <div className="container mt-3">
           <IonItem lines="none" className="mb-1 itemTextSmall">
-            <IonIcon color="primary" icon={bulb}/>
-            <IonLabel className="ion-text-wrap ms-1" >
-              Bewerte nur 1 Eissorte
-            </IonLabel>
-            
             <IonIcon
-              className="infoIcon"
+              className="infoIcon me-1"
               color="primary" 
               button 
               onClick={e => {
@@ -213,6 +208,10 @@ const Bewerten = () => {
               }}
               icon={informationCircle} 
             />
+            <IonLabel className="ion-text-wrap" >
+              Bewerte nur 1 Eissorte
+            </IonLabel>
+
             <IonPopover
               color="primary"
               cssClass='info-popover'

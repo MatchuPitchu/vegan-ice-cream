@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Context } from "../../context/Context";
-import { IonContent, IonPage, IonHeader, IonItem, IonCard, IonCardTitle, IonCardContent } from "@ionic/react";
+import { IonContent, IonPage, IonHeader, IonItem, IonCard, IonCardTitle, IonCardContent, IonLabel } from "@ionic/react";
 
 const Login = () => {
   const { toggle } = useContext(Context);
@@ -13,10 +13,12 @@ const Login = () => {
       <IonContent>
         <div className="container text-center">
           <IonCard>
-            <IonCardContent>
-            <IonCardTitle className="mb-3">Logout erfolgreich</IonCardTitle>
+            <IonItem lines="full">
+              <IonLabel className="text-center ion-text-wrap" color="primary">Logout erfolgreich</IonLabel>
+            </IonItem>
+            <p className="text-center itemTextSmall ion-text-wrap px-2 my-2 ">
               Melde dich wieder an, wenn du neue Eisläden eintragen, bewerten und zu deinen Favoriten hinzufügen möchtest.
-            </IonCardContent>
+            </p>
           </IonCard>
         </div>
       </IonContent>
