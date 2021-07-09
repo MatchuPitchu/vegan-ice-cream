@@ -77,4 +77,8 @@ self.addEventListener('message', (event) => {
   }
 });
 
+// A one-character change in the controlling service-worker.ts let trigger PWA update
+// update always version number in const
+const versionNumber = "1.2.0"
+
 // Any other custom service worker logic can go here.
