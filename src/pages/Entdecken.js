@@ -52,7 +52,7 @@ const Entdecken = () => {
       setPosition({lat: position.coords.latitude, lng: position.coords.longitude});
       setCenter({lat: position.coords.latitude, lng: position.coords.longitude})
     } catch (error) {
-      setError('Deine Position kann nicht ermittelt werden. Kontrolliere deine Einstellungen:', error)
+      setError('Deine Position kann nicht ermittelt werden:', error)
       setTimeout(() => setError(null), 5000);
     }
   };
@@ -110,7 +110,8 @@ const Entdecken = () => {
         </IonSegment>
       </div>
 
-      <Search />
+      {/* show search only if locations on map loaded in order to avoid too fast in searchbar typing behavior  */}
+      {locationsMap.length ? <Search /> : null}
 
       {segment === 'map' && (
         <IonContent>
@@ -200,7 +201,7 @@ const Entdecken = () => {
               onLoad={onMapLoad}
               onUnmount={onUnmount}
             >
-              <MarkerClusterer 
+              <MarkerClusterer
                 options={clusterOptions}
                 imageExtension='png'
                 averageCenter
@@ -244,6 +245,7 @@ const Entdecken = () => {
               </MarkerClusterer>
 
               {searchSelected ? (
+                // Marker of ice cream location selected in searchbar
                 <Marker
                   position={{lat: searchSelected.address.geo.lat, lng: searchSelected.address.geo.lng}}
                   icon={{
@@ -264,6 +266,7 @@ const Entdecken = () => {
               ) : null}
 
               {position ? (
+                // Current position marker of user
                 <Marker
                   position={{lat: position.lat, lng: position.lng}}
                   icon={{
@@ -275,6 +278,7 @@ const Entdecken = () => {
                 ) : null}
 
               {newLocation ? (
+                // Marker for new ice cream location
                 <>
                   <Marker
                     position={{lat: newLocation.address.geo.lat, lng: newLocation.address.geo.lng}}

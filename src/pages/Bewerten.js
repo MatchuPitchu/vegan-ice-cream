@@ -230,7 +230,7 @@ const Bewerten = () => {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <IonItem lines="none" className="mb-1">
-              <IonLabel position='stacked' htmlFor="location">Name des Eisladens</IonLabel>
+              <IonLabel position='stacked' htmlFor="location">Name Eisladen</IonLabel>
               <IonInput
                 readonly
                 className="inputField"
@@ -239,6 +239,27 @@ const Bewerten = () => {
                 value={searchSelected ? searchSelected.name : ''}
               />
             </IonItem>
+
+            <IonItem hidden lines="none">
+              <Controller 
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <IonInput
+                    readonly
+                    className="inputField"
+                    type="text"
+                    placeholder="Nutze die Suche"
+                    value={searchSelected ? searchSelected.name : ''}
+                    onIonChange={e => {
+                      onChange(e.detail.value)
+                    }}
+                  />
+                )}
+                name="location"
+                rules={{ required: true }}
+              />
+            </IonItem>
+            {showError("location", errors)}
 
             <IonItem className="mb-1" lines="none">  
               <Controller
@@ -263,10 +284,6 @@ const Bewerten = () => {
                 )}
                 name="pricing"
               />
-            </IonItem>
-
-            <IonItem className="itemLabelStacked" lines="none">
-              <IonLabel position='stacked' htmlFor="name">Eissorte</IonLabel>
             </IonItem>
 
             <SearchFlavors />
@@ -294,8 +311,8 @@ const Bewerten = () => {
 
             <IonItem lines="none">
               <div className="row">
-                <div className="col">
-                  <IonLabel position='stacked' htmlFor="type_fruit">Fruchteis</IonLabel>
+                <div className="col mt-2">
+                  <IonLabel position='stacked' htmlFor="type_fruit">Sorbet/Fruchteis</IonLabel>
                   <Controller
                     control={control}
                     render={({ field: { onChange, value } }) => (
@@ -307,8 +324,8 @@ const Bewerten = () => {
                     name="type_fruit"
                   />
                 </div>
-                <div className="col">
-                  <IonLabel position='stacked' htmlFor="type_cream">Cremeeis</IonLabel>
+                <div className="col mt-2">
+                  <IonLabel position='stacked' htmlFor="type_cream">Cremeeis/Milcheis/Pflanzenmilcheis</IonLabel>
                   <Controller 
                     control={control}
                     render={({ field: { onChange, value } }) => (
@@ -384,11 +401,12 @@ const Bewerten = () => {
             
             <IonItem lines="none" className="mb-1">
               <IonLabel position='stacked' htmlFor="text">Kommentar</IonLabel>
+              <div className="ion-text-wrap textSmallLight">... Geschmack, Konsistenz, Waffel, Preis-Leistung, Zusatzleistungen wie vegane Sahne, Waffeln oder Soßen, Freundlichkeit ...</div>
               <Controller
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <IonTextarea
-                    className="pb-3"
+                    className="pb-2"
                     autoGrow={true} 
                     value={value} 
                     onIonChange={e => onChange(e.detail.value)} 
@@ -402,6 +420,7 @@ const Bewerten = () => {
             
             <IonItem lines="none" className="itemRating">
               <IonLabel position='stacked' htmlFor="rating_quality">Eis-Erlebnis</IonLabel>
+              <div className="ion-text-wrap textSmallLight">... gewählte Eiskugel, Waffel, dein Eindruck vom Eisladen ...</div>
               <Controller
                 control={control}
                 render={({ field: { onChange, value } }) => (
@@ -484,7 +503,7 @@ const Bewerten = () => {
                           onChange(e.detail.checked);
                           e.detail.checked && unCheckToggles();
                         }} 
-                        checked={value} 
+                        checked={value}
                       />
                     )}
                     name="not_specified"
@@ -494,7 +513,8 @@ const Bewerten = () => {
             </IonItem>
 
             <IonItem lines="none" className="itemRating mb-1">
-              <IonLabel position='stacked' htmlFor="rating_vegan_offer">Veganes Angebot des Eisladens</IonLabel>
+              <IonLabel position='stacked' htmlFor="rating_vegan_offer">Veganes Angebot Eisladen</IonLabel>
+              <div className="ion-text-wrap textSmallLight">... viele vegane Sorten, vegane Waffeln, vegane Sahne ...</div>
               <Controller
                 control={control}
                 render={({ field: { onChange, value } }) => (
