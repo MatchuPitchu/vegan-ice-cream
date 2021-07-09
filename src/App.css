@@ -1091,7 +1091,7 @@ mark {
 
 .pricingInfo {
   border-radius: 50%;
-  background-color: var(--ion-color-step-900);
+  background-color: var(--ion-color-primary);
   color: var(--ion-color-primary-contrast);
   font-size: 0.7rem;
   height: 60px;
