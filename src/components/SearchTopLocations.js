@@ -44,12 +44,11 @@ const Search = () => {
         setTopLocations(data);
         setShowTopLoc(true)
       } else {
-        // setTopLocations([]);
         setNoTopLoc(true);
         setShowTopLoc(false)
       }
     } catch (error) {
-      setError('Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in Deutschland eintragen.')
+      setError('Ups, schief gelaufen. Versuche es später nochmal.')
       setTimeout(() => setError(null), 5000);
     }
 
@@ -97,7 +96,7 @@ const Search = () => {
             className="searchbar"
             type="search"
             inputMode="search"
-            placeholder="Top Eisläden in deiner Stadt" 
+            placeholder="Stadt suchen"
             showCancelButton="always"
             showClearButton="always"
             cancel-button-text=""

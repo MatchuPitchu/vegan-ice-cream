@@ -26,7 +26,7 @@ const HeaderApp = () => {
           {user && (
             <>
               <IonIcon
-                color={`${toggle ? "primary" : ''}`}
+                color={`${toggle ? "primary" : 'dark'}`}
                 button 
                 onClick={e => {
                   e.persist();
@@ -48,7 +48,7 @@ const HeaderApp = () => {
               </IonPopover>
             </>
           )}
-          <IonButton className="rotateIcon ms-3" fill="clear" onClick={ async () => await menuController.toggle()}>
+          <IonButton color={`${toggle ? 'primary' : 'dark'}`} className="rotateIcon ms-3" fill="clear" onClick={ async () => await menuController.toggle()}>
             <IonIcon icon={cog} />
           </IonButton>
         </IonButtons>
