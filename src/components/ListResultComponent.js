@@ -3,7 +3,7 @@ import { Context } from '../context/Context';
 import { IonButton, IonCard, IonIcon, isPlatform } from '@ionic/react';
 import { add } from "ionicons/icons";
 import Ratings from "./Ratings";
-import BtnInfoRating from "./BtnInfoRating";
+import BtnInfoRating from "./Comments/BtnInfoRating";
 import LocInfoHeader from "./LocInfoHeader";
 
 const ListResultComponent = ({loc}) => {
@@ -22,7 +22,7 @@ const ListResultComponent = ({loc}) => {
       <div className="px-3 py-2">     
         {loc.location_rating_quality ? (
         <>
-          <Ratings 
+          <Ratings
             rating_vegan_offer={loc.location_rating_vegan_offer}
             rating_quality={loc.location_rating_quality}
             showNum={true}

@@ -3,8 +3,8 @@ import { Context } from "../context/Context";
 import ReactStars from "react-rating-stars-component";
 import { CirclePicker } from "react-color";
 import { Controller, useForm } from 'react-hook-form';
-import { IonButton, IonCard, IonCardContent, IonCardTitle, IonContent, IonDatetime, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonPage, IonPicker, IonPopover, IonRange, IonSearchbar, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToast, IonToggle, IonToolbar } from '@ionic/react';
-import { add, bulb, cashOutline, colorPaletteOutline, informationCircle } from 'ionicons/icons';
+import { IonButton, IonCard, IonCardContent, IonCardTitle, IonContent, IonDatetime, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonPage, IonPopover, IonRange, IonTextarea, IonToggle } from '@ionic/react';
+import { add, cashOutline, colorPaletteOutline, informationCircle } from 'ionicons/icons';
 import showError from '../components/showError';
 import Search from '../components/Search';
 import SearchFlavors from '../components/SearchFlavors';
@@ -47,6 +47,7 @@ const Bewerten = () => {
   ]
   
   const defaultValues = {
+    location: '',
     pricing: 0,
     name: undefined,
     type_cream: false,
@@ -66,6 +67,11 @@ const Bewerten = () => {
   const { control, handleSubmit, reset, setValue, formState: { errors } } = useForm({
     defaultValues
   });
+
+  useEffect(() => {
+    // if user selects location for example on map, than this location name is set as value is form
+    setValue("location", searchSelected ? searchSelected.name : '')
+  }, [])
 
   useEffect(() => {
     setValue("name", flavor.name ? searchFlavor : undefined);
@@ -230,16 +236,6 @@ const Bewerten = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <IonItem lines="none" className="mb-1">
               <IonLabel position='stacked' htmlFor="location">Name Eisladen</IonLabel>
-              <IonInput
-                readonly
-                className="inputField"
-                type="text"
-                placeholder="Nutze die Suche"
-                value={searchSelected ? searchSelected.name : ''}
-              />
-            </IonItem>
-
-            <IonItem hidden lines="none">
               <Controller 
                 control={control}
                 render={({ field: { onChange, value } }) => (
@@ -248,10 +244,8 @@ const Bewerten = () => {
                     className="inputField"
                     type="text"
                     placeholder="Nutze die Suche"
-                    value={searchSelected ? searchSelected.name : ''}
-                    onIonChange={e => {
-                      onChange(e.detail.value)
-                    }}
+                    value={value = searchSelected ? searchSelected.name : ''}
+                    onIonChange={e => onChange(e.detail.value) }
                   />
                 )}
                 name="location"

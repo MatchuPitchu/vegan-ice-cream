@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Context } from '../context/Context';
+import { Context } from '../../context/Context';
 import { IonButton, IonIcon } from "@ionic/react";
 import { add, open } from "ionicons/icons";
 

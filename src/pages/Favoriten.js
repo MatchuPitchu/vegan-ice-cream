@@ -6,7 +6,7 @@ import Spinner from '../components/Spinner';
 import LoadingError from "../components/LoadingError";
 import Ratings from "../components/Ratings";
 import SelectedMarker from "../components/SelectedMarker";
-import BtnInfoRating from "../components/BtnInfoRating";
+import BtnInfoRating from "../components/Comments/BtnInfoRating";
 import LocInfoHeader from "../components/LocInfoHeader";
 
 const Favoriten = () => {

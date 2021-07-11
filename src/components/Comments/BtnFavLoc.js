@@ -1,9 +1,9 @@
 import { IonAlert, IonBadge, IonButton, IonIcon } from "@ionic/react";
 import { bookmarks, bookmarksOutline } from "ionicons/icons";
 import { useContext } from "react";
-import { Context } from '../context/Context';
+import { Context } from '../../context/Context';
 
-const FavLocBtn = ({selectedLoc}) => {
+const BtnFavLoc = ({selectedLoc}) => {
   const { 
     user,
     alertUpdateFav, setAlertUpdateFav,
@@ -47,4 +47,4 @@ const FavLocBtn = ({selectedLoc}) => {
   )
 }
 
-export default FavLocBtn
+export default BtnFavLoc

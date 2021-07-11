@@ -1177,3 +1177,46 @@ ion-range::part(knob) {
     #fff 6px
   );
 }
+
+/*********** Comments of Ice Cream Locations ************/
+.locationTitle {
+  color: var(--ion-text-color);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.underlining {
+  position: relative;
+  bottom: 11px;
+  background-color: var(--ion-color-primary);
+  height: 0.6rem;
+  width: 100%;
+  opacity: 0.2;
+  z-index: 0;
+}
+
+.smallBtn {
+  font-size: 0.3rem;
+  width: 30px;
+  height: 30px;
+  margin: 0;
+}
+
+.actionSheet .action-sheet-group .action-sheet-title {
+  background: var(--ion-item-background);
+  color: var(--ion-text-color);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.actionSheet .action-sheet-group .action-sheet-destructive,
+.actionSheet .action-sheet-group .action-sheet-cancel {
+  color: var(--ion-text-color);
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--ion-card-background);
+}
+
+.action-sheet-cancel.sc-ion-action-sheet-ios::after {
+  background: var(--ion-card-background);
+}

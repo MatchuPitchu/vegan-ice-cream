@@ -20,7 +20,7 @@ const showError = (_fieldName, errors) => {
           {_fieldName === 'number' && 'Hast du eine korrekte Hausnummer eingetragen?'}
           {_fieldName === 'zipcode' && 'Überprüfe die Eingabe der Postleitzahl'}
           {_fieldName === 'country' && 'Überprüfe die Eingabe des Landes'}
-          {_fieldName === 'location' && 'Wähle einen Eisladen in der Suche aus'}
+          {_fieldName === 'location' && 'Wähle einen Eisladen'}
           {_fieldName === 'color1' && 'Wähle mindestens 1 Farbe'}
           {_fieldName === 'text' && 'Was möchtest du über den Eisladen teilen?'}
           {_fieldName === 'rating_quality' && 'Die Sterne fehlen noch'}

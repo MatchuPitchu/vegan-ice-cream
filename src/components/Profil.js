@@ -1,13 +1,11 @@
-import { useContext, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { Context } from "../context/Context";
 // https://www.npmjs.com/package/react-rating-stars-component
-import ReactStars from "react-rating-stars-component";
-import { IonButton, IonContent, IonPage, IonHeader, IonCard, IonCardHeader,  IonCardTitle, IonIcon, IonLabel, IonItem, IonItemGroup, IonPopover } from "@ionic/react";
-import { caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, iceCream, informationCircle, mail, refreshCircle, trailSign } from "ionicons/icons";
+import { IonButton, IonContent, IonPage, IonHeader, IonCard,  IonCardTitle, IonIcon, IonLabel, IonItem, IonItemGroup, IonPopover } from "@ionic/react";
+import { caretDownCircle, caretForwardCircle, closeCircleOutline, iceCream, informationCircle, mail, refreshCircle, trailSign } from "ionicons/icons";
 import ProfilUpdate from '../components/ProfilUpdate';
 import Spinner from '../components/Spinner';
-import Ratings from "./Ratings";
-import CommentsBlock from "./CommentsBlock";
+import CommentsBlock from "./Comments/CommentsBlock";
 import FlavorsBlock from "./FlavorsBlock";
 
 const Profil = () => {
@@ -38,7 +36,7 @@ const Profil = () => {
         <img className="headerImg" src={`${toggle ? "./assets/header-profil-dark.svg" : "./assets/header-profil-light.svg"}`} />
       </IonHeader>
       <IonContent>
-        <div className="container-sm mt-3">
+        <div className="mt-3">
           <IonCard>
             <IonItem className="d-flex align-items-center" lines="full">
               <IonCardTitle className="me-2 my-3 ion-text-wrap">{user.name}</IonCardTitle>
@@ -107,7 +105,17 @@ const Profil = () => {
                 </IonButton>
               </IonItem>
     
-              {showComments && user.comments_list ? user.comments_list.map(comment => <CommentsBlock comment={comment} key={comment._id} />) : null}
+              {showComments && user.comments_list ? user.comments_list.map(comment => {
+                return (
+                  <Fragment key={comment._id} >
+                    <div className="locationTitle mx-3 mt-3">
+                      {comment.location_id.name}
+                      <div className="underlining"></div>
+                    </div>
+                    <CommentsBlock comment={comment} />
+                  </Fragment>
+                )
+              }) : null}
 
               <IonItem color="background-color" lines="none">
                 <IonIcon
