@@ -3,7 +3,7 @@ import { Context } from '../context/Context';
 import { isPlatform, IonSlide, IonCard, IonLabel, IonSlides, IonItem, IonButton } from '@ionic/react';
 import SelectedMarker from "./SelectedMarker";
 import Ratings from "./Ratings";
-import BtnInfoRating from "./BtnInfoRating";
+import BtnInfoRating from "./Comments/BtnInfoRating";
 
 // Optional parameters to pass to the swiper instance.
 // See http://idangero.us/swiper/api/ for valid options.

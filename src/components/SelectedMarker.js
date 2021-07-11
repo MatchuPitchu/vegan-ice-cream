@@ -2,10 +2,10 @@ import { useContext, useEffect } from "react";
 import { Context } from '../context/Context';
 import { IonButton, IonCard, IonContent, IonIcon, IonImg, IonItem, IonItemGroup, IonLabel, IonModal, isPlatform } from "@ionic/react";
 import { add, caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, iceCream } from "ionicons/icons";
-import FavLocBtn from "./FavLocBtn";
+import BtnFavLoc from "./Comments/BtnFavLoc";
 import LoadingError from "./LoadingError";
 import Ratings from "./Ratings";
-import CommentsBlock from "./CommentsBlock";
+import CommentsBlock from "./Comments/CommentsBlock";
 import FlavorsBlock from "./FlavorsBlock";
 
 const SelectedMarker = () => {
@@ -51,7 +51,7 @@ const SelectedMarker = () => {
       enterAnimation={enterAnimation} 
       leaveAnimation={leaveAnimation}>
       <IonItem lines='full'>
-        {user ? <FavLocBtn selectedLoc={selected}/> : null}
+        {user ? <BtnFavLoc selectedLoc={selected}/> : null}
         <IonLabel>{selected.name}</IonLabel>
         <IonButton fill="clear" onClick={() => {setOpenComments(false); setSelected(null); setInfoModal(false)}} >
           <IonIcon icon={closeCircleOutline}/>

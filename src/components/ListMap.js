@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Context } from '../context/Context';
-import { IonCard, IonCardContent, IonCardTitle, IonContent, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
+import { IonCard, IonContent, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 import SelectedMarker from './SelectedMarker';
 import ListResultComponent from "./ListResultComponent";
 
