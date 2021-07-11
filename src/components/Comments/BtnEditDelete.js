@@ -44,18 +44,18 @@ const BtnEditDelete = ({comment}) => {
   return (
     <>
       {/* edit comment functionality */}
-      <IonButton
+      {/* <IonButton
         fill="clear"
         className="smallBtn ms-auto"
         onClick={() => setShowActionSheet(true)}
       >
         <IonIcon className="me-0" size="small" icon={createOutline} />
-      </IonButton>
+      </IonButton> */}
 
       {/* delete comment functionality */}
       <IonButton
         fill="clear"
-        className="smallBtn"
+        className="smallBtn ms-auto"
         onClick={() => setShowActionSheet(true)}
       >
         <IonIcon className="me-0" size="small" icon={trashOutline} />

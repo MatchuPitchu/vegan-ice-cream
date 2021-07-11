@@ -18,7 +18,7 @@ const Entdecken = () => {
     user, 
     locationsMap,
     center, setCenter,
-    zoom,
+    zoom, setZoom,
     segment, setSegment,
     map, setMap,
     setAutocompleteModal,

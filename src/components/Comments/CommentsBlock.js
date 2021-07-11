@@ -10,6 +10,8 @@ const CommentsBlock = ({comment}) => {
     user,
   } = useContext(Context);
 
+  console.log(user._id, comment.user_id)
+
   return (
     <div key={comment._id} className="px-3 py-2 borderBottom">
       <div className="commentText">
@@ -24,7 +26,7 @@ const CommentsBlock = ({comment}) => {
         
         {/* Displays buttons a) if user has not deactivated his account and b) if user is author of comment */}
         {/* ID is in comment.user_id in profil; ID is in comment.user_id._id in selected  */}
-        {comment.user_id && (user._id === comment.user_id || comment.user_id._id ? <BtnEditDelete comment={comment} /> : null)}
+        {comment.user_id && (user._id === comment.user_id || user._id === comment.user_id._id ? <BtnEditDelete comment={comment} /> : null)}
 
       </div>
       {comment.flavors_referred.map(flavor => {

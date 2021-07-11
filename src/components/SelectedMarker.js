@@ -15,6 +15,7 @@ const SelectedMarker = () => {
     setError,
     selected, setSelected,
     setSearchSelected,
+    setSearchText,
     toggle,
     openComments, setOpenComments,
     infoModal, setInfoModal,
