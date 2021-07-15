@@ -3,7 +3,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Context } from "../context/Context";
 import { IonInput, IonItem, IonLabel, IonButton, IonIcon } from "@ionic/react";
 import showError from './showError';
-import { refreshCircle } from "ionicons/icons";
+import { refreshCircle, repeat } from "ionicons/icons";
 import LoadingError from "./LoadingError";
 
 const ProfilUpdate = () => {
@@ -13,11 +13,23 @@ const ProfilUpdate = () => {
     user, 
     setUser, 
     setShowProfil,
-    setShowUpdate, 
+    setShowUpdateProfil,
     setSuccessMsg,
     logout,
   } = useContext(Context);
-  const { control, handleSubmit, formState: { errors } } = useForm();
+
+  const defaultValues = {
+    name: '',
+    email: '',
+    city: '',
+    newPassword: '',
+    repeatPassword: '',
+    password: '',
+  }
+
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    defaultValues
+  });
 
   const onSubmit = async data => {
     if(data.newPassword && data.newPassword !== data.repeatPassword) {
@@ -30,7 +42,7 @@ const ProfilUpdate = () => {
     try {
       const token = localStorage.getItem('token');
       let body = {}
-      if(!data.password) return;
+      if(!data.password) return setLoading(false);
         else body.password = data.password;
       if(data.name && data.name !== user.name) body.name = data.name;
       if(data.email && data.email !== user.email) body.email = data.email; 
@@ -75,13 +87,13 @@ const ProfilUpdate = () => {
         })
         setSuccessMsg('Update erfolgreich');
         setTimeout(() => setSuccessMsg(''), 10000);
-        setShowUpdate(false);
+        setShowUpdateProfil(false);
         if(data.email) {
           setShowProfil(false);
           logout();
         }
       } else {
-        setError('Da ist etwas schief gelaufen. Versuche es später nochmal.');
+        setError('Du hast ein falsches Passwort eingetragen');
         setTimeout(() => setError(null), 5000);
       }
     } catch (error) {
@@ -139,9 +151,13 @@ const ProfilUpdate = () => {
           <IonLabel position='stacked' htmlFor="newPassword">Neues Passwort</IonLabel>
           <Controller 
             control={control}
-            defaultValue=""
             render={({ field: { onChange, value } }) => (
-              <IonInput type="password" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
+              <IonInput 
+                type="password" 
+                inputmode="text" 
+                value={value} 
+                onIonChange={e => onChange(e.detail.value)} 
+              />
             )}
             name="newPassword"
             rules={{ 
@@ -158,9 +174,14 @@ const ProfilUpdate = () => {
           <IonLabel position='stacked' htmlFor="repeatPassword">Passwort wiederholen</IonLabel>
           <Controller 
             control={control}
-            defaultValue=""
             render={({ field: { onChange, value } }) => (
-              <IonInput type="password" id="repeatPassword" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
+              <IonInput 
+                type="password" 
+                id="repeatPassword" 
+                inputmode="text" 
+                value={value} 
+                onIonChange={e => onChange(e.detail.value)} 
+              />
             )}
             name="repeatPassword"
             rules={{
@@ -178,7 +199,12 @@ const ProfilUpdate = () => {
           <Controller 
             control={control}
             render={({ field: { onChange, value } }) => (
-              <IonInput type="password" inputmode="text" value={value} onIonChange={e => onChange(e.detail.value)} />
+              <IonInput 
+                type="password" 
+                inputmode="text" 
+                value={value} 
+                onIonChange={e => onChange(e.detail.value)}
+              />
               )}
             name="password"
             rules={{ required: true }}

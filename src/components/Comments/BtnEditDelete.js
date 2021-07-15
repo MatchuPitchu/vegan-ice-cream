@@ -7,6 +7,7 @@ const BtnEditDelete = ({comment}) => {
   const { 
     user, setUser,
     selected, setSelected,
+    setShowUpdateComment
   } = useContext(Context)
 
   const [showActionSheet, setShowActionSheet] = useState(false);
@@ -21,7 +22,7 @@ const BtnEditDelete = ({comment}) => {
           token
         },
         // converts JS data into JSON string.
-        body: JSON.stringify({user_id: user._id}),
+        body: JSON.stringify({ user_id: user._id }),
         credentials: "include"
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${comment._id}`, options);
@@ -44,18 +45,18 @@ const BtnEditDelete = ({comment}) => {
   return (
     <>
       {/* edit comment functionality */}
-      {/* <IonButton
+      <IonButton
         fill="clear"
         className="smallBtn ms-auto"
-        onClick={() => setShowActionSheet(true)}
+        onClick={() => setShowUpdateComment({ state: true, comment_id: comment._id })}
       >
         <IonIcon className="me-0" size="small" icon={createOutline} />
-      </IonButton> */}
+      </IonButton>
 
       {/* delete comment functionality */}
       <IonButton
         fill="clear"
-        className="smallBtn ms-auto"
+        className="smallBtn"
         onClick={() => setShowActionSheet(true)}
       >
         <IonIcon className="me-0" size="small" icon={trashOutline} />
@@ -73,7 +74,6 @@ const BtnEditDelete = ({comment}) => {
             icon: trashOutline,
             handler: () => deleteComment(),
           },
-          // 60a3f50304018c0015900a34
           {
             text: 'Abbrechen',
             role: 'cancel',

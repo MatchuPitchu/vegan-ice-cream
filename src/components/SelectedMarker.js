@@ -15,7 +15,6 @@ const SelectedMarker = () => {
     setError,
     selected, setSelected,
     setSearchSelected,
-    setSearchText,
     toggle,
     openComments, setOpenComments,
     infoModal, setInfoModal,
@@ -127,7 +126,7 @@ const SelectedMarker = () => {
       
         <IonCard className={`${isPlatform('desktop') ? "cardIonic" : ""}`}>
           <div style={{backgroundColor: 'var(--ion-item-background)'}}>          
-            {selected.location_rating_quality ? (
+            {selected.comments_list.length ? (
               <IonItemGroup>
                 <div className="px-3 py-1 borderBottom">
                   <Ratings 

@@ -43,7 +43,11 @@ const AppState = ({children}) => {
   const [error, setError] = useState('');
   const [toggle, setToggle] = useState(null);
   const [mapStyles, setMapStyles] = useState(null);
-  const [showUpdate, setShowUpdate ] = useState(false);
+  const [showUpdateProfil, setShowUpdateProfil] = useState(false);
+  const [showUpdateComment, setShowUpdateComment] = useState({
+    state: false,
+    comment_id: ''
+  });
   const [showProfil, setShowProfil] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
@@ -56,7 +60,6 @@ const AppState = ({children}) => {
   });
   const [openComments, setOpenComments] = useState(false);
   const [newComment, setNewComment] = useState(null);
-  const [finishComment, setFinishComment] = useState(false);
   const [searchFlavor, setSearchFlavor] = useState('');
   const [flavor, setFlavor] = useState({});
 
@@ -157,6 +160,7 @@ const AppState = ({children}) => {
     setSearchText('');
   }, [segment])
 
+  // fetch data of locations in viewport
   useEffect(() => {
     const updateLocInViewport = async () => {
       try {
@@ -415,7 +419,8 @@ const AppState = ({children}) => {
         mapStyles,
         enterAnimationBtm, leaveAnimationBtm,
         enterAnimationLft, leaveAnimationLft,
-        showUpdate, setShowUpdate,
+        showUpdateProfil, setShowUpdateProfil,
+        showUpdateComment, setShowUpdateComment,
         showProfil, setShowProfil,
         showFeedback, setShowFeedback,
         showAbout, setShowAbout,
@@ -427,7 +432,6 @@ const AppState = ({children}) => {
         createPricing,
         openComments, setOpenComments,
         newComment, setNewComment,
-        finishComment, setFinishComment,
         searchFlavor, setSearchFlavor,
         flavor, setFlavor
       }}

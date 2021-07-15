@@ -15,8 +15,8 @@ const Profil = () => {
     user, 
     setShowProfil, 
     locations, 
-    showUpdate, 
-    setShowUpdate, 
+    showUpdateProfil, 
+    setShowUpdateProfil,
     successMsg 
   } = useContext(Context);
   const [showComments, setShowComments] = useState(false);
@@ -42,13 +42,13 @@ const Profil = () => {
               <IonCardTitle className="me-2 my-3 ion-text-wrap">{user.name}</IonCardTitle>
               <IonButton  
                 className="update-btn ms-auto"
-                onClick={() => setShowUpdate(prev => !prev)}
+                onClick={() => setShowUpdateProfil(prev => !prev)}
               >
                 <IonIcon className="me-1" icon={refreshCircle}/>Update
               </IonButton>
             </IonItem>
 
-            {showUpdate && (
+            {showUpdateProfil && (
               <ProfilUpdate />
             )}
 

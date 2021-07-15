@@ -10,7 +10,6 @@ const SearchFlavors = () => {
     setLoading,
     searchFlavor, setSearchFlavor,
     flavor, setFlavor,
-    finishComment, setFinishComment,
   } = useContext(Context);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
   const [flavors, setFlavors] = useState([]);
@@ -30,7 +29,7 @@ const SearchFlavors = () => {
     }
     fetchFlavors();
     setLoading(false);
-  }, [finishComment])
+  }, [])
 
   const forAutocompleteChange = value => {
     if(value.length >= 3 && flavors) {
