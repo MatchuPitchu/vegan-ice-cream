@@ -2,11 +2,11 @@ import { useContext, useEffect } from "react";
 import { Context } from '../context/Context';
 import { IonButton, IonCard, IonContent, IonIcon, IonImg, IonItem, IonItemGroup, IonLabel, IonModal, isPlatform } from "@ionic/react";
 import { add, caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, iceCream } from "ionicons/icons";
-import BtnFavLoc from "./Comments/BtnFavLoc";
-import LoadingError from "./LoadingError";
-import Ratings from "./Ratings";
 import CommentsBlock from "./Comments/CommentsBlock";
-import FlavorsBlock from "./FlavorsBlock";
+import BtnFavLoc from "./Comments/BtnFavLoc";
+import FlavorsBlock from "./Comments/FlavorsBlock";
+import Ratings from "./Ratings";
+import LoadingError from "./LoadingError";
 
 const SelectedMarker = () => {
   const {

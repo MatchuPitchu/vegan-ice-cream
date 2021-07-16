@@ -27,7 +27,7 @@ const UpdateComment = ({comment}) => {
   }
 
   // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
-  const { control, handleSubmit, watch, setValue, formState: { errors } } = useForm({
+  const { control, handleSubmit, setValue, formState: { errors } } = useForm({
     defaultValues
   });
 
@@ -44,7 +44,7 @@ const UpdateComment = ({comment}) => {
   const checkLactoseFree = () => {
     setValue("lactose_free", true);
   }
-
+  console.log(selected.comments_list[0])
   const onSubmit = async (data) => {
     setLoading(true);
 

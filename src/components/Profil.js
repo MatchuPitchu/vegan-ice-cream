@@ -6,7 +6,7 @@ import { caretDownCircle, caretForwardCircle, closeCircleOutline, iceCream, info
 import ProfilUpdate from '../components/ProfilUpdate';
 import Spinner from '../components/Spinner';
 import CommentsBlock from "./Comments/CommentsBlock";
-import FlavorsBlock from "./FlavorsBlock";
+import FlavorsBlock from "./Comments/FlavorsBlock";
 
 const Profil = () => {
   const { 
