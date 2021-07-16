@@ -15,8 +15,10 @@ import AutocompleteForm from "../components/AutocompleteForm";
 const Entdecken = () => {
   const {
     setError,
-    user, 
-    locationsMap,
+    user,
+    locations,
+    // if too many locations in database later, then detach locations on the map displayed in viewport from locations
+    // locationsMap,
     center, setCenter,
     zoom, setZoom,
     segment, setSegment,
@@ -37,14 +39,34 @@ const Entdecken = () => {
   const [libraries] = useState(['places']);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
 
-  useEffect(() => {
-    if(map) setTimeout(() => searchViewport(), 2000);
-  }, [map])
+  // deactivated until there are so many locations in the database, that search in viewport is needed
+  // useEffect(() => {
+  //   if(map) setTimeout(() => searchViewport(), 750);
+  // }, [map])
 
   useEffect(() => {
-    if(user && user.home_city.geo.lat) setCenter({ lat:  user.home_city.geo.lat, lng: user.home_city.geo.lng });
-      else setCenter({ lat:  52.524, lng: 13.410 })
-  }, [user])
+    // if user exists with indicated home city than first center + zoom
+    if(user && user.home_city.geo.lat) {
+      setCenter({ lat:  user.home_city.geo.lat, lng: user.home_city.geo.lng });
+      setZoom(12);
+    } else {
+      setCenter({ lat:  52.524, lng: 13.410 })
+      setZoom(12)
+    }
+  }, [])
+
+  useEffect(() => {
+    if(searchSelected) {
+      // zoom + center when user chooses item in prediction list
+      setCenter({
+        lat: searchSelected.address.geo.lat, 
+        lng: searchSelected.address.geo.lng
+      })
+      setZoom(15);
+    } else {
+      setZoom(12)
+    }
+  }, [searchSelected])
 
   const getLocation = async () => {
     try {
@@ -110,8 +132,7 @@ const Entdecken = () => {
         </IonSegment>
       </div>
 
-      {/* show search only if locations on map loaded in order to avoid too fast in searchbar typing behavior  */}
-      {locationsMap.length ? <Search /> : null}
+      <Search />
 
       {segment === 'map' && (
         <IonContent>
@@ -134,10 +155,12 @@ const Entdecken = () => {
               </IonButton>
             </div>
             <div className="d-flex flex-column align-items-end control-right-top">
-              <IonButton className="viewport-control" onClick={searchViewport}>
+
+              {/* deactivated until there are so many locations in the database that, for performance reasons, loaded locations have to be decoupled  */}
+              {/* <IonButton className="viewport-control" onClick={searchViewport}>
                 <IonLabel className="me-1">Eisläden im Gebiet</IonLabel>
                 <IonIcon slot="start" icon={search} />
-              </IonButton>
+              </IonButton> */}
 
               <IonButton 
                 className="add-control" 
@@ -183,10 +206,11 @@ const Entdecken = () => {
             
               <IonButton 
                 className="center-control" 
-                title="Karte auf Anfangspunkt zentrieren"
-                onClick={() => { 
-                  map.setCenter(center); 
-                  map.setZoom(13)
+                title="Karte auf deinen Anfangspunkt zentrieren"
+                onClick={() => {
+                  // take users home city or general lat lng values + default zoom
+                  map.setCenter({ lat: user && user.home_city.geo.lat || 52.524, lng: user && user.home_city.geo.lng || 13.410 });
+                  map.setZoom(user && user.home_city.geo.lat ? 12 : 9)
                 }}
               >
                 <IonIcon icon={refreshCircle} />
@@ -207,7 +231,7 @@ const Entdecken = () => {
                 averageCenter
               >
                 {(clusterer) =>
-                  locationsMap ? locationsMap.map(loc => (
+                  locations ? locations.map(loc => (
                     // if searchSelected exists, than normal marker at this position is null 
                     searchSelected &&
                     searchSelected.address.geo.lat === loc.address.geo.lat &&
@@ -236,6 +260,10 @@ const Entdecken = () => {
                             setOpenComments(false); 
                             setSelected(loc); 
                             setInfoModal(true) 
+                            setCenter({
+                              lat: loc.address.geo.lat,
+                              lng: loc.address.geo.lng
+                            })
                           }}
                           zIndex={1}
                         />

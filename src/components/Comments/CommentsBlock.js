@@ -1,24 +1,29 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Context } from '../../context/Context';
 import { IonIcon } from '@ionic/react'
 import { chatboxEllipses, iceCream } from 'ionicons/icons'
 import Ratings from '../Ratings'
 import BtnEditDelete from "./BtnEditDelete";
+import UpdateComment from "./UpdateComment";
 
 const CommentsBlock = ({comment}) => {
-  const {
-    user,
-  } = useContext(Context);
+  const { user, showUpdateComment } = useContext(Context);
 
-  console.log(user._id, comment.user_id)
-
-  return (
-    <div key={comment._id} className="px-3 py-2 borderBottom">
+  // if user clicks on edit btn than updateComment component is displayed
+  return showUpdateComment.comment_id !== comment._id ? (
+    <div className="px-3 py-2 borderBottom">
       <div className="commentText">
         <IonIcon slot="start" className="me-2" color='text-color' icon={chatboxEllipses}/>{comment.text}
       </div>
+      {(comment.bio || comment.vegan || comment.lactose_free) && (
+        <div className="d-flex mt-3">
+          {comment.bio ? (<div className="commentTag">bio</div>) : null}
+          {comment.vegan ? (<div className="commentTag">vegan</div>) : null}
+          {comment.lactose_free ? (<div className="commentTag">laktosefrei</div>) : null}
+        </div>
+      )}
       <div className="d-flex align-items-center">
-        <Ratings 
+        <Ratings
           rating_vegan_offer={comment.rating_vegan_offer}
           rating_quality={comment.rating_quality}
           showNum={false}
@@ -39,8 +44,10 @@ const CommentsBlock = ({comment}) => {
         })
       }
       {/* If user_id exists (so user account is not deleted), than check if user_id.name is there, if not than it's the profil section and I can user user.name */}
-      <div className="textSmallGrey mt-2">{comment.date.replace('T', ' um ').slice(0, 19)} Uhr von {`${comment.user_id ? (comment.user_id.name !== undefined ? comment.user_id.name : user.name) : 'Konto deaktiviert'}`}</div>      
+      <div className="textSmallGrey mt-2">{`${comment.user_id ? (comment.user_id.name !== undefined ? comment.user_id.name : user.name) : 'User mit deaktiviertem Konto'}`} am {comment.date.replace('T', ' um ').slice(0, 19)} Uhr</div>      
     </div>
+  ) : (
+    <UpdateComment comment={comment} />
   )
 }
 

@@ -2,11 +2,11 @@ import { useContext, useEffect } from "react";
 import { Context } from '../context/Context';
 import { IonButton, IonCard, IonContent, IonIcon, IonImg, IonItem, IonItemGroup, IonLabel, IonModal, isPlatform } from "@ionic/react";
 import { add, caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, iceCream } from "ionicons/icons";
-import BtnFavLoc from "./Comments/BtnFavLoc";
-import LoadingError from "./LoadingError";
-import Ratings from "./Ratings";
 import CommentsBlock from "./Comments/CommentsBlock";
-import FlavorsBlock from "./FlavorsBlock";
+import BtnFavLoc from "./Comments/BtnFavLoc";
+import FlavorsBlock from "./Comments/FlavorsBlock";
+import Ratings from "./Ratings";
+import LoadingError from "./LoadingError";
 
 const SelectedMarker = () => {
   const {
@@ -15,7 +15,6 @@ const SelectedMarker = () => {
     setError,
     selected, setSelected,
     setSearchSelected,
-    setSearchText,
     toggle,
     openComments, setOpenComments,
     infoModal, setInfoModal,
@@ -127,7 +126,7 @@ const SelectedMarker = () => {
       
         <IonCard className={`${isPlatform('desktop') ? "cardIonic" : ""}`}>
           <div style={{backgroundColor: 'var(--ion-item-background)'}}>          
-            {selected.location_rating_quality ? (
+            {selected.comments_list.length ? (
               <IonItemGroup>
                 <div className="px-3 py-1 borderBottom">
                   <Ratings 
@@ -137,7 +136,7 @@ const SelectedMarker = () => {
                   />
                 </div>
 
-                {selected.comments_list[0].text && selected.flavors_listed[0].color.primary ? (
+                {selected.comments_list[0].text ? (
                   <>
                     <IonItem color="background-color" className={`${!openComments && 'borderBottom'}`} lines="none">
                       <IonIcon 

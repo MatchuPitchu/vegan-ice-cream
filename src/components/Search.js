@@ -32,12 +32,12 @@ const Search = () => {
         const { results } = await res.json();
        
         if(results[0].geometry.location) {
-          // set zoom and center map if user types in city or address
+          // center + zoom when user confirms his own typed in city or address (not choose from predictions)
           setCenter({
             lat: results[0].geometry.location.lat,
             lng: results[0].geometry.location.lng
           });
-          setZoom(13);
+          setZoom(12);
         }
       } catch (error) {
         setError('Ups, schief gelaufen. Nur Orte in Deutschland, Österreich und der Schweiz möglich')
@@ -83,12 +83,6 @@ const Search = () => {
   const initMarker = (loc) => {
     setSearchSelected(loc); 
     setPredictions([]);
-    // set zoom and center map if user chooses item in prediction list
-    setCenter({
-      lat: loc.address.geo.lat, 
-      lng: loc.address.geo.lng
-    })
-    setZoom(16);
   }
 
   return (

@@ -18,17 +18,17 @@ const Bewerten = () => {
     setLoading,
     setError,
     user,
+    center, zoom,
     searchSelected, setSearchSelected,
     setSearchText,
     setNewComment,
-    setFinishComment,
     searchFlavor, setSearchFlavor,
-    flavor,
+    flavor, setFlavor,
     createPricing,
   } = useContext(Context);
   const [popoverInfo, setPopoverInfo] = useState({ show: false, event: undefined });
   const [showColorPicker, setShowColorPicker] = useState({field1: false, field2: false});
-  const [endReset, setEndReset] = useState(false);
+  const [success, setSuccess] = useState(false);
   const flav1Ref = useRef(null);
   const flav2Ref = useRef(null);
 
@@ -61,17 +61,13 @@ const Bewerten = () => {
     lactose_free: false,
     not_specified: false,
     rating_vegan_offer: 0,
+    date: undefined,
   }
 
   // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
-  const { control, handleSubmit, reset, setValue, formState: { errors } } = useForm({
+  const { control, handleSubmit, reset, getValues, setValue, formState: { errors } } = useForm({
     defaultValues
   });
-
-  useEffect(() => {
-    // if user selects location for example on map, than this location name is set as value is form
-    setValue("location", searchSelected ? searchSelected.name : '')
-  }, [])
 
   useEffect(() => {
     setValue("name", flavor.name ? searchFlavor : undefined);
@@ -79,6 +75,8 @@ const Bewerten = () => {
     setValue("type_cream", flavor.name ? flavor.type_cream : false);
     setValue("color1", flavor.name ? flavor.color.primary : undefined);
     setValue("color2", flavor.name ? flavor.color.secondary : undefined);
+    // if user selects location for example on map, than this location name is set as value is form
+    setValue("location", searchSelected ? searchSelected.name : '')
   }, [flavor]);
 
   const unCheckToggles = () => {
@@ -95,67 +93,14 @@ const Bewerten = () => {
     setValue("lactose_free", true);
   }
 
-  // Create Flavor Post Function
-  const createFlavor = (data, comment) => {
-    setLoading(true);
-    const token = localStorage.getItem('token');
-    try {
-      const uploadFlavor = async (name, type_fruit, type_cream, primary, secondary) => {
-        const body = {
-          location_id: searchSelected._id,
-          user_id: user._id,
-          name,
-          type_fruit,
-          type_cream,
-          color: {
-            primary,
-            secondary
-          },
-        };
-        
-        const options = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            token
-          },
-          body: JSON.stringify(body),
-          credentials: "include",
-        };
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors/${comment._id}`, options);
-        await res.json();
-      }
-      const { name, type_fruit, type_cream, color1, color2 } = data
-      uploadFlavor(name, type_fruit, type_cream, color1, color2);
-      
-    } catch (error) {
-      console.log(error);
-      setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
-      setTimeout(() => setError(null), 5000);
-    };
-
-    setNewComment(comment);
-    setSearchText('');
-    setSearchFlavor('');
-    setSearchSelected(null);
-    setFinishComment(prev => !prev);
-    setEndReset(true);
-    setTimeout(() => setEndReset(false), 5000);
-    reset();
-  };
-
   const onSubmit = async (data) => {
-    if(!searchSelected) {
-      setError('Der Name des Eisladens fehlt.');
-      setTimeout(() => setError(null), 5000);
-    }
     setLoading(true);
     const token = localStorage.getItem('token');
 
-    // Pricing Post Function
+    // Create Pricing and add to database
     if(data.pricing && data.pricing > 0) createPricing(data);
 
-    // Create Comment Post Function
+    // Create Comment Function
     try {
       const body = {
         user_id: user._id,
@@ -178,13 +123,65 @@ const Bewerten = () => {
         credentials: "include",
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${searchSelected._id}`, options);
-      const newComment = await res.json();
-      
-      if (!newComment) {
+      const createdComment = await res.json();
+
+      if (!createdComment) {
         setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
         setTimeout(() => setError(null), 5000);
       }
-      createFlavor(data, newComment);
+
+      // Create Flavor Function
+      const createFlavor = (data, comment) => {
+        setLoading(true);
+        const token = localStorage.getItem('token');
+        try {
+          const uploadFlavor = async (name, type_fruit, type_cream, primary, secondary) => {
+            const body = {
+              location_id: searchSelected._id,
+              user_id: user._id,
+              name,
+              type_fruit,
+              type_cream,
+              color: {
+                primary,
+                secondary
+              },
+            };
+            
+            const options = {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                token
+              },
+              body: JSON.stringify(body),
+              credentials: "include",
+            };
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors/${comment._id}`, options);
+            await res.json();
+          }
+          const { name, type_fruit, type_cream, color1, color2 } = data
+          uploadFlavor(name, type_fruit, type_cream, color1, color2);
+          
+        } catch (error) {
+          console.log(error);
+          setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
+          setTimeout(() => setError(null), 5000);
+        };
+      };
+
+      createFlavor(data, createdComment);
+
+      // if newComment is set than user data is refetched in Context
+      setNewComment(createdComment);
+      // clean for form needed values in searchbars 
+      setSearchText('');
+      setSearchFlavor('');
+      setFlavor({});
+      setSearchSelected(null);
+      
+      // delay is needed, otherwise memory leak if state updates on unmounted component
+      setTimeout(() => setSuccess(true), 500);
 
     } catch (error) {
       setError(error)
@@ -201,7 +198,7 @@ const Bewerten = () => {
       </IonHeader>
 
       <IonContent>
-      {!endReset ? (
+        {!success ? (
         <div className="container mt-3">
           <IonItem lines="none" className="mb-1 itemTextSmall">
             <IonIcon
@@ -305,7 +302,7 @@ const Bewerten = () => {
             <IonItem lines="none">
               <div className="row">
                 <div className="col mt-2">
-                  <IonLabel position='stacked' htmlFor="type_fruit">Sorbet/Fruchteis</IonLabel>
+                  <IonLabel position='stacked' htmlFor="type_fruit">Sorbet • Fruchteis</IonLabel>
                   <Controller
                     control={control}
                     render={({ field: { onChange, value } }) => (
@@ -318,7 +315,7 @@ const Bewerten = () => {
                   />
                 </div>
                 <div className="col mt-2">
-                  <IonLabel position='stacked' htmlFor="type_cream">Cremeeis/Milcheis/Pflanzenmilcheis</IonLabel>
+                  <IonLabel position='stacked' htmlFor="type_cream">Cremeeis • Milcheis • Pflanzenmilcheis</IonLabel>
                   <Controller 
                     control={control}
                     render={({ field: { onChange, value } }) => (
@@ -364,7 +361,8 @@ const Bewerten = () => {
                 rules={{ required: true }}
               />
             </IonItem>
-            {showError("color1", errors)}
+            {/* getValues is needed, otherwise error is displayed even if user select flavor in search after first submit try of form */}
+            {!getValues("color1") && showError("color1", errors)}
 
             <IonItem lines="none" className="mb-1">
               <IonLabel ref={flav2Ref} className="mb-1" position='stacked' htmlFor="color2"></IonLabel>
@@ -399,8 +397,8 @@ const Bewerten = () => {
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <IonTextarea
-                    className="pb-2"
-                    autoGrow={true} 
+                    className="textField"
+                    autoGrow={true}
                     value={value} 
                     onIonChange={e => onChange(e.detail.value)} 
                   />
@@ -418,18 +416,19 @@ const Bewerten = () => {
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <ReactStars
+                    className="react-stars"
                     count={5}
                     value={value}
                     isHalf={true}
                     onChange={e => onChange(e)}
                     edit={true}
                     size={30}
-                    color='#9b9b9b'
-                    activeColor='#de9c01'
+                    color1='#cccccc90'
+                    color2='var(--ion-color-primary)'
                   />
                 )}
                 name="rating_quality"
-                rules={{ required: true, min: 1 }}
+                rules={{ required: true, min: 0.5 }}
               />
             </IonItem>
             {showError("rating_quality", errors)}
@@ -512,18 +511,19 @@ const Bewerten = () => {
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <ReactStars
+                    className="react-stars"
                     count={5}
                     value={value}
                     isHalf={true}
                     onChange={e => onChange(e)}
                     edit={true}
                     size={30}
-                    color='#9b9b9b'
-                    activeColor='#de9c01'
+                    color1='#cccccc90'
+                    color2='var(--ion-color-primary)'
                   />
                 )}
                 name="rating_vegan_offer"
-                rules={{ required: true, min: 1 }}
+                rules={{ required: true, min: 0.5 }}
               />
             </IonItem>
             {showError("rating_vegan_offer", errors)}
@@ -554,15 +554,25 @@ const Bewerten = () => {
             </IonButton>
           </form>
         </div>
-      ) : (
-        <div className="container text-center">
-          <IonCard>
-            <IonCardContent>
-              <IonCardTitle>Danke für deine Bewertung</IonCardTitle>
-            </IonCardContent>
-          </IonCard>
-        </div>
-      )}
+        ) : (
+          <div className="container text-center">
+            <IonCard>
+              <IonCardContent>
+                <IonCardTitle>Danke für deine Bewertung</IonCardTitle>
+                <IonButton 
+                  fill="solid" 
+                  className="check-btn my-3" 
+                  onClick={() => {
+                    setSuccess(false);
+                    // Reset React Hook Form
+                    reset()
+                  }}>
+                  <IonIcon className="pe-1" icon={add}/>Weitere Bewertung
+                </IonButton>
+              </IonCardContent>
+            </IonCard>
+          </div>
+        )}
 
       <LoadingError />
 

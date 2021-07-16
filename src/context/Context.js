@@ -33,7 +33,7 @@ const AppState = ({children}) => {
   const [map, setMap]= useState(null);
   const [viewport, setViewport] = useState({});
   const [center, setCenter] = useState({});
-  const [zoom, setZoom] = useState(12);
+  const [zoom, setZoom] = useState(null);
   const [selected, setSelected] = useState(null);
   const [searchSelected, setSearchSelected] = useState(null);
   const [position, setPosition] = useState();
@@ -43,7 +43,11 @@ const AppState = ({children}) => {
   const [error, setError] = useState('');
   const [toggle, setToggle] = useState(null);
   const [mapStyles, setMapStyles] = useState(null);
-  const [showUpdate, setShowUpdate ] = useState(false);
+  const [showUpdateProfil, setShowUpdateProfil] = useState(false);
+  const [showUpdateComment, setShowUpdateComment] = useState({
+    state: false,
+    comment_id: ''
+  });
   const [showProfil, setShowProfil] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
@@ -56,7 +60,6 @@ const AppState = ({children}) => {
   });
   const [openComments, setOpenComments] = useState(false);
   const [newComment, setNewComment] = useState(null);
-  const [finishComment, setFinishComment] = useState(false);
   const [searchFlavor, setSearchFlavor] = useState('');
   const [flavor, setFlavor] = useState({});
 
@@ -157,6 +160,7 @@ const AppState = ({children}) => {
     setSearchText('');
   }, [segment])
 
+  // fetch data of locations in viewport
   useEffect(() => {
     const updateLocInViewport = async () => {
       try {
@@ -222,6 +226,51 @@ const AppState = ({children}) => {
     setNum(prev => prev + 4)
     setLocationsList([...locationsList, ...newArr])
     e.target.complete();
+  }
+
+  // delete comment, update user and selected location data, calculate new rating averages to display them immediately
+  const deleteComment = async (comment) => {
+    setLoading(true);
+
+    try {
+      const token = localStorage.getItem('token');
+      const options = {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          token
+        },
+        // converts JS data into JSON string.
+        body: JSON.stringify({ user_id: user._id }),
+        credentials: "include"
+      };
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${comment._id}`, options);
+      if(res.status === 200) {
+        if(selected) {
+          // remove deleted comment from selected comments list array
+          const newList = selected.comments_list.filter(item => item._id !== comment._id);
+
+          // if list exists after removing than calc new avg ratings without fetching data from API - rounded to one decimal
+          if(newList.length) {
+            // if length list = 1 than take directly rating
+            const sumQuality = newList.length === 1 ? newList[0].rating_quality : newList.reduce((a, b) => a.rating_quality + b.rating_quality);
+            const sumVegan = newList.length === 1 ? newList[0].rating_vegan_offer : newList.reduce((a, b) => a.rating_vegan_offer + b.rating_vegan_offer);
+            const location_rating_quality = Math.round( (sumQuality / newList.length) * 10) / 10 || 0;
+            const location_rating_vegan_offer = Math.round( (sumVegan / newList.length) * 10) / 10 || 0;
+            setSelected({...selected, comments_list: newList, location_rating_quality, location_rating_vegan_offer});
+          } else {
+            setSelected({...selected, comments_list: []});
+          }
+        }
+  
+        // remove deleted comment from user profil comments list array
+        const newUserList = user.comments_list.filter(item => item._id !== comment._id);
+        setUser({...user, comments_list: newUserList})
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+    setLoading(false);
   }
 
   const addFavLoc = async () => {
@@ -415,19 +464,20 @@ const AppState = ({children}) => {
         mapStyles,
         enterAnimationBtm, leaveAnimationBtm,
         enterAnimationLft, leaveAnimationLft,
-        showUpdate, setShowUpdate,
+        showUpdateProfil, setShowUpdateProfil,
+        showUpdateComment, setShowUpdateComment,
         showProfil, setShowProfil,
         showFeedback, setShowFeedback,
         showAbout, setShowAbout,
         infoModal, setInfoModal,
         newLocModal, setNewLocModal,
         alertUpdateFav, setAlertUpdateFav,
-        removeFavLoc,
+        deleteComment,
         addFavLoc,
+        removeFavLoc,
         createPricing,
         openComments, setOpenComments,
         newComment, setNewComment,
-        finishComment, setFinishComment,
         searchFlavor, setSearchFlavor,
         flavor, setFlavor
       }}

@@ -6,7 +6,7 @@ import { caretDownCircle, caretForwardCircle, closeCircleOutline, iceCream, info
 import ProfilUpdate from '../components/ProfilUpdate';
 import Spinner from '../components/Spinner';
 import CommentsBlock from "./Comments/CommentsBlock";
-import FlavorsBlock from "./FlavorsBlock";
+import FlavorsBlock from "./Comments/FlavorsBlock";
 
 const Profil = () => {
   const { 
@@ -15,8 +15,8 @@ const Profil = () => {
     user, 
     setShowProfil, 
     locations, 
-    showUpdate, 
-    setShowUpdate, 
+    showUpdateProfil, 
+    setShowUpdateProfil,
     successMsg 
   } = useContext(Context);
   const [showComments, setShowComments] = useState(false);
@@ -42,13 +42,13 @@ const Profil = () => {
               <IonCardTitle className="me-2 my-3 ion-text-wrap">{user.name}</IonCardTitle>
               <IonButton  
                 className="update-btn ms-auto"
-                onClick={() => setShowUpdate(prev => !prev)}
+                onClick={() => setShowUpdateProfil(prev => !prev)}
               >
                 <IonIcon className="me-1" icon={refreshCircle}/>Update
               </IonButton>
             </IonItem>
 
-            {showUpdate && (
+            {showUpdateProfil && (
               <ProfilUpdate />
             )}
 
