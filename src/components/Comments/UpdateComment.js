@@ -44,7 +44,7 @@ const UpdateComment = ({comment}) => {
   const checkLactoseFree = () => {
     setValue("lactose_free", true);
   }
-  console.log(selected.comments_list[0])
+
   const onSubmit = async (data) => {
     setLoading(true);
 
