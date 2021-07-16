@@ -1178,6 +1178,10 @@ ion-range::part(knob) {
   );
 }
 
+.textField {
+  min-height: 70px;
+}
+
 /*********** Comments of Ice Cream Locations ************/
 .locationTitle {
   color: var(--ion-text-color);

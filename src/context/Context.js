@@ -33,7 +33,7 @@ const AppState = ({children}) => {
   const [map, setMap]= useState(null);
   const [viewport, setViewport] = useState({});
   const [center, setCenter] = useState({});
-  const [zoom, setZoom] = useState(12);
+  const [zoom, setZoom] = useState(null);
   const [selected, setSelected] = useState(null);
   const [searchSelected, setSearchSelected] = useState(null);
   const [position, setPosition] = useState();

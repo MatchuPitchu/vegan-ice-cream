@@ -89,11 +89,11 @@ const UpdateComment = ({comment}) => {
         const index = selected.comments_list.findIndex(item => item._id === comment._id);
         comments_list.splice(index, 1, updatedComment);
         // calc new avg ratings without fetching data from API - rounded to one decimal
-        const sumQuality = comments_list.reduce((a, b) => a.rating_quality + b.rating_quality);
-        const sumVegan = comments_list.reduce((a, b) => a.rating_vegan_offer + b.rating_vegan_offer);
+        // if length list = 1 than take directly rating
+        const sumQuality = comments_list.length === 1 ? comments_list[0].rating_quality : comments_list.reduce((a, b) => a.rating_quality + b.rating_quality);
+        const sumVegan = comments_list.length === 1 ? comments_list[0].rating_vegan_offer : comments_list.reduce((a, b) => a.rating_vegan_offer + b.rating_vegan_offer);
         const location_rating_quality = Math.round( (sumQuality / comments_list.length) * 10) / 10 || 0;
         const location_rating_vegan_offer = Math.round( (sumVegan / comments_list.length) * 10) / 10 || 0;
-
         setSelected({...selected, comments_list, location_rating_quality, location_rating_vegan_offer})
       }
     } catch (error) {

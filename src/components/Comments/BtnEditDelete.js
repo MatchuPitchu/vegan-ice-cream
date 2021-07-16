@@ -27,10 +27,21 @@ const BtnEditDelete = ({comment}) => {
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${comment._id}`, options);
       if(res.status === 200) {
-        // remove deleted comment from selected comments list array
         if(selected) {
-          const newSelectedList = selected.comments_list.filter(item => item._id !== comment._id);
-          setSelected({...selected, comments_list: newSelectedList})
+          // remove deleted comment from selected comments list array
+          const newList = selected.comments_list.filter(item => item._id !== comment._id);
+
+          // if list exists after removing than calc new avg ratings without fetching data from API - rounded to one decimal
+          if(newList.length) {
+            // if length list = 1 than take directly rating
+            const sumQuality = newList.length === 1 ? newList[0].rating_quality : newList.reduce((a, b) => a.rating_quality + b.rating_quality);
+            const sumVegan = newList.length === 1 ? newList[0].rating_vegan_offer : newList.reduce((a, b) => a.rating_vegan_offer + b.rating_vegan_offer);
+            const location_rating_quality = Math.round( (sumQuality / newList.length) * 10) / 10 || 0;
+            const location_rating_vegan_offer = Math.round( (sumVegan / newList.length) * 10) / 10 || 0;
+            setSelected({...selected, comments_list: newList, location_rating_quality, location_rating_vegan_offer});
+          } else {
+            setSelected({...selected, comments_list: []});
+          }
         }
   
         // remove deleted comment from user profil comments list array
@@ -44,7 +55,7 @@ const BtnEditDelete = ({comment}) => {
 
   return (
     <>
-      {/* edit comment functionality */}
+      {/* edit comment btn */}
       <IonButton
         fill="clear"
         className="smallBtn ms-auto"
@@ -53,7 +64,7 @@ const BtnEditDelete = ({comment}) => {
         <IonIcon className="me-0" size="small" icon={createOutline} />
       </IonButton>
 
-      {/* delete comment functionality */}
+      {/* delete comment btn */}
       <IonButton
         fill="clear"
         className="smallBtn"

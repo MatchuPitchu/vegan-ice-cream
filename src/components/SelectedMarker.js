@@ -136,7 +136,7 @@ const SelectedMarker = () => {
                   />
                 </div>
 
-                {selected.comments_list[0].text && selected.flavors_listed[0].color.primary ? (
+                {selected.comments_list[0].text ? (
                   <>
                     <IonItem color="background-color" className={`${!openComments && 'borderBottom'}`} lines="none">
                       <IonIcon 

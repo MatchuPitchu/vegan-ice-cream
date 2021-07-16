@@ -18,6 +18,7 @@ const Bewerten = () => {
     setLoading,
     setError,
     user,
+    center, zoom,
     searchSelected, setSearchSelected,
     setSearchText,
     setNewComment,
@@ -178,7 +179,7 @@ const Bewerten = () => {
       setSearchFlavor('');
       setFlavor({});
       setSearchSelected(null);
-
+      
       // delay is needed, otherwise memory leak if state updates on unmounted component
       setTimeout(() => setSuccess(true), 500);
 
@@ -301,7 +302,7 @@ const Bewerten = () => {
             <IonItem lines="none">
               <div className="row">
                 <div className="col mt-2">
-                  <IonLabel position='stacked' htmlFor="type_fruit">Sorbet/Fruchteis</IonLabel>
+                  <IonLabel position='stacked' htmlFor="type_fruit">Sorbet • Fruchteis</IonLabel>
                   <Controller
                     control={control}
                     render={({ field: { onChange, value } }) => (
@@ -314,7 +315,7 @@ const Bewerten = () => {
                   />
                 </div>
                 <div className="col mt-2">
-                  <IonLabel position='stacked' htmlFor="type_cream">Cremeeis/Milcheis/Pflanzenmilcheis</IonLabel>
+                  <IonLabel position='stacked' htmlFor="type_cream">Cremeeis • Milcheis • Pflanzenmilcheis</IonLabel>
                   <Controller 
                     control={control}
                     render={({ field: { onChange, value } }) => (
@@ -396,8 +397,8 @@ const Bewerten = () => {
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <IonTextarea
-                    className="pb-2"
-                    autoGrow={true} 
+                    className="textField"
+                    autoGrow={true}
                     value={value} 
                     onIonChange={e => onChange(e.detail.value)} 
                   />
