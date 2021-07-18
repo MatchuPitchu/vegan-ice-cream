@@ -962,8 +962,9 @@ mark {
   height: 100%;
   object-fit: cover;
   object-position: center;
-  opacity: 0.3;
+  opacity: 0.4;
   z-index: -1;
+  mask-image: linear-gradient(to top, transparent 0%, black);
 }
 
 .modalOverlay {
@@ -1142,12 +1143,12 @@ mark {
 
 .commentTag {
   font-size: 0.7rem;
-  color: var(--ion-color-secondary);
+  color: var(--ion-color-primary);
   text-align: center;
   margin-right: 10px;
   padding: 2px 7px 3px 7px;
   background-color: #fce3ab15;
-  border: 1px solid var(--ion-color-secondary);
+  border: 1px solid var(--ion-color-primary);
   border-radius: 10px;
   cursor: default;
 }

@@ -62,7 +62,7 @@ const SelectedMarker = () => {
         {/* IonImg uses lazy loading */}
         <IonImg className="modalImage" src='./assets/images/ice-cream-chocolate-sm-mae-mu-unsplash.jpg' />
         
-        <div style={toggle ? {backgroundColor: '#23303390' } : {backgroundColor: '#ffffff90'}}>
+        <div style={toggle ? {backgroundColor: '#23303399' } : {backgroundColor: '#ffffff99'}}>
           <IonItemGroup>
             <IonItem className="modalItem" lines="full">
               <IonLabel>
