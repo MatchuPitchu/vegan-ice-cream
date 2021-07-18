@@ -60,7 +60,8 @@ const SelectedMarker = () => {
 
       <IonContent>
         {/* IonImg uses lazy loading */}
-        <IonImg className="modalImage" src='./assets/ice-cream-truck-vincent-creton-unsplash.jpg' />
+        <IonImg className="modalImage" src='./assets/images/ice-cream-chocolate-sm-mae-mu-unsplash.jpg' />
+        
         <div style={toggle ? {backgroundColor: '#23303390' } : {backgroundColor: '#ffffff90'}}>
           <IonItemGroup>
             <IonItem className="modalItem" lines="full">
@@ -156,7 +157,7 @@ const SelectedMarker = () => {
                         {selected.comments_list.length} 
                       </IonButton>
                     </IonItem>
-    
+                    
                     {openComments ? selected.comments_list.map(comment => <CommentsBlock comment={comment} key={comment._id} />) : null}
     
                     <IonItem lines="none">
