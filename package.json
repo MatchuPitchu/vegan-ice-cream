@@ -9,7 +9,6 @@
     "@capacitor/ios": "^2.4.7",
     "@googlemaps/markerclustererplus": "^1.1.2",
     "@ionic-native/core": "^5.32.1",
-    "@ionic-native/geolocation": "^5.33.0",
     "@ionic/react": "^5.5.0",
     "@ionic/react-router": "^5.5.0",
     "@reach/combobox": "^0.15.1",
