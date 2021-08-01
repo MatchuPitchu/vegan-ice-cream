@@ -923,6 +923,7 @@ mark {
 
 .add-control,
 .where-control,
+.close-center,
 .center-control,
 .update-btn {
   --background: var(--ion-item-background);
@@ -939,6 +940,11 @@ mark {
 }
 
 .center-control {
+  color: var(--ion-color-danger-tint);
+}
+
+.close-center {
+  align-self: flex-start;
   color: var(--ion-color-danger-tint);
 }
 

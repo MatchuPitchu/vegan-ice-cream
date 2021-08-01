@@ -1,9 +1,8 @@
 import { useContext, useState, useEffect, useCallback } from "react";
 import { Context } from '../context/Context';
-import { Geolocation } from '@ionic-native/geolocation';
 import { IonPopover, IonButton, IonContent, IonIcon, IonLabel, IonPage, IonSegment, IonSegmentButton } from '@ionic/react';
 import { GoogleMap, Marker, MarkerClusterer, useJsApiLoader } from '@react-google-maps/api';
-import { add, addCircleOutline, create, listCircle, location as myPos, logIn, map as mapIcon, refreshCircle, removeCircleOutline, search } from "ionicons/icons";
+import { add, addCircleOutline, create, listCircle, logIn, map as mapIcon, refreshCircle, removeCircleOutline } from "ionicons/icons";
 import NewLocationForm from "../components/NewLocationForm";
 import Search from "../components/Search";
 import SelectedMarker from '../components/SelectedMarker';
@@ -11,6 +10,7 @@ import ListMap from "../components/ListMap";
 import Spinner from "../components/Spinner";
 import LoadingError from "../components/LoadingError";
 import AutocompleteForm from "../components/AutocompleteForm";
+import GeolocationBtn from "../components/GeolocationBtn";
 
 const Entdecken = () => {
   const {
@@ -67,17 +67,6 @@ const Entdecken = () => {
       setZoom(12)
     }
   }, [searchSelected])
-
-  const getLocation = async () => {
-    try {
-      const position = await Geolocation.getCurrentPosition();
-      setPosition({lat: position.coords.latitude, lng: position.coords.longitude});
-      setCenter({lat: position.coords.latitude, lng: position.coords.longitude})
-    } catch (error) {
-      setError('Deine Position kann nicht ermittelt werden:', error)
-      setTimeout(() => setError(null), 5000);
-    }
-  };
 
   const clusterOptions = {
     imagePath: './assets/icons/m'
@@ -200,16 +189,14 @@ const Entdecken = () => {
                
               <AutocompleteForm />
 
-              <IonButton className="where-control" onClick={getLocation} title="Mein Standort">
-                <IonIcon icon={myPos} />
-              </IonButton>
+              <GeolocationBtn />
             
               <IonButton 
                 className="center-control" 
-                title="Karte auf deinen Anfangspunkt zentrieren"
+                title="Karte zentrieren: auf Anfangspunkt oder (falls aktiviert) meinen Standort"
                 onClick={() => {
-                  // take users home city or general lat lng values + default zoom
-                  map.setCenter({ lat: user && user.home_city.geo.lat || 52.524, lng: user && user.home_city.geo.lng || 13.410 });
+                  // if no user position take users home city or general lat lng values + default zoom; otherwise recenter on users position
+                  !position ? map.setCenter({ lat: user && user.home_city.geo.lat || 52.524, lng: user && user.home_city.geo.lng || 13.410 }) : map.setCenter({ lat: position.lat, lng: position.lng });
                   map.setZoom(user && user.home_city.geo.lat ? 12 : 9)
                 }}
               >
@@ -299,9 +286,14 @@ const Entdecken = () => {
                   position={{lat: position.lat, lng: position.lng}}
                   icon={{
                     url: './assets/icons/current-position-marker.svg',
-                    scaledSize: new window.google.maps.Size(60, 60),
+                    scaledSize: new window.google.maps.Size(50, 50),
                   }}
-                  zIndex={1}
+                  onClick={() => {
+                    setCenter({lat: position.lat, lng: position.lng});
+                    // zoom in on click untill zoom level of 17
+                    setZoom(prev => prev < 18 ? prev + 1 : prev)
+                  }}
+                  zIndex={0}
                 />
                 ) : null}
 
