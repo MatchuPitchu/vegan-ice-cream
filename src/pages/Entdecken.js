@@ -293,7 +293,7 @@ const Entdecken = () => {
                     // zoom in on click untill zoom level of 17
                     setZoom(prev => prev < 18 ? prev + 1 : prev)
                   }}
-                  zIndex={0}
+                  zIndex={1}
                 />
                 ) : null}
 
