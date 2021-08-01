@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Context } from '../context/Context';
 import { IonButton, IonIcon } from "@ionic/react"
 import { closeCircleOutline, location as myPos } from "ionicons/icons";
@@ -11,35 +11,40 @@ const GeolocationBtn = () => {
     position, setPosition,
   } = useContext(Context);
 
-  const handleClick = async () => {
-    // if click when no position is displayed than enable watchPosition otherwise clear watchting und reset position to undefined
-    if(!position) {
+  const [watchID, setWatchID] = useState(undefined)
+
+  const getPosition = async () => {
       setLoading(true);
       try {
         // define as var to have access below to clearWatch
-        var watchID = await navigator.geolocation.watchPosition(
+        const id = await navigator.geolocation.watchPosition(
           pos => setPosition({lat: pos.coords.latitude, lng: pos.coords.longitude}),
           err => setError(err),
           { useSignificantChanges: true }
-        )        
+        )
+        setWatchID(id);  
       } catch (err) {
         console.log(err);
         setError('Position kann nicht ermittelt werden. Berechtigung prüfen');
         setTimeout(() => setError(null), 5000);
       }
       setLoading(false);
-    } else {
-      setPosition(undefined);
-      navigator.geolocation.clearWatch(watchID);
-    }
-
   };
+
+  const removeWatch = () => {
+    setPosition(undefined);
+    navigator.geolocation.clearWatch(watchID);
+  }
 
   return (
     <>
-      <IonButton className="where-control" onClick={handleClick} title="Meinen Standort verfolgen">
+      <IonButton 
+        className="where-control" 
+        onClick={!position ? getPosition : removeWatch}
+        title="Eigenen Standort verfolgen"
+      >
         <IonIcon icon={myPos} />
-        {position && <IonIcon className="close-center" size="small" icon={closeCircleOutline} /> }
+        {position && <IonIcon className="close-center-btn" size="small" icon={closeCircleOutline} /> }
       </IonButton>
 
       <LoadingError />

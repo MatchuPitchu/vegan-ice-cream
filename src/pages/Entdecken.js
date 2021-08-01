@@ -193,7 +193,7 @@ const Entdecken = () => {
             
               <IonButton 
                 className="center-control" 
-                title="Karte zentrieren: auf Anfangspunkt oder (falls aktiviert) meinen Standort"
+                title="Karte zentrieren: auf eigenen Standort (falls aktiviert), sonst auf Anfangspunkt"
                 onClick={() => {
                   // if no user position take users home city or general lat lng values + default zoom; otherwise recenter on users position
                   !position ? map.setCenter({ lat: user && user.home_city.geo.lat || 52.524, lng: user && user.home_city.geo.lng || 13.410 }) : map.setCenter({ lat: position.lat, lng: position.lng });
