@@ -18,13 +18,13 @@ const Bewerten = () => {
     setLoading,
     setError,
     user,
-    center, zoom,
     searchSelected, setSearchSelected,
     setSearchText,
     setNewComment,
     searchFlavor, setSearchFlavor,
     flavor, setFlavor,
     createPricing,
+    fetchUpdatedLoc,
   } = useContext(Context);
   const [popoverInfo, setPopoverInfo] = useState({ show: false, event: undefined });
   const [showColorPicker, setShowColorPicker] = useState({field1: false, field2: false});
@@ -126,7 +126,7 @@ const Bewerten = () => {
       const createdComment = await res.json();
 
       if (!createdComment) {
-        setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
+        setError('Fehler beim Eintragen. Bitte versuch es später nochmal');
         setTimeout(() => setError(null), 5000);
       }
 
@@ -171,6 +171,9 @@ const Bewerten = () => {
       };
 
       createFlavor(data, createdComment);
+      
+      // replace data of updated loc in locations array
+      fetchUpdatedLoc(searchSelected);
 
       // if newComment is set than user data is refetched in Context
       setNewComment(createdComment);

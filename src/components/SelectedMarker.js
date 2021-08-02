@@ -32,7 +32,8 @@ const SelectedMarker = () => {
           comments_list,
           flavors_listed
         })
-      } catch (error) {
+      } catch (err) {
+        console.log(err)
         setError('Ups, schief gelaufen. Versuche es später nochmal.')
         setTimeout(() => setError(null), 5000);
       }
