@@ -16,14 +16,17 @@ const ListMap = () => {
 
   return (
     <IonContent>
+      {/* if searchbar is used */}
       {listResults.length ? listResults.map(loc => (
         <ListResultComponent key={loc._id} loc={loc} />
       )) : null}
 
+      {/* if searchbar empty and so listResults array is empty */}
       {!searchText && !listResults.length && locationsList ? locationsList.map(loc => (
         <ListResultComponent key={loc._id} loc={loc} />
       )) : null}
 
+      {/* if smth was typed into searchbar but no results were found  */}
       {searchText && !listResults.length ? (
         <div className="container text-center">
           <IonCard>

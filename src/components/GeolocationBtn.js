@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import { Context } from '../context/Context';
 import { IonButton, IonIcon } from "@ionic/react"
-import { closeCircleOutline, location as myPos } from "ionicons/icons";
+import { close, navigateCircle, navigateCircleOutline } from "ionicons/icons";
 import LoadingError from "./LoadingError";
 
 const GeolocationBtn = () => {
@@ -54,10 +54,10 @@ const GeolocationBtn = () => {
       <IonButton 
         className="where-control" 
         onClick={!position ? getPosition : removeWatch}
-        title="Eigenen Standort verfolgen"
+        title={!position ? "Eigenen Standort verfolgen" : "Standortanzeige aus"}
       >
-        <IonIcon icon={myPos} />
-        {position && <IonIcon className="close-center-btn" size="small" icon={closeCircleOutline} /> }
+        <IonIcon icon={!position ? navigateCircleOutline : navigateCircle} />
+        {position && <IonIcon className="close-center-btn" size="small" icon={close} /> }
       </IonButton>
 
       <LoadingError />

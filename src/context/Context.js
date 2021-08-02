@@ -82,8 +82,8 @@ const AppState = ({children}) => {
           const data = await res.json();
           setUser({ ...user, ...data});
         };
-      } catch (error) {
-        console.log(error.message);
+      } catch (err) {
+        console.log(err.message);
       }
     }
     if (token) verifySession();   
@@ -111,8 +111,8 @@ const AppState = ({children}) => {
           credentials: "include"
         };
         await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/num-loc-last-visit`, options);
-      } catch (error) {
-        console.log(error.message);
+      } catch (err) {
+        console.log(err.message);
       }
     }
 
@@ -135,21 +135,35 @@ const AppState = ({children}) => {
           const newArr = data.slice(0, 4)
           setLocationsList(newArr)
         }
-      } catch (error) {
-        console.log(error.message);
+      } catch (err) {
+        console.log(err.message);
       }
     }
     fetchLoc();
   }, [])
   
+  const fetchUpdatedLoc = async (loc) => {
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/${loc._id}`)
+      const updatedLoc = await res.json();
+      // filter out updated loc of these two locations arrays, than via spread operator add updatedLoc to arrays
+      const newArr1 = locations.filter(loc => loc._id !== updatedLoc._id);
+      setLocations([...newArr1, updatedLoc]);
+      const newArr2 = locationsList.filter(loc => loc._id !== updatedLoc._id);
+      setLocationsList([...newArr2, updatedLoc]);
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
   useEffect(() => {
     const fetchAllCitiesWithLoc = async () => {
       try {
         const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/cities-with-locations`)
         const data = await res.json();
         setCities(data);
-      } catch (error) {
-        console.log(error.message);
+      } catch (err) {
+        console.log(err.message);
       }
     }
     fetchAllCitiesWithLoc();
@@ -182,8 +196,8 @@ const AppState = ({children}) => {
         const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/viewport?limit=${limit}`, options)
         const data = await res.json();
         setLocationsMap(data);
-      } catch (error) {
-        console.log(error.message);
+      } catch (err) {
+        console.log(err.message);
       }
     }
     if(viewport) updateLocInViewport();
@@ -222,7 +236,7 @@ const AppState = ({children}) => {
 
   const loadMore = (e) => {
     setLocPage(prev => prev + 1);
-    const newArr = locations.slice(num, num+4)
+    const newArr = locations.slice(num, num + 4)
     setNum(prev => prev + 4)
     setLocationsList([...locationsList, ...newArr])
     e.target.complete();
@@ -267,8 +281,8 @@ const AppState = ({children}) => {
         const newUserList = user.comments_list.filter(item => item._id !== comment._id);
         setUser({...user, comments_list: newUserList})
       }
-    } catch (error) {
-      console.log(error.message);
+    } catch (err) {
+      console.log(err.message);
     }
     setLoading(false);
   }
@@ -293,9 +307,9 @@ const AppState = ({children}) => {
       const newFavLoc = [...user.favorite_locations, alertUpdateFav.location]
       setUser(prev => ({ ...prev, favorite_locations: newFavLoc }));
       setAlertUpdateFav({...alertUpdateFav, addStatus: false, location: null});
-    } catch (error) {
-      console.log(error.message);
-      setError('Da ist etwas schief gelaufen. Versuche es später nochmal.')
+    } catch (err) {
+      console.log(err.message);
+      setError('Da ist etwas schief gelaufen. Versuche es später nochmal')
       setTimeout(() => setError(null), 5000);
     };
     setLoading(false)
@@ -319,9 +333,9 @@ const AppState = ({children}) => {
       const favorite_locations = await res.json();
       setUser(prev => ({ ...prev, favorite_locations }));
       setAlertUpdateFav({...alertUpdateFav, removeStatus: false, location: null});
-    } catch (error) {
-      console.log(error.message);
-      setError('Da ist etwas schief gelaufen. Versuche es später nochmal.')
+    } catch (err) {
+      console.log(err.message);
+      setError('Da ist etwas schief gelaufen. Versuche es später nochmal')
       setTimeout(() => setError(null), 5000);
     };
     setLoading(false);
@@ -348,8 +362,9 @@ const AppState = ({children}) => {
       setLocations([...newArr1, updatedLoc]);
       const newArr2 = locationsList.filter(loc => loc._id !== updatedLoc._id);
       setLocationsList([...newArr2, updatedLoc]);
-    } catch (error) {
-      setError(error);
+    } catch (err) {
+      console.log(err.message);
+      setError('Da ist etwas schief gelaufen. Versuche es später nochmal')
       setTimeout(() => setError(null), 5000);
     };
   }
@@ -431,6 +446,7 @@ const AppState = ({children}) => {
         locationsMap, setLocationsMap,
         locationsList, setLocationsList,
         topLocations, setTopLocations,
+        fetchUpdatedLoc,
         cities, setCities,
         listResults, setListResults,
         autocomplete, setAutocomplete,

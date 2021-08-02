@@ -923,7 +923,6 @@ mark {
 
 .add-control,
 .where-control,
-.close-center-btn,
 .center-control,
 .update-btn {
   --background: var(--ion-item-background);
@@ -944,6 +943,7 @@ mark {
 }
 
 .close-center-btn {
+  margin-top: 4px;
   align-self: flex-start;
   color: var(--ion-color-danger-tint);
 }
