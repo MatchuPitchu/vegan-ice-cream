@@ -14,14 +14,12 @@ const LoadingError = () => {
         // loading is only true or false
         isOpen={loading} 
         message={"Einen Moment bitte ..."}
-        onDidDismiss={() => setLoading(false)}
       />
       <IonToast
         cssClass="errorToast"
         // error is message, so need to spezify that if msg than true
         isOpen={error ? true : false} 
-        message={error} 
-        onDidDismiss={() => setError('')}
+        message={error}
       />
     </>
   )
