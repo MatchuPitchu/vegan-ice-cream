@@ -28,13 +28,6 @@ const AutocompleteForm = () => {
     if(!result) return;
     setLoading(true);
 
-    const duplicate = locations.find(loc => loc.address.street === result.address.street && loc.address.number === result.address.number)    
-    if(duplicate) {
-      setResult(null)
-      setError('Diese Adresse gibt es schon.');
-      setTimeout(() => setError(null), 5000);
-    }
-
     const fetchData = async () => {
       try {
         // fetch results are restricted to countries DE, AT, CH, LI
@@ -85,9 +78,18 @@ const AutocompleteForm = () => {
         setTimeout(() => setError(null), 5000);
       }
     };
-    if(!duplicate) fetchData();
+
+    const duplicate = locations.find(loc => loc.address.street === result.address.street && loc.address.number === result.address.number)    
+    if(duplicate) {
+      setResult(null)
+      setError('Adresse gibt es schon');
+      setTimeout(() => setError(null), 5000);
+    } else {
+      fetchData();
+      setCheckMsgNewLoc('Bestätige noch die Daten - klicke auf das grüne Icon');
+    }
+    
     setSearchAutocomplete('');
-    setCheckMsgNewLoc('Bestätige noch die Daten - klicke auf das grüne Icon')
     setLoading(false);
     setAutocompleteModal(false);
   };
@@ -169,7 +171,9 @@ const AutocompleteForm = () => {
           </IonButton>
         </form>
       </IonContent>
+
       <LoadingError />
+
     </IonModal>
   )
 };

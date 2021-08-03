@@ -157,6 +157,8 @@ const Entdecken = () => {
                   if (user) {
                     setNewLocation(null);
                     setAutocompleteModal(true);
+                    // set to empty string for case that user adds new loc icon but never clicks on icon
+                    setCheckMsgNewLoc('');
                   } else {
                     e.persist();
                     setPopoverShow({ show: true, event: e })

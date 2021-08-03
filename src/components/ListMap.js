@@ -3,6 +3,7 @@ import { Context } from '../context/Context';
 import { IonCard, IonContent, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 import SelectedMarker from './SelectedMarker';
 import ListResultComponent from "./ListResultComponent";
+import ListFilters from "./ListFilters";
 
 const ListMap = () => {
   const {
@@ -16,6 +17,9 @@ const ListMap = () => {
 
   return (
     <IonContent>
+      
+      {/* <ListFilters /> */}
+
       {/* if searchbar is used */}
       {listResults.length ? listResults.map(loc => (
         <ListResultComponent key={loc._id} loc={loc} />
