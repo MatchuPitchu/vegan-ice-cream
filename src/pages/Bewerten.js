@@ -169,7 +169,7 @@ const Bewerten = () => {
           setTimeout(() => setError(null), 5000);
         };
       };
-
+      
       createFlavor(data, createdComment);
       
       // replace data of updated loc in locations array
@@ -266,7 +266,7 @@ const Bewerten = () => {
                       min={0}
                       max={3}
                       step={0.10}
-                      ticks
+                      snaps
                       value={value} 
                       onIonChange={e => onChange(e.detail.value)} 
                     >

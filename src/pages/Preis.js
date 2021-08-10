@@ -32,7 +32,7 @@ const Preis = () => {
 
     setSearchSelected(null);
     setEndReset(true);
-    setTimeout(() => setEndReset(false), 10000);
+    setTimeout(() => setEndReset(false), 5000);
     setLoading(false)
   };
 
@@ -67,7 +67,7 @@ const Preis = () => {
                       min={0}
                       max={3}
                       step={0.10}
-                      ticks
+                      snaps
                       value={value} 
                       onIonChange={e => onChange(e.detail.value)} 
                     >

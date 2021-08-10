@@ -54,7 +54,7 @@ const SelectedMarker = () => {
       <IonItem lines='full'>
         {user ? <BtnFavLoc selectedLoc={selected}/> : null}
         <IonLabel>{selected.name}</IonLabel>
-        <IonButton fill="clear" onClick={() => {setOpenComments(false); setSelected(null); setInfoModal(false)}} >
+        <IonButton className="hoverTransparentBtn" fill="clear" onClick={() => {setOpenComments(false); setSelected(null); setInfoModal(false)}} >
           <IonIcon icon={closeCircleOutline}/>
         </IonButton>
       </IonItem>
