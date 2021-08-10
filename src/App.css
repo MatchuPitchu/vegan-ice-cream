@@ -26,7 +26,7 @@ ion-icon {
   font-size: 24px;
 }
 
-ion-button[type="submit"] {
+ion-button[type='submit'] {
   appearance: none;
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -133,6 +133,10 @@ li {
   height: 20px;
 }
 
+.hoverTransparentBtn {
+  --background-hover: transparent;
+}
+
 /************ Header general ************/
 .headerToolbar {
   --min-height: 40px;
@@ -156,7 +160,6 @@ li {
 }
 
 .rotateIcon:hover {
-  --background-hover: transparent;
   transform: rotate(360deg);
   transition: transform 4s;
 }
