@@ -59,9 +59,18 @@ function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then(registration => {
+      // https://github.com/Steviebaa/ios-friendly-serviceworker/blob/master/src/serviceWorker.js
+      if (navigator.vendor === 'Apple Computer, Inc.') {
+				console.log('Safari!!!!');
+				if (registration.waiting) {
+					if (config && config.onUpdate) {
+						config.onUpdate(registration);
+					}
+				}
+			}
+
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
-
         if (installingWorker == null) {
           return;
         }
@@ -95,13 +104,6 @@ function registerValidSW(swUrl, config) {
           }
         };
       };
-
-      if (registration.waiting !== null) {
-        if (config && config.onUpdate) {
-            config.onUpdate(registration);
-        }
-      }
-
     })
     .catch((error) => {
       console.error('Error during service worker registration:', error);
