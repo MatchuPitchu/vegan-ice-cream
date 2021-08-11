@@ -4,21 +4,27 @@ import { register } from '../serviceWorker';
 
 const ServiceWorkerWrapper = () => {
   const [showReload, setShowReload] = useState(false);
-  const [installingWorker, setInstallingWorker] = useState(null);
-
-  const onSWUpdate = (registration) => {
-    setShowReload(true);
-    setInstallingWorker(registration.installing);
-  };
 
   useEffect(() => {
-    register({ onUpdate: onSWUpdate });
+    register({ onUpdate: (registration) => {
+      if (registration && registration.waiting) setShowReload(true)
+        else setShowReload(false)
+      }
+    });
   }, []);
 
-  const reloadPage = () => {
-    installingWorker.postMessage({ type: 'SKIP_WAITING' });
-    setShowReload(false);
-    window.location.reload(true);
+  const refreshForUpdate = () => {
+    if('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .getRegistration()
+        .then(reg => {
+          reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+          window.location.reload();
+        })
+        .catch(err => console.log('Could not get registration: ', err));
+        
+        setShowReload(false);
+    }
   };
 
   return (
@@ -32,7 +38,7 @@ const ServiceWorkerWrapper = () => {
           side: 'end',
           text: 'Klick für Update',
           handler: () => {
-            reloadPage()
+            refreshForUpdate()
           }
         }
       ]}
