@@ -54,15 +54,15 @@ const App: React.FC = () => {
 
   // to display notification if update available (see ServiceWorkerWrapper.js) 
   // without reload of page
-  const history = useHistory();
-  useEffect(() => {
-    history.listen((location, action) => {
-      // check for sw updates on page change
-      navigator.serviceWorker
-        .getRegistrations()
-        .then((regs) => regs.forEach((reg) => reg.update()));
-    });
-  }, []);
+  // const history = useHistory();
+  // useEffect(() => {
+  //   history.listen((location, action) => {
+  //     // check for sw updates on page change
+  //     navigator.serviceWorker
+  //       .getRegistrations()
+  //       .then((regs) => regs.forEach((reg) => reg.update()));
+  //   });
+  // }, []);
 
   return (
     <IonApp>

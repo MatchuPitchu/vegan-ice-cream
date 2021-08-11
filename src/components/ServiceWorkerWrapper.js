@@ -7,7 +7,7 @@ const ServiceWorkerWrapper = () => {
 
   useEffect(() => {
     register({ onUpdate: (registration) => {
-      if (registration && registration.waiting) setShowReload(true)
+      if (registration && registration.waiting) setShowReload(true);
         else setShowReload(false)
       }
     });
