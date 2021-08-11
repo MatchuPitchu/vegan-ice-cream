@@ -1,22 +1,22 @@
 import { useState, useEffect } from 'react';
 import { IonToast } from '@ionic/react';
-import * as serviceWorker from '../serviceWorker';
+import { register } from '../serviceWorker';
 
 const ServiceWorkerWrapper = () => {
   const [showReload, setShowReload] = useState(false);
-  const [waitingWorker, setWaitingWorker] = useState(null);
+  const [installingWorker, setInstallingWorker] = useState(null);
 
   const onSWUpdate = (registration) => {
     setShowReload(true);
-    setWaitingWorker(registration.waiting);
+    setInstallingWorker(registration.installing);
   };
 
   useEffect(() => {
-    serviceWorker.register({ onUpdate: onSWUpdate });
+    register({ onUpdate: onSWUpdate });
   }, []);
 
   const reloadPage = () => {
-    waitingWorker.postMessage({ type: 'SKIP_WAITING' });
+    installingWorker.postMessage({ type: 'SKIP_WAITING' });
     setShowReload(false);
     window.location.reload(true);
   };
