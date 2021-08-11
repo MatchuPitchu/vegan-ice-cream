@@ -137,6 +137,11 @@ li {
   --background-hover: transparent;
 }
 
+.toastOpen {
+  --background: var(--ion-color-primary);
+  --button-color: var(--ion-color-text);
+}
+
 /************ Header general ************/
 .headerToolbar {
   --min-height: 40px;
