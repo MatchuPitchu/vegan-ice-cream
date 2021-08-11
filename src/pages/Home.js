@@ -28,7 +28,7 @@ const Home = () => {
   return (
     <IonPage>
       <IonHeader>
-        <img className="headerMap" src={`${toggle ? "./assets/header-home-dark.svg" : "./assets/header-home-light.svg"}`} />
+        <img className="headerMap" src={`${toggle ? "./assets/header-home-dark.svg" : "./assets/header-home-light.svg"}`} alt="" />
       </IonHeader>
 
       <div className={`${show && "fabOpen"}`}></div>
@@ -71,13 +71,13 @@ const Home = () => {
             }} 
           >
             <div className="start-btn-container">
-              <a>
+              <div>
                 <span className="btn-ring"></span>
                 <span className="btn-border"></span>
                 <span className="btn-text">
                   <IonIcon icon={add}/><br/>Eisladen<br/>eintragen
                 </span>
-              </a>
+              </div>
             </div>
           </IonButton>
           <IonPopover

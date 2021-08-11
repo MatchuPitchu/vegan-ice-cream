@@ -96,7 +96,7 @@ const Search = () => {
             className="searchbar"
             type="search"
             inputMode="search"
-            placeholder="Stadt suchen"
+            placeholder="Stadtname eintragen"
             showCancelButton="always"
             showClearButton="always"
             cancel-button-text=""
