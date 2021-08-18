@@ -16,7 +16,7 @@ const IosDescription = () => {
                 Die App ist aus Kostengründen (noch) nicht im Apple App Store erhältlich. Solange kannst du die App <strong>als Quasi-App (sog. PWA) auf deinem iPhone</strong> installieren
               </p>
               <ol>
-                <li>Öffne im Safari <b><a href="https://eis-mit-stil.netlify.app" target="_blank">https://eis-mit-stil.netlify.app</a></b></li>
+                <li>Öffne im Safari <b><a href="https://eis-mit-stil.netlify.app" target="_blank" rel="noopener noreferrer">https://eis-mit-stil.netlify.app</a></b></li>
                 <li>Klicke unten in der Mitte den Share-Button des Browsers <IonIcon size="small" icon={shareOutline} /></li>
                 <li>Scrolle herunter und klicke auf „Zum Home-Bildschirm“</li>
                 <li>Bestätigen und voilà - fertig!</li>

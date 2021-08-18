@@ -7,6 +7,7 @@ import BtnFavLoc from "./Comments/BtnFavLoc";
 import FlavorsBlock from "./Comments/FlavorsBlock";
 import Ratings from "./Ratings";
 import LoadingError from "./LoadingError";
+import Pricing from "./Pricing";
 
 const SelectedMarker = () => {
   const {
@@ -66,17 +67,15 @@ const SelectedMarker = () => {
         <div style={toggle ? {backgroundColor: '#23303399' } : {backgroundColor: '#ffffff99'}}>
           <IonItemGroup>
             <IonItem className="modalItem" lines="full">
-              <IonLabel>
+              <IonLabel className="ion-text-wrap">
                 {selected.address.street} {selected.address.number}
                 <br/>
                 {selected.address.zipcode} {selected.address.city}
                 <br/>
-                <a className="websiteLink" href={selected.location_url.includes("http") ? selected.location_url : `//${selected.location_url}`} target="_blank">{selected.location_url}</a>
+                <a className="websiteLink" href={selected.location_url.includes("http") ? selected.location_url : `//${selected.location_url}`} target="_blank" rel="noopener noreferrer">{selected.location_url}</a>
               </IonLabel>
               {selected.pricing.length > 0 && (
-                <div className="pricingInfo">
-                  Eiskugel {selected.pricing[selected.pricing.length-1].toFixed(2).replace(/\./g, ',')} €
-                </div>
+                <Pricing loc={selected} />
               )}
             </IonItem>
 

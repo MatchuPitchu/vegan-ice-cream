@@ -88,6 +88,9 @@ const Entdecken = () => {
     },
   }
 
+  // use useCallback with empty dependencies to avoid that setMap is re-executed on every rerendering
+  // so the hook returns (memoizes) the function instance between renderings;
+  // the map has a fixed reference in the memory (notice: read more about it)
   const onMapLoad = useCallback((map) => {
     setMap(map);
   }, []);
