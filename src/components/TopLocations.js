@@ -4,6 +4,7 @@ import { isPlatform, IonSlide, IonCard, IonLabel, IonSlides, IonItem, IonButton 
 import SelectedMarker from "./SelectedMarker";
 import Ratings from "./Ratings";
 import BtnInfoRating from "./Comments/BtnInfoRating";
+import Pricing from "./Pricing";
 
 // Optional parameters to pass to the swiper instance.
 // See http://idangero.us/swiper/api/ for valid options.
@@ -40,20 +41,18 @@ const TopLocations = () => {
           </IonButton>
           <IonCard className="slideCard">       
             <IonItem lines="full">
-              <IonLabel>
+              <IonLabel className="ion-text-wrap">
                 {loc.name}
                 <p>{loc.address.street} {loc.address.number}</p>
                 <p className="mb-1">{loc.address.zipcode} {loc.address.city}</p>
                 {loc.location_url && ( 
                   <p>
-                    <a className="websiteLink" href={loc.location_url.includes("http") ? loc.location_url : `//${loc.location_url}`} target="_blank">{loc.location_url}</a>
+                    <a className="websiteLink" href={loc.location_url.includes("http") ? loc.location_url : `//${loc.location_url}`} target="_blank" rel="noopener noreferrer">{loc.location_url}</a>
                   </p> 
                 )}
               </IonLabel>
               {loc.pricing.length > 0 && (
-                <div className="pricingInfo">
-                  Eiskugel {loc.pricing[loc.pricing.length-1].toFixed(2).replace(/\./g, ',')} €
-                </div>
+                <Pricing loc={loc} />
               )}
             </IonItem>
             <div className="px-3 py-2">

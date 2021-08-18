@@ -134,6 +134,7 @@ const Home = () => {
             className="donate-btn"
             href="https://paypal.me/eismitstil"
             target="_blank"
+            rel="noopener noreferrer"
             routerDirection="forward"
             color="primary"
             onClick={() => setShow(prev => !prev)}
@@ -154,7 +155,7 @@ const Home = () => {
             <IonIcon icon={phonePortraitOutline} />
           </IonFabButton>
           <IonFabList side="top">
-            <IonFabButton color="primary" className="logo-btn" routerDirection="forward" target="_blank" href='https://play.google.com/store/apps/details?id=eismitstil.app'>
+            <IonFabButton color="primary" className="logo-btn" routerDirection="forward" target="_blank" rel="noopener noreferrer" href='https://play.google.com/store/apps/details?id=eismitstil.app'>
               <IonIcon icon={logoGooglePlaystore} />
             </IonFabButton>
             <IonFabButton color="primary" className="logo-btn" routerDirection="forward" routerLink='/ios'>

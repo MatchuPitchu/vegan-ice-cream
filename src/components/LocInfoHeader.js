@@ -11,7 +11,7 @@ const LocInfoHeader = ({loc}) => {
   return (
     <IonItem lines="full">
       <IonAvatar slot='start'>
-        <img src='./assets/icons/ice-cream-icon-dark.svg' />
+        <img src='./assets/icons/ice-cream-icon-dark.svg' alt=""/>
       </IonAvatar>
       <IonLabel className="ion-text-wrap">
         <p style={{"color":"var(--ion-text-color)"}}>{loc.name}</p>
@@ -19,7 +19,7 @@ const LocInfoHeader = ({loc}) => {
         <p className="mb-1">{loc.address.zipcode} {loc.address.city}</p>
         {loc.location_url && ( 
           <p>
-            <a className="websiteLink" href={loc.location_url.includes("http") ? loc.location_url : `//${loc.location_url}`} target="_blank">{loc.location_url}</a>
+            <a className="websiteLink" href={loc.location_url.includes("http") ? loc.location_url : `//${loc.location_url}`} target="_blank" rel="noopener noreferrer">{loc.location_url}</a>
           </p> 
         )}
       </IonLabel>

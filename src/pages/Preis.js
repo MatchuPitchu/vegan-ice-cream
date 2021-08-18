@@ -39,7 +39,7 @@ const Preis = () => {
   return isAuth && user ? (
     <IonPage>
       <IonHeader>
-        <img className="headerMap" src={`${toggle ? "./assets/header-bewerten-dark.svg" : "./assets/header-bewerten-light.svg"}`} />
+        <img className="headerMap" src={`${toggle ? "./assets/header-bewerten-dark.svg" : "./assets/header-bewerten-light.svg"}`} alt="" />
       </IonHeader>
 
       <IonContent>

@@ -179,9 +179,9 @@ const Datenschutz = () => (
         </IonItem>
         <IonCardContent>
           <p className="mb-2"><strong>netlify</strong></p>
-          <p className="mb-2">Dienstanbieter: netlify<br/>Internetseite: San Francisco, USA<br/>Datenschutzerklärung: <a href="https://www.netlify.com/privacy" target="_blank">https://www.netlify.com/privacy</a></p>
+          <p className="mb-2">Dienstanbieter: netlify<br/>Internetseite: San Francisco, USA<br/>Datenschutzerklärung: <a href="https://www.netlify.com/privacy" target="_blank" rel="noopener noreferrer">https://www.netlify.com/privacy</a></p>
           <p className="mb-2"><strong>MongoDB</strong></p>
-          <p className="mb-2">Dienstanbieter: MongoDB Inc.<br/>MongoDB is ein globales Unternehmen, dass einen Cloud-Service für Datenbanken zur Verfügung stellt, und seine US-Zentrale in New York City und seine internationale Zentrale in Dublin hat.<br/>Datenschutzerklärung: <a href="https://www.mongodb.com/legal/privacy-policy" target="_blank">https://www.mongodb.com/legal/privacy-policy</a></p>
+          <p className="mb-2">Dienstanbieter: MongoDB Inc.<br/>MongoDB is ein globales Unternehmen, dass einen Cloud-Service für Datenbanken zur Verfügung stellt, und seine US-Zentrale in New York City und seine internationale Zentrale in Dublin hat.<br/>Datenschutzerklärung: <a href="https://www.mongodb.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">https://www.mongodb.com/legal/privacy-policy</a></p>
         </IonCardContent>
         
         <IonItem lines="none">
@@ -276,7 +276,7 @@ const Datenschutz = () => (
           
           <p className="mb-2"><strong>Google Maps</strong></p>
           <p className="mb-2">Wir nutzen auf unserer Internetpräsenz Google Maps. Hierbei wird durch Google die IP-Adresse des Besuchers erhoben und verarbeitet. Wenn Sie eine Internetseite besuchen, auf der Google Maps eingebunden ist, wird unabhängig davon, ob die Nutzung von Google Maps tatsächlich erfolgt oder Sie in Ihrem Google Account eingeloggt sind Ihre IP-Adresse sowie Ihre Standortdaten (letztere in der Regel nicht ohne Ihre Einwilligung) an Google übermittelt. Ihre IP-Adresse wird Ihrem Google Account zugeordnet, sofern Sie bei dem Besuch unserer Internetpräsenz dort eingeloggt sind.</p>
-          <p className="mb-2">Dienstanbieter: Google Inc., 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA<br/>Sitz in der EU: Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland<br/>Internetseite: <a href="https://www.google.de/maps">https://www.google.de/maps</a><br/>Datenschutzerklärung: <a href="https://policies.google.com/privacy">https://policies.google.com/privacy</a><br/><strong>Opt-Out-Möglichkeit:</strong> <a href="https://tools.google.com/dlpage/gaoptout?hl=de" target="_blank" rel="noopener">https://tools.google.com/dlpage/gaoptout?hl=de</a></p>
+          <p className="mb-2">Dienstanbieter: Google Inc., 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA<br/>Sitz in der EU: Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland<br/>Internetseite: <a href="https://www.google.de/maps">https://www.google.de/maps</a><br/>Datenschutzerklärung: <a href="https://policies.google.com/privacy">https://policies.google.com/privacy</a><br/><strong>Opt-Out-Möglichkeit:</strong> <a href="https://tools.google.com/dlpage/gaoptout?hl=de" target="_blank" rel="noopener noreferrer">https://tools.google.com/dlpage/gaoptout?hl=de</a></p>
           
           <p className="mb-2"><strong>Google Web Fonts</strong></p>
           <p className="mb-2">Mit Google Web Fonts können wir Schriftarten (Web Fonts) in das Design unserer Webseite einbinden und diese bei der Darstellung unserer Internetseiten in Ihrem Browser korrekt ausgeben. Die Einbindung dieser Web Fonts erfolgt durch einen Serveraufruf bei Google. Von dort aus werden die Schriftarten komprimiert an Ihren Browser weitergegeben und dort entpackt. Regelmäßig befindet sich dieser Server in den USA. Besuchen Sie eine unserer Seiten auf denen wir Google Fonts einbinden, wird an Google übermittelt, welche unserer Internetseiten Sie besucht haben.</p>
