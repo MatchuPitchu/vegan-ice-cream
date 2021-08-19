@@ -33,7 +33,7 @@ const Profil = () => {
             <IonIcon icon={closeCircleOutline}/>
           </IonButton>
         </IonItem>
-        <img className="headerImg" src={`${toggle ? "./assets/header-profil-dark.svg" : "./assets/header-profil-light.svg"}`} />
+        <img className="headerImg" src={`${toggle ? "./assets/header-profil-dark.svg" : "./assets/header-profil-light.svg"}`} alt="" />
       </IonHeader>
       <IonContent>
         <div className="mt-3">
