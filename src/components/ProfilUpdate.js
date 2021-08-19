@@ -96,8 +96,8 @@ const ProfilUpdate = () => {
         setError('Du hast ein falsches Passwort eingetragen');
         setTimeout(() => setError(null), 5000);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
       setError('Da ist etwas schief gelaufen. Versuche es später nochmal.')
       setTimeout(() => setError(null), 5000);
     };

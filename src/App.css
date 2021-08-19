@@ -824,11 +824,12 @@ mark {
 
 .slideBtn {
   position: absolute;
+  font-size: 0.8rem;
   font-weight: bold;
   margin: 0 auto;
-  height: 35px;
-  width: 35px;
-  --border-radius: 90%;
+  height: 30px;
+  width: 30px;
+  --border-radius: 50%;
   z-index: 2;
 }
 
@@ -1274,4 +1275,36 @@ ion-range::part(knob) {
 
 .textField {
   min-height: 70px;
+}
+
+/*********** Tab Favoriten ************/
+.favReorderOff {
+  color: var(--ion-color-primary);
+  --background: var(--ion-background-color);
+  height: 35px;
+  font-size: 0.7rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.favReorderOn {
+  color: var(--ion-background-color);
+  --background: var(--ion-color-primary);
+  height: 35px;
+  font-size: 0.7rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.favOrderNum {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin: 0 auto;
+  height: 27px;
+  width: 34px;
+  --border-radius: 0 0 30% 0;
+  z-index: 2;
 }
