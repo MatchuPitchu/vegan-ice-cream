@@ -1278,6 +1278,11 @@ ion-range::part(knob) {
 }
 
 /*********** Tab Favoriten ************/
+.backgroundTransparent {
+  background-color: transparent;
+  box-shadow: none;
+}
+
 .favReorderOff {
   color: var(--ion-color-primary);
   --background: var(--ion-background-color);
@@ -1294,6 +1299,10 @@ ion-range::part(knob) {
   font-size: 0.7rem;
   text-transform: none;
   letter-spacing: 0;
+}
+
+.reorderItem {
+  height: 29px;
 }
 
 .favOrderNum {

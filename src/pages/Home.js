@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import { Context } from "../context/Context";
 import { IonButton, IonCard, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonLabel, IonPage, IonPopover, isPlatform } from '@ionic/react';
-import { add, create, gift, iceCream, logIn, logoApple, logoGooglePlaystore, logoPaypal, logoVimeo, phonePortraitOutline, settings, star } from 'ionicons/icons';
+import { add, create, gift, iceCream, logIn, logoApple, logoGooglePlaystore, logoPaypal, phonePortraitOutline, star } from 'ionicons/icons';
 import SearchTopLocations from '../components/SearchTopLocations';
 import TopLocations from '../components/TopLocations';
 
