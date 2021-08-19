@@ -70,7 +70,7 @@ const Favoriten = () => {
         <img className="headerMap" src={`${toggle ? "./assets/header-favoriten-dark.svg" : "./assets/header-favoriten-light.svg"}`} alt="" />
       </IonHeader>
       <IonContent>
-        <div className={`d-flex ${isPlatform('desktop') ? "cardIonic" : ""}`} >
+        <IonCard className={`d-flex backgroundTransparent ${isPlatform('desktop') ? "cardIonic" : ""}`} >
           <IonButton  
             className={`ms-auto ${reorderDeactivated ? "favReorderOff" : "favReorderOn"}`}
             onClick={() => {
@@ -82,17 +82,24 @@ const Favoriten = () => {
             <IonIcon className="me-1" icon={reorderDeactivated ? reorderThreeOutline : refreshCircle}/>
             {reorderDeactivated ? "Liste per Drag & Drop ordnen" : "Neue Sortierung bestätigen"}
           </IonButton>
-        </div>
+        </IonCard>
 
         <IonReorderGroup disabled={reorderDeactivated} onIonItemReorder={doReorder}>
 
           {user.favorite_locations && user.favorite_locations.map((loc, i) => (
-          <IonReorder key={loc._id} >
-            <IonCard className={`${isPlatform('desktop') ? "cardIonic" : ""}`} >
+            <IonCard key={loc._id} className={`${isPlatform('desktop') ? "cardIonic" : ""}`} >
               <IonButton className="favOrderNum">
                 {i+1}.
               </IonButton>
 
+              {!reorderDeactivated && (
+                <IonItem className="reorderItem" lines="none">
+                  <IonReorder slot="end">
+                    <IonIcon icon={reorderThreeOutline} />
+                  </IonReorder>
+                </IonItem>
+              )}
+              
               <LocInfoHeader loc={loc} />
               
               <div className="px-3 py-2">
@@ -123,7 +130,6 @@ const Favoriten = () => {
                 )}
               </div>
             </IonCard>
-          </IonReorder>
           ))}
         </IonReorderGroup>
         
