@@ -22,7 +22,9 @@ const Home = () => {
 
   useEffect(() => {    
     // (number) means duration
-    setTimeout(() => contentRef.current && contentRef.current.scrollToBottom(500), 500);
+    const id = setTimeout(() => contentRef.current && contentRef.current.scrollToBottom(500), 500);
+  
+    return () => clearTimeout(id)
   }, [topLocations])
 
   return (

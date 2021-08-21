@@ -70,7 +70,7 @@ const Favoriten = () => {
         <img className="headerMap" src={`${toggle ? "./assets/header-favoriten-dark.svg" : "./assets/header-favoriten-light.svg"}`} alt="" />
       </IonHeader>
       <IonContent>
-        <IonCard className={`d-flex backgroundTransparent ${isPlatform('desktop') ? "cardIonic" : ""}`} >
+        <IonCard className={`my-0 d-flex backgroundTransparent ${isPlatform('desktop') ? "cardIonic" : ""}`} >
           <IonButton  
             className={`ms-auto ${reorderDeactivated ? "favReorderOff" : "favReorderOn"}`}
             onClick={() => {
