@@ -1,5 +1,5 @@
 import { IonAlert, IonBadge, IonButton, IonIcon } from "@ionic/react";
-import { bookmarks, bookmarksOutline } from "ionicons/icons";
+import { heartOutline, bookmarksOutline, heart } from "ionicons/icons";
 import { useContext } from "react";
 import { Context } from '../../context/Context';
 
@@ -14,13 +14,11 @@ const BtnFavLoc = ({selectedLoc}) => {
     <>
       {user.favorite_locations.find(loc => loc._id === selectedLoc._id) ? (
         <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: true, location: selectedLoc})}>
-          <IonIcon icon={bookmarks}/>
-          <IonBadge slot="end" color="danger">-</IonBadge>
+          <IonIcon icon={heart}/>
         </IonButton>
         ) : (
         <IonButton fill="clear" onClick={() => setAlertUpdateFav({...alertUpdateFav, addStatus: true, location: selectedLoc})}>
-          <IonIcon icon={bookmarksOutline}/>
-          <IonBadge slot="end" color="success">+</IonBadge>  
+          <IonIcon icon={heartOutline}/>
         </IonButton>
       )}
       <IonAlert
@@ -37,7 +35,7 @@ const BtnFavLoc = ({selectedLoc}) => {
         isOpen={alertUpdateFav.removeStatus}
         onDidDismiss={() => setAlertUpdateFav({...alertUpdateFav, removeStatus: false })}
         header={'Favoriten entfernen'}
-        message={'Möchtest du den Eisladen wirklich von deiner Liste entfernen?'}
+        message={'Möchtest du den Eisladen von deiner Liste entfernen?'}
         buttons={[
           { text: 'Abbrechen', role: 'cancel' },
           { text: 'Bestätigen', handler: removeFavLoc }

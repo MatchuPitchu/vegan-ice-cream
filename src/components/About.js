@@ -1,8 +1,7 @@
 import { useContext } from 'react';
 import { Context } from "../context/Context";
-import { menuController } from '@ionic/core';
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonPage } from '@ionic/react';
-import { bulb, closeCircleOutline, documentLock, helpCircle, lockClosed, logoCss3, logoHtml5, logoIonic, logoJavascript, logoNodejs, logoReact } from 'ionicons/icons';
+import { bulb, closeCircleOutline, documentLock, helpCircle, logoCss3, logoHtml5, logoIonic, logoJavascript, logoNodejs, logoReact } from 'ionicons/icons';
 
 const About = () => {
   const { setShowAbout, toggle } = useContext(Context);
@@ -14,7 +13,7 @@ const About = () => {
           <IonLabel size="" color="primary">About</IonLabel>
           <IonButton slot="end" fill="clear" onClick={() => setShowAbout(false)}><IonIcon icon={closeCircleOutline}/></IonButton>
         </IonItem>
-        <img className="headerMap" src={`${toggle ? "./assets/header-about-dark.svg" : "./assets/header-about-light.svg"}`} />
+        <img className="headerMap" src={`${toggle ? "./assets/header-about-dark.svg" : "./assets/header-about-light.svg"}`} alt="" />
       </IonHeader>
       <IonContent className="ion-padding">
         <IonCard>

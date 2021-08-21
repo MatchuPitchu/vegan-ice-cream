@@ -41,7 +41,10 @@ const Entdecken = () => {
 
   // deactivated until there are so many locations in the database, that search in viewport is needed
   // useEffect(() => {
-  //   if(map) setTimeout(() => searchViewport(), 750);
+  //   if(map) {
+  //    const id = setTimeout(() => searchViewport(), 750);
+  //    return () => clearTimeout(id);
+  //   }
   // }, [map])
 
   useEffect(() => {

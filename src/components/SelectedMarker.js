@@ -53,8 +53,8 @@ const SelectedMarker = () => {
       enterAnimation={enterAnimation} 
       leaveAnimation={leaveAnimation}>
       <IonItem lines='full'>
-        {user ? <BtnFavLoc selectedLoc={selected}/> : null}
         <IonLabel>{selected.name}</IonLabel>
+        {user ? <BtnFavLoc selectedLoc={selected}/> : null}
         <IonButton className="hoverTransparentBtn" fill="clear" onClick={() => {setOpenComments(false); setSelected(null); setInfoModal(false)}} >
           <IonIcon icon={closeCircleOutline}/>
         </IonButton>

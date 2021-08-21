@@ -11,6 +11,21 @@ import SearchFlavors from '../components/SearchFlavors';
 import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
 
+// static data outside of React component to avoid redeclaring variable after each re-rendering
+const colorArr = [
+  "TRANSPARENT", "#b71c1c", "#f44336", "#e57373", "#ffcdd2",
+  "#880e4f", "#c2185b", "#e91e63", "#f06292", "#f8bbd0",
+  "#4a148c", "#7b1fa2", "#9c27b0", "#ba68c8", "#e1bee7",
+  "#0d47a1", "#1976d2", "#2196f3", "#64b5f6", "#bbdefb",
+  "#004d40", "#00796b", "#009688", "#4db6ac", "#b2dfdb",
+  "#194d33", "#388e3c", "#4caf50", "#81c784", "#c8e6c9",
+  "#f57f17", "#fbc02d", "#ffeb3b", "#fff176", "#fff9c4",
+  "#e65100", "#f57c00", "#ff9800", "#ffb74d", "#ffe0b2",
+  "#bf360c", "#e64a19", "#ff5722", "#ff8a65", "#ffccbc",
+  "#3e2723", "#5d4037", "#795548", "#a1887f", "#d7ccc8",
+  "#000000", "#4d2119", "#693e18", "#c98850", "#ffffff",
+]
+
 const Bewerten = () => {
   const { 
     isAuth,
@@ -31,20 +46,6 @@ const Bewerten = () => {
   const [success, setSuccess] = useState(false);
   const flav1Ref = useRef(null);
   const flav2Ref = useRef(null);
-
-  const colorArr = [
-    "TRANSPARENT", "#b71c1c", "#f44336", "#e57373", "#ffcdd2",
-    "#880e4f", "#c2185b", "#e91e63", "#f06292", "#f8bbd0",
-    "#4a148c", "#7b1fa2", "#9c27b0", "#ba68c8", "#e1bee7",
-    "#0d47a1", "#1976d2", "#2196f3", "#64b5f6", "#bbdefb",
-    "#004d40", "#00796b", "#009688", "#4db6ac", "#b2dfdb",
-    "#194d33", "#388e3c", "#4caf50", "#81c784", "#c8e6c9",
-    "#f57f17", "#fbc02d", "#ffeb3b", "#fff176", "#fff9c4",
-    "#e65100", "#f57c00", "#ff9800", "#ffb74d", "#ffe0b2",
-    "#bf360c", "#e64a19", "#ff5722", "#ff8a65", "#ffccbc",
-    "#3e2723", "#5d4037", "#795548", "#a1887f", "#d7ccc8",
-    "#000000", "#4d2119", "#693e18", "#c98850", "#ffffff",
-  ]
   
   const defaultValues = {
     location: '',
@@ -197,7 +198,7 @@ const Bewerten = () => {
   return isAuth && user ? (
     <IonPage>
       <IonHeader>
-        <img className="headerMap" src={`${toggle ? "./assets/header-bewerten-dark.svg" : "./assets/header-bewerten-light.svg"}`} />
+        <img className="headerMap" src={`${toggle ? "./assets/header-bewerten-dark.svg" : "./assets/header-bewerten-light.svg"}`} alt="" />
       </IonHeader>
 
       <IonContent>

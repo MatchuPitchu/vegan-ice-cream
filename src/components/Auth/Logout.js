@@ -8,7 +8,7 @@ const Login = () => {
   return (
     <IonPage>
       <IonHeader>
-        <img className="headerMap" src={`${toggle ? "./assets/header-home-dark.svg" : "./assets/header-home-light.svg"}`} />
+        <img className="headerMap" src={`${toggle ? "./assets/header-home-dark.svg" : "./assets/header-home-light.svg"}`} alt="" />
       </IonHeader>
       <IonContent>
         <div className="container text-center">
