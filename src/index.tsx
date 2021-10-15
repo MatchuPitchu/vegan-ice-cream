@@ -1,18 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Context from './context/Context';
+import AppStateProvider from './context/Context';
 import App from './App';
 import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
 import { IonReactRouter } from '@ionic/react-router';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Context>
+    <AppStateProvider>
       <IonReactRouter>
         <App />
         <ServiceWorkerWrapper />
       </IonReactRouter>
-    </Context>
+    </AppStateProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
