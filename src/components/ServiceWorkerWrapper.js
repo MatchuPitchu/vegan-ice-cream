@@ -6,44 +6,45 @@ const ServiceWorkerWrapper = () => {
   const [showReload, setShowReload] = useState(false);
 
   useEffect(() => {
-    register({ onUpdate: (registration) => {
-      if (registration && registration.waiting) setShowReload(true);
-        else setShowReload(false)
-      }
+    register({
+      onUpdate: (registration) => {
+        if (registration && registration.waiting) setShowReload(true);
+        else setShowReload(false);
+      },
     });
   }, []);
 
   const refreshForUpdate = () => {
-    if('serviceWorker' in navigator) {
+    if ('serviceWorker' in navigator) {
       navigator.serviceWorker
         .getRegistration()
-        .then(reg => {
+        .then((reg) => {
           reg.waiting.postMessage({ type: 'SKIP_WAITING' });
           window.location.reload();
         })
-        .catch(err => console.log('Could not get registration: ', err));
-        
-        setShowReload(false);
+        .catch((err) => console.log('Could not get registration: ', err));
+
+      setShowReload(false);
     }
   };
 
   return (
     <IonToast
       isOpen={showReload}
-      message="Neue Version verfügbar!"
-      position="bottom"
-      cssClass="toastOpen"
+      message='Neue Version verfügbar!'
+      position='bottom'
+      cssClass='toastOpen'
       buttons={[
         {
           side: 'end',
           text: 'Klick für Update',
           handler: () => {
-            refreshForUpdate()
-          }
-        }
+            refreshForUpdate();
+          },
+        },
       ]}
     />
   );
-}
+};
 
 export default ServiceWorkerWrapper;

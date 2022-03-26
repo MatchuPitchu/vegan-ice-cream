@@ -1,30 +1,44 @@
-import { useContext, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Context } from "../../context/Context";
-import { IonContent, IonInput, IonItem, IonLabel, IonButton, IonPage, IonHeader, IonIcon, IonCard } from "@ionic/react";
+import { useContext, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { Context } from '../../context/Context';
+import {
+  IonContent,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonButton,
+  IonPage,
+  IonHeader,
+  IonIcon,
+  IonCard,
+} from '@ionic/react';
 import showError from '../showError';
-import { refreshCircle } from "ionicons/icons";
-import LoadingError from "../LoadingError";
+import { refreshCircle } from 'ionicons/icons';
+import LoadingError from '../LoadingError';
 
 const ResetPassword = () => {
-  const { setError, toggle } = useContext(Context);
+  const { setError, isDarkTheme } = useContext(Context);
   const [success, setSuccess] = useState(false);
-  const { control, handleSubmit, formState: { errors } } = useForm();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const onSubmit = async data => {
+  const onSubmit = async (data) => {
     try {
       const options = {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         // converts JS data into JSON string.
         body: JSON.stringify(data),
-        credentials: "include",
+        credentials: 'include',
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/reset-password`, options);
       const { message } = await res.json();
-      if(!message) {
+      if (!message) {
         setError('Prüfe, ob du deine richtige Mailadresse eingetippt hast.');
         setTimeout(() => setError(null), 5000);
       } else {
@@ -38,41 +52,58 @@ const ResetPassword = () => {
   return (
     <IonPage>
       <IonHeader>
-        <img className="headerMap" src={`${toggle ? "./assets/header-login-dark.svg" : "./assets/header-login-light.svg"}`} />
+        <img
+          className='headerMap'
+          src={`${
+            isDarkTheme ? './assets/header-login-dark.svg' : './assets/header-login-light.svg'
+          }`}
+          alt='Header Login'
+        />
       </IonHeader>
       <IonContent>
-        <div className="container mt-3">
+        <div className='container mt-3'>
           {!success ? (
-            <IonCard className="text-center">
+            <IonCard className='text-center'>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <IonItem lines="none">
-                  <IonLabel position='floating' htmlFor="email">E-Mail</IonLabel>
-                  <Controller 
+                <IonItem lines='none'>
+                  <IonLabel position='floating' htmlFor='email'>
+                    E-Mail
+                  </IonLabel>
+                  <Controller
                     control={control}
                     render={({ field: { onChange, value } }) => (
-                      <IonInput type="email" inputmode="email" value={value} onIonChange={e => onChange(e.detail.value)} />
-                      )}
-                      name="email"
-                      rules={{ required: true }}
+                      <IonInput
+                        type='email'
+                        inputmode='email'
+                        value={value}
+                        onIonChange={(e) => onChange(e.detail.value)}
                       />
+                    )}
+                    name='email'
+                    rules={{ required: true }}
+                  />
                 </IonItem>
-                {showError("email", errors)}
-                
-                <IonButton className="my-3 mx-3 confirm-btn" type="submit">
-                  <IonIcon slot="end" className="pe-1"icon={refreshCircle}/>Passwort zurücksetzen
+                {showError('email', errors)}
+
+                <IonButton className='my-3 mx-3 confirm-btn' type='submit'>
+                  <IonIcon slot='end' className='pe-1' icon={refreshCircle} />
+                  Passwort zurücksetzen
                 </IonButton>
               </form>
             </IonCard>
           ) : (
-            <IonCard className="text-center successMsg">
-              <div className="my-3 mx-3" >Schau in dein Mailpostfach. Du hast einen Link zum Zurücksetzen deines Passworts erhalten. Kontrolliere auch deinen Spam-Ordner.</div>
+            <IonCard className='text-center successMsg'>
+              <div className='my-3 mx-3'>
+                Schau in dein Mailpostfach. Du hast einen Link zum Zurücksetzen deines Passworts
+                erhalten. Kontrolliere auch deinen Spam-Ordner.
+              </div>
             </IonCard>
           )}
         </div>
         <LoadingError />
       </IonContent>
     </IonPage>
-  )
+  );
 };
 
 export default ResetPassword;

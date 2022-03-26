@@ -21,10 +21,7 @@ const isLocalhost = Boolean(
 export function register(config) {
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
-    const publicUrl = new URL(
-      process.env.PUBLIC_URL, 
-      window.location.href
-    );
+    const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
     if (publicUrl.origin !== window.location.origin) {
       // Our service worker won't work if PUBLIC_URL is on a different origin
       // from what our page is served on. This might happen if a CDN is used to
@@ -58,16 +55,16 @@ export function register(config) {
 function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
-    .then(registration => {
+    .then((registration) => {
       // https://github.com/Steviebaa/ios-friendly-serviceworker/blob/master/src/serviceWorker.js
       if (navigator.vendor === 'Apple Computer, Inc.') {
-				console.log('Safari!!!!');
-				if (registration.waiting) {
-					if (config && config.onUpdate) {
-						config.onUpdate(registration);
-					}
-				}
-			}
+        console.log('Safari!!!!');
+        if (registration.waiting) {
+          if (config && config.onUpdate) {
+            config.onUpdate(registration);
+          }
+        }
+      }
 
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
@@ -124,7 +121,7 @@ function checkValidServiceWorker(swUrl, config) {
         (contentType != null && contentType.indexOf('javascript') === -1)
       ) {
         // No service worker found. Probably a different app. Reload the page.
-        navigator.serviceWorker.ready.then(registration => {
+        navigator.serviceWorker.ready.then((registration) => {
           registration.unregister().then(() => {
             window.location.reload();
           });

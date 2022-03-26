@@ -1,6 +1,6 @@
-import { useContext, useEffect } from 'react';
-import { Context } from "./context/Context";
-import { Redirect, Route, useHistory } from 'react-router-dom';
+import { useContext } from 'react';
+import { Context } from './context/Context';
+import { Redirect, Route } from 'react-router-dom';
 import {
   IonApp,
   IonIcon,
@@ -10,7 +10,7 @@ import {
   IonTabButton,
   IonTabs,
   IonContent,
-  IonBadge
+  IonBadge,
 } from '@ionic/react';
 import { bookmarks, disc, home, iceCream } from 'ionicons/icons';
 import HeaderApp from './components/HeaderApp';
@@ -24,6 +24,9 @@ import Register from './components/Auth/Register';
 import ActivateUser from './components/Auth/ActivateUser';
 import Logout from './components/Auth/Logout';
 import IosDescription from './components/IosDescription';
+import ResetPassword from './components/Auth/ResetPassword';
+import SetNewPassword from './components/Auth/SetNewPassword';
+import Datenschutz from './pages/Datenschutz';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -41,18 +44,15 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
-/* Bootstrap, Theme variables, leaflet css, custom CSS */
+/* Bootstrap, Theme variables, custom CSS */
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './theme/variables.css';
-import './App.css'
-import ResetPassword from './components/Auth/ResetPassword';
-import SetNewPassword from './components/Auth/SetNewPassword';
-import Datenschutz from './pages/Datenschutz';
+import './App.css';
 
 const App: React.FC = () => {
   const { user } = useContext(Context);
 
-  // to display notification if update available (see ServiceWorkerWrapper.js) 
+  // to display notification if update available (see ServiceWorkerWrapper.js)
   // without reload of page
   // const history = useHistory();
   // useEffect(() => {
@@ -67,50 +67,48 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <HeaderApp />
-    
+
       <IonContent>
         <IonTabs>
           <IonRouterOutlet>
-            <Redirect from="/" to="/home" exact />
-            <Route path="/home" component={Home} exact />
-            <Route path="/entdecken" component={Entdecken} exact />
-            <Route path="/bewerten" component={Bewerten} exact />
-            <Route path="/preis" component={Preis} exact />
-            <Route path="/favoriten" component={Favoriten} exact />
-            <Route path="/login" component={Login} exact />
-            <Route path="/register" component={Register} exact />
-            <Route path="/logout" component={Logout} exact/>
-            <Route path="/auth/activate/user/:id" component={ActivateUser} exact/>
-            <Route path="/auth/reset-password" component={ResetPassword} exact/>
-            <Route path="/auth/reset-password/user/:id" component={SetNewPassword} exact/>
-            <Route path="/datenschutz" component={Datenschutz} exact/>
-            <Route path="/ios" component={IosDescription} exact/>
+            <Redirect from='/' to='/home' exact />
+            <Route path='/home' component={Home} exact />
+            <Route path='/entdecken' component={Entdecken} exact />
+            <Route path='/bewerten' component={Bewerten} exact />
+            <Route path='/preis' component={Preis} exact />
+            <Route path='/favoriten' component={Favoriten} exact />
+            <Route path='/login' component={Login} exact />
+            <Route path='/register' component={Register} exact />
+            <Route path='/logout' component={Logout} exact />
+            <Route path='/auth/activate/user/:id' component={ActivateUser} exact />
+            <Route path='/auth/reset-password' component={ResetPassword} exact />
+            <Route path='/auth/reset-password/user/:id' component={SetNewPassword} exact />
+            <Route path='/datenschutz' component={Datenschutz} exact />
+            <Route path='/ios' component={IosDescription} exact />
           </IonRouterOutlet>
-          <IonTabBar slot="bottom">
-            <IonTabButton tab="home" href="/home">
+          <IonTabBar slot='bottom'>
+            <IonTabButton tab='home' href='/home'>
               <IonIcon icon={home} />
-              <IonLabel className="labelTabs">Home</IonLabel>
+              <IonLabel className='labelTabs'>Home</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="entdecken" href="/entdecken">
+            <IonTabButton tab='entdecken' href='/entdecken'>
               <IonIcon icon={disc} />
-              <IonLabel className="labelTabs">Entdecken</IonLabel>
+              <IonLabel className='labelTabs'>Entdecken</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="bewerten" href="/bewerten">
+            <IonTabButton tab='bewerten' href='/bewerten'>
               <IonIcon icon={iceCream} />
-              <IonLabel className="labelTabs">Bewerten</IonLabel>
+              <IonLabel className='labelTabs'>Bewerten</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="favoriten" href="/favoriten">
+            <IonTabButton tab='favoriten' href='/favoriten'>
               <IonIcon icon={bookmarks} />
-              <IonLabel className="labelTabs">Favoriten</IonLabel>
-              {user && (
-                <IonBadge color="secondary">{user.favorite_locations.length || 0}</IonBadge>
-              )}
+              <IonLabel className='labelTabs'>Favoriten</IonLabel>
+              {user && <IonBadge color='secondary'>{user.favorite_locations.length || 0}</IonBadge>}
             </IonTabButton>
           </IonTabBar>
         </IonTabs>
       </IonContent>
     </IonApp>
-  )
-}
+  );
+};
 
 export default App;

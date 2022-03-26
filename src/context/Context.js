@@ -41,7 +41,7 @@ const AppStateProvider = ({ children }) => {
   const [checkMsgNewLoc, setCheckMsgNewLoc] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [toggle, setToggle] = useState(null);
+  const [isDarkTheme, setIsDarkTheme] = useState(null);
   const [mapStyles, setMapStyles] = useState(null);
   const [showUpdateProfil, setShowUpdateProfil] = useState(false);
   const [showUpdateComment, setShowUpdateComment] = useState({
@@ -74,10 +74,7 @@ const AppStateProvider = ({ children }) => {
           headers: { token },
           credentials: 'include',
         };
-        const res = await fetch(
-          `${process.env.REACT_APP_API_URL}/auth/verify-session`,
-          options
-        );
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/verify-session`, options);
         const { success, user } = await res.json();
         if (success) {
           setIsAuth(true);
@@ -153,9 +150,7 @@ const AppStateProvider = ({ children }) => {
 
   const fetchUpdatedLoc = async (loc) => {
     try {
-      const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/locations/${loc._id}`
-      );
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/${loc._id}`);
       const updatedLoc = await res.json();
       // filter out updated loc of these two locations arrays, than via spread operator add updatedLoc to arrays
       const newArr1 = locations.filter((loc) => loc._id !== updatedLoc._id);
@@ -170,9 +165,7 @@ const AppStateProvider = ({ children }) => {
   useEffect(() => {
     const fetchAllCitiesWithLoc = async () => {
       try {
-        const res = await fetch(
-          `${process.env.REACT_APP_API_URL}/locations/cities-with-locations`
-        );
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/cities-with-locations`);
         const data = await res.json();
         setCities(data);
       } catch (err) {
@@ -242,11 +235,11 @@ const AppStateProvider = ({ children }) => {
       if (darkSelected) {
         document.body.setAttribute('color-theme', 'dark');
         setMapStyles(mapDark);
-        setToggle(true);
+        setIsDarkTheme(true);
       } else {
         document.body.setAttribute('color-theme', 'light');
         setMapStyles(mapLight);
-        setToggle(false);
+        setIsDarkTheme(false);
       }
     };
     initTheme();
@@ -276,16 +269,11 @@ const AppStateProvider = ({ children }) => {
         body: JSON.stringify({ user_id: user._id }),
         credentials: 'include',
       };
-      const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/comments/${comment._id}`,
-        options
-      );
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${comment._id}`, options);
       if (res.status === 200) {
         if (selected) {
           // remove deleted comment from selected comments list array
-          const newList = selected.comments_list.filter(
-            (item) => item._id !== comment._id
-          );
+          const newList = selected.comments_list.filter((item) => item._id !== comment._id);
 
           // if list exists after removing than calc new avg ratings without fetching data from API - rounded to one decimal
           if (newList.length) {
@@ -297,9 +285,7 @@ const AppStateProvider = ({ children }) => {
             const sumVegan =
               newList.length === 1
                 ? newList[0].rating_vegan_offer
-                : newList.reduce(
-                    (a, b) => a.rating_vegan_offer + b.rating_vegan_offer
-                  );
+                : newList.reduce((a, b) => a.rating_vegan_offer + b.rating_vegan_offer);
             const location_rating_quality =
               Math.round((sumQuality / newList.length) * 10) / 10 || 0;
             const location_rating_vegan_offer =
@@ -316,9 +302,7 @@ const AppStateProvider = ({ children }) => {
         }
 
         // remove deleted comment from user profil comments list array
-        const newUserList = user.comments_list.filter(
-          (item) => item._id !== comment._id
-        );
+        const newUserList = user.comments_list.filter((item) => item._id !== comment._id);
         setUser({ ...user, comments_list: newUserList });
       }
     } catch (err) {
@@ -428,9 +412,9 @@ const AppStateProvider = ({ children }) => {
     }
   };
 
-  const handleToggleDN = () => {
-    setToggle((prev) => !prev);
-    if (!toggle) {
+  const handleTheme = () => {
+    setIsDarkTheme((prev) => !prev);
+    if (!isDarkTheme) {
       document.body.setAttribute('color-theme', 'dark');
       setMapStyles(mapDark);
       localStorage.setItem('themeSwitch', 'dark');
@@ -569,8 +553,8 @@ const AppStateProvider = ({ children }) => {
         loadMore,
         error,
         setError,
-        toggle,
-        handleToggleDN,
+        isDarkTheme,
+        handleTheme,
         mapStyles,
         enterAnimationBtm,
         leaveAnimationBtm,
