@@ -253,7 +253,7 @@ ion-searchbar .searchbar-input-container .searchbar-input {
 .searchbar {
   height: 50px;
   margin-left: 5px;
-  background-color: transparent !important;
+  background-color: red;
 }
 
 .sc-ion-searchbar-ios-h {

@@ -11,6 +11,10 @@
 # production
 /build
 
+# android / ios
+/ios
+/android
+
 # misc
 .DS_Store
 .env
