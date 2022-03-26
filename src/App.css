@@ -261,9 +261,8 @@ ion-searchbar .searchbar-input-container .searchbar-input {
   border-radius: var(--border-radius);
 }
 
-.sc-ion-searchbar-ios-h {
-  height: 43px;
-  padding: 2px;
+.searchbar-cancel-button.sc-ion-searchbar-ios {
+  display: none !important;
 }
 
 .searchbar-input::placeholder {
@@ -271,7 +270,8 @@ ion-searchbar .searchbar-input-container .searchbar-input {
 }
 
 .searchbar.sc-ion-searchbar-ios-h {
-  /* --background: var(--ion-card-background); */
+  height: 37px;
+  padding: 0;
   --border-radius: 5px;
   margin: 2px;
 }
