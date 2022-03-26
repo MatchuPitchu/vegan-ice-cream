@@ -253,13 +253,11 @@ ion-searchbar .searchbar-input-container .searchbar-input {
 .searchbar {
   height: 50px;
   margin-left: 5px;
-  background-color: red;
 }
 
 .sc-ion-searchbar-ios-h {
   height: 43px;
   padding: 2px;
-  --border-radius: 5px;
 }
 
 .searchbar-input::placeholder {
@@ -267,7 +265,13 @@ ion-searchbar .searchbar-input-container .searchbar-input {
 }
 
 .sc-ion-searchbar-ios-h {
-  --background: var(--ion-card-background);
+  --background: transparent;
+}
+
+.searchbar.sc-ion-searchbar-ios-h {
+  background-color: var(--ion-card-background);
+  border-radius: 5px;
+  margin: 2px;
 }
 
 .infoIcon:hover {
