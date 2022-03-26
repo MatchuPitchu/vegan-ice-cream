@@ -14,6 +14,7 @@
     "@reach/combobox": "^0.15.1",
     "@react-google-maps/api": "^2.2.0",
     "bootstrap": "^5.0.0-beta3",
+    "caniuse-lite": "^1.0.30001320",
     "cordova-plugin-geolocation": "^4.1.0",
     "ionicons": "^5.4.0",
     "react": "^17.0.1",
