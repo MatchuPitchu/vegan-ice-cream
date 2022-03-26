@@ -55,7 +55,7 @@ const SearchFlavors = () => {
   return (
     <>
       <div
-        className='d-flex align-items-center pt-2 form-searchbar'
+        className='d-flex align-items-center pt-2'
         style={{ backgroundColor: 'var(--ion-item-background)' }}
       >
         <IonSearchbar
