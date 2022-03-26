@@ -251,10 +251,11 @@ ion-searchbar .searchbar-input-container .searchbar-input {
 }
 
 .searchbar {
-  height: 50px;
+  height: 41px;
   margin-left: 5px;
   background-color: var(--ion-card-background);
   border-radius: var(--border-radius);
+  padding: 0;
 }
 
 .searchbar-cancel-button.sc-ion-searchbar-ios {
