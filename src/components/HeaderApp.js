@@ -1,44 +1,51 @@
 import { useContext, useState } from 'react';
 import { Context } from '../context/Context';
 import { menuController } from '@ionic/core';
-import { IonBadge, IonButton, IonButtons, IonIcon, IonMenu, IonPage, IonPopover, IonToolbar } from '@ionic/react';
+import {
+  IonBadge,
+  IonButton,
+  IonButtons,
+  IonIcon,
+  IonMenu,
+  IonPage,
+  IonPopover,
+  IonToolbar,
+} from '@ionic/react';
 import { cog, storefront } from 'ionicons/icons';
 import Menu from './Menu';
-import Toggle from './Toggle';
+import SwitchTheme from './SwitchTheme';
 
 const HeaderApp = () => {
-  const {
-    toggle,
-    user,
-    numNewLoc,
-  } = useContext(Context);
+  const { isDarkTheme, user, numNewLoc } = useContext(Context);
 
-  const [ popoverShow, setPopoverShow ] = useState({ show: false, event: undefined });
+  const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
 
   return (
     <>
-      <IonToolbar className="headerToolbar">
-        <IonButtons slot="start" >
-          <Toggle />
+      <IonToolbar className='headerToolbar'>
+        <IonButtons slot='start'>
+          <SwitchTheme />
         </IonButtons>
-   
-        <IonButtons slot="end" >
+
+        <IonButtons slot='end'>
           {user && (
             <>
               <IonIcon
-                color={`${toggle ? "primary" : 'dark'}`}
-                button 
-                onClick={e => {
+                color={`${isDarkTheme ? 'primary' : 'dark'}`}
+                button
+                onClick={(e) => {
                   e.persist();
-                  setPopoverShow({ show: true, event: e })
+                  setPopoverShow({ show: true, event: e });
                 }}
                 icon={storefront}
-                title="Neue Eisläden seit letztem Besuch"
+                title='Neue Eisläden seit letztem Besuch'
               />
-              <IonBadge slot="end" color="secondary">{numNewLoc ? numNewLoc : 0}</IonBadge>
-          
+              <IonBadge slot='end' color='secondary'>
+                {numNewLoc ? numNewLoc : 0}
+              </IonBadge>
+
               <IonPopover
-                color="primary"
+                color='primary'
                 cssClass='info-popover'
                 event={popoverShow.event}
                 isOpen={popoverShow.show}
@@ -48,18 +55,23 @@ const HeaderApp = () => {
               </IonPopover>
             </>
           )}
-          <IonButton color={`${toggle ? 'primary' : 'dark'}`} className="rotateIcon ms-3" fill="clear" onClick={ async () => await menuController.toggle()}>
+          <IonButton
+            color={`${isDarkTheme ? 'primary' : 'dark'}`}
+            className='rotateIcon ms-3'
+            fill='clear'
+            onClick={async () => await menuController.toggle()}
+          >
             <IonIcon icon={cog} />
           </IonButton>
         </IonButtons>
       </IonToolbar>
 
-      <IonMenu contentId="settings" type="overlay" swipeGesture={true}>
+      <IonMenu contentId='settings' type='overlay' swipeGesture={true}>
         <Menu />
       </IonMenu>
-      <IonPage id="settings"></IonPage>
+      <IonPage id='settings'></IonPage>
     </>
-  )
-}
+  );
+};
 
 export default HeaderApp;

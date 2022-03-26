@@ -1,82 +1,132 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect } from 'react';
 import { Context } from '../context/Context';
-import { IonButton, IonCard, IonContent, IonIcon, IonImg, IonItem, IonItemGroup, IonLabel, IonModal, isPlatform } from "@ionic/react";
-import { add, caretDownCircle, caretForwardCircle, chatboxEllipses, closeCircleOutline, iceCream } from "ionicons/icons";
-import CommentsBlock from "./Comments/CommentsBlock";
-import BtnFavLoc from "./Comments/BtnFavLoc";
-import FlavorsBlock from "./Comments/FlavorsBlock";
-import Ratings from "./Ratings";
-import LoadingError from "./LoadingError";
-import Pricing from "./Pricing";
+import {
+  IonButton,
+  IonCard,
+  IonContent,
+  IonIcon,
+  IonImg,
+  IonItem,
+  IonItemGroup,
+  IonLabel,
+  IonModal,
+  isPlatform,
+} from '@ionic/react';
+import {
+  add,
+  caretDownCircle,
+  caretForwardCircle,
+  closeCircleOutline,
+  iceCream,
+} from 'ionicons/icons';
+import CommentsBlock from './Comments/CommentsBlock';
+import BtnFavLoc from './Comments/BtnFavLoc';
+import FlavorsBlock from './Comments/FlavorsBlock';
+import Ratings from './Ratings';
+import LoadingError from './LoadingError';
+import Pricing from './Pricing';
 
 const SelectedMarker = () => {
   const {
-    user, 
-    setLoading, 
+    user,
+    setLoading,
     setError,
-    selected, setSelected,
+    selected,
+    setSelected,
     setSearchSelected,
-    toggle,
-    openComments, setOpenComments,
-    infoModal, setInfoModal,
-    enterAnimation, leaveAnimation,
+    isDarkTheme,
+    openComments,
+    setOpenComments,
+    infoModal,
+    setInfoModal,
+    enterAnimation,
+    leaveAnimation,
   } = useContext(Context);
 
   useEffect(() => {
     setLoading(true);
-    const fetchData = async() => {
+    const fetchData = async () => {
       try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/${selected._id}/all-comments-flavors`)
+        const res = await fetch(
+          `${process.env.REACT_APP_API_URL}/locations/${selected._id}/all-comments-flavors`
+        );
         const { comments_list, flavors_listed } = await res.json();
         setSelected({
           ...selected,
           comments_list,
-          flavors_listed
-        })
+          flavors_listed,
+        });
       } catch (err) {
-        console.log(err)
-        setError('Ups, schief gelaufen. Versuche es später nochmal.')
+        console.log(err);
+        setError('Ups, schief gelaufen. Versuche es später nochmal.');
         setTimeout(() => setError(null), 5000);
       }
-    }
+    };
     fetchData();
     setLoading(false);
-  }, [])
+  }, []);
 
   return (
     <IonModal
       cssClass='mapModal'
-      isOpen={infoModal} 
-      swipeToClose={true} 
-      backdropDismiss={true} 
-      onDidDismiss={() => {setOpenComments(false); setSelected(null); setInfoModal(false)}} 
-      enterAnimation={enterAnimation} 
-      leaveAnimation={leaveAnimation}>
+      isOpen={infoModal}
+      swipeToClose={true}
+      backdropDismiss={true}
+      onDidDismiss={() => {
+        setOpenComments(false);
+        setSelected(null);
+        setInfoModal(false);
+      }}
+      enterAnimation={enterAnimation}
+      leaveAnimation={leaveAnimation}
+    >
       <IonItem lines='full'>
         <IonLabel>{selected.name}</IonLabel>
-        {user ? <BtnFavLoc selectedLoc={selected}/> : null}
-        <IonButton className="hoverTransparentBtn" fill="clear" onClick={() => {setOpenComments(false); setSelected(null); setInfoModal(false)}} >
-          <IonIcon icon={closeCircleOutline}/>
+        {user ? <BtnFavLoc selectedLoc={selected} /> : null}
+        <IonButton
+          className='hoverTransparentBtn'
+          fill='clear'
+          onClick={() => {
+            setOpenComments(false);
+            setSelected(null);
+            setInfoModal(false);
+          }}
+        >
+          <IonIcon icon={closeCircleOutline} />
         </IonButton>
       </IonItem>
 
       <IonContent>
         {/* IonImg uses lazy loading */}
-        <IonImg className="modalImage" src='./assets/images/ice-cream-chocolate-sm-mae-mu-unsplash.jpg' />
-        
-        <div style={toggle ? {backgroundColor: '#23303399' } : {backgroundColor: '#ffffff99'}}>
+        <IonImg
+          className='modalImage'
+          src='./assets/images/ice-cream-chocolate-sm-mae-mu-unsplash.jpg'
+        />
+
+        <div
+          style={isDarkTheme ? { backgroundColor: '#23303399' } : { backgroundColor: '#ffffff99' }}
+        >
           <IonItemGroup>
-            <IonItem className="modalItem" lines="full">
-              <IonLabel className="ion-text-wrap">
+            <IonItem className='modalItem' lines='full'>
+              <IonLabel className='ion-text-wrap'>
                 {selected.address.street} {selected.address.number}
-                <br/>
+                <br />
                 {selected.address.zipcode} {selected.address.city}
-                <br/>
-                <a className="websiteLink" href={selected.location_url.includes("http") ? selected.location_url : `//${selected.location_url}`} target="_blank" rel="noopener noreferrer">{selected.location_url}</a>
+                <br />
+                <a
+                  className='websiteLink'
+                  href={
+                    selected.location_url.includes('http')
+                      ? selected.location_url
+                      : `//${selected.location_url}`
+                  }
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  {selected.location_url}
+                </a>
               </IonLabel>
-              {selected.pricing.length > 0 && (
-                <Pricing loc={selected} />
-              )}
+              {selected.pricing.length > 0 && <Pricing loc={selected} />}
             </IonItem>
 
             <IonItem
@@ -86,51 +136,51 @@ const SelectedMarker = () => {
                 setOpenComments(false);
                 setSelected(null);
                 setInfoModal(false);
-              }} 
-              routerLink="/preis" 
-              routerDirection="forward"
-              className="modalItemSmall itemTextSmall" 
-              lines="full"
-              detail="false"
+              }}
+              routerLink='/preis'
+              routerDirection='forward'
+              className='modalItemSmall itemTextSmall'
+              lines='full'
+              detail='false'
             >
-              <IonLabel>{selected.pricing.length === 0 ? 'Kugelpreis eintragen' : 'Kugelpreis aktualisieren'}</IonLabel>
-              <IonButton 
-                fill="clear" 
-              >
-                <IonIcon icon={add}/>
+              <IonLabel>
+                {selected.pricing.length === 0
+                  ? 'Kugelpreis eintragen'
+                  : 'Kugelpreis aktualisieren'}
+              </IonLabel>
+              <IonButton fill='clear'>
+                <IonIcon icon={add} />
               </IonButton>
             </IonItem>
 
-            <IonItem 
+            <IonItem
               button
               onClick={() => {
                 setSearchSelected(selected);
                 setOpenComments(false);
                 setSelected(null);
                 setInfoModal(false);
-              }} 
-              routerLink="/bewerten" 
-              routerDirection="forward"
-              className="modalItemSmall itemTextSmall" 
-              lines="full"
-              detail="false"
+              }}
+              routerLink='/bewerten'
+              routerDirection='forward'
+              className='modalItemSmall itemTextSmall'
+              lines='full'
+              detail='false'
             >
               <IonLabel>Bewerten</IonLabel>
-              <IonButton 
-                fill="clear"
-              >
-                <IonIcon icon={add}/>
+              <IonButton fill='clear'>
+                <IonIcon icon={add} />
               </IonButton>
             </IonItem>
           </IonItemGroup>
         </div>
-      
-        <IonCard className={`${isPlatform('desktop') ? "cardIonic" : ""}`}>
-          <div style={{backgroundColor: 'var(--ion-item-background)'}}>          
+
+        <IonCard className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
+          <div style={{ backgroundColor: 'var(--ion-item-background)' }}>
             {selected.comments_list.length ? (
               <IonItemGroup>
-                <div className="px-3 py-1 borderBottom">
-                  <Ratings 
+                <div className='px-3 py-1 borderBottom'>
+                  <Ratings
                     rating_vegan_offer={selected.location_rating_vegan_offer}
                     rating_quality={selected.location_rating_quality}
                     showNum={true}
@@ -139,61 +189,70 @@ const SelectedMarker = () => {
 
                 {selected.comments_list[0].text ? (
                   <>
-                    <IonItem color="background-color" className={`${!openComments && 'borderBottom'}`} lines="none">
-                      <IonIcon 
-                        className="me-2"
-                        color="primary" 
-                        icon={openComments ? caretDownCircle : caretForwardCircle} 
-                        button onClick={() => {
-                          setOpenComments(prev => !prev);
+                    <IonItem
+                      color='background-color'
+                      className={`${!openComments && 'borderBottom'}`}
+                      lines='none'
+                    >
+                      <IonIcon
+                        className='me-2'
+                        color='primary'
+                        icon={openComments ? caretDownCircle : caretForwardCircle}
+                        button
+                        onClick={() => {
+                          setOpenComments((prev) => !prev);
                         }}
                       />
                       <IonLabel>Bewertungen</IonLabel>
-                      <IonButton 
-                        fill="solid"
-                        className="commentNum"
-                        onClick={() => setOpenComments(prev => !prev)}
+                      <IonButton
+                        fill='solid'
+                        className='commentNum'
+                        onClick={() => setOpenComments((prev) => !prev)}
                       >
-                        {selected.comments_list.length} 
+                        {selected.comments_list.length}
                       </IonButton>
                     </IonItem>
-                    
-                    {openComments ? selected.comments_list.map(comment => <CommentsBlock comment={comment} key={comment._id} />) : null}
-    
-                    <IonItem lines="none">
-                      <IonIcon className="me-2" color="primary" icon={iceCream} />
+
+                    {openComments
+                      ? selected.comments_list.map((comment) => (
+                          <CommentsBlock comment={comment} key={comment._id} />
+                        ))
+                      : null}
+
+                    <IonItem lines='none'>
+                      <IonIcon className='me-2' color='primary' icon={iceCream} />
                       <IonLabel>Bewertete Eissorten</IonLabel>
                     </IonItem>
-                    
-                    <FlavorsBlock flavorsList={selected.flavors_listed} />                    
-                    
+
+                    <FlavorsBlock flavorsList={selected.flavors_listed} />
                   </>
-                  ) : null}
-                </IonItemGroup>
-              ) : (
-                <IonItem 
-                  button
-                  onClick={() => {
-                    setSearchSelected(selected);
-                    setOpenComments(false);
-                    setSelected(null);
-                    setInfoModal(false);
-                  }} 
-                  routerLink="/bewerten" 
-                  routerDirection="forward"
-                  className="itemTextSmall"
-                  lines="none"
-                  detail="false"
-                >... wartet auf die erste Bewertung</IonItem>
-              )}
+                ) : null}
+              </IonItemGroup>
+            ) : (
+              <IonItem
+                button
+                onClick={() => {
+                  setSearchSelected(selected);
+                  setOpenComments(false);
+                  setSelected(null);
+                  setInfoModal(false);
+                }}
+                routerLink='/bewerten'
+                routerDirection='forward'
+                className='itemTextSmall'
+                lines='none'
+                detail='false'
+              >
+                ... wartet auf die erste Bewertung
+              </IonItem>
+            )}
           </div>
         </IonCard>
-        
-        <LoadingError />
 
+        <LoadingError />
       </IonContent>
     </IonModal>
-  )
-}
+  );
+};
 
-export default SelectedMarker
+export default SelectedMarker;

@@ -1,0 +1,118 @@
+.switch {
+  position: relative;
+  border: none;
+  margin: 0.4rem auto 0.4rem 0.4rem;
+  height: 27px;
+  width: 55px;
+  border-radius: var(--border-radius);
+  background-image: linear-gradient(aqua, skyblue);
+  cursor: pointer;
+  box-shadow: var(--box-shadow);
+}
+
+.switch.night {
+  background-image: linear-gradient(midnightblue, rebeccapurple);
+}
+
+.moon {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #fde833;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  box-shadow: 0 0 10px #fde833;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.moon > .crater {
+  background: burlywood;
+  border-radius: 50%;
+  position: absolute;
+  opacity: 0;
+  box-shadow: 0 5px 5px rgb(0, 0, 0, 0.4) inset;
+}
+
+.night .crater {
+  opacity: 0.4;
+}
+
+.crater:first-child {
+  left: 1px;
+  top: 3px;
+  height: 5px;
+  width: 10px;
+  transform: rotate(-45deg);
+}
+
+.crater:last-child {
+  left: 13px;
+  top: 3px;
+  height: 5px;
+  width: 6px;
+  transform: rotate(45deg);
+}
+
+.night > .moon {
+  background: whitesmoke;
+  box-shadow: 0 0 5px whitesmoke;
+  transform: translate(25px, 0);
+}
+
+.shape {
+  position: absolute;
+  background: whitesmoke;
+  border-radius: 50%;
+}
+
+.shape.sm {
+  height: 3px;
+  width: 11px;
+  top: 35%;
+  left: 70%;
+  transition: all 0.3s ease;
+}
+
+.shape.md {
+  height: 5px;
+  width: 20px;
+  top: 15%;
+  left: 20%;
+  z-index: 2;
+}
+
+.shape.lg {
+  height: 8px;
+  width: 30px;
+  top: 55%;
+  left: 13%;
+}
+
+.night .shape {
+  background: lightgrey;
+  box-shadow: 0 0 10px 2px violet;
+}
+
+.night .shape.sm {
+  height: 3px;
+  width: 3px;
+  transform: translate(-18px, 3px);
+}
+
+.night .shape.sm:first-of-type {
+  transform: translate(-27px, -3px);
+}
+
+.night .shape.md {
+  height: 5px;
+  width: 5px;
+  transform: translate(10px, 0);
+}
+
+.night .shape.lg {
+  height: 8px;
+  width: 8px;
+  transform: translate(-2px, 0);
+}
