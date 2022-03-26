@@ -93,7 +93,7 @@ const Search = () => {
   };
 
   return (
-    <form className='container' onSubmit={handleSubmit(onSubmit)}>
+    <form className='container form-searchbar' onSubmit={handleSubmit(onSubmit)}>
       <Controller
         name='city'
         control={control}

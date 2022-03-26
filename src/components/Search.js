@@ -98,7 +98,7 @@ const Search = () => {
   };
 
   return (
-    <form onSubmit={onSubmit}>
+    <form className='form-searchbar' onSubmit={onSubmit}>
       <div className='d-flex align-items-center'>
         <IonSearchbar
           className='searchbar'
