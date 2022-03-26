@@ -266,7 +266,7 @@ ion-searchbar .searchbar-input-container .searchbar-input {
 }
 
 .searchbar.sc-ion-searchbar-ios-h {
-  height: 37px;
+  height: 34px;
   padding: 0;
   --background: var(--ion-card-background);
   --border-radius: 5px;
