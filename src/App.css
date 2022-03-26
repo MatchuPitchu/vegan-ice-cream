@@ -246,6 +246,10 @@ li {
 }
 
 /*********** Searchbar ************/
+.form-searchbar {
+  background-color: transparent;
+}
+
 ion-searchbar .searchbar-input-container .searchbar-input {
   font-size: 0.9rem;
 }
@@ -253,6 +257,8 @@ ion-searchbar .searchbar-input-container .searchbar-input {
 .searchbar {
   height: 50px;
   margin-left: 5px;
+  background-color: var(--ion-card-background);
+  border-radius: var(--border-radius);
 }
 
 .sc-ion-searchbar-ios-h {
@@ -265,7 +271,7 @@ ion-searchbar .searchbar-input-container .searchbar-input {
 }
 
 .searchbar.sc-ion-searchbar-ios-h {
-  --background: var(--ion-card-background);
+  /* --background: var(--ion-card-background); */
   --border-radius: 5px;
   margin: 2px;
 }
