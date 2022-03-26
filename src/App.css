@@ -264,13 +264,9 @@ ion-searchbar .searchbar-input-container .searchbar-input {
   font-size: 0.8rem;
 }
 
-.sc-ion-searchbar-ios-h {
-  --background: transparent;
-}
-
 .searchbar.sc-ion-searchbar-ios-h {
-  background-color: var(--ion-card-background);
-  border-radius: 5px;
+  --background: var(--ion-card-background);
+  --border-radius: 5px;
   margin: 2px;
 }
 
