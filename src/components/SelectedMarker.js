@@ -44,6 +44,9 @@ const SelectedMarker = () => {
   } = useContext(Context);
 
   useEffect(() => {
+    // no need to fetch if no comments ids available or if detailed comments already fetched
+    if (selected.comments_list.length === 0 || selected.comments_list[0].text) return;
+
     setLoading(true);
     const fetchData = async () => {
       try {
@@ -64,7 +67,7 @@ const SelectedMarker = () => {
     };
     fetchData();
     setLoading(false);
-  }, []);
+  }, [selected, setError, setLoading, setSelected]);
 
   return (
     <IonModal
@@ -214,9 +217,9 @@ const SelectedMarker = () => {
                     </IonItem>
 
                     {openComments
-                      ? selected.comments_list.map((comment) => (
-                          <CommentsBlock comment={comment} key={comment._id} />
-                        ))
+                      ? selected.comments_list
+                          .reverse()
+                          .map((comment) => <CommentsBlock comment={comment} key={comment._id} />)
                       : null}
 
                     <IonItem lines='none'>
