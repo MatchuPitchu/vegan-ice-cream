@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import { Context } from '../context/Context';
+import { useThemeContext } from '../context/ThemeContext';
 import { menuController } from '@ionic/core';
 import {
   IonBadge,
@@ -16,7 +17,8 @@ import Menu from './Menu';
 import SwitchTheme from './SwitchTheme';
 
 const HeaderApp = () => {
-  const { isDarkTheme, user, numNewLoc } = useContext(Context);
+  const { user, numNewLoc } = useContext(Context);
+  const { isDarkTheme } = useThemeContext();
 
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
 

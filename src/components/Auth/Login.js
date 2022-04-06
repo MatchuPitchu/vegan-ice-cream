@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Context } from '../../context/Context';
+import { useThemeContext } from '../../context/ThemeContext';
 import {
   IonContent,
   IonInput,
@@ -16,7 +17,9 @@ import showError from '../showError';
 import { lockClosed, logIn, refreshCircle } from 'ionicons/icons';
 
 const Login = () => {
-  const { isAuth, setIsAuth, error, setError, setUser, isDarkTheme } = useContext(Context);
+  const { isAuth, setIsAuth, error, setError, setUser } = useContext(Context);
+  const { isDarkTheme } = useThemeContext();
+
   const {
     control,
     handleSubmit,

@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect, useCallback } from 'react';
 import { Context } from '../context/Context';
+import { useThemeContext } from '../context/ThemeContext';
 import {
   IonPopover,
   IonButton,
@@ -52,12 +53,13 @@ const Entdecken = () => {
     newLocation,
     checkMsgNewLoc,
     setCheckMsgNewLoc,
-    mapStyles,
     setInfoModal,
     setNewLocation,
     setNewLocModal,
     setOpenComments,
   } = useContext(Context);
+  const { mapStyles } = useThemeContext();
+
   const [libraries] = useState(['places']);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
 

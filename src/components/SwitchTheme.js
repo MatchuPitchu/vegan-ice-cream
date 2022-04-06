@@ -1,9 +1,8 @@
-import { useContext } from 'react';
-import { Context } from '../context/Context';
+import { useThemeContext } from '../context/ThemeContext';
 import classes from './SwitchTheme.module.css';
 
 const SwitchTheme = () => {
-  const { isDarkTheme, handleTheme } = useContext(Context);
+  const { isDarkTheme, handleTheme } = useThemeContext();
 
   return (
     <button

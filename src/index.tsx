@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ThemeContextProvider from './context/ThemeContext';
 import AppStateProvider from './context/Context';
 import App from './App';
 import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
@@ -7,12 +8,14 @@ import { IonReactRouter } from '@ionic/react-router';
 
 ReactDOM.render(
   <React.StrictMode>
-    <AppStateProvider>
-      <IonReactRouter>
-        <App />
-        <ServiceWorkerWrapper />
-      </IonReactRouter>
-    </AppStateProvider>
+    <ThemeContextProvider>
+      <AppStateProvider>
+        <IonReactRouter>
+          <App />
+          <ServiceWorkerWrapper />
+        </IonReactRouter>
+      </AppStateProvider>
+    </ThemeContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

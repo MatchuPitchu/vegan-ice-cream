@@ -1,9 +1,8 @@
-import { useContext } from 'react';
-import { Context } from '../../context/Context';
+import { useThemeContext } from '../../context/ThemeContext';
 import { IonContent, IonPage, IonHeader, IonItem, IonCard, IonLabel } from '@ionic/react';
 
 const Login = () => {
-  const { isDarkTheme } = useContext(Context);
+  const { isDarkTheme } = useThemeContext();
 
   return (
     <IonPage>

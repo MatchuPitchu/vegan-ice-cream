@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { Context } from '../context/Context';
+import { useThemeContext } from '../context/ThemeContext';
 import { menuController } from '@ionic/core';
 import {
   IonContent,
@@ -31,7 +32,6 @@ const Menu: React.FC = () => {
   const {
     isAuth,
     logout,
-    isDarkTheme,
     enterAnimationLft,
     leaveAnimationLft,
     showProfil,
@@ -42,6 +42,7 @@ const Menu: React.FC = () => {
     setShowAbout,
     successMsg,
   } = useContext(Context);
+  const { isDarkTheme } = useThemeContext();
 
   return (
     <IonPage>

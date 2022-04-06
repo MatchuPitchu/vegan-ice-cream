@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Context } from '../../context/Context';
+import { useThemeContext } from '../../context/ThemeContext';
 import {
   IonContent,
   IonInput,
@@ -17,7 +18,9 @@ import { refreshCircle } from 'ionicons/icons';
 import LoadingError from '../LoadingError';
 
 const ResetPassword = () => {
-  const { setError, isDarkTheme } = useContext(Context);
+  const { setError } = useContext(Context);
+  const { isDarkTheme } = useThemeContext();
+
   const [success, setSuccess] = useState(false);
   const {
     control,

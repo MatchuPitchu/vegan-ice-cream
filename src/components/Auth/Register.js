@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Context } from '../../context/Context';
+import { useThemeContext } from '../../context/ThemeContext';
 import {
   IonContent,
   IonInput,
@@ -19,7 +20,9 @@ import LoadingError from '../LoadingError';
 import InfoTextRegister from './InfoTextRegister';
 
 const Register = () => {
-  const { setLoading, error, setError, isDarkTheme } = useContext(Context);
+  const { setLoading, error, setError } = useContext(Context);
+  const { isDarkTheme } = useThemeContext();
+
   const {
     control,
     handleSubmit,

@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { Context } from '../context/Context';
+import { useThemeContext } from '../context/ThemeContext';
 import {
   IonButton,
   IonCard,
@@ -28,7 +29,8 @@ import {
 } from 'ionicons/icons';
 
 const About = () => {
-  const { setShowAbout, isDarkTheme } = useContext(Context);
+  const { setShowAbout } = useContext(Context);
+  const { isDarkTheme } = useThemeContext();
 
   return (
     <IonPage>

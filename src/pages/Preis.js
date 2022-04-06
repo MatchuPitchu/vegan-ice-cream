@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import { Context } from '../context/Context';
+import { useThemeContext } from '../context/ThemeContext';
 import { Controller, useForm } from 'react-hook-form';
 import {
   IonButton,
@@ -20,15 +21,10 @@ import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
 
 const Preis = () => {
-  const {
-    isAuth,
-    isDarkTheme,
-    setLoading,
-    user,
-    searchSelected,
-    setSearchSelected,
-    createPricing,
-  } = useContext(Context);
+  const { isAuth, setLoading, user, searchSelected, setSearchSelected, createPricing } =
+    useContext(Context);
+  const { isDarkTheme } = useThemeContext();
+
   const [endReset, setEndReset] = useState(false);
 
   const defaultValues = {

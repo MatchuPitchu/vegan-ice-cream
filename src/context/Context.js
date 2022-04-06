@@ -1,5 +1,4 @@
 import { useState, useEffect, createContext } from 'react';
-import { mapDark, mapLight } from '../components/mapStyles';
 import { createAnimation } from '@ionic/react';
 
 export const Context = createContext();
@@ -41,8 +40,6 @@ const AppStateProvider = ({ children }) => {
   const [checkMsgNewLoc, setCheckMsgNewLoc] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [isDarkTheme, setIsDarkTheme] = useState(null);
-  const [mapStyles, setMapStyles] = useState(null);
   const [showUpdateProfil, setShowUpdateProfil] = useState(false);
   const [showUpdateComment, setShowUpdateComment] = useState({
     state: false,
@@ -227,24 +224,6 @@ const AppStateProvider = ({ children }) => {
     setViewport(latLngBounds);
   };
 
-  useEffect(() => {
-    const initTheme = () => {
-      var darkSelected =
-        localStorage.getItem('themeSwitch') !== null &&
-        localStorage.getItem('themeSwitch') === 'dark';
-      if (darkSelected) {
-        document.body.setAttribute('color-theme', 'dark');
-        setMapStyles(mapDark);
-        setIsDarkTheme(true);
-      } else {
-        document.body.setAttribute('color-theme', 'light');
-        setMapStyles(mapLight);
-        setIsDarkTheme(false);
-      }
-    };
-    initTheme();
-  }, []);
-
   const loadMore = (e) => {
     setLocPage((prev) => prev + 1);
     const newArr = locations.slice(num, num + 4);
@@ -412,19 +391,6 @@ const AppStateProvider = ({ children }) => {
     }
   };
 
-  const handleTheme = () => {
-    setIsDarkTheme((prev) => !prev);
-    if (!isDarkTheme) {
-      document.body.setAttribute('color-theme', 'dark');
-      setMapStyles(mapDark);
-      localStorage.setItem('themeSwitch', 'dark');
-    } else {
-      document.body.setAttribute('color-theme', 'light');
-      setMapStyles(mapLight);
-      localStorage.removeItem('themeSwitch');
-    }
-  };
-
   // animations modal
   const enterAnimationBtm = (modal) => {
     // darkened background
@@ -553,9 +519,6 @@ const AppStateProvider = ({ children }) => {
         loadMore,
         error,
         setError,
-        isDarkTheme,
-        handleTheme,
-        mapStyles,
         enterAnimationBtm,
         leaveAnimationBtm,
         enterAnimationLft,

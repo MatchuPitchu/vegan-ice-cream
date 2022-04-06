@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import { Context } from '../../context/Context';
+import { useThemeContext } from '../../context/ThemeContext';
 import { useParams } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import {
@@ -19,7 +20,9 @@ import LoadingError from '../LoadingError';
 import InfoTextRegister from './InfoTextRegister';
 
 const SetNewPassword = () => {
-  const { isDarkTheme, setLoading, error, setError } = useContext(Context);
+  const { setLoading, error, setError } = useContext(Context);
+  const { isDarkTheme } = useThemeContext();
+
   const {
     control,
     handleSubmit,
