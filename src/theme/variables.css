@@ -156,7 +156,9 @@ http://ionicframework.com/docs/theming/ */
   --ion-item-background: #fdf7e7;
   --ion-card-background: #fff4d5;
   --ion-toolbar-background: #fce6b3;
-  --ion-tab-bar-background: #fce6b3;
+  --ion-tab-bar-color: var(--ion-color-medium-tint);
+  --ion-tab-bar-color-selected: var(--ion-color-dark);
+  --ion-tab-bar-background: var(--ion-background-color);
 
   /* font family */
   --ion-font-family: 'Lato', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
@@ -238,6 +240,8 @@ body[color-theme='dark'] {
   --ion-item-background: #2e3a3d;
   --ion-card-background: #394547;
   --ion-toolbar-background: #233033;
+  --ion-tab-bar-color: #796f47;
+  --ion-tab-bar-color-selected: #f9ce64;
   --ion-tab-bar-background: #233033;
 
   /* font family */
@@ -276,6 +280,8 @@ body[color-theme='dark'] {
   --ion-item-background: #2e3a3d;
   --ion-card-background: #394547;
   --ion-toolbar-background: #233033;
+  --ion-tab-bar-color: #796f47;
+  --ion-tab-bar-color-selected: #f9ce64;
   --ion-tab-bar-background: #233033;
 }
 
@@ -318,5 +324,7 @@ body[color-theme='dark'] {
   --ion-item-background: #2e3a3d;
   --ion-card-background: #394547;
   --ion-toolbar-background: #233033;
+  --ion-tab-bar-color: #796f47;
+  --ion-tab-bar-color-selected: #f9ce64;
   --ion-tab-bar-background: #233033;
 }

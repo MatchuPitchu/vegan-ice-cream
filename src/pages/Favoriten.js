@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import { Context } from '../context/Context';
+import { useThemeContext } from '../context/ThemeContext';
 import {
   IonContent,
   IonPage,
@@ -27,13 +28,13 @@ const Favoriten = () => {
     isAuth,
     user,
     setUser,
-    isDarkTheme,
     setOpenComments,
     setSearchSelected,
     selected,
     setSelected,
     setInfoModal,
   } = useContext(Context);
+  const { isDarkTheme } = useThemeContext();
 
   const [reorderDeactivated, setReorderDeactivated] = useState(true);
   const [rearranged, setRearranged] = useState(false);

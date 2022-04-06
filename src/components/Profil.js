@@ -1,5 +1,6 @@
 import { Fragment, useContext, useState } from 'react';
 import { Context } from '../context/Context';
+import { useThemeContext } from '../context/ThemeContext';
 // https://www.npmjs.com/package/react-rating-stars-component
 import {
   IonButton,
@@ -32,7 +33,6 @@ import FlavorsBlock from './Comments/FlavorsBlock';
 const Profil = () => {
   const {
     isAuth,
-    isDarkTheme,
     user,
     setShowProfil,
     locations,
@@ -40,6 +40,8 @@ const Profil = () => {
     setShowUpdateProfil,
     successMsg,
   } = useContext(Context);
+  const { isDarkTheme } = useThemeContext();
+
   const [showComments, setShowComments] = useState(false);
   const [showFlavors, setShowFlavors] = useState(false);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });

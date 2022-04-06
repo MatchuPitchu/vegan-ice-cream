@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect, useRef } from 'react';
 import { Context } from '../context/Context';
+import { useThemeContext } from '../context/ThemeContext';
 import {
   IonButton,
   IonCard,
@@ -30,15 +31,10 @@ import SearchTopLocations from '../components/SearchTopLocations';
 import TopLocations from '../components/TopLocations';
 
 const Home = () => {
-  const {
-    user,
-    isDarkTheme,
-    cityName,
-    topLocations,
-    noTopLoc,
-    setNewLocation,
-    setAutocompleteModal,
-  } = useContext(Context);
+  const { user, cityName, topLocations, noTopLoc, setNewLocation, setAutocompleteModal } =
+    useContext(Context);
+  const { isDarkTheme } = useThemeContext();
+
   const [show, setShow] = useState(false);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
   const contentRef = useRef(null);

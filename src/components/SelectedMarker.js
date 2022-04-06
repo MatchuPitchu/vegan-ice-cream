@@ -1,5 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { Context } from '../context/Context';
+import { useThemeContext } from '../context/ThemeContext';
 import {
   IonButton,
   IonCard,
@@ -34,7 +35,6 @@ const SelectedMarker = () => {
     selected,
     setSelected,
     setSearchSelected,
-    isDarkTheme,
     openComments,
     setOpenComments,
     infoModal,
@@ -42,6 +42,7 @@ const SelectedMarker = () => {
     enterAnimation,
     leaveAnimation,
   } = useContext(Context);
+  const { isDarkTheme } = useThemeContext();
 
   useEffect(() => {
     // no need to fetch if no comments ids available or if detailed comments already fetched

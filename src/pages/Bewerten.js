@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect, useRef } from 'react';
 import { Context } from '../context/Context';
+import { useThemeContext } from '../context/ThemeContext';
 import ReactStars from 'react-rating-stars-component';
 import { CirclePicker } from 'react-color';
 import { Controller, useForm } from 'react-hook-form';
@@ -90,7 +91,6 @@ const colorArr = [
 const Bewerten = () => {
   const {
     isAuth,
-    isDarkTheme,
     setLoading,
     setError,
     user,
@@ -105,6 +105,8 @@ const Bewerten = () => {
     createPricing,
     fetchUpdatedLoc,
   } = useContext(Context);
+  const { isDarkTheme } = useThemeContext();
+
   const [popoverInfo, setPopoverInfo] = useState({ show: false, event: undefined });
   const [showColorPicker, setShowColorPicker] = useState({ field1: false, field2: false });
   const [success, setSuccess] = useState(false);

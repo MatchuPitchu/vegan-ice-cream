@@ -17,8 +17,8 @@ const Search = () => {
     setSearchSelected,
     searchText,
     setSearchText,
-    isDarkTheme,
   } = useContext(Context);
+
   const [predictions, setPredictions] = useState([]);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
   const [searchWords, setSearchWords] = useState([]);

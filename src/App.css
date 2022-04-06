@@ -7,14 +7,6 @@ body {
   box-sizing: border-box;
 }
 
-ion-tab-bar {
-  padding-top: 2px;
-  border-top: 1px transparent solid;
-  background-clip: content-box, border-box;
-  background-image: linear-gradient(var(--ion-background-color), var(--ion-background-color)),
-    linear-gradient(to left, var(--ion-color-primary), var(--ion-color-secondary));
-}
-
 ion-icon {
   font-size: 24px;
 }
@@ -160,6 +152,15 @@ li {
 .rotateIcon:hover {
   transform: rotate(360deg);
   transition: transform 4s;
+}
+
+/************ Tab Bar *********/
+ion-tab-bar {
+  padding-top: 2px;
+  border-top: 1px transparent solid;
+  background-clip: content-box, border-box;
+  background-image: linear-gradient(var(--ion-background-color), var(--ion-background-color)),
+    linear-gradient(to left, var(--ion-color-primary), var(--ion-color-tertiary));
 }
 
 /************ Menu ************/
