@@ -90,6 +90,8 @@ const AppStateProvider = ({ children }) => {
     setLoading(false);
   }, [newComment]);
 
+  console.log(user);
+
   const logout = () => {
     localStorage.removeItem('token');
     setIsAuth(false);
