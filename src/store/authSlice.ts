@@ -3,20 +3,25 @@ import { User } from '../types';
 
 interface AuthStateSlice {
   isAuth: boolean;
-  user: User;
+  user: User | null;
 }
 
 const initialAuthState: AuthStateSlice = {
   isAuth: false,
-  user: {},
+  user: null,
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState: initialAuthState,
   reducers: {
-    test: (state, action: PayloadAction<AuthStateSlice>) => {
-      return action.payload;
+    login: (state) => {
+      state.isAuth = true;
+    },
+    logout: (state) => {
+      localStorage.removeItem('token');
+      state.isAuth = false;
+      state.user = null;
     },
   },
 });

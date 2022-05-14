@@ -1,9 +1,13 @@
 import { useState, useEffect, createContext } from 'react';
+import { skipToken } from '@reduxjs/toolkit/dist/query';
 import { createAnimation } from '@ionic/react';
+import { useVerifySessionQuery } from '../store/auth-api-slice';
+import { useGetAdditionalInfosFromUserQuery } from '../store/user-api-slice';
 
 export const Context = createContext();
 
 const AppStateProvider = ({ children }) => {
+  // OLD CONTEXT
   const [isAuth, setIsAuth] = useState(false);
   const [activateMessage, setActivateMessage] = useState('Waiting');
   const [successMsg, setSuccessMsg] = useState('');
@@ -60,6 +64,31 @@ const AppStateProvider = ({ children }) => {
   const [searchFlavor, setSearchFlavor] = useState('');
   const [flavor, setFlavor] = useState({});
 
+  // START REDUX TOOLKIT UPDATE
+
+  // How to use the hook: https://redux-toolkit.js.org/tutorials/rtk-query#create-an-api-service
+  // const {
+  //   data,
+  //   error: errorRTKQuery,
+  //   isFetching,
+  //   isLoading,
+  //   isSuccess,
+  //   isError,
+  // } = useVerifySessionQuery();
+
+  // const {
+  //   data,
+  //   error: errorRTKQuery,
+  //   isFetching,
+  //   isLoading,
+  //   isSuccess,
+  //   isError,
+  // } = useGetAdditionalInfosFromUserQuery(user?._id ?? skipToken); // when `id` is nullish (null/undefined), query is skipped: https://redux-toolkit.js.org/rtk-query/usage-with-typescript#skipping-queries-with-typescript-using-skiptoken
+
+  // console.log(data, isLoading);
+
+  // END REDUX TOOLKIT
+
   useEffect(() => {
     setLoading(true);
     const token = localStorage.getItem('token');
@@ -87,11 +116,11 @@ const AppStateProvider = ({ children }) => {
       }
     };
     if (token) verifySession();
+
     setLoading(false);
   }, [newComment]);
 
-  console.log(user);
-
+  // OK Redux
   const logout = () => {
     localStorage.removeItem('token');
     setIsAuth(false);

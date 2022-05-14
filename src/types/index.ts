@@ -49,13 +49,14 @@ export interface Comment {
 }
 
 export interface User {
+  _id: string;
   name: string;
   email: string;
   confirmed: boolean;
   home_city: Pick<Address, 'city' | 'geo'>;
-  comments_list: Comment[];
-  favorite_locations: Location[];
-  favorite_flavors: Flavour[];
+  comments_list: Comment[] | string[];
+  favorite_locations: Location[] | string[];
+  favorite_flavors: Flavour[] | string[];
   needs_reset: boolean;
   num_loc_last_visit: number;
   resetToken: string;

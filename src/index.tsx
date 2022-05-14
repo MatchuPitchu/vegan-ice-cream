@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider as ReduxProvider } from 'react-redux';
+import store from './store';
 import ThemeContextProvider from './context/ThemeContext';
 import AppStateProvider from './context/Context';
 import App from './App';
@@ -8,14 +10,16 @@ import { IonReactRouter } from '@ionic/react-router';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeContextProvider>
-      <AppStateProvider>
-        <IonReactRouter>
-          <App />
-          <ServiceWorkerWrapper />
-        </IonReactRouter>
-      </AppStateProvider>
-    </ThemeContextProvider>
+    <ReduxProvider store={store}>
+      <ThemeContextProvider>
+        <AppStateProvider>
+          <IonReactRouter>
+            <App />
+            <ServiceWorkerWrapper />
+          </IonReactRouter>
+        </AppStateProvider>
+      </ThemeContextProvider>
+    </ReduxProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
