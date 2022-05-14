@@ -1,10 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Comment, Flavour, Location, User } from '../types';
+import { Comment, Flavor, Location, User } from '../types';
 
 interface ReturnTypeAdditionalInfosFromUser {
   comments_list: Comment[];
   favorite_locations: Location[];
-  favorite_flavors: Flavour[];
+  favorite_flavors: Flavor[];
 }
 
 // Define a service using a base URL and expected endpoints

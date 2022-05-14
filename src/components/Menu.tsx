@@ -2,6 +2,7 @@ import { useContext } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
+import { showActions } from '../store/showSlice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -35,18 +36,9 @@ import Profil from './Profil';
 const Menu: React.FC = () => {
   const dispatch = useAppDispatch();
   const { isAuth } = useAppSelector((state) => state.user);
+  const { showProfil, showFeedback, showAbout } = useAppSelector((state) => state.show);
 
-  const {
-    enterAnimationLft,
-    leaveAnimationLft,
-    showProfil,
-    setShowProfil,
-    showFeedback,
-    setShowFeedback,
-    showAbout,
-    setShowAbout,
-    successMsg,
-  } = useContext(Context);
+  const { enterAnimationLft, leaveAnimationLft, successMsg } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const handleLogout = () => dispatch(userActions.logout());
@@ -102,9 +94,7 @@ const Menu: React.FC = () => {
             <IonItem
               className='labelMenu'
               button
-              onClick={() => {
-                setShowProfil(true);
-              }}
+              onClick={() => dispatch(showActions.setShowProfil(true))}
               lines='full'
               detail={false}
             >
@@ -118,7 +108,7 @@ const Menu: React.FC = () => {
               isOpen={showProfil}
               swipeToClose={true}
               backdropDismiss={true}
-              onDidDismiss={() => setShowProfil(false)}
+              onDidDismiss={() => dispatch(showActions.setShowProfil(false))}
               enterAnimation={enterAnimationLft}
               leaveAnimation={leaveAnimationLft}
             >
@@ -129,9 +119,7 @@ const Menu: React.FC = () => {
           <IonItem
             className='labelMenu'
             button
-            onClick={() => {
-              setShowFeedback(true);
-            }}
+            onClick={() => dispatch(showActions.setShowFeedback(true))}
             lines='none'
             detail={false}
           >
@@ -144,7 +132,7 @@ const Menu: React.FC = () => {
               isOpen={showFeedback}
               swipeToClose={true}
               backdropDismiss={true}
-              onDidDismiss={() => setShowFeedback(false)}
+              onDidDismiss={() => dispatch(showActions.setShowFeedback(false))}
               enterAnimation={enterAnimationLft}
               leaveAnimation={leaveAnimationLft}
             >
@@ -155,9 +143,7 @@ const Menu: React.FC = () => {
           <IonItem
             className='labelMenu'
             button
-            onClick={() => {
-              setShowAbout(true);
-            }}
+            onClick={() => dispatch(showActions.setShowAbout(true))}
             lines='none'
             detail={false}
           >
@@ -170,7 +156,7 @@ const Menu: React.FC = () => {
               isOpen={showAbout}
               swipeToClose={true}
               backdropDismiss={true}
-              onDidDismiss={() => setShowAbout(false)}
+              onDidDismiss={() => dispatch(showActions.setShowAbout(false))}
               enterAnimation={enterAnimationLft}
               leaveAnimation={leaveAnimationLft}
             >

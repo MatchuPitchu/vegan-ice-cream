@@ -1,8 +1,9 @@
 import { useContext } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 // Redux Store
-import { userActions } from '../store/userSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { userActions } from '../store/userSlice';
+import { showActions } from '../store/showSlice';
 // Context
 import { Context } from '../context/Context';
 import { IonInput, IonItem, IonLabel, IonButton, IonIcon } from '@ionic/react';
@@ -14,8 +15,7 @@ const ProfilUpdate = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
 
-  const { error, setError, setLoading, setShowProfil, setShowUpdateProfil, setSuccessMsg } =
-    useContext(Context);
+  const { error, setError, setLoading, setSuccessMsg } = useContext(Context);
 
   const defaultValues = {
     name: '',
@@ -102,9 +102,9 @@ const ProfilUpdate = () => {
         // });
         setSuccessMsg('Update erfolgreich');
         setTimeout(() => setSuccessMsg(''), 10000);
-        setShowUpdateProfil(false);
+        dispatch(showActions.setShowUpdateProfil(false));
         if (data.email) {
-          setShowProfil(false);
+          dispatch(showActions.setShowProfil(false));
           dispatch(userActions.logout());
         }
       } else {

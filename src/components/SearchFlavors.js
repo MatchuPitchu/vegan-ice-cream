@@ -1,4 +1,8 @@
 import { useContext, useState, useEffect } from 'react';
+// Redux Store
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { flavorActions } from '../store/flavorSlice';
+// Context
 import { Context } from '../context/Context';
 import Highlighter from 'react-highlight-words';
 import { IonIcon, IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/react';
@@ -6,7 +10,10 @@ import { iceCream, informationCircle } from 'ionicons/icons';
 import LoadingError from '../components/LoadingError';
 
 const SearchFlavors = () => {
-  const { setLoading, searchFlavor, setSearchFlavor, flavor, setFlavor } = useContext(Context);
+  const dispatch = useAppDispatch();
+  const { flavor, searchTermFlavor } = useAppSelector((state) => state.flavor);
+
+  const { setLoading } = useContext(Context);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
   const [flavors, setFlavors] = useState([]);
   const [searchWords, setSearchWords] = useState([]);
@@ -69,15 +76,15 @@ const SearchFlavors = () => {
           cancel-button-text=''
           spellcheck={true}
           autocorrect='on'
-          value={searchFlavor}
+          value={searchTermFlavor}
           debounce={100}
           onIonChange={(e) => {
-            setSearchFlavor(e.detail.value);
+            dispatch(flavorActions.setSearchTermFlavor(e.detail.value));
             forAutocompleteChange(e.detail.value);
             setSearchWords(() => e.detail.value.split(' ').filter((word) => word));
           }}
-          onIonCancel={() => setFlavor({})}
-          onIonClear={() => setFlavor({})}
+          onIonCancel={() => dispatch(flavorActions.setFlavor(null))}
+          onIonClear={() => dispatch(flavorActions.setFlavor(null))}
           onKeyUp={(e) => e.key === 'Enter' && setFlavorsPredict([])}
         />
         <div>
@@ -103,7 +110,7 @@ const SearchFlavors = () => {
         </div>
       </div>
 
-      {flavorsPredict.length && searchFlavor !== flavor.name ? (
+      {flavorsPredict.length && searchTermFlavor !== flavor.name ? (
         <IonList className='py-0'>
           <div className='infoText pt-2'>... Auswahl bereits eingetragener Sorten</div>
           {flavorsPredict.map((flavor) => (
@@ -111,9 +118,9 @@ const SearchFlavors = () => {
               key={flavor._id}
               button
               onClick={() => {
-                setFlavor(flavor);
+                dispatch(flavorActions.setFlavor(flavor));
                 setFlavorsPredict([]);
-                setSearchFlavor(flavor.name);
+                dispatch(flavorActions.setSearchTermFlavor(flavor.name));
               }}
               lines='full'
             >

@@ -1,10 +1,15 @@
 import { useContext, useState } from 'react';
+// Redux Store
+import { useAppDispatch } from '../../store/hooks';
+import { showActions } from '../../store/showSlice';
+// Context
 import { Context } from '../../context/Context';
 import { IonActionSheet, IonButton, IonIcon } from '@ionic/react';
 import { close, createOutline, trashOutline } from 'ionicons/icons';
 
 const BtnEditDelete = ({ comment }) => {
-  const { deleteComment, setShowUpdateComment } = useContext(Context);
+  const dispatch = useAppDispatch();
+  const { deleteComment } = useContext(Context);
 
   const [showActionSheet, setShowActionSheet] = useState(false);
 
@@ -14,7 +19,9 @@ const BtnEditDelete = ({ comment }) => {
       <IonButton
         fill='clear'
         className='smallBtn ms-auto'
-        onClick={() => setShowUpdateComment({ state: true, comment_id: comment._id })}
+        onClick={() =>
+          dispatch(showActions.setShowUpdateComment({ state: true, comment_id: comment._id }))
+        }
       >
         <IonIcon className='me-0' size='small' icon={createOutline} />
       </IonButton>

@@ -29,7 +29,7 @@ const mapSlice = createSlice({
       state.zoom = payload;
     },
     zoomIn: (state) => {
-      // zoom in untill zoom level of 17
+      // zoom in until zoom level of 17
       if (state.zoom < 18) {
         state.zoom++;
       } else {

@@ -13,6 +13,16 @@ const AppStateProvider = ({ children }) => {
   // OLD CONTEXT
   // const [isAuth, setIsAuth] = useState(false);
   // const [user, setUser] = useState(null);
+  // const [searchFlavor, setSearchFlavor] = useState('');
+  // const [flavor, setFlavor] = useState({});
+  // const [showUpdateComment, setShowUpdateComment] = useState({
+  //   state: false,
+  //   comment_id: '',
+  // });
+  // const [showProfil, setShowProfil] = useState(false);
+  // const [showUpdateProfil, setShowUpdateProfil] = useState(false);
+  // const [showFeedback, setShowFeedback] = useState(false);
+  // const [showAbout, setShowAbout] = useState(false);
   const [activateMessage, setActivateMessage] = useState('Waiting');
   const [successMsg, setSuccessMsg] = useState('');
   const [numNewLoc, setNumNewLoc] = useState();
@@ -27,6 +37,7 @@ const AppStateProvider = ({ children }) => {
   const [searchAutocomplete, setSearchAutocomplete] = useState('');
   const [result, setResult] = useState(null);
   const [formattedAddress, setFormattedAddress] = useState(null);
+  const [openComments, setOpenComments] = useState(false);
   const [locPage, setLocPage] = useState(1);
   const [num, setNum] = useState(4);
   const [all, setAll] = useState(false);
@@ -44,14 +55,6 @@ const AppStateProvider = ({ children }) => {
   const [checkMsgNewLoc, setCheckMsgNewLoc] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [showUpdateProfil, setShowUpdateProfil] = useState(false);
-  const [showUpdateComment, setShowUpdateComment] = useState({
-    state: false,
-    comment_id: '',
-  });
-  const [showProfil, setShowProfil] = useState(false);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [showAbout, setShowAbout] = useState(false);
   const [infoModal, setInfoModal] = useState(false);
   const [newLocModal, setNewLocModal] = useState(false);
   const [alertUpdateFav, setAlertUpdateFav] = useState({
@@ -59,10 +62,7 @@ const AppStateProvider = ({ children }) => {
     addStatus: false,
     location: {},
   });
-  const [openComments, setOpenComments] = useState(false);
   const [newComment, setNewComment] = useState(null);
-  const [searchFlavor, setSearchFlavor] = useState('');
-  const [flavor, setFlavor] = useState({});
 
   // START REDUX TOOLKIT UPDATE
   const dispatch = useAppDispatch();
@@ -545,16 +545,6 @@ const AppStateProvider = ({ children }) => {
         leaveAnimationBtm,
         enterAnimationLft,
         leaveAnimationLft,
-        showUpdateProfil,
-        setShowUpdateProfil,
-        showUpdateComment,
-        setShowUpdateComment,
-        showProfil,
-        setShowProfil,
-        showFeedback,
-        setShowFeedback,
-        showAbout,
-        setShowAbout,
         infoModal,
         setInfoModal,
         newLocModal,
@@ -569,10 +559,6 @@ const AppStateProvider = ({ children }) => {
         setOpenComments,
         newComment,
         setNewComment,
-        searchFlavor,
-        setSearchFlavor,
-        flavor,
-        setFlavor,
       }}
     >
       {children}

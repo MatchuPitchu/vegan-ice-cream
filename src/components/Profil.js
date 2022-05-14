@@ -1,6 +1,8 @@
 import { Fragment, useContext, useState } from 'react';
 // Redux Store
-import { useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { showActions } from '../store/showSlice';
+// Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 // https://www.npmjs.com/package/react-rating-stars-component
@@ -33,10 +35,11 @@ import CommentsBlock from './Comments/CommentsBlock';
 import FlavorsBlock from './Comments/FlavorsBlock';
 
 const Profil = () => {
+  const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
+  const { showUpdateProfil } = useAppSelector((state) => state.show);
 
-  const { setShowProfil, locations, showUpdateProfil, setShowUpdateProfil, successMsg } =
-    useContext(Context);
+  const { locations, successMsg } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [showComments, setShowComments] = useState(false);
@@ -49,7 +52,11 @@ const Profil = () => {
       <IonHeader>
         <IonItem color='background-color' lines='none'>
           <IonLabel color='primary'>Profil</IonLabel>
-          <IonButton slot='end' fill='clear' onClick={() => setShowProfil(false)}>
+          <IonButton
+            slot='end'
+            fill='clear'
+            onClick={() => dispatch(showActions.setShowProfil(false))}
+          >
             <IonIcon icon={closeCircleOutline} />
           </IonButton>
         </IonItem>
@@ -68,7 +75,7 @@ const Profil = () => {
               <IonCardTitle className='me-2 my-3 ion-text-wrap'>{user.name}</IonCardTitle>
               <IonButton
                 className='update-btn ms-auto'
-                onClick={() => setShowUpdateProfil((prev) => !prev)}
+                onClick={() => dispatch(showActions.toggleShowUpdateProfil())}
               >
                 <IonIcon className='me-1' icon={refreshCircle} />
                 Update

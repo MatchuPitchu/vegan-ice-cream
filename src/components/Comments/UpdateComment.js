@@ -1,7 +1,8 @@
 import { useContext } from 'react';
 // Redux Store
-import { userActions } from '../../store/userSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { userActions } from '../../store/userSlice';
+import { showActions } from '../../store/showSlice';
 // Context
 import { Context } from '../../context/Context';
 import ReactStars from 'react-rating-stars-component';
@@ -15,7 +16,7 @@ const UpdateComment = ({ comment }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
 
-  const { setLoading, setError, setShowUpdateComment, selected, setSelected } = useContext(Context);
+  const { setLoading, setError, selected, setSelected } = useContext(Context);
 
   const defaultValues = {
     text: comment.text,
@@ -121,7 +122,7 @@ const UpdateComment = ({ comment }) => {
       setError('Da ist etwas schief gelaufen. Versuche es später nochmal.');
       setTimeout(() => setError(null), 5000);
     }
-    setShowUpdateComment({ state: false, comment_id: '' });
+    dispatch(showActions.setShowUpdateComment({ state: false, comment_id: '' }));
     setLoading(false);
   };
 
@@ -274,7 +275,9 @@ const UpdateComment = ({ comment }) => {
           </IonButton>
           <IonButton
             className='check-btn'
-            onClick={() => setShowUpdateComment({ state: false, comment_id: '' })}
+            onClick={() =>
+              dispatch(showActions.setShowUpdateComment({ state: false, comment_id: '' }))
+            }
           >
             <IonIcon className='pe-1' size='small' icon={backspaceOutline} />
             Abbrechen

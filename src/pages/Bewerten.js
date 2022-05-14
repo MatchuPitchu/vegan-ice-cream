@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect, useRef } from 'react';
 // Redux Store
-import { useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { flavorActions } from '../store/flavorSlice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -92,7 +93,9 @@ const colorArr = [
 ];
 
 const Bewerten = () => {
+  const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
+  const { flavor, searchTermFlavor } = useAppSelector((state) => state.flavor);
 
   const {
     setLoading,
@@ -101,10 +104,6 @@ const Bewerten = () => {
     setSearchSelected,
     setSearchText,
     setNewComment,
-    searchFlavor,
-    setSearchFlavor,
-    flavor,
-    setFlavor,
     createPricing,
     fetchUpdatedLoc,
   } = useContext(Context);
@@ -147,14 +146,14 @@ const Bewerten = () => {
   });
 
   useEffect(() => {
-    setValue('name', flavor.name ? searchFlavor : undefined);
-    setValue('type_fruit', flavor.name ? flavor.type_fruit : false);
-    setValue('type_cream', flavor.name ? flavor.type_cream : false);
-    setValue('color1', flavor.name ? flavor.color.primary : undefined);
-    setValue('color2', flavor.name ? flavor.color.secondary : undefined);
+    setValue('name', flavor?.name ? searchTermFlavor : undefined);
+    setValue('type_fruit', flavor?.name ? flavor.type_fruit : false);
+    setValue('type_cream', flavor?.name ? flavor.type_cream : false);
+    setValue('color1', flavor?.name ? flavor.color.primary : undefined);
+    setValue('color2', flavor?.name ? flavor.color.secondary : undefined);
     // if user selects location for example on map, than this location name is set as value is form
     setValue('location', searchSelected ? searchSelected.name : '');
-  }, [flavor, searchFlavor, searchSelected, setValue]);
+  }, [flavor, searchTermFlavor, searchSelected, setValue]);
 
   const unCheckToggles = () => {
     setValue('bio', false);
@@ -261,8 +260,8 @@ const Bewerten = () => {
       setNewComment(createdComment);
       // clean for form needed values in searchbars
       setSearchText('');
-      setSearchFlavor('');
-      setFlavor({});
+      dispatch(flavorActions.setSearchTermFlavor(''));
+      dispatch(flavorActions.setFlavor(null));
       setSearchSelected(null);
 
       // delay is needed, otherwise memory leak if state updates on unmounted component
@@ -382,7 +381,7 @@ const Bewerten = () => {
                       readonly
                       autocapitalize='words'
                       type='text'
-                      value={(value = searchFlavor)}
+                      value={(value = searchTermFlavor)}
                       onIonChange={(e) => {
                         onChange(e.detail.value);
                       }}
@@ -404,7 +403,7 @@ const Bewerten = () => {
                       control={control}
                       render={({ field: { onChange, value } }) => (
                         <IonToggle
-                          disabled={flavor.name ? true : false}
+                          disabled={flavor?.name ? true : false}
                           onIonChange={(e) => onChange(e.detail.checked)}
                           checked={value}
                         />
@@ -420,7 +419,7 @@ const Bewerten = () => {
                       control={control}
                       render={({ field: { onChange, value } }) => (
                         <IonToggle
-                          disabled={flavor.name ? true : false}
+                          disabled={flavor?.name ? true : false}
                           onIonChange={(e) => onChange(e.detail.checked)}
                           checked={value}
                         />

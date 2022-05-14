@@ -10,7 +10,7 @@ interface Address {
   zipcode: string;
 }
 
-export interface Flavour {
+export interface Flavor {
   flavor_id: string;
   color: {
     primary: string;
@@ -37,7 +37,7 @@ export interface Location {
 export interface Comment {
   user_id: string;
   location_id: string;
-  flavors_referred: Partial<Flavour>[];
+  flavors_referred: Partial<Flavor>[];
   text: string;
   rating_vegan_offer: number;
   rating_quality: number;
@@ -56,7 +56,7 @@ export interface User {
   home_city: Pick<Address, 'city' | 'geo'>;
   comments_list: Comment[] | string[];
   favorite_locations: Location[] | string[];
-  favorite_flavors: Flavour[] | string[];
+  favorite_flavors: Flavor[] | string[];
   needs_reset: boolean;
   num_loc_last_visit: number;
   resetToken: string;

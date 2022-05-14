@@ -1,5 +1,7 @@
-import { useContext } from 'react';
-import { Context } from '../context/Context';
+// Redux Store
+import { useAppDispatch } from '../store/hooks';
+import { showActions } from '../store/showSlice';
+// Context
 import { useThemeContext } from '../context/ThemeContext';
 import {
   IonButton,
@@ -29,7 +31,7 @@ import {
 } from 'ionicons/icons';
 
 const About = () => {
-  const { setShowAbout } = useContext(Context);
+  const dispatch = useAppDispatch();
   const { isDarkTheme } = useThemeContext();
 
   return (
@@ -39,7 +41,11 @@ const About = () => {
           <IonLabel size='' color='primary'>
             About
           </IonLabel>
-          <IonButton slot='end' fill='clear' onClick={() => setShowAbout(false)}>
+          <IonButton
+            slot='end'
+            fill='clear'
+            onClick={() => dispatch(showActions.setShowAbout(false))}
+          >
             <IonIcon icon={closeCircleOutline} />
           </IonButton>
         </IonItem>
