@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 // Redux Store
-import { useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { userActions } from '../store/userSlice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -25,13 +26,12 @@ import BtnInfoRating from '../components/Comments/BtnInfoRating';
 import LocInfoHeader from '../components/LocInfoHeader';
 
 const Favoriten = () => {
-  const { isAuth } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  const { isAuth, user } = useAppSelector((state) => state.user);
 
   const {
     setLoading,
     setError,
-    user,
-    setUser,
     setOpenComments,
     setSearchSelected,
     selected,
@@ -45,10 +45,11 @@ const Favoriten = () => {
 
   const doReorder = (e) => {
     const newOrder = e.detail.complete(user.favorite_locations);
-    setUser({
-      ...user,
-      favorite_locations: newOrder,
-    });
+    dispatch(userActions.updateUser({ favorite_locations: newOrder }));
+    // setUser({
+    //   ...user,
+    //   favorite_locations: newOrder,
+    // });
     setRearranged(true);
   };
 

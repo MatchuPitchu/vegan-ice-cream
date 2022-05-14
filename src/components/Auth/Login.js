@@ -24,7 +24,7 @@ const Login = () => {
   const dispatch = useAppDispatch();
   const { isAuth } = useAppSelector((state) => state.user);
 
-  const { error, setError, setUser } = useContext(Context);
+  const { error, setError } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const {
@@ -57,7 +57,8 @@ const Login = () => {
         );
         const data = await res.json();
         localStorage.setItem('token', token);
-        setUser({ ...user, ...data });
+        dispatch(userActions.updateUser(data));
+        // setUser({ ...user, ...data });
         dispatch(userActions.login());
       }
     } catch (error) {

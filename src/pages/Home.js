@@ -1,4 +1,7 @@
 import { useContext, useState, useEffect, useRef } from 'react';
+// Redux Store
+import { useAppSelector } from '../store/hooks';
+// Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import {
@@ -31,7 +34,9 @@ import SearchTopLocations from '../components/SearchTopLocations';
 import TopLocations from '../components/TopLocations';
 
 const Home = () => {
-  const { user, cityName, topLocations, noTopLoc, setNewLocation, setAutocompleteModal } =
+  const { user } = useAppSelector((state) => state.user);
+
+  const { cityName, topLocations, noTopLoc, setNewLocation, setAutocompleteModal } =
     useContext(Context);
   const { isDarkTheme } = useThemeContext();
 

@@ -1,4 +1,7 @@
 import { useContext, useState, useEffect, useCallback } from 'react';
+// Redux Store
+import { useAppSelector } from '../store/hooks';
+// Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import {
@@ -32,8 +35,9 @@ import AutocompleteForm from '../components/AutocompleteForm';
 import GeolocationBtn from '../components/GeolocationBtn';
 
 const Entdecken = () => {
+  const { user } = useAppSelector((state) => state.user);
+
   const {
-    user,
     locations,
     // if too many locations in database later, then detach locations on the map displayed in viewport from locations
     // locationsMap,

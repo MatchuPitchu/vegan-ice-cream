@@ -1,4 +1,8 @@
 import { useContext } from 'react';
+// Redux Store
+import { userActions } from '../../store/userSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+// Context
 import { Context } from '../../context/Context';
 import ReactStars from 'react-rating-stars-component';
 import { Controller, useForm } from 'react-hook-form';
@@ -8,8 +12,10 @@ import showError from '../showError';
 import LoadingError from '../LoadingError';
 
 const UpdateComment = ({ comment }) => {
-  const { user, setUser, setLoading, setError, setShowUpdateComment, selected, setSelected } =
-    useContext(Context);
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.user);
+
+  const { setLoading, setError, setShowUpdateComment, selected, setSelected } = useContext(Context);
 
   const defaultValues = {
     text: comment.text,
@@ -81,7 +87,8 @@ const UpdateComment = ({ comment }) => {
       const comments_list = [...user.comments_list];
       const index = user.comments_list.findIndex((item) => item._id === comment._id);
       comments_list.splice(index, 1, updatedComment);
-      setUser({ ...user, comments_list });
+      dispatch(userActions.updateUser({ comments_list }));
+      // setUser({ ...user, comments_list });
 
       if (selected) {
         // set new comments list

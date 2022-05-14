@@ -1,4 +1,7 @@
 import { useContext, useState } from 'react';
+// Redux Store
+import { useAppSelector } from '../store/hooks';
+// Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import { menuController } from '@ionic/core';
@@ -17,7 +20,9 @@ import Menu from './Menu';
 import SwitchTheme from './SwitchTheme';
 
 const HeaderApp = () => {
-  const { user, numNewLoc } = useContext(Context);
+  const { user } = useAppSelector((state) => state.user);
+
+  const { numNewLoc } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });

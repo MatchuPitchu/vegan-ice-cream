@@ -13,7 +13,7 @@ const AppStateProvider = ({ children }) => {
   // const [isAuth, setIsAuth] = useState(false);
   const [activateMessage, setActivateMessage] = useState('Waiting');
   const [successMsg, setSuccessMsg] = useState('');
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
   const [numNewLoc, setNumNewLoc] = useState();
   const [locations, setLocations] = useState([]);
   const [locationsMap, setLocationsMap] = useState([]);
@@ -68,8 +68,8 @@ const AppStateProvider = ({ children }) => {
 
   // START REDUX TOOLKIT UPDATE
   const dispatch = useAppDispatch();
-  const data = useAppSelector((state) => state.user);
-  console.log(data);
+  const { user } = useAppSelector((state) => state.user);
+  console.log(user);
   // How to use the hook: https://redux-toolkit.js.org/tutorials/rtk-query#create-an-api-service
   // const {
   //   data,
@@ -113,7 +113,8 @@ const AppStateProvider = ({ children }) => {
             options
           );
           const data = await res.json();
-          setUser({ ...user, ...data });
+          dispatch(userActions.updateUser(data));
+          // setUser({ ...user, ...data });
         }
       } catch (err) {
         console.log(err.message);
@@ -310,7 +311,8 @@ const AppStateProvider = ({ children }) => {
 
         // remove deleted comment from user profil comments list array
         const newUserList = user.comments_list.filter((item) => item._id !== comment._id);
-        setUser({ ...user, comments_list: newUserList });
+        dispatch(userActions.updateUser({ comments_list: newUserList }));
+        // setUser({ ...user, comments_list: newUserList });
       }
     } catch (err) {
       console.log(err.message);
@@ -339,7 +341,8 @@ const AppStateProvider = ({ children }) => {
       // Don't need sended back data of server
       // const favorite_locations = await res.json();
       const newFavLoc = [...user.favorite_locations, alertUpdateFav.location];
-      setUser((prev) => ({ ...prev, favorite_locations: newFavLoc }));
+      dispatch(userActions.updateUser({ favorite_locations: newFavLoc }));
+      // setUser((prev) => ({ ...prev, favorite_locations: newFavLoc }));
       setAlertUpdateFav({
         ...alertUpdateFav,
         addStatus: false,
@@ -374,7 +377,8 @@ const AppStateProvider = ({ children }) => {
         options
       );
       const favorite_locations = await res.json();
-      setUser((prev) => ({ ...prev, favorite_locations }));
+      dispatch(userActions.updateUser({ favorite_locations }));
+      // setUser((prev) => ({ ...prev, favorite_locations }));
       setAlertUpdateFav({
         ...alertUpdateFav,
         removeStatus: false,
@@ -477,8 +481,6 @@ const AppStateProvider = ({ children }) => {
         setActivateMessage,
         successMsg,
         setSuccessMsg,
-        user,
-        setUser,
         numNewLoc,
         setNumNewLoc,
         locations,

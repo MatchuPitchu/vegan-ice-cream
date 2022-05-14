@@ -1,4 +1,7 @@
 import { useContext, useEffect } from 'react';
+// Redux Store
+import { useAppSelector } from '../store/hooks';
+// Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import {
@@ -28,8 +31,9 @@ import LoadingError from './LoadingError';
 import Pricing from './Pricing';
 
 const SelectedMarker = () => {
+  const { user } = useAppSelector((state) => state.user);
+
   const {
-    user,
     setLoading,
     setError,
     selected,

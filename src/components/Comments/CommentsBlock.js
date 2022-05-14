@@ -1,4 +1,7 @@
 import { useContext } from 'react';
+// Redux Store
+import { useAppSelector } from '../../store/hooks';
+// Context
 import { Context } from '../../context/Context';
 import { IonIcon } from '@ionic/react';
 import { chatboxEllipses, iceCream } from 'ionicons/icons';
@@ -7,7 +10,9 @@ import BtnEditDelete from './BtnEditDelete';
 import UpdateComment from './UpdateComment';
 
 const CommentsBlock = ({ comment }) => {
-  const { user, showUpdateComment } = useContext(Context);
+  const { user } = useAppSelector((state) => state.user);
+
+  const { showUpdateComment } = useContext(Context);
 
   // if user clicks on edit btn than updateComment component is displayed
   return showUpdateComment.comment_id !== comment._id ? (

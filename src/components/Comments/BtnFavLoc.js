@@ -1,10 +1,15 @@
+import { useContext } from 'react';
+// Redux Store
+import { useAppSelector } from '../../store/hooks';
+// Context
+import { Context } from '../../context/Context';
 import { IonAlert, IonButton, IonIcon } from '@ionic/react';
 import { heartOutline, heart } from 'ionicons/icons';
-import { useContext } from 'react';
-import { Context } from '../../context/Context';
 
 const BtnFavLoc = ({ selectedLoc }) => {
-  const { user, alertUpdateFav, setAlertUpdateFav, addFavLoc, removeFavLoc } = useContext(Context);
+  const { user } = useAppSelector((state) => state.user);
+
+  const { alertUpdateFav, setAlertUpdateFav, addFavLoc, removeFavLoc } = useContext(Context);
 
   return (
     <>

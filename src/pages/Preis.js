@@ -24,10 +24,9 @@ import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
 
 const Preis = () => {
-  const { isAuth } = useAppSelector((state) => state.user);
+  const { isAuth, user } = useAppSelector((state) => state.user);
 
-  const { setLoading, user, searchSelected, setSearchSelected, createPricing } =
-    useContext(Context);
+  const { setLoading, searchSelected, setSearchSelected, createPricing } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [endReset, setEndReset] = useState(false);

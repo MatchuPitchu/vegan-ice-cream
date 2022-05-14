@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 // Redux Store
 import { userActions } from '../store/userSlice';
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 // Context
 import { Context } from '../context/Context';
 import { IonInput, IonItem, IonLabel, IonButton, IonIcon } from '@ionic/react';
@@ -12,17 +12,10 @@ import LoadingError from './LoadingError';
 
 const ProfilUpdate = () => {
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.user);
 
-  const {
-    error,
-    setError,
-    setLoading,
-    user,
-    setUser,
-    setShowProfil,
-    setShowUpdateProfil,
-    setSuccessMsg,
-  } = useContext(Context);
+  const { error, setError, setLoading, setShowProfil, setShowUpdateProfil, setSuccessMsg } =
+    useContext(Context);
 
   const defaultValues = {
     name: '',
@@ -94,12 +87,19 @@ const ProfilUpdate = () => {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}`, options);
       const { success } = await res.json();
       if (success) {
-        setUser({
-          ...user,
-          name: body.name || user.name,
-          email: body.email || user.email,
-          home_city: body.home_city || user.home_city,
-        });
+        dispatch(
+          userActions.updateUser({
+            name: body.name || user.name,
+            email: body.email || user.email,
+            home_city: body.home_city || user.home_city,
+          })
+        );
+        // setUser({
+        //   ...user,
+        //   name: body.name || user.name,
+        //   email: body.email || user.email,
+        //   home_city: body.home_city || user.home_city,
+        // });
         setSuccessMsg('Update erfolgreich');
         setTimeout(() => setSuccessMsg(''), 10000);
         setShowUpdateProfil(false);

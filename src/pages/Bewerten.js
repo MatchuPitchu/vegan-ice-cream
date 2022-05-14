@@ -92,12 +92,11 @@ const colorArr = [
 ];
 
 const Bewerten = () => {
-  const { isAuth } = useAppSelector((state) => state.user);
+  const { isAuth, user } = useAppSelector((state) => state.user);
 
   const {
     setLoading,
     setError,
-    user,
     searchSelected,
     setSearchSelected,
     setSearchText,

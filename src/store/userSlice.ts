@@ -23,6 +23,12 @@ const userSlice = createSlice({
       state.isAuth = false;
       state.user = null;
     },
+    updateUser: (state, { payload }: PayloadAction<Partial<User>>) => {
+      state.user = {
+        ...state.user,
+        ...payload,
+      } as User;
+    },
   },
 });
 
