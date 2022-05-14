@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect, useCallback } from 'react';
 // Redux Store
-import { useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -33,18 +33,17 @@ import Spinner from '../components/Spinner';
 import LoadingError from '../components/LoadingError';
 import AutocompleteForm from '../components/AutocompleteForm';
 import GeolocationBtn from '../components/GeolocationBtn';
+import { mapActions } from '../store/mapSlice';
 
 const Entdecken = () => {
+  const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
+  const { center, zoom } = useAppSelector((state) => state.map);
 
   const {
     locations,
     // if too many locations in database later, then detach locations on the map displayed in viewport from locations
     // locationsMap,
-    center,
-    setCenter,
-    zoom,
-    setZoom,
     segment,
     setSegment,
     map,
@@ -78,26 +77,28 @@ const Entdecken = () => {
   useEffect(() => {
     // if user exists with indicated home city than first center + zoom
     if (user?.home_city.geo.lat) {
-      setCenter({ lat: user.home_city.geo.lat, lng: user.home_city.geo.lng });
-      setZoom(12);
+      dispatch(mapActions.setCenter({ lat: user.home_city.geo.lat, lng: user.home_city.geo.lng }));
+      dispatch(mapActions.setZoom(12));
     } else {
-      setCenter({ lat: 52.524, lng: 13.41 });
-      setZoom(12);
+      dispatch(mapActions.setCenter({ lat: 52.524, lng: 13.41 }));
+      dispatch(mapActions.setZoom(12));
     }
-  }, [setCenter, setZoom, user]);
+  }, [user, dispatch]);
 
   useEffect(() => {
     if (searchSelected) {
       // zoom + center when user chooses item in prediction list
-      setCenter({
-        lat: searchSelected.address.geo.lat,
-        lng: searchSelected.address.geo.lng,
-      });
-      setZoom(15);
+      dispatch(
+        mapActions.setCenter({
+          lat: searchSelected.address.geo.lat,
+          lng: searchSelected.address.geo.lng,
+        })
+      );
+      dispatch(mapActions.setZoom(15));
     } else {
-      setZoom(12);
+      dispatch(mapActions.setZoom(12));
     }
-  }, [searchSelected, setZoom, setCenter]);
+  }, [searchSelected, dispatch]);
 
   const clusterOptions = {
     imagePath: './assets/icons/m',
@@ -122,16 +123,8 @@ const Entdecken = () => {
   // use useCallback with empty dependencies to avoid that setMap is re-executed on every rerendering
   // so the hook returns (memoizes) the function instance between renderings;
   // the map has a fixed reference in the memory (notice: read more about it)
-  const onMapLoad = useCallback(
-    (map) => {
-      setMap(map);
-    },
-    [setMap]
-  );
-
-  const onUnmount = useCallback(() => {
-    setMap(null);
-  }, [setMap]);
+  const onMapLoad = useCallback((map) => setMap(map), [setMap]);
+  const onUnmount = useCallback(() => setMap(null), [setMap]);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -289,10 +282,12 @@ const Entdecken = () => {
                               setOpenComments(false);
                               setSelected(loc);
                               setInfoModal(true);
-                              setCenter({
-                                lat: loc.address.geo.lat,
-                                lng: loc.address.geo.lng,
-                              });
+                              dispatch(
+                                mapActions.setCenter({
+                                  lat: loc.address.geo.lat,
+                                  lng: loc.address.geo.lng,
+                                })
+                              );
                             }}
                             zIndex={1}
                           />
@@ -335,9 +330,8 @@ const Entdecken = () => {
                     scaledSize: new window.google.maps.Size(50, 50),
                   }}
                   onClick={() => {
-                    setCenter({ lat: position.lat, lng: position.lng });
-                    // zoom in on click untill zoom level of 17
-                    setZoom((prev) => (prev < 18 ? prev + 1 : prev));
+                    dispatch(mapActions.setCenter({ lat: position.lat, lng: position.lng }));
+                    dispatch(mapActions.zoomIn());
                   }}
                   zIndex={1}
                 />

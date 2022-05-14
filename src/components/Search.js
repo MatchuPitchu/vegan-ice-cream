@@ -1,16 +1,20 @@
 import { useContext, useState } from 'react';
+// Redux Store
+import { useAppDispatch } from '../store/hooks';
+import { mapActions } from '../store/mapSlice';
+// Context
 import { Context } from '../context/Context';
 import Highlighter from 'react-highlight-words';
 import { IonIcon, IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/react';
 import { informationCircle } from 'ionicons/icons';
 
 const Search = () => {
+  const dispatch = useAppDispatch();
+
   const {
     setLoading,
     setError,
     segment,
-    setCenter,
-    setZoom,
     locations,
     searchViewport,
     setListResults,
@@ -41,11 +45,13 @@ const Search = () => {
 
         if (results[0].geometry.location) {
           // center + zoom when user confirms his own typed in city or address (not choose from predictions)
-          setCenter({
-            lat: results[0].geometry.location.lat,
-            lng: results[0].geometry.location.lng,
-          });
-          setZoom(12);
+          dispatch(
+            mapActions.setCenter({
+              lat: results[0].geometry.location.lat,
+              lng: results[0].geometry.location.lng,
+            })
+          );
+          dispatch(mapActions.setZoom(12));
         }
       } catch (error) {
         setError(

@@ -5,6 +5,7 @@ import { useVerifySessionQuery } from '../store/auth-api-slice';
 import { useGetAdditionalInfosFromUserQuery } from '../store/user-api-slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
+import { mapActions } from '../store/mapSlice';
 
 export const Context = createContext();
 
@@ -36,9 +37,6 @@ const AppStateProvider = ({ children }) => {
   const [showTopLoc, setShowTopLoc] = useState(false);
   const [segment, setSegment] = useState('map');
   const [map, setMap] = useState(null);
-  const [viewport, setViewport] = useState({});
-  const [center, setCenter] = useState({});
-  const [zoom, setZoom] = useState(null);
   const [selected, setSelected] = useState(null);
   const [searchSelected, setSearchSelected] = useState(null);
   const [position, setPosition] = useState();
@@ -69,6 +67,7 @@ const AppStateProvider = ({ children }) => {
   // START REDUX TOOLKIT UPDATE
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
+  const { viewport } = useAppSelector((state) => state.map);
   // console.log(viewport);
   // How to use the hook: https://redux-toolkit.js.org/tutorials/rtk-query#create-an-api-service
   // const {
@@ -250,7 +249,7 @@ const AppStateProvider = ({ children }) => {
       northLat,
       eastLng,
     };
-    setViewport(latLngBounds);
+    dispatch(mapActions.setViewport(latLngBounds));
   };
 
   const loadMore = (e) => {
@@ -526,13 +525,7 @@ const AppStateProvider = ({ children }) => {
         setSegment,
         map,
         setMap,
-        viewport,
-        setViewport,
         searchViewport,
-        center,
-        setCenter,
-        zoom,
-        setZoom,
         selected,
         setSelected,
         searchSelected,

@@ -1,19 +1,25 @@
 import { useContext, useState, useEffect } from 'react';
+// Redux Store
+import { useAppDispatch } from '../store/hooks';
+import { mapActions } from '../store/mapSlice';
+// Context
 import { Context } from '../context/Context';
 import { IonButton, IonIcon } from '@ionic/react';
 import { close, navigateCircle, navigateCircleOutline } from 'ionicons/icons';
 import LoadingError from './LoadingError';
 
 const GeolocationBtn = () => {
-  const { setError, setLoading, position, setPosition, setCenter } = useContext(Context);
+  const dispatch = useAppDispatch();
+
+  const { setError, setLoading, position, setPosition } = useContext(Context);
 
   const [watchID, setWatchID] = useState(undefined);
   const [centerCoord, setCenterCoord] = useState([]);
 
   useEffect(() => {
     // setCenter to user position after first click on btn
-    if (centerCoord.length) setCenter(centerCoord[0]);
-  }, [centerCoord, setCenter]);
+    if (centerCoord.length) dispatch(mapActions.setCenter(centerCoord[0]));
+  }, [centerCoord, dispatch]);
 
   const getPosition = async () => {
     setLoading(true);

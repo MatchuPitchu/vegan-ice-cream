@@ -1,4 +1,8 @@
 import { useContext } from 'react';
+// Redux Store
+import { useAppDispatch } from '../store/hooks';
+import { mapActions } from '../store/mapSlice';
+// Context
 import { Context } from '../context/Context';
 import { Autocomplete } from '@react-google-maps/api';
 import {
@@ -14,12 +18,12 @@ import { checkbox, closeCircleOutline, informationCircleOutline } from 'ionicons
 import LoadingError from './LoadingError';
 
 const AutocompleteForm = () => {
+  const dispatch = useAppDispatch();
+
   const {
     setError,
     setLoading,
     locations,
-    setCenter,
-    setZoom,
     autocomplete,
     setAutocomplete,
     autocompleteModal,
@@ -90,11 +94,13 @@ const AutocompleteForm = () => {
         }
 
         if (results[0].geometry.location) {
-          setCenter({
-            lat: results[0].geometry.location.lat,
-            lng: results[0].geometry.location.lng,
-          });
-          setZoom(18);
+          dispatch(
+            mapActions.setCenter({
+              lat: results[0].geometry.location.lat,
+              lng: results[0].geometry.location.lng,
+            })
+          );
+          dispatch(mapActions.setZoom(18));
         }
       } catch (error) {
         setError(
