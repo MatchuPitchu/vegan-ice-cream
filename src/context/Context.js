@@ -11,9 +11,9 @@ export const Context = createContext();
 const AppStateProvider = ({ children }) => {
   // OLD CONTEXT
   // const [isAuth, setIsAuth] = useState(false);
+  // const [user, setUser] = useState(null);
   const [activateMessage, setActivateMessage] = useState('Waiting');
   const [successMsg, setSuccessMsg] = useState('');
-  // const [user, setUser] = useState(null);
   const [numNewLoc, setNumNewLoc] = useState();
   const [locations, setLocations] = useState([]);
   const [locationsMap, setLocationsMap] = useState([]);
@@ -69,7 +69,7 @@ const AppStateProvider = ({ children }) => {
   // START REDUX TOOLKIT UPDATE
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
-  console.log(user);
+  // console.log(viewport);
   // How to use the hook: https://redux-toolkit.js.org/tutorials/rtk-query#create-an-api-service
   // const {
   //   data,
@@ -113,7 +113,7 @@ const AppStateProvider = ({ children }) => {
             options
           );
           const data = await res.json();
-          dispatch(userActions.updateUser(data));
+          dispatch(userActions.updateUser({ ...user, ...data }));
           // setUser({ ...user, ...data });
         }
       } catch (err) {
@@ -422,6 +422,8 @@ const AppStateProvider = ({ children }) => {
       setTimeout(() => setError(null), 5000);
     }
   };
+
+  // ToDo: Create custom Hook for animation logic
 
   // animations modal
   const enterAnimationBtm = (modal) => {

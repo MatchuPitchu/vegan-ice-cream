@@ -33,9 +33,9 @@ import CommentsBlock from './Comments/CommentsBlock';
 import FlavorsBlock from './Comments/FlavorsBlock';
 
 const Profil = () => {
-  const { isAuth } = useAppSelector((state) => state.user);
+  const { isAuth, user } = useAppSelector((state) => state.user);
 
-  const { user, setShowProfil, locations, showUpdateProfil, setShowUpdateProfil, successMsg } =
+  const { setShowProfil, locations, showUpdateProfil, setShowUpdateProfil, successMsg } =
     useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
