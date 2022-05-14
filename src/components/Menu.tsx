@@ -1,4 +1,8 @@
 import { useContext } from 'react';
+// Redux Store
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { userActions } from '../store/userSlice';
+// Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import { menuController } from '@ionic/core';
@@ -29,9 +33,10 @@ import About from './About';
 import Profil from './Profil';
 
 const Menu: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { isAuth } = useAppSelector((state) => state.user);
+
   const {
-    isAuth,
-    logout,
     enterAnimationLft,
     leaveAnimationLft,
     showProfil,
@@ -43,6 +48,8 @@ const Menu: React.FC = () => {
     successMsg,
   } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
+
+  const handleLogout = () => dispatch(userActions.logout());
 
   return (
     <IonPage>
@@ -186,7 +193,7 @@ const Menu: React.FC = () => {
           {isAuth && (
             <IonItem
               button
-              onClick={logout}
+              onClick={handleLogout}
               className='labelMenu mt-3 pe-2'
               routerLink='/logout'
               lines='none'

@@ -3,12 +3,14 @@ import { skipToken } from '@reduxjs/toolkit/dist/query';
 import { createAnimation } from '@ionic/react';
 import { useVerifySessionQuery } from '../store/auth-api-slice';
 import { useGetAdditionalInfosFromUserQuery } from '../store/user-api-slice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { userActions } from '../store/userSlice';
 
 export const Context = createContext();
 
 const AppStateProvider = ({ children }) => {
   // OLD CONTEXT
-  const [isAuth, setIsAuth] = useState(false);
+  // const [isAuth, setIsAuth] = useState(false);
   const [activateMessage, setActivateMessage] = useState('Waiting');
   const [successMsg, setSuccessMsg] = useState('');
   const [user, setUser] = useState(null);
@@ -65,7 +67,9 @@ const AppStateProvider = ({ children }) => {
   const [flavor, setFlavor] = useState({});
 
   // START REDUX TOOLKIT UPDATE
-
+  const dispatch = useAppDispatch();
+  const data = useAppSelector((state) => state.user);
+  console.log(data);
   // How to use the hook: https://redux-toolkit.js.org/tutorials/rtk-query#create-an-api-service
   // const {
   //   data,
@@ -103,7 +107,7 @@ const AppStateProvider = ({ children }) => {
         const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/verify-session`, options);
         const { success, user } = await res.json();
         if (success) {
-          setIsAuth(true);
+          dispatch(userActions.login());
           const res = await fetch(
             `${process.env.REACT_APP_API_URL}/users/${user._id}/infos`,
             options
@@ -119,13 +123,6 @@ const AppStateProvider = ({ children }) => {
 
     setLoading(false);
   }, [newComment]);
-
-  // OK Redux
-  const logout = () => {
-    localStorage.removeItem('token');
-    setIsAuth(false);
-    setUser(null);
-  };
 
   useEffect(() => {
     const updateNewNumLoc = async () => {
@@ -476,9 +473,6 @@ const AppStateProvider = ({ children }) => {
   return (
     <Context.Provider
       value={{
-        isAuth,
-        setIsAuth,
-        logout,
         activateMessage,
         setActivateMessage,
         successMsg,

@@ -1,5 +1,9 @@
 import { useContext } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+// Redux Store
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { userActions } from '../../store/userSlice';
+// Context
 import { Context } from '../../context/Context';
 import { useThemeContext } from '../../context/ThemeContext';
 import {
@@ -17,7 +21,10 @@ import showError from '../showError';
 import { lockClosed, logIn, refreshCircle } from 'ionicons/icons';
 
 const Login = () => {
-  const { isAuth, setIsAuth, error, setError, setUser } = useContext(Context);
+  const dispatch = useAppDispatch();
+  const { isAuth } = useAppSelector((state) => state.user);
+
+  const { error, setError, setUser } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const {
@@ -51,7 +58,7 @@ const Login = () => {
         const data = await res.json();
         localStorage.setItem('token', token);
         setUser({ ...user, ...data });
-        setIsAuth(true);
+        dispatch(userActions.login());
       }
     } catch (error) {
       setError(

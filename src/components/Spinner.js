@@ -1,4 +1,7 @@
 import { useContext } from 'react';
+// Redux Store
+import { useAppSelector } from '../store/hooks';
+// Context
 import { Context } from '../context/Context';
 // import spinner
 import { css } from '@emotion/core';
@@ -15,7 +18,9 @@ const override = css`
 `;
 
 const Spinner = () => {
-  const { isAuth, activateMessage } = useContext(Context);
+  const { isAuth } = useAppSelector((state) => state.user);
+
+  const { activateMessage } = useContext(Context);
 
   if (activateMessage === 'Aktivierung des Mail-Accounts erfolgreich')
     return (

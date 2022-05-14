@@ -1,4 +1,7 @@
 import { useContext, useState, useEffect, useRef } from 'react';
+// Redux Store
+import { useAppSelector } from '../store/hooks';
+// Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import ReactStars from 'react-rating-stars-component';
@@ -89,8 +92,9 @@ const colorArr = [
 ];
 
 const Bewerten = () => {
+  const { isAuth } = useAppSelector((state) => state.user);
+
   const {
-    isAuth,
     setLoading,
     setError,
     user,

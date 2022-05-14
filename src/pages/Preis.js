@@ -1,4 +1,7 @@
 import { useContext, useState } from 'react';
+// Redux Store
+import { useAppSelector } from '../store/hooks';
+// Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import { Controller, useForm } from 'react-hook-form';
@@ -21,7 +24,9 @@ import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
 
 const Preis = () => {
-  const { isAuth, setLoading, user, searchSelected, setSearchSelected, createPricing } =
+  const { isAuth } = useAppSelector((state) => state.user);
+
+  const { setLoading, user, searchSelected, setSearchSelected, createPricing } =
     useContext(Context);
   const { isDarkTheme } = useThemeContext();
 

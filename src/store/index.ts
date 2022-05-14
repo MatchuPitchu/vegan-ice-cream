@@ -1,10 +1,10 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import { authSliceReducer } from './authSlice';
+import { userSliceReducer } from './userSlice';
 import { authApi } from './auth-api-slice';
 import { userApi } from './user-api-slice';
 
 const reducers = combineReducers({
-  auth: authSliceReducer,
+  user: userSliceReducer,
   [authApi.reducerPath]: authApi.reducer, // Add generated reducer as a specific top-level slice
   [userApi.reducerPath]: userApi.reducer,
 });

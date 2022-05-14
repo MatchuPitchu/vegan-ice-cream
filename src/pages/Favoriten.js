@@ -1,4 +1,7 @@
 import { useContext, useState } from 'react';
+// Redux Store
+import { useAppSelector } from '../store/hooks';
+// Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import {
@@ -22,10 +25,11 @@ import BtnInfoRating from '../components/Comments/BtnInfoRating';
 import LocInfoHeader from '../components/LocInfoHeader';
 
 const Favoriten = () => {
+  const { isAuth } = useAppSelector((state) => state.user);
+
   const {
     setLoading,
     setError,
-    isAuth,
     user,
     setUser,
     setOpenComments,

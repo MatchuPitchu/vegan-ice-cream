@@ -1,4 +1,6 @@
 import { Fragment, useContext, useState } from 'react';
+// Redux Store
+import { useAppSelector } from '../store/hooks';
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 // https://www.npmjs.com/package/react-rating-stars-component
@@ -31,15 +33,10 @@ import CommentsBlock from './Comments/CommentsBlock';
 import FlavorsBlock from './Comments/FlavorsBlock';
 
 const Profil = () => {
-  const {
-    isAuth,
-    user,
-    setShowProfil,
-    locations,
-    showUpdateProfil,
-    setShowUpdateProfil,
-    successMsg,
-  } = useContext(Context);
+  const { isAuth } = useAppSelector((state) => state.user);
+
+  const { user, setShowProfil, locations, showUpdateProfil, setShowUpdateProfil, successMsg } =
+    useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [showComments, setShowComments] = useState(false);

@@ -1,5 +1,9 @@
 import { useContext } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+// Redux Store
+import { userActions } from '../store/userSlice';
+import { useAppDispatch } from '../store/hooks';
+// Context
 import { Context } from '../context/Context';
 import { IonInput, IonItem, IonLabel, IonButton, IonIcon } from '@ionic/react';
 import showError from './showError';
@@ -7,6 +11,8 @@ import { refreshCircle } from 'ionicons/icons';
 import LoadingError from './LoadingError';
 
 const ProfilUpdate = () => {
+  const dispatch = useAppDispatch();
+
   const {
     error,
     setError,
@@ -16,7 +22,6 @@ const ProfilUpdate = () => {
     setShowProfil,
     setShowUpdateProfil,
     setSuccessMsg,
-    logout,
   } = useContext(Context);
 
   const defaultValues = {
@@ -100,7 +105,7 @@ const ProfilUpdate = () => {
         setShowUpdateProfil(false);
         if (data.email) {
           setShowProfil(false);
-          logout();
+          dispatch(userActions.logout());
         }
       } else {
         setError('Du hast ein falsches Passwort eingetragen');
