@@ -17,6 +17,10 @@ import {
 import { checkbox, closeCircleOutline, informationCircleOutline } from 'ionicons/icons';
 import LoadingError from './LoadingError';
 
+const GOOGLE_API_URL = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
+// fetch results are restricted to countries DE, AT, CH, LI
+const GOOGLE_API_URL_CONFIG = `&components=country:DE|country:AT|country:CH|country:LI&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
+
 const AutocompleteForm = () => {
   const dispatch = useAppDispatch();
 
@@ -48,14 +52,8 @@ const AutocompleteForm = () => {
 
     const fetchData = async () => {
       try {
-        // fetch results are restricted to countries DE, AT, CH, LI
-        const res = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(
-            formattedAddress ? formattedAddress : searchAutocomplete
-          )}&components=country:DE|country:AT|country:CH|country:LI&key=${
-            process.env.REACT_APP_GOOGLE_MAPS_API_KEY
-          }`
-        );
+        const uri = encodeURI(formattedAddress || searchAutocomplete);
+        const res = await fetch(`${GOOGLE_API_URL}${uri}${GOOGLE_API_URL_CONFIG}`);
         const { results } = await res.json();
 
         if (result.address.number) {
@@ -104,15 +102,15 @@ const AutocompleteForm = () => {
         }
       } catch (error) {
         setError(
-          'Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in Deutschland eintragen.'
+          'Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in D, AUT, CH und LIE eintragen.'
         );
         setTimeout(() => setError(null), 5000);
       }
     };
 
     const duplicate = locations.find(
-      (loc) =>
-        loc.address.street === result.address.street && loc.address.number === result.address.number
+      ({ address: { street, number } }) =>
+        street === result.address.street && number === result.address.number
     );
     if (duplicate) {
       setResult(null);
@@ -131,17 +129,16 @@ const AutocompleteForm = () => {
   const onPlaceChanged = () => {
     if (autocomplete !== null) {
       const data = autocomplete.getPlace();
-      let address = {};
-      data.address_components &&
-        data.address_components.forEach((e) =>
-          e.types.forEach((type) => Object.assign(address, { [type]: e.long_name }))
-        );
+      const address = {};
+      data?.address_components?.map((item) =>
+        item.types.map((type) => Object.assign(address, { [type]: item.long_name }))
+      );
       setFormattedAddress(data.formatted_address);
       setResult({
         name: data.name ? data.name : '',
         address: {
           street: address.route ? address.route : '',
-          number: address.street_number ? parseInt(address.street_number) : '',
+          number: address.street_number ? +address.street_number : '',
           zipcode: address.postal_code ? address.postal_code : '',
           city: address.locality ? address.locality : '',
           country: address.country ? address.country : '',
@@ -200,12 +197,11 @@ const AutocompleteForm = () => {
             </div>
           </IonItem>
           <IonItem className='addLocForm' lines='none'>
-            {/* Restricts autocomplete to countries DE, AT, CH, LI*/}
             <Autocomplete
               className='container-autocomplete'
               onLoad={onAutocompleteLoad}
               onPlaceChanged={onPlaceChanged}
-              restrictions={{ country: ['de', 'at', 'ch', 'li'] }}
+              restrictions={{ country: ['de', 'at', 'ch', 'li'] }} // Restricts autocomplete to countries DE, AT, CH, LI
               fields={['name', 'address_components', 'formatted_address', 'place_id', 'website']}
             >
               <input
@@ -213,7 +209,10 @@ const AutocompleteForm = () => {
                 placeholder='Name, Adresse eintippen ...'
                 className='search-autocomplete'
                 // value={searchText}
-                onChange={(e) => setSearchAutocomplete(e.target.value)}
+                onChange={(e) => {
+                  setSearchAutocomplete(e.target.value);
+                  setFormattedAddress(''); // reset formattedAddress if input is filled manually
+                }}
               />
             </Autocomplete>
           </IonItem>
