@@ -1,6 +1,7 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 // Redux Store
-import { useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { selectedLocationActions } from '../store/selectedLocationSlice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -31,13 +32,13 @@ import LoadingError from './LoadingError';
 import Pricing from './Pricing';
 
 const SelectedMarker = () => {
+  const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
+  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
 
   const {
     setLoading,
     setError,
-    selected,
-    setSelected,
     setSearchSelected,
     openComments,
     setOpenComments,
@@ -50,20 +51,22 @@ const SelectedMarker = () => {
 
   useEffect(() => {
     // no need to fetch if no comments ids available or if detailed comments already fetched
-    if (selected.comments_list.length === 0 || selected.comments_list[0].text) return;
+    if (selectedLocation.comments_list.length === 0 || selectedLocation.comments_list[0].text)
+      return;
 
     setLoading(true);
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `${process.env.REACT_APP_API_URL}/locations/${selected._id}/all-comments-flavors`
+          `${process.env.REACT_APP_API_URL}/locations/${selectedLocation._id}/all-comments-flavors`
         );
         const { comments_list, flavors_listed } = await res.json();
-        setSelected({
-          ...selected,
-          comments_list,
-          flavors_listed,
-        });
+        dispatch(
+          selectedLocationActions.updateSelectedLocation({
+            comments_list,
+            flavors_listed,
+          })
+        );
       } catch (err) {
         console.log(err);
         setError('Ups, schief gelaufen. Versuche es später nochmal.');
@@ -72,7 +75,7 @@ const SelectedMarker = () => {
     };
     fetchData();
     setLoading(false);
-  }, [selected, setError, setLoading, setSelected]);
+  }, [selectedLocation, setError, setLoading, dispatch]);
 
   return (
     <IonModal
@@ -82,21 +85,21 @@ const SelectedMarker = () => {
       backdropDismiss={true}
       onDidDismiss={() => {
         setOpenComments(false);
-        setSelected(null);
+        dispatch(selectedLocationActions.resetSelectedLocation());
         setInfoModal(false);
       }}
       enterAnimation={enterAnimation}
       leaveAnimation={leaveAnimation}
     >
       <IonItem lines='full'>
-        <IonLabel>{selected.name}</IonLabel>
-        {user ? <BtnFavLoc selectedLoc={selected} /> : null}
+        <IonLabel>{selectedLocation.name}</IonLabel>
+        {user ? <BtnFavLoc selectedLoc={selectedLocation} /> : null}
         <IonButton
           className='hoverTransparentBtn'
           fill='clear'
           onClick={() => {
             setOpenComments(false);
-            setSelected(null);
+            dispatch(selectedLocationActions.resetSelectedLocation());
             setInfoModal(false);
           }}
         >
@@ -117,32 +120,32 @@ const SelectedMarker = () => {
           <IonItemGroup>
             <IonItem className='modalItem' lines='full'>
               <IonLabel className='ion-text-wrap'>
-                {selected.address.street} {selected.address.number}
+                {selectedLocation.address.street} {selectedLocation.address.number}
                 <br />
-                {selected.address.zipcode} {selected.address.city}
+                {selectedLocation.address.zipcode} {selectedLocation.address.city}
                 <br />
                 <a
                   className='websiteLink'
                   href={
-                    selected.location_url.includes('http')
-                      ? selected.location_url
-                      : `//${selected.location_url}`
+                    selectedLocation.location_url.includes('http')
+                      ? selectedLocation.location_url
+                      : `//${selectedLocation.location_url}`
                   }
                   target='_blank'
                   rel='noopener noreferrer'
                 >
-                  {selected.location_url}
+                  {selectedLocation.location_url}
                 </a>
               </IonLabel>
-              {selected.pricing.length > 0 && <Pricing loc={selected} />}
+              {selectedLocation.pricing.length > 0 && <Pricing loc={selectedLocation} />}
             </IonItem>
 
             <IonItem
               button
               onClick={() => {
-                setSearchSelected(selected);
+                setSearchSelected(selectedLocation);
                 setOpenComments(false);
-                setSelected(null);
+                dispatch(selectedLocationActions.resetSelectedLocation());
                 setInfoModal(false);
               }}
               routerLink='/preis'
@@ -152,7 +155,7 @@ const SelectedMarker = () => {
               detail='false'
             >
               <IonLabel>
-                {selected.pricing.length === 0
+                {selectedLocation.pricing.length === 0
                   ? 'Kugelpreis eintragen'
                   : 'Kugelpreis aktualisieren'}
               </IonLabel>
@@ -164,9 +167,9 @@ const SelectedMarker = () => {
             <IonItem
               button
               onClick={() => {
-                setSearchSelected(selected);
+                setSearchSelected(selectedLocation);
                 setOpenComments(false);
-                setSelected(null);
+                dispatch(selectedLocationActions.resetSelectedLocation());
                 setInfoModal(false);
               }}
               routerLink='/bewerten'
@@ -185,17 +188,17 @@ const SelectedMarker = () => {
 
         <IonCard className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
           <div style={{ backgroundColor: 'var(--ion-item-background)' }}>
-            {selected.comments_list.length ? (
+            {selectedLocation.comments_list.length ? (
               <IonItemGroup>
                 <div className='px-3 py-1 borderBottom'>
                   <Ratings
-                    rating_vegan_offer={selected.location_rating_vegan_offer}
-                    rating_quality={selected.location_rating_quality}
+                    rating_vegan_offer={selectedLocation.location_rating_vegan_offer}
+                    rating_quality={selectedLocation.location_rating_quality}
                     showNum={true}
                   />
                 </div>
 
-                {selected.comments_list[0].text ? (
+                {selectedLocation.comments_list[0] && (
                   <>
                     <IonItem
                       color='background-color'
@@ -217,14 +220,14 @@ const SelectedMarker = () => {
                         className='commentNum'
                         onClick={() => setOpenComments((prev) => !prev)}
                       >
-                        {selected.comments_list.length}
+                        {selectedLocation.comments_list.length}
                       </IonButton>
                     </IonItem>
 
                     {openComments
-                      ? selected.comments_list
-                          .reverse()
-                          .map((comment) => <CommentsBlock comment={comment} key={comment._id} />)
+                      ? selectedLocation.comments_list.map((comment) => (
+                          <CommentsBlock comment={comment} key={comment._id} />
+                        ))
                       : null}
 
                     <IonItem lines='none'>
@@ -232,17 +235,17 @@ const SelectedMarker = () => {
                       <IonLabel>Bewertete Eissorten</IonLabel>
                     </IonItem>
 
-                    <FlavorsBlock flavorsList={selected.flavors_listed} />
+                    <FlavorsBlock flavorsList={selectedLocation.flavors_listed} />
                   </>
-                ) : null}
+                )}
               </IonItemGroup>
             ) : (
               <IonItem
                 button
                 onClick={() => {
-                  setSearchSelected(selected);
+                  setSearchSelected(selectedLocation);
                   setOpenComments(false);
-                  setSelected(null);
+                  dispatch(selectedLocationActions.resetSelectedLocation());
                   setInfoModal(false);
                 }}
                 routerLink='/bewerten'

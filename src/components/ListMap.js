@@ -1,3 +1,6 @@
+// Redux Store
+import { useAppSelector } from '../store/hooks';
+// Context
 import { useContext } from 'react';
 import { Context } from '../context/Context';
 import { IonCard, IonContent, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
@@ -5,7 +8,9 @@ import SelectedMarker from './SelectedMarker';
 import ListResultComponent from './ListResultComponent';
 
 const ListMap = () => {
-  const { locationsList, listResults, disableInfScroll, loadMore, selected, searchText } =
+  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
+
+  const { locationsList, listResults, disableInfScroll, loadMore, searchText } =
     useContext(Context);
 
   return (
@@ -36,7 +41,7 @@ const ListMap = () => {
         </div>
       ) : null}
 
-      {selected ? <SelectedMarker /> : null}
+      {selectedLocation ? <SelectedMarker /> : null}
 
       {/* Infinite Scroll Ionic React: https://dev.to/daviddalbusco/infinite-scroll-with-ionic-react-3a3i */}
       {!listResults.length && (

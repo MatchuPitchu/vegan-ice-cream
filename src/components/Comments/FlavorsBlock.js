@@ -8,12 +8,12 @@ const FlavorsBlock = ({ flavorsList }) => {
               <div
                 className='icecream'
                 style={{
-                  background: `linear-gradient(to bottom, ${flavor.color.primary}, ${
-                    flavor.color.secondary ? flavor.color.secondary : flavor.color.primary
+                  background: `linear-gradient(to bottom, ${flavor.color?.primary}, ${
+                    flavor.color?.secondary ? flavor.color?.secondary : flavor.color?.primary
                   })`,
                 }}
               ></div>
-              <div className='icecreamBottom' style={{ background: flavor.color.primary }}></div>
+              <div className='icecreamBottom' style={{ background: flavor.color?.primary }}></div>
               <div className='cone'></div>
             </div>
             <div className='labelFlavor'>{flavor.name}</div>

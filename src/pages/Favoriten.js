@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
+import { selectedLocationActions } from '../store/selectedLocationSlice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -28,16 +29,10 @@ import LocInfoHeader from '../components/LocInfoHeader';
 const Favoriten = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
+  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
 
-  const {
-    setLoading,
-    setError,
-    setOpenComments,
-    setSearchSelected,
-    selected,
-    setSelected,
-    setInfoModal,
-  } = useContext(Context);
+  const { setLoading, setError, setOpenComments, setSearchSelected, setInfoModal } =
+    useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [reorderDeactivated, setReorderDeactivated] = useState(true);
@@ -150,7 +145,7 @@ const Favoriten = () => {
                       onClick={() => {
                         setSearchSelected(loc);
                         setOpenComments(false);
-                        setSelected(null);
+                        dispatch(selectedLocationActions.resetSelectedLocation());
                         setInfoModal(false);
                       }}
                       routerLink='/bewerten'
@@ -165,7 +160,7 @@ const Favoriten = () => {
             ))}
         </IonReorderGroup>
 
-        {selected ? <SelectedMarker /> : null}
+        {selectedLocation ? <SelectedMarker /> : null}
 
         <LoadingError />
       </IonContent>

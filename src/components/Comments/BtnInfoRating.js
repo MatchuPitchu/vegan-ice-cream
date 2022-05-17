@@ -1,10 +1,16 @@
+// Redux Store
+import { useAppDispatch } from '../../store/hooks';
+// Context
 import { useContext } from 'react';
 import { Context } from '../../context/Context';
 import { IonButton, IonIcon } from '@ionic/react';
 import { add, open } from 'ionicons/icons';
+import { selectedLocationActions } from '../../store/selectedLocationSlice';
 
 const BtnInfoRating = ({ loc }) => {
-  const { setSelected, setSearchSelected, setOpenComments, setInfoModal } = useContext(Context);
+  const dispatch = useAppDispatch();
+
+  const { setSearchSelected, setOpenComments, setInfoModal } = useContext(Context);
 
   return (
     <div className='text-center mt-1'>
@@ -14,7 +20,7 @@ const BtnInfoRating = ({ loc }) => {
         fill='solid'
         onClick={() => {
           setOpenComments(false);
-          setSelected(loc);
+          dispatch(selectedLocationActions.updateSelectedLocation(loc));
           setInfoModal(true);
         }}
       >
@@ -26,7 +32,7 @@ const BtnInfoRating = ({ loc }) => {
         onClick={() => {
           setSearchSelected(loc);
           setOpenComments(false);
-          setSelected(null);
+          dispatch(selectedLocationActions.resetSelectedLocationt());
           setInfoModal(false);
         }}
         fill='solid'

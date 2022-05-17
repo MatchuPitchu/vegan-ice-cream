@@ -6,6 +6,7 @@ import { useGetAdditionalInfosFromUserQuery } from '../store/user-api-slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
 import { mapActions } from '../store/mapSlice';
+import { selectedLocationActions } from '../store/selectedLocationSlice';
 
 export const Context = createContext();
 
@@ -23,6 +24,7 @@ const AppStateProvider = ({ children }) => {
   // const [showUpdateProfil, setShowUpdateProfil] = useState(false);
   // const [showFeedback, setShowFeedback] = useState(false);
   // const [showAbout, setShowAbout] = useState(false);
+  // const [selected, setSelected] = useState(null);
   const [activateMessage, setActivateMessage] = useState('Waiting');
   const [successMsg, setSuccessMsg] = useState('');
   const [numNewLoc, setNumNewLoc] = useState();
@@ -48,7 +50,6 @@ const AppStateProvider = ({ children }) => {
   const [showTopLoc, setShowTopLoc] = useState(false);
   const [segment, setSegment] = useState('map');
   const [map, setMap] = useState(null);
-  const [selected, setSelected] = useState(null);
   const [searchSelected, setSearchSelected] = useState(null);
   const [position, setPosition] = useState();
   const [newLocation, setNewLocation] = useState(null);
@@ -68,6 +69,8 @@ const AppStateProvider = ({ children }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { viewport } = useAppSelector((state) => state.map);
+  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
+
   // console.log(viewport);
   // How to use the hook: https://redux-toolkit.js.org/tutorials/rtk-query#create-an-api-service
   // const {
@@ -122,7 +125,7 @@ const AppStateProvider = ({ children }) => {
     if (token) verifySession();
 
     setLoading(false);
-  }, [newComment]);
+  }, [newComment, dispatch]);
 
   useEffect(() => {
     const updateNewNumLoc = async () => {
@@ -278,9 +281,9 @@ const AppStateProvider = ({ children }) => {
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${comment._id}`, options);
       if (res.status === 200) {
-        if (selected) {
+        if (selectedLocation) {
           // remove deleted comment from selected comments list array
-          const newList = selected.comments_list.filter((item) => item._id !== comment._id);
+          const newList = selectedLocation.comments_list.filter((item) => item._id !== comment._id);
 
           // if list exists after removing than calc new avg ratings without fetching data from API - rounded to one decimal
           if (newList.length) {
@@ -297,14 +300,20 @@ const AppStateProvider = ({ children }) => {
               Math.round((sumQuality / newList.length) * 10) / 10 || 0;
             const location_rating_vegan_offer =
               Math.round((sumVegan / newList.length) * 10) / 10 || 0;
-            setSelected({
-              ...selected,
-              comments_list: newList,
-              location_rating_quality,
-              location_rating_vegan_offer,
-            });
+
+            dispatch(
+              selectedLocationActions.updateSelectedLocation({
+                comments_list: newList,
+                location_rating_quality,
+                location_rating_vegan_offer,
+              })
+            );
           } else {
-            setSelected({ ...selected, comments_list: [] });
+            dispatch(
+              selectedLocationActions.updateSelectedLocation({
+                comments_list: [],
+              })
+            );
           }
         }
 
@@ -526,8 +535,6 @@ const AppStateProvider = ({ children }) => {
         map,
         setMap,
         searchViewport,
-        selected,
-        setSelected,
         searchSelected,
         setSearchSelected,
         position,

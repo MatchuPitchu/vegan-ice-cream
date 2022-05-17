@@ -2,16 +2,16 @@ interface Address {
   city: string;
   country: string;
   geo: {
-    lat: number;
-    lng: number;
+    lat: number | null;
+    lng: number | null;
   };
-  number: number;
+  number: number | null;
   street: string;
   zipcode: string;
 }
 
 export interface Flavor {
-  flavor_id: string;
+  _id: string;
   color: {
     primary: string;
     secondary: string;
@@ -22,30 +22,31 @@ export interface Flavor {
 }
 
 export interface Location {
-  location_id: string;
+  _id: string;
   name: string;
   address: Address;
-  comments_list: string[];
-  flavors_listed: string[];
-  location_num: number;
-  location_rating_quality: number;
-  location_rating_vegan_offer: number;
+  comments_list: Comment[] | string[];
+  flavors_listed: Flavor[] | string[];
+  location_num: number | null;
+  location_rating_quality: number | null;
+  location_rating_vegan_offer: number | null;
   location_url: string;
   pricing: number[];
 }
 
 export interface Comment {
-  user_id: string;
+  _id: string;
+  user_id: Pick<User, '_id' | 'name'>;
   location_id: string;
-  flavors_referred: Partial<Flavor>[];
+  flavors_referred: Pick<Flavor, '_id' | 'name'>[];
   text: string;
-  rating_vegan_offer: number;
-  rating_quality: number;
+  rating_vegan_offer: number | null;
+  rating_quality: number | null;
   bio: boolean;
   vegan: boolean;
   lactose_free: boolean;
   not_specified: boolean;
-  date: Date;
+  date: string;
 }
 
 export interface User {
@@ -58,6 +59,6 @@ export interface User {
   favorite_locations: Location[] | string[];
   favorite_flavors: Flavor[] | string[];
   needs_reset: boolean;
-  num_loc_last_visit: number;
+  num_loc_last_visit: number | null;
   resetToken: string;
 }

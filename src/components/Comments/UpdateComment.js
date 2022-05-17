@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { userActions } from '../../store/userSlice';
 import { showActions } from '../../store/showSlice';
+import { selectedLocationActions } from '../../store/selectedLocationSlice';
 // Context
 import { Context } from '../../context/Context';
 import ReactStars from 'react-rating-stars-component';
@@ -15,8 +16,9 @@ import LoadingError from '../LoadingError';
 const UpdateComment = ({ comment }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
+  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
 
-  const { setLoading, setError, selected, setSelected } = useContext(Context);
+  const { setLoading, setError } = useContext(Context);
 
   const defaultValues = {
     text: comment.text,
@@ -91,10 +93,10 @@ const UpdateComment = ({ comment }) => {
       dispatch(userActions.updateUser({ comments_list }));
       // setUser({ ...user, comments_list });
 
-      if (selected) {
+      if (selectedLocation) {
         // set new comments list
-        const comments_list = [...selected.comments_list];
-        const index = selected.comments_list.findIndex((item) => item._id === comment._id);
+        const comments_list = [...selectedLocation.comments_list];
+        const index = selectedLocation.comments_list.findIndex((item) => item._id === comment._id);
         comments_list.splice(index, 1, updatedComment);
         // calc new avg ratings without fetching data from API - rounded to one decimal
         // if length list = 1 than take directly rating
@@ -110,12 +112,14 @@ const UpdateComment = ({ comment }) => {
           Math.round((sumQuality / comments_list.length) * 10) / 10 || 0;
         const location_rating_vegan_offer =
           Math.round((sumVegan / comments_list.length) * 10) / 10 || 0;
-        setSelected({
-          ...selected,
-          comments_list,
-          location_rating_quality,
-          location_rating_vegan_offer,
-        });
+
+        dispatch(
+          selectedLocationActions.updateSelectedLocation({
+            comments_list,
+            location_rating_quality,
+            location_rating_vegan_offer,
+          })
+        );
       }
     } catch (error) {
       console.log(error);

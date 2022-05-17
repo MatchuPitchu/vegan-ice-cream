@@ -1,3 +1,6 @@
+// Redux Store
+import { useAppSelector } from '../store/hooks';
+// Context
 import { useContext } from 'react';
 import { Context } from '../context/Context';
 import {
@@ -18,7 +21,9 @@ import Pricing from './Pricing';
 // See http://idangero.us/swiper/api/ for valid options.
 
 const TopLocations = () => {
-  const { topLocations, selected, showTopLoc } = useContext(Context);
+  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
+
+  const { topLocations, showTopLoc } = useContext(Context);
 
   const slideOpts = {
     initialSlide: 0,
@@ -82,7 +87,7 @@ const TopLocations = () => {
             </IonCard>
           </div>
 
-          {selected ? <SelectedMarker /> : null}
+          {selectedLocation ? <SelectedMarker /> : null}
         </IonSlide>
       ))}
     </IonSlides>

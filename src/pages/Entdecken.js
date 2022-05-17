@@ -1,6 +1,8 @@
 import { useContext, useState, useEffect, useCallback } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { mapActions } from '../store/mapSlice';
+import { selectedLocationActions } from '../store/selectedLocationSlice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -33,12 +35,12 @@ import Spinner from '../components/Spinner';
 import LoadingError from '../components/LoadingError';
 import AutocompleteForm from '../components/AutocompleteForm';
 import GeolocationBtn from '../components/GeolocationBtn';
-import { mapActions } from '../store/mapSlice';
 
 const Entdecken = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { center, zoom } = useAppSelector((state) => state.map);
+  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
 
   const {
     locations,
@@ -49,8 +51,6 @@ const Entdecken = () => {
     map,
     setMap,
     setAutocompleteModal,
-    selected,
-    setSelected,
     searchSelected,
     position,
     newLocation,
@@ -280,7 +280,7 @@ const Entdecken = () => {
                             cursor='pointer'
                             onClick={() => {
                               setOpenComments(false);
-                              setSelected(loc);
+                              dispatch(selectedLocationActions.updateSelectedLocation(loc));
                               setInfoModal(true);
                               dispatch(
                                 mapActions.setCenter({
@@ -314,7 +314,7 @@ const Entdecken = () => {
                   title={`${searchSelected.address.street} ${searchSelected.address.number} ${searchSelected.address.zipcode} ${searchSelected.address.city}`}
                   onClick={() => {
                     setOpenComments(false);
-                    setSelected(searchSelected);
+                    dispatch(selectedLocationActions.updateSelectedLocation(searchSelected));
                     setInfoModal(true);
                   }}
                   zIndex={2}
@@ -364,7 +364,7 @@ const Entdecken = () => {
                 </>
               ) : null}
 
-              {selected ? <SelectedMarker /> : null}
+              {selectedLocation ? <SelectedMarker /> : null}
             </GoogleMap>
 
             {checkMsgNewLoc && <div className='checkMsg'>{checkMsgNewLoc}</div>}

@@ -1,3 +1,7 @@
+// Redux Store
+import { selectedLocationActions } from '../store/selectedLocationSlice';
+import { useAppDispatch } from '../store/hooks';
+// Context
 import { useContext } from 'react';
 import { Context } from '../context/Context';
 import { IonButton, IonCard, IonIcon, isPlatform } from '@ionic/react';
@@ -7,7 +11,9 @@ import BtnInfoRating from './Comments/BtnInfoRating';
 import LocInfoHeader from './LocInfoHeader';
 
 const ListResultComponent = ({ loc }) => {
-  const { setSelected, setSearchSelected, setInfoModal, setOpenComments } = useContext(Context);
+  const dispatch = useAppDispatch();
+
+  const { setSearchSelected, setInfoModal, setOpenComments } = useContext(Context);
 
   return (
     <IonCard className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
@@ -29,7 +35,7 @@ const ListResultComponent = ({ loc }) => {
             onClick={() => {
               setSearchSelected(loc);
               setOpenComments(false);
-              setSelected(null);
+              dispatch(selectedLocationActions.resetSelectedLocation());
               setInfoModal(false);
             }}
             fill='solid'

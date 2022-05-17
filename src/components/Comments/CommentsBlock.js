@@ -15,7 +15,7 @@ const CommentsBlock = ({ comment }) => {
   const { showUpdateComment } = useContext(Context);
 
   // if user clicks on edit btn than updateComment component is displayed
-  return showUpdateComment.comment_id !== comment._id ? (
+  return showUpdateComment?.comment_id !== comment._id ? (
     <div className='px-3 py-2 borderBottom'>
       <div className='commentText'>
         <IonIcon slot='start' className='me-2' color='text-color' icon={chatboxEllipses} />
@@ -36,7 +36,7 @@ const CommentsBlock = ({ comment }) => {
         />
 
         {/* Displays buttons a) if user has not deactivated his account and b) if user is author of comment */}
-        {/* ID is in comment.user_id in profil; ID is in comment.user_id._id in selected  */}
+        {/* ID is in comment.user_id in profil; ID is in comment.user_id._id in selectedLocation  */}
         {comment.user_id &&
           ((user && user._id === comment.user_id) || (user && user._id === comment.user_id._id) ? (
             <BtnEditDelete comment={comment} />
