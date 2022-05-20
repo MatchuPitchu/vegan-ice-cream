@@ -3,13 +3,13 @@ import { Context } from '../context/Context';
 import { IonLoading, IonToast } from '@ionic/react';
 
 const LoadingError = () => {
-  const { loading, error } = useContext(Context);
+  const { isLoading, error } = useContext(Context);
 
   return (
     <>
       <IonLoading
-        // loading is only true or false
-        isOpen={loading}
+        // isLoading is only true or false
+        isOpen={isLoading}
         message={'Einen Moment bitte ...'}
       />
       <IonToast

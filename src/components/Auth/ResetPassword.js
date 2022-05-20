@@ -1,6 +1,8 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
+// Redux Store
+import { useAppDispatch } from '../../store/hooks';
+import { appActions } from '../../store/appSlice';
 import { Controller, useForm } from 'react-hook-form';
-import { Context } from '../../context/Context';
 import { useThemeContext } from '../../context/ThemeContext';
 import {
   IonContent,
@@ -18,7 +20,7 @@ import { refreshCircle } from 'ionicons/icons';
 import LoadingError from '../LoadingError';
 
 const ResetPassword = () => {
-  const { setError } = useContext(Context);
+  const dispatch = useAppDispatch();
   const { isDarkTheme } = useThemeContext();
 
   const [success, setSuccess] = useState(false);
@@ -42,8 +44,8 @@ const ResetPassword = () => {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/reset-password`, options);
       const { message } = await res.json();
       if (!message) {
-        setError('Prüfe, ob du deine richtige Mailadresse eingetippt hast.');
-        setTimeout(() => setError(null), 5000);
+        dispatch(appActions.setError('Prüfe, ob du deine richtige Mailadresse eingetippt hast.'));
+        setTimeout(() => dispatch(appActions.setError('')), 5000);
       } else {
         setSuccess(true);
       }

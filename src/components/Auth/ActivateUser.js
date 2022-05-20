@@ -5,7 +5,7 @@ import { IonContent, IonPage } from '@ionic/react';
 import Spinner from '../Spinner';
 
 const ActivateUser = () => {
-  const { activateMessage, setActivateMessage } = useContext(Context);
+  const { activateMsg, setActivateMessage } = useContext(Context);
   const { id } = useParams();
 
   useEffect(() => {
@@ -29,10 +29,10 @@ const ActivateUser = () => {
       }
     };
 
-    if (activateMessage === 'Waiting') activateUser();
-  }, [activateMessage, id, setActivateMessage]);
+    if (activateMsg === 'Waiting') activateUser();
+  }, [activateMsg, id, setActivateMessage]);
 
-  return activateMessage === 'Waiting' ? (
+  return activateMsg === 'Waiting' ? (
     <IonPage>
       <IonContent>
         <div className='text-center'>Einen Moment bitte ...</div>

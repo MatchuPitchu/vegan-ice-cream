@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 // Redux Store
-import { useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { appActions } from '../store/appSlice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -24,9 +25,10 @@ import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
 
 const Preis = () => {
+  const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
 
-  const { setLoading, searchSelected, setSearchSelected, createPricing } = useContext(Context);
+  const { searchSelected, setSearchSelected, createPricing } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [endReset, setEndReset] = useState(false);
@@ -45,13 +47,13 @@ const Preis = () => {
   });
 
   const onSubmit = async (data) => {
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
     if (data.pricing && data.pricing > 0) createPricing(data);
 
     setSearchSelected(null);
     setEndReset(true);
     setTimeout(() => setEndReset(false), 5000);
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   return isAuth && user ? (

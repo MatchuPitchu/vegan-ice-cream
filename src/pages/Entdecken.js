@@ -54,7 +54,7 @@ const Entdecken = () => {
     searchSelected,
     position,
     newLocation,
-    checkMsgNewLoc,
+    checkMsgNewLocation,
     setCheckMsgNewLoc,
     setInfoModal,
     setNewLocation,
@@ -367,7 +367,7 @@ const Entdecken = () => {
               {selectedLocation ? <SelectedMarker /> : null}
             </GoogleMap>
 
-            {checkMsgNewLoc && <div className='checkMsg'>{checkMsgNewLoc}</div>}
+            {checkMsgNewLocation && <div className='checkMsg'>{checkMsgNewLocation}</div>}
           </div>
         </IonContent>
       )}

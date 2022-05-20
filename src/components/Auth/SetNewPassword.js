@@ -1,5 +1,8 @@
-import { useContext, useState } from 'react';
-import { Context } from '../../context/Context';
+import { useState } from 'react';
+// Redux Store
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { appActions } from '../../store/appSlice';
+// Context
 import { useThemeContext } from '../../context/ThemeContext';
 import { useParams } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
@@ -20,7 +23,9 @@ import LoadingError from '../LoadingError';
 import InfoTextRegister from './InfoTextRegister';
 
 const SetNewPassword = () => {
-  const { setLoading, error, setError } = useContext(Context);
+  const dispatch = useAppDispatch();
+  const { error } = useAppSelector((state) => state.app);
+
   const { isDarkTheme } = useThemeContext();
 
   const {
@@ -32,7 +37,7 @@ const SetNewPassword = () => {
   const [endReset, setEndReset] = useState(false);
 
   const onSubmit = async ({ email, password, repeatPassword }) => {
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
     try {
       const options = {
         method: 'PUT',
@@ -51,10 +56,10 @@ const SetNewPassword = () => {
       const { message } = await res.json();
       if (message) setEndReset(true);
     } catch (error) {
-      setError(error);
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError(error.message));
+      setTimeout(() => dispatch(appActions.setError('')), 5000);
     }
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   return (

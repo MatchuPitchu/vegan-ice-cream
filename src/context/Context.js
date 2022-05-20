@@ -6,7 +6,7 @@ import { useGetAdditionalInfosFromUserQuery } from '../store/user-api-slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
 import { mapActions } from '../store/mapSlice';
-import { selectedLocationActions } from '../store/selectedLocationSlice';
+import { appActions } from '../store/appSlice';
 
 export const Context = createContext();
 
@@ -25,8 +25,17 @@ const AppStateProvider = ({ children }) => {
   // const [showFeedback, setShowFeedback] = useState(false);
   // const [showAbout, setShowAbout] = useState(false);
   // const [selected, setSelected] = useState(null);
-  const [activateMessage, setActivateMessage] = useState('Waiting');
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [activateMsg, setActivateMessage] = useState('Waiting');
+  const [checkMsgNewLocation, setCheckMsgNewLoc] = useState('');
+  const [alertUpdateFav, setAlertUpdateFav] = useState({
+    removeStatus: false,
+    addStatus: false,
+    location: {},
+  });
+
   const [numNewLoc, setNumNewLoc] = useState();
   const [locations, setLocations] = useState([]);
   const [locationsMap, setLocationsMap] = useState([]);
@@ -53,23 +62,14 @@ const AppStateProvider = ({ children }) => {
   const [searchSelected, setSearchSelected] = useState(null);
   const [position, setPosition] = useState();
   const [newLocation, setNewLocation] = useState(null);
-  const [checkMsgNewLoc, setCheckMsgNewLoc] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [infoModal, setInfoModal] = useState(false);
   const [newLocModal, setNewLocModal] = useState(false);
-  const [alertUpdateFav, setAlertUpdateFav] = useState({
-    removeStatus: false,
-    addStatus: false,
-    location: {},
-  });
   const [newComment, setNewComment] = useState(null);
 
   // START REDUX TOOLKIT UPDATE
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { viewport } = useAppSelector((state) => state.map);
-  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
 
   // console.log(viewport);
   // How to use the hook: https://redux-toolkit.js.org/tutorials/rtk-query#create-an-api-service
@@ -96,7 +96,7 @@ const AppStateProvider = ({ children }) => {
   // END REDUX TOOLKIT
 
   useEffect(() => {
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
     const token = localStorage.getItem('token');
 
     // First check if token is valid, then fetch all user infos and set to state
@@ -124,7 +124,7 @@ const AppStateProvider = ({ children }) => {
     };
     if (token) verifySession();
 
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   }, [newComment, dispatch]);
 
   useEffect(() => {
@@ -263,73 +263,8 @@ const AppStateProvider = ({ children }) => {
     e.target.complete();
   };
 
-  // delete comment, update user and selected location data, calculate new rating averages to display them immediately
-  const deleteComment = async (comment) => {
-    setLoading(true);
-
-    try {
-      const token = localStorage.getItem('token');
-      const options = {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          token,
-        },
-        // converts JS data into JSON string.
-        body: JSON.stringify({ user_id: user._id }),
-        credentials: 'include',
-      };
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/comments/${comment._id}`, options);
-      if (res.status === 200) {
-        if (selectedLocation) {
-          // remove deleted comment from selected comments list array
-          const newList = selectedLocation.comments_list.filter((item) => item._id !== comment._id);
-
-          // if list exists after removing than calc new avg ratings without fetching data from API - rounded to one decimal
-          if (newList.length) {
-            // if length list = 1 than take directly rating
-            const sumQuality =
-              newList.length === 1
-                ? newList[0].rating_quality
-                : newList.reduce((a, b) => a.rating_quality + b.rating_quality);
-            const sumVegan =
-              newList.length === 1
-                ? newList[0].rating_vegan_offer
-                : newList.reduce((a, b) => a.rating_vegan_offer + b.rating_vegan_offer);
-            const location_rating_quality =
-              Math.round((sumQuality / newList.length) * 10) / 10 || 0;
-            const location_rating_vegan_offer =
-              Math.round((sumVegan / newList.length) * 10) / 10 || 0;
-
-            dispatch(
-              selectedLocationActions.updateSelectedLocation({
-                comments_list: newList,
-                location_rating_quality,
-                location_rating_vegan_offer,
-              })
-            );
-          } else {
-            dispatch(
-              selectedLocationActions.updateSelectedLocation({
-                comments_list: [],
-              })
-            );
-          }
-        }
-
-        // remove deleted comment from user profil comments list array
-        const newUserList = user.comments_list.filter((item) => item._id !== comment._id);
-        dispatch(userActions.updateUser({ comments_list: newUserList }));
-        // setUser({ ...user, comments_list: newUserList });
-      }
-    } catch (err) {
-      console.log(err.message);
-    }
-    setLoading(false);
-  };
-
   const addFavLoc = async () => {
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
     const token = localStorage.getItem('token');
     try {
       const options = {
@@ -358,14 +293,14 @@ const AppStateProvider = ({ children }) => {
       });
     } catch (err) {
       console.log(err.message);
-      setError('Da ist etwas schief gelaufen. Versuche es später nochmal');
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal'));
+      setTimeout(() => dispatch(appActions.setError('')), 5000);
     }
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   const removeFavLoc = async () => {
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
     const token = localStorage.getItem('token');
     try {
       const options = {
@@ -394,10 +329,10 @@ const AppStateProvider = ({ children }) => {
       });
     } catch (err) {
       console.log(err.message);
-      setError('Da ist etwas schief gelaufen. Versuche es später nochmal');
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal'));
+      setTimeout(() => dispatch(appActions.setError('')), 5000);
     }
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   const createPricing = async (data) => {
@@ -426,8 +361,8 @@ const AppStateProvider = ({ children }) => {
       setLocationsList([...newArr2, updatedLoc]);
     } catch (err) {
       console.log(err.message);
-      setError('Da ist etwas schief gelaufen. Versuche es später nochmal');
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal'));
+      setTimeout(() => dispatch(appActions.setError('')), 5000);
     }
   };
 
@@ -487,7 +422,7 @@ const AppStateProvider = ({ children }) => {
   return (
     <Context.Provider
       value={{
-        activateMessage,
+        activateMsg,
         setActivateMessage,
         successMsg,
         setSuccessMsg,
@@ -541,13 +476,9 @@ const AppStateProvider = ({ children }) => {
         setPosition,
         newLocation,
         setNewLocation,
-        checkMsgNewLoc,
+        checkMsgNewLocation,
         setCheckMsgNewLoc,
-        loading,
-        setLoading,
         loadMore,
-        error,
-        setError,
         enterAnimationBtm,
         leaveAnimationBtm,
         enterAnimationLft,
@@ -558,7 +489,6 @@ const AppStateProvider = ({ children }) => {
         setNewLocModal,
         alertUpdateFav,
         setAlertUpdateFav,
-        deleteComment,
         addFavLoc,
         removeFavLoc,
         createPricing,

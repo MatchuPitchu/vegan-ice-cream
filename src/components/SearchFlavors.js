@@ -1,9 +1,9 @@
-import { useContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { flavorActions } from '../store/flavorSlice';
+import { appActions } from '../store/appSlice';
 // Context
-import { Context } from '../context/Context';
 import Highlighter from 'react-highlight-words';
 import { IonIcon, IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/react';
 import { iceCream, informationCircle } from 'ionicons/icons';
@@ -13,14 +13,13 @@ const SearchFlavors = () => {
   const dispatch = useAppDispatch();
   const { flavor, searchTermFlavor } = useAppSelector((state) => state.flavor);
 
-  const { setLoading } = useContext(Context);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
   const [flavors, setFlavors] = useState([]);
   const [searchWords, setSearchWords] = useState([]);
   const [flavorsPredict, setFlavorsPredict] = useState([]);
 
   useEffect(() => {
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
     const fetchFlavors = async () => {
       try {
         const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors`);
@@ -31,8 +30,8 @@ const SearchFlavors = () => {
       }
     };
     fetchFlavors();
-    setLoading(false);
-  }, [setLoading]);
+    dispatch(appActions.setIsLoading(false));
+  }, [dispatch]);
 
   const forAutocompleteChange = (value) => {
     if (value.length >= 3 && flavors) {
@@ -110,7 +109,7 @@ const SearchFlavors = () => {
         </div>
       </div>
 
-      {flavorsPredict.length && searchTermFlavor !== flavor.name ? (
+      {flavorsPredict.length && searchTermFlavor !== flavor?.name ? (
         <IonList className='py-0'>
           <div className='infoText pt-2'>... Auswahl bereits eingetragener Sorten</div>
           {flavorsPredict.map((flavor) => (

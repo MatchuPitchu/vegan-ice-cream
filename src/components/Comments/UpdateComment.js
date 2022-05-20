@@ -1,11 +1,10 @@
-import { useContext } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { userActions } from '../../store/userSlice';
 import { showActions } from '../../store/showSlice';
 import { selectedLocationActions } from '../../store/selectedLocationSlice';
+import { appActions } from '../../store/appSlice';
 // Context
-import { Context } from '../../context/Context';
 import ReactStars from 'react-rating-stars-component';
 import { Controller, useForm } from 'react-hook-form';
 import { IonButton, IonIcon, IonTextarea, IonToggle } from '@ionic/react';
@@ -17,8 +16,6 @@ const UpdateComment = ({ comment }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
-
-  const { setLoading, setError } = useContext(Context);
 
   const defaultValues = {
     text: comment.text,
@@ -55,7 +52,7 @@ const UpdateComment = ({ comment }) => {
   };
 
   const onSubmit = async (data) => {
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
 
     try {
       const token = localStorage.getItem('token');
@@ -123,11 +120,11 @@ const UpdateComment = ({ comment }) => {
       }
     } catch (error) {
       console.log(error);
-      setError('Da ist etwas schief gelaufen. Versuche es später nochmal.');
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal.'));
+      setTimeout(() => dispatch(appActions.setError('')), 5000);
     }
     dispatch(showActions.setShowUpdateComment({ state: false, comment_id: '' }));
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   return (

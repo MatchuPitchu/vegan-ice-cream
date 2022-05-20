@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 // Redux Store
 import { useAppDispatch } from '../store/hooks';
 import { mapActions } from '../store/mapSlice';
+import { appActions } from '../store/appSlice';
 // Context
 import { Context } from '../context/Context';
 import Highlighter from 'react-highlight-words';
@@ -12,8 +13,6 @@ const Search = () => {
   const dispatch = useAppDispatch();
 
   const {
-    setLoading,
-    setError,
     segment,
     locations,
     searchViewport,
@@ -31,7 +30,7 @@ const Search = () => {
     e.preventDefault();
     setSearchText('');
     if (e.target.elements[0].value.length > 3 && segment === 'map') {
-      setLoading(true);
+      dispatch(appActions.setIsLoading(true));
       try {
         // fetch results are restricted to countries DE, AT, CH, LI
         const res = await fetch(
@@ -54,15 +53,17 @@ const Search = () => {
           dispatch(mapActions.setZoom(12));
         }
       } catch (error) {
-        setError(
-          'Ups, schief gelaufen. Nur Orte in Deutschland, Österreich und der Schweiz möglich'
+        dispatch(
+          appActions.setError(
+            'Ups, schief gelaufen. Nur Orte in Deutschland, Österreich und der Schweiz möglich'
+          )
         );
-        setTimeout(() => setError(null), 5000);
+        setTimeout(() => dispatch(appActions.setError('')), 5000);
       }
       searchViewport();
       setPredictions([]);
       setListResults([]);
-      setLoading(false);
+      dispatch(appActions.setIsLoading(false));
     }
   };
 

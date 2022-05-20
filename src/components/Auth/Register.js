@@ -1,7 +1,10 @@
-import { useContext, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { Context } from '../../context/Context';
+import { useState } from 'react';
+// Redux Store
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { appActions } from '../../store/appSlice';
+// Context
 import { useThemeContext } from '../../context/ThemeContext';
+import { Controller, useForm } from 'react-hook-form';
 import {
   IonContent,
   IonInput,
@@ -20,7 +23,8 @@ import LoadingError from '../LoadingError';
 import InfoTextRegister from './InfoTextRegister';
 
 const Register = () => {
-  const { setLoading, error, setError } = useContext(Context);
+  const dispatch = useAppDispatch();
+  const { error } = useAppSelector((state) => state.app);
   const { isDarkTheme } = useThemeContext();
 
   const {
@@ -32,7 +36,7 @@ const Register = () => {
   const [endRegister, setEndRegister] = useState(false);
 
   const onSubmit = async (data) => {
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
     try {
       const city = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(
@@ -62,17 +66,17 @@ const Register = () => {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/register`, options);
       const { error: errorMsg } = await res.json();
       if (errorMsg) {
-        setError('E-Mail ist bereits im System hinterlegt.');
-        setLoading(false);
-        return setTimeout(() => setError(''), 5000);
+        dispatch(appActions.setError('E-Mail ist bereits im System hinterlegt.'));
+        dispatch(appActions.setIsLoading(false));
+        return setTimeout(() => dispatch(appActions.setError('')), 5000);
       }
       setEndRegister(true);
     } catch (error) {
-      setError(error);
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError(error.message));
+      setTimeout(() => dispatch(appActions.setError('')), 5000);
     }
     reset();
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   // Autocomplete list and functionality

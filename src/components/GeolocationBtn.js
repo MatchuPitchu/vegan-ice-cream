@@ -2,6 +2,7 @@ import { useContext, useState, useEffect } from 'react';
 // Redux Store
 import { useAppDispatch } from '../store/hooks';
 import { mapActions } from '../store/mapSlice';
+import { appActions } from '../store/appSlice';
 // Context
 import { Context } from '../context/Context';
 import { IonButton, IonIcon } from '@ionic/react';
@@ -11,7 +12,7 @@ import LoadingError from './LoadingError';
 const GeolocationBtn = () => {
   const dispatch = useAppDispatch();
 
-  const { setError, setLoading, position, setPosition } = useContext(Context);
+  const { position, setPosition } = useContext(Context);
 
   const [watchID, setWatchID] = useState(undefined);
   const [centerCoord, setCenterCoord] = useState([]);
@@ -22,7 +23,7 @@ const GeolocationBtn = () => {
   }, [centerCoord, dispatch]);
 
   const getPosition = async () => {
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
     try {
       // define as var to have access below to clearWatch
       const id = await navigator.geolocation.watchPosition(
@@ -36,16 +37,16 @@ const GeolocationBtn = () => {
               : [{ lat: pos.coords.latitude, lng: pos.coords.longitude }]
           );
         },
-        (err) => setError(err),
+        (err) => dispatch(appActions.setError(err)),
         { useSignificantChanges: true }
       );
       setWatchID(id);
     } catch (err) {
       console.log(err);
-      setError('Position kann nicht ermittelt werden. Berechtigung prüfen');
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError('Position kann nicht ermittelt werden. Berechtigung prüfen'));
+      setTimeout(() => dispatch(appActions.setError('')), 5000);
     }
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   const removeWatch = () => {

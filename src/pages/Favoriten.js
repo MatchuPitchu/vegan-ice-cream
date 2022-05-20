@@ -3,6 +3,7 @@ import { useContext, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
 import { selectedLocationActions } from '../store/selectedLocationSlice';
+import { appActions } from '../store/appSlice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -31,8 +32,7 @@ const Favoriten = () => {
   const { isAuth, user } = useAppSelector((state) => state.user);
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
 
-  const { setLoading, setError, setOpenComments, setSearchSelected, setInfoModal } =
-    useContext(Context);
+  const { setOpenComments, setSearchSelected, setInfoModal } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [reorderDeactivated, setReorderDeactivated] = useState(true);
@@ -49,7 +49,7 @@ const Favoriten = () => {
   };
 
   const onSubmit = async () => {
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
 
     try {
       const token = localStorage.getItem('token');
@@ -69,12 +69,12 @@ const Favoriten = () => {
       await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/update-fav-list`, options);
     } catch (err) {
       console.log(err);
-      setError('Da ist etwas schief gelaufen. Versuche es später nochmal.');
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal.'));
+      setTimeout(() => dispatch(appActions.setError('')), 5000);
     }
 
     setRearranged(false);
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   return isAuth && user ? (

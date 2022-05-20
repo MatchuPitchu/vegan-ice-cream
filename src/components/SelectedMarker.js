@@ -2,6 +2,7 @@ import { useContext, useEffect, useMemo } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectedLocationActions } from '../store/selectedLocationSlice';
+import { appActions } from '../store/appSlice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -37,8 +38,6 @@ const SelectedMarker = () => {
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
 
   const {
-    setLoading,
-    setError,
     setSearchSelected,
     openComments,
     setOpenComments,
@@ -54,7 +53,7 @@ const SelectedMarker = () => {
     if (selectedLocation.comments_list.length === 0 || selectedLocation.comments_list[0].text)
       return;
 
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
     const fetchData = async () => {
       try {
         const res = await fetch(
@@ -69,13 +68,13 @@ const SelectedMarker = () => {
         );
       } catch (err) {
         console.log(err);
-        setError('Ups, schief gelaufen. Versuche es später nochmal.');
-        setTimeout(() => setError(null), 5000);
+        dispatch(appActions.setError('Ups, schief gelaufen. Versuche es später nochmal.'));
+        setTimeout(() => dispatch(appActions.setError('')), 5000);
       }
     };
     fetchData();
-    setLoading(false);
-  }, [selectedLocation, setError, setLoading, dispatch]);
+    dispatch(appActions.setIsLoading(false));
+  }, [selectedLocation, dispatch]);
 
   return (
     <IonModal
@@ -108,7 +107,7 @@ const SelectedMarker = () => {
       </IonItem>
 
       <IonContent>
-        {/* IonImg uses lazy loading */}
+        {/* IonImg uses lazy isLoading */}
         <IonImg
           className='modalImage'
           src='./assets/images/ice-cream-chocolate-sm-mae-mu-unsplash.jpg'

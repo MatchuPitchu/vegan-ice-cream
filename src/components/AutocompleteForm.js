@@ -2,6 +2,7 @@ import { useContext } from 'react';
 // Redux Store
 import { useAppDispatch } from '../store/hooks';
 import { mapActions } from '../store/mapSlice';
+import { appActions } from '../store/appSlice';
 // Context
 import { Context } from '../context/Context';
 import { Autocomplete } from '@react-google-maps/api';
@@ -25,8 +26,6 @@ const AutocompleteForm = () => {
   const dispatch = useAppDispatch();
 
   const {
-    setError,
-    setLoading,
     locations,
     autocomplete,
     setAutocomplete,
@@ -48,7 +47,7 @@ const AutocompleteForm = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     if (!result) return;
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
 
     const fetchData = async () => {
       try {
@@ -101,10 +100,12 @@ const AutocompleteForm = () => {
           dispatch(mapActions.setZoom(18));
         }
       } catch (error) {
-        setError(
-          'Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in D, AUT, CH und LIE eintragen.'
+        dispatch(
+          appActions.setError(
+            'Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in D, AUT, CH und LIE eintragen.'
+          )
         );
-        setTimeout(() => setError(null), 5000);
+        setTimeout(() => dispatch(appActions.setError('')), 5000);
       }
     };
 
@@ -114,15 +115,14 @@ const AutocompleteForm = () => {
     );
     if (duplicate) {
       setResult(null);
-      setError('Adresse gibt es schon');
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError('Adresse gibt es schon'));
+      setTimeout(() => dispatch(appActions.setError('')), 5000);
     } else {
       fetchData();
       setCheckMsgNewLoc('Bestätige noch die Daten - klicke auf das grüne Icon');
     }
 
-    setSearchAutocomplete('');
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
     setAutocompleteModal(false);
   };
 
@@ -151,8 +151,8 @@ const AutocompleteForm = () => {
         place_id: data.place_id ? data.place_id : '',
       });
     } else {
-      setError('Autocomplete kann gerade nicht geladen werden');
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError('Autocomplete kann gerade nicht geladen werden'));
+      setTimeout(() => dispatch(appActions.setError('')), 5000);
     }
   };
 

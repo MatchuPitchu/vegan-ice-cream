@@ -2,6 +2,7 @@ import { useContext, useState, useEffect, useRef } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { flavorActions } from '../store/flavorSlice';
+import { appActions } from '../store/appSlice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -34,7 +35,7 @@ import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
 
 // static data outside of React component to avoid redeclaring variable after each re-rendering
-const colorArr = [
+const COLORS = [
   'TRANSPARENT',
   '#b71c1c',
   '#f44336',
@@ -98,8 +99,6 @@ const Bewerten = () => {
   const { flavor, searchTermFlavor } = useAppSelector((state) => state.flavor);
 
   const {
-    setLoading,
-    setError,
     searchSelected,
     setSearchSelected,
     setSearchText,
@@ -170,7 +169,7 @@ const Bewerten = () => {
   };
 
   const onSubmit = async (data) => {
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
     const token = localStorage.getItem('token');
 
     // Create Pricing and add to database
@@ -205,13 +204,12 @@ const Bewerten = () => {
       const createdComment = await res.json();
 
       if (!createdComment) {
-        setError('Fehler beim Eintragen. Bitte versuch es später nochmal');
-        setTimeout(() => setError(null), 5000);
+        dispatch(appActions.setError('Fehler beim Eintragen. Bitte versuch es später nochmal'));
+        setTimeout(() => dispatch(appActions.setError('')), 5000);
       }
 
       // Create Flavor Function
       const createFlavor = (data, comment) => {
-        setLoading(true);
         const token = localStorage.getItem('token');
         try {
           const uploadFlavor = async (name, type_fruit, type_cream, primary, secondary) => {
@@ -246,8 +244,8 @@ const Bewerten = () => {
           uploadFlavor(name, type_fruit, type_cream, color1, color2);
         } catch (error) {
           console.log(error);
-          setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
-          setTimeout(() => setError(null), 5000);
+          dispatch(appActions.setError('Fehler beim Eintragen. Bitte versuch es später nochmal.'));
+          setTimeout(() => dispatch(appActions.setError('')), 5000);
         }
       };
 
@@ -267,11 +265,11 @@ const Bewerten = () => {
       // delay is needed, otherwise memory leak if state updates on unmounted component
       setTimeout(() => setSuccess(true), 500);
     } catch (error) {
-      setError(error);
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError(error.message));
+      setTimeout(() => dispatch(appActions.setError('')), 5000);
     }
 
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   return isAuth && user ? (
@@ -287,7 +285,7 @@ const Bewerten = () => {
       </IonHeader>
 
       <IonContent>
-        {!success ? (
+        {!success && (
           <div className='container mt-3'>
             <IonItem lines='none' className='mb-1 itemTextSmall'>
               <IonIcon
@@ -459,7 +457,7 @@ const Bewerten = () => {
                       {showColorPicker.field1 && (
                         <div className='colorPicker ion-padding'>
                           <CirclePicker
-                            colors={colorArr}
+                            colors={COLORS}
                             circleSpacing={15}
                             circleSize={25}
                             onChangeComplete={(e) => {
@@ -512,7 +510,7 @@ const Bewerten = () => {
                       {showColorPicker.field2 && (
                         <div className='colorPicker ion-padding'>
                           <CirclePicker
-                            colors={colorArr}
+                            colors={COLORS}
                             circleSpacing={15}
                             circleSize={25}
                             onChangeComplete={(e) => {
@@ -721,7 +719,8 @@ const Bewerten = () => {
               </IonButton>
             </form>
           </div>
-        ) : (
+        )}
+        {success && (
           <div className='container text-center'>
             <IonCard>
               <IonCardContent>

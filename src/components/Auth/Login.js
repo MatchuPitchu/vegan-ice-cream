@@ -1,10 +1,9 @@
-import { useContext } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { userActions } from '../../store/userSlice';
+import { appActions } from '../../store/appSlice';
 // Context
-import { Context } from '../../context/Context';
 import { useThemeContext } from '../../context/ThemeContext';
 import {
   IonContent,
@@ -23,8 +22,8 @@ import { lockClosed, logIn, refreshCircle } from 'ionicons/icons';
 const Login = () => {
   const dispatch = useAppDispatch();
   const { isAuth } = useAppSelector((state) => state.user);
+  const { error } = useAppSelector((state) => state.app);
 
-  const { error, setError } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const {
@@ -62,10 +61,12 @@ const Login = () => {
         dispatch(userActions.login());
       }
     } catch (error) {
-      setError(
-        'Prüfe, ob du das richtige Passwort eingetippt hast oder ob du deine Mailadresse bestätigt hast.'
+      dispatch(
+        appActions.setError(
+          'Prüfe, ob du das richtige Passwort eingetippt hast oder ob du deine Mailadresse bestätigt hast.'
+        )
       );
-      setTimeout(() => setError(null), 5000);
+      setTimeout(() => dispatch(appActions.setError('')), 5000);
       console.log(error.message);
     }
   };

@@ -1,3 +1,7 @@
+// Redux Store
+import { appActions } from '../store/appSlice';
+import { useAppDispatch } from '../store/hooks';
+// Context
 import { useContext } from 'react';
 import { Context } from '../context/Context';
 import { Controller, useForm } from 'react-hook-form';
@@ -15,9 +19,9 @@ import showError from './showError';
 import LoadingError from './LoadingError';
 
 const NewLocationForm = () => {
+  const dispatch = useAppDispatch();
+
   const {
-    setError,
-    setLoading,
     locations,
     setLocations,
     locationsMap,
@@ -50,7 +54,7 @@ const NewLocationForm = () => {
   } = useForm({ defaultValues });
 
   const onSubmit = async ({ name, street, number, zipcode, city, country, location_url }) => {
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
     try {
       const body = {
         name,
@@ -83,16 +87,16 @@ const NewLocationForm = () => {
       setLocationsMap([...locationsMap, newData]);
       setLocationsList([...locationsList, newData]);
       if (!newData) {
-        setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
-        setTimeout(() => setError(null), 5000);
+        dispatch(appActions.setError('Fehler beim Eintragen. Bitte versuch es später nochmal.'));
+        setTimeout(() => dispatch(appActions.setError('')), 5000);
       }
     } catch (error) {
-      setError(error);
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError(error.message));
+      setTimeout(() => dispatch(appActions.setError('')), 5000);
     }
     setNewLocation(null);
     searchViewport();
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   return (

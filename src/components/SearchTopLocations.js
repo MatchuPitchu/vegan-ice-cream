@@ -1,4 +1,8 @@
 import { useContext, useState } from 'react';
+// Redux Store
+import { useAppDispatch } from '../store/hooks';
+import { appActions } from '../store/appSlice';
+// Context
 import { Context } from '../context/Context';
 import { Controller, useForm } from 'react-hook-form';
 import Highlighter from 'react-highlight-words';
@@ -6,10 +10,10 @@ import { IonItem, IonSearchbar, isPlatform } from '@ionic/react';
 import LoadingError from './LoadingError';
 
 const Search = () => {
+  const dispatch = useAppDispatch();
+
   const {
     isDarkTheme,
-    setLoading,
-    setError,
     cities,
     setTopLocations,
     cityName,
@@ -25,7 +29,7 @@ const Search = () => {
   const { control, handleSubmit } = useForm();
 
   const onSubmit = async ({ city }) => {
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
     const cityCapitalized = city.replace(/^(.)|\s+(.)/g, (l) => l.toUpperCase());
     setCityName(cityCapitalized);
     try {
@@ -53,13 +57,13 @@ const Search = () => {
         setShowTopLoc(false);
       }
     } catch (error) {
-      setError('Ups, schief gelaufen. Versuche es später nochmal.');
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError('Ups, schief gelaufen. Versuche es später nochmal.'));
+      setTimeout(() => dispatch(appActions.setError('')), 5000);
     }
 
     setPredictions([]);
     setShowPredict(false);
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   const forAutocompleteChange = async (value) => {

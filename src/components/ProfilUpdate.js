@@ -4,6 +4,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
 import { showActions } from '../store/showSlice';
+import { appActions } from '../store/appSlice';
 // Context
 import { Context } from '../context/Context';
 import { IonInput, IonItem, IonLabel, IonButton, IonIcon } from '@ionic/react';
@@ -14,8 +15,9 @@ import LoadingError from './LoadingError';
 const ProfilUpdate = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
+  const { error } = useAppSelector((state) => state.app);
 
-  const { error, setError, setLoading, setSuccessMsg } = useContext(Context);
+  const { setSuccessMsg } = useContext(Context);
 
   const defaultValues = {
     name: '',
@@ -36,17 +38,18 @@ const ProfilUpdate = () => {
 
   const onSubmit = async (data) => {
     if (data.newPassword && data.newPassword !== data.repeatPassword) {
-      setError('Neues Password stimmt nicht mit Wiederholung überein.');
-      return setTimeout(() => setError(''), 5000);
+      dispatch(appActions.setError('Neues Password stimmt nicht mit Wiederholung überein.'));
+      return setTimeout(() => dispatch(appActions.setError('')), 5000);
     }
+    if (!data.password) return;
 
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
 
     try {
       const token = localStorage.getItem('token');
-      let body = {};
-      if (!data.password) return setLoading(false);
-      else body.password = data.password;
+      let body = {
+        password: data.password,
+      };
       if (data.name && data.name !== user.name) body.name = data.name;
       if (data.email && data.email !== user.email) body.email = data.email;
       if (data.city && data.city !== user.home_city.city) {
@@ -65,10 +68,12 @@ const ProfilUpdate = () => {
                 lng: results[0].geometry.location ? results[0].geometry.location.lng : null,
               },
             };
-        } catch (error) {
-          console.log(error);
-          setError('Da ist etwas schief gelaufen. Versuche es später nochmal.');
-          return setTimeout(() => setError(null), 5000);
+        } catch (err) {
+          console.log(err);
+          dispatch(
+            appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal.')
+          );
+          return setTimeout(() => dispatch(appActions.setError('')), 5000);
         }
       }
       if (data.newPassword) body.newPassword = data.newPassword;
@@ -108,15 +113,15 @@ const ProfilUpdate = () => {
           dispatch(userActions.logout());
         }
       } else {
-        setError('Du hast ein falsches Passwort eingetragen');
-        setTimeout(() => setError(null), 5000);
+        dispatch(appActions.setError('Du hast ein falsches Passwort eingetragen'));
+        setTimeout(() => dispatch(appActions.setError('')), 5000);
       }
     } catch (err) {
       console.log(err);
-      setError('Da ist etwas schief gelaufen. Versuche es später nochmal.');
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal.'));
+      setTimeout(() => dispatch(appActions.setError('')), 5000);
     }
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   return (
