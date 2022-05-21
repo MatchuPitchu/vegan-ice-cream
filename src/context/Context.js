@@ -1,6 +1,5 @@
 import { useState, useEffect, createContext } from 'react';
 import { skipToken } from '@reduxjs/toolkit/dist/query';
-import { createAnimation } from '@ionic/react';
 import { useVerifySessionQuery } from '../store/auth-api-slice';
 import { useGetAdditionalInfosFromUserQuery } from '../store/user-api-slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -366,59 +365,6 @@ const AppStateProvider = ({ children }) => {
     }
   };
 
-  // ToDo: Create custom Hook for animation logic
-
-  // animations modal
-  const enterAnimationBtm = (modal) => {
-    // darkened background
-    const backdropAnimation = createAnimation()
-      .addElement(modal.querySelector('ion-backdrop'))
-      .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
-
-    // animates modal
-    const wrapperAnimation = createAnimation()
-      .addElement(modal.querySelector('.modal-wrapper'))
-      .keyframes([
-        { offset: 0, opacity: '1', transform: 'translateY(300px)' },
-        { offset: 1, opacity: '1', transform: 'translateY(0)' },
-      ]);
-
-    return createAnimation()
-      .addElement(modal)
-      .easing('ease-out')
-      .duration(200)
-      .addAnimation([backdropAnimation, wrapperAnimation]);
-  };
-
-  const leaveAnimationBtm = (modal) => {
-    return enterAnimationBtm(modal).direction('reverse');
-  };
-
-  const enterAnimationLft = (modal) => {
-    // darkened background
-    const backdropAnimation = createAnimation()
-      .addElement(modal.querySelector('ion-backdrop'))
-      .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
-
-    // animates modal
-    const wrapperAnimation = createAnimation()
-      .addElement(modal.querySelector('.modal-wrapper'))
-      .keyframes([
-        { offset: 0, opacity: '1', transform: 'translateX(-300px)' },
-        { offset: 1, opacity: '1', transform: 'translateX(0)' },
-      ]);
-
-    return createAnimation()
-      .addElement(modal)
-      .easing('ease-out')
-      .duration(200)
-      .addAnimation([backdropAnimation, wrapperAnimation]);
-  };
-
-  const leaveAnimationLft = (modal) => {
-    return enterAnimationLft(modal).direction('reverse');
-  };
-
   return (
     <Context.Provider
       value={{
@@ -479,10 +425,6 @@ const AppStateProvider = ({ children }) => {
         checkMsgNewLocation,
         setCheckMsgNewLoc,
         loadMore,
-        enterAnimationBtm,
-        leaveAnimationBtm,
-        enterAnimationLft,
-        leaveAnimationLft,
         infoModal,
         setInfoModal,
         newLocModal,

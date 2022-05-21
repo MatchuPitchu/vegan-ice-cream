@@ -8,6 +8,7 @@ import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import { menuController } from '@ionic/core';
 import {
+  createAnimation,
   IonContent,
   IonIcon,
   IonItem,
@@ -38,10 +39,35 @@ const Menu: React.FC = () => {
   const { isAuth } = useAppSelector((state) => state.user);
   const { showProfil, showFeedback, showAbout } = useAppSelector((state) => state.show);
 
-  const { enterAnimationLft, leaveAnimationLft, successMsg } = useContext(Context);
+  const { successMsg } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const handleLogout = () => dispatch(userActions.logout());
+
+  const enterAnimationFromLeft = (modal: HTMLIonModalElement) => {
+    // darkened background
+    const backdropAnimation = createAnimation()
+      .addElement(modal.querySelector('ion-backdrop') as HTMLIonBackdropElement)
+      .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
+
+    // animates modal
+    const wrapperAnimation = createAnimation()
+      .addElement(modal.querySelector('.modal-wrapper') as HTMLIonModalElement)
+      .keyframes([
+        { offset: 0, opacity: '1', transform: 'translateX(-300px)' },
+        { offset: 1, opacity: '1', transform: 'translateX(0)' },
+      ]);
+
+    return createAnimation()
+      .addElement(modal)
+      .easing('ease-out')
+      .duration(200)
+      .addAnimation([backdropAnimation, wrapperAnimation]);
+  };
+
+  const leaveAnimationToLeft = (modal: HTMLIonModalElement) => {
+    return enterAnimationFromLeft(modal).direction('reverse');
+  };
 
   return (
     <IonPage>
@@ -109,8 +135,8 @@ const Menu: React.FC = () => {
               swipeToClose={true}
               backdropDismiss={true}
               onDidDismiss={() => dispatch(showActions.setShowProfil(false))}
-              enterAnimation={enterAnimationLft}
-              leaveAnimation={leaveAnimationLft}
+              enterAnimation={enterAnimationFromLeft}
+              leaveAnimation={leaveAnimationToLeft}
             >
               <Profil />
             </IonModal>
@@ -133,8 +159,8 @@ const Menu: React.FC = () => {
               swipeToClose={true}
               backdropDismiss={true}
               onDidDismiss={() => dispatch(showActions.setShowFeedback(false))}
-              enterAnimation={enterAnimationLft}
-              leaveAnimation={leaveAnimationLft}
+              enterAnimation={enterAnimationFromLeft}
+              leaveAnimation={leaveAnimationToLeft}
             >
               <Feedback />
             </IonModal>
@@ -157,8 +183,8 @@ const Menu: React.FC = () => {
               swipeToClose={true}
               backdropDismiss={true}
               onDidDismiss={() => dispatch(showActions.setShowAbout(false))}
-              enterAnimation={enterAnimationLft}
-              leaveAnimation={leaveAnimationLft}
+              enterAnimation={enterAnimationFromLeft}
+              leaveAnimation={leaveAnimationToLeft}
             >
               <About />
             </IonModal>
