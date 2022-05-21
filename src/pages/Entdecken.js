@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect, useCallback } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { appActions } from '../store/appSlice';
 import { mapActions } from '../store/mapSlice';
 import { selectedLocationActions } from '../store/selectedLocationSlice';
 // Context
@@ -41,6 +42,7 @@ const Entdecken = () => {
   const { user } = useAppSelector((state) => state.user);
   const { center, zoom } = useAppSelector((state) => state.map);
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
+  const { checkMsgNewLocation } = useAppSelector((state) => state.app);
 
   const {
     locations,
@@ -54,8 +56,6 @@ const Entdecken = () => {
     searchSelected,
     position,
     newLocation,
-    checkMsgNewLocation,
-    setCheckMsgNewLoc,
     setInfoModal,
     setNewLocation,
     setNewLocModal,
@@ -187,7 +187,7 @@ const Entdecken = () => {
                     setNewLocation(null);
                     setAutocompleteModal(true);
                     // set to empty string for case that user adds new loc icon but never clicks on icon
-                    setCheckMsgNewLoc('');
+                    dispatch(appActions.setCheckMsgNewLocation(''));
                   } else {
                     e.persist();
                     setPopoverShow({ show: true, event: e });
@@ -355,7 +355,7 @@ const Entdecken = () => {
                     title={`${newLocation.address.street} ${newLocation.address.number} ${newLocation.address.zipcode} ${newLocation.address.city}`}
                     cursor='pointer'
                     onClick={() => {
-                      setCheckMsgNewLoc('');
+                      dispatch(appActions.setCheckMsgNewLocation(''));
                       setNewLocModal(true);
                     }}
                     zIndex={3}

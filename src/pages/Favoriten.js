@@ -113,51 +113,50 @@ const Favoriten = () => {
         </IonCard>
 
         <IonReorderGroup disabled={reorderDeactivated} onIonItemReorder={doReorder}>
-          {user.favorite_locations &&
-            user.favorite_locations.map((loc, i) => (
-              <IonCard key={loc._id} className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
-                <IonButton className='favOrderNum'>{i + 1}.</IonButton>
+          {user?.favorite_locations?.map((loc, i) => (
+            <IonCard key={loc._id} className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
+              <IonButton className='favOrderNum'>{i + 1}.</IonButton>
 
-                {!reorderDeactivated && (
-                  <IonItem className='reorderItem' lines='none'>
-                    <IonReorder slot='end'>
-                      <IonIcon icon={reorderThreeOutline} />
-                    </IonReorder>
-                  </IonItem>
+              {!reorderDeactivated && (
+                <IonItem className='reorderItem' lines='none'>
+                  <IonReorder slot='end'>
+                    <IonIcon icon={reorderThreeOutline} />
+                  </IonReorder>
+                </IonItem>
+              )}
+
+              <LocInfoHeader loc={loc} />
+
+              <div className='px-3 py-2'>
+                {loc.location_rating_quality ? (
+                  <>
+                    <Ratings
+                      rating_vegan_offer={loc.location_rating_vegan_offer}
+                      rating_quality={loc.location_rating_quality}
+                      showNum={true}
+                    />
+                    <BtnInfoRating loc={loc} />
+                  </>
+                ) : (
+                  <IonButton
+                    className='more-infos mt-1'
+                    fill='solid'
+                    onClick={() => {
+                      setSearchSelected(loc);
+                      setOpenComments(false);
+                      dispatch(selectedLocationActions.resetSelectedLocation());
+                      setInfoModal(false);
+                    }}
+                    routerLink='/bewerten'
+                    routerDirection='forward'
+                  >
+                    <IonIcon icon={add} />
+                    Erste Bewertung schreiben
+                  </IonButton>
                 )}
-
-                <LocInfoHeader loc={loc} />
-
-                <div className='px-3 py-2'>
-                  {loc.location_rating_quality ? (
-                    <>
-                      <Ratings
-                        rating_vegan_offer={loc.location_rating_vegan_offer}
-                        rating_quality={loc.location_rating_quality}
-                        showNum={true}
-                      />
-                      <BtnInfoRating loc={loc} />
-                    </>
-                  ) : (
-                    <IonButton
-                      className='more-infos mt-1'
-                      fill='solid'
-                      onClick={() => {
-                        setSearchSelected(loc);
-                        setOpenComments(false);
-                        dispatch(selectedLocationActions.resetSelectedLocation());
-                        setInfoModal(false);
-                      }}
-                      routerLink='/bewerten'
-                      routerDirection='forward'
-                    >
-                      <IonIcon icon={add} />
-                      Erste Bewertung schreiben
-                    </IonButton>
-                  )}
-                </div>
-              </IonCard>
-            ))}
+              </div>
+            </IonCard>
+          ))}
         </IonReorderGroup>
 
         {selectedLocation ? <SelectedMarker /> : null}

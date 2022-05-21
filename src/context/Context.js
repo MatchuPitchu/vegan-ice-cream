@@ -26,14 +26,13 @@ const AppStateProvider = ({ children }) => {
   // const [selected, setSelected] = useState(null);
   // const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
-  const [activateMsg, setActivateMessage] = useState('Waiting');
-  const [checkMsgNewLocation, setCheckMsgNewLoc] = useState('');
-  const [alertUpdateFav, setAlertUpdateFav] = useState({
-    removeStatus: false,
-    addStatus: false,
-    location: {},
-  });
+  // const [successMsg, setSuccessMsg] = useState('');
+  // const [checkMsgNewLocation, setCheckMsgNewLoc] = useState('');
+  // const [alertUpdateFav, setAlertUpdateFav] = useState({
+  //   removeStatus: false,
+  //   addStatus: false,
+  //   location: {},
+  // });
 
   const [numNewLoc, setNumNewLoc] = useState();
   const [locations, setLocations] = useState([]);
@@ -262,78 +261,6 @@ const AppStateProvider = ({ children }) => {
     e.target.complete();
   };
 
-  const addFavLoc = async () => {
-    dispatch(appActions.setIsLoading(true));
-    const token = localStorage.getItem('token');
-    try {
-      const options = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          token,
-        },
-        // converts JS data into JSON string.
-        body: JSON.stringify({ add_location_id: alertUpdateFav.location._id }),
-        credentials: 'include',
-      };
-      const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/users/${user._id}/add-fav-loc`,
-        options
-      );
-      // Don't need sended back data of server
-      // const favorite_locations = await res.json();
-      const newFavLoc = [...user.favorite_locations, alertUpdateFav.location];
-      dispatch(userActions.updateUser({ favorite_locations: newFavLoc }));
-      // setUser((prev) => ({ ...prev, favorite_locations: newFavLoc }));
-      setAlertUpdateFav({
-        ...alertUpdateFav,
-        addStatus: false,
-        location: null,
-      });
-    } catch (err) {
-      console.log(err.message);
-      dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal'));
-      setTimeout(() => dispatch(appActions.setError('')), 5000);
-    }
-    dispatch(appActions.setIsLoading(false));
-  };
-
-  const removeFavLoc = async () => {
-    dispatch(appActions.setIsLoading(true));
-    const token = localStorage.getItem('token');
-    try {
-      const options = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          token,
-        },
-        // converts JS data into JSON string.
-        body: JSON.stringify({
-          remove_location_id: alertUpdateFav.location._id,
-        }),
-        credentials: 'include',
-      };
-      const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/users/${user._id}/remove-fav-loc`,
-        options
-      );
-      const favorite_locations = await res.json();
-      dispatch(userActions.updateUser({ favorite_locations }));
-      // setUser((prev) => ({ ...prev, favorite_locations }));
-      setAlertUpdateFav({
-        ...alertUpdateFav,
-        removeStatus: false,
-        location: null,
-      });
-    } catch (err) {
-      console.log(err.message);
-      dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal'));
-      setTimeout(() => dispatch(appActions.setError('')), 5000);
-    }
-    dispatch(appActions.setIsLoading(false));
-  };
-
   const createPricing = async (data) => {
     const token = localStorage.getItem('token');
     try {
@@ -368,10 +295,6 @@ const AppStateProvider = ({ children }) => {
   return (
     <Context.Provider
       value={{
-        activateMsg,
-        setActivateMessage,
-        successMsg,
-        setSuccessMsg,
         numNewLoc,
         setNumNewLoc,
         locations,
@@ -422,17 +345,11 @@ const AppStateProvider = ({ children }) => {
         setPosition,
         newLocation,
         setNewLocation,
-        checkMsgNewLocation,
-        setCheckMsgNewLoc,
         loadMore,
         infoModal,
         setInfoModal,
         newLocModal,
         setNewLocModal,
-        alertUpdateFav,
-        setAlertUpdateFav,
-        addFavLoc,
-        removeFavLoc,
         createPricing,
         openComments,
         setOpenComments,

@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Comment, Flavor, Location, User } from '../types';
+import { Comment, Flavor, IceCreamLocation, User } from '../types';
 
 interface ReturnTypeAdditionalInfosFromUser {
   comments_list: Comment[];
-  favorite_locations: Location[];
+  favorite_locations: IceCreamLocation[];
   favorite_flavors: Flavor[];
 }
 

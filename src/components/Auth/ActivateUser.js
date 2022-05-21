@@ -1,11 +1,10 @@
-import { useContext, useEffect } from 'react';
-import { Context } from '../../context/Context';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { IonContent, IonPage } from '@ionic/react';
 import Spinner from '../Spinner';
 
 const ActivateUser = () => {
-  const { activateMsg, setActivateMessage } = useContext(Context);
+  const [activateMessage, setActivateMessage] = useState('Waiting');
   const { id } = useParams();
 
   useEffect(() => {
@@ -29,18 +28,18 @@ const ActivateUser = () => {
       }
     };
 
-    if (activateMsg === 'Waiting') activateUser();
-  }, [activateMsg, id, setActivateMessage]);
+    if (activateMessage === 'Waiting') activateUser();
+  }, [id, activateMessage]);
 
-  return activateMsg === 'Waiting' ? (
+  return (
     <IonPage>
-      <IonContent>
-        <div className='text-center'>Einen Moment bitte ...</div>
-      </IonContent>
-    </IonPage>
-  ) : (
-    <IonPage>
-      <Spinner />
+      {activateMessage === 'Waiting' ? (
+        <IonContent>
+          <div className='text-center'>Einen Moment bitte ...</div>
+        </IonContent>
+      ) : (
+        <Spinner />
+      )}
     </IonPage>
   );
 };

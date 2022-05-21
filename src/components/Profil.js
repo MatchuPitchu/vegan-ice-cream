@@ -38,8 +38,9 @@ const Profil = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
   const { showUpdateProfil } = useAppSelector((state) => state.show);
+  const { successMsg } = useAppSelector((state) => state.app);
 
-  const { locations, successMsg } = useContext(Context);
+  const { locations } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [showComments, setShowComments] = useState(false);

@@ -38,7 +38,6 @@ const AutocompleteForm = () => {
     formattedAddress,
     setFormattedAddress,
     setNewLocation,
-    setCheckMsgNewLoc,
     setNewLocModal,
     enterAnimation,
     leaveAnimation,
@@ -119,7 +118,9 @@ const AutocompleteForm = () => {
       setTimeout(() => dispatch(appActions.setError('')), 5000);
     } else {
       fetchData();
-      setCheckMsgNewLoc('Bestätige noch die Daten - klicke auf das grüne Icon');
+      dispatch(
+        appActions.setCheckMsgNewLocation('Bestätige noch die Daten - klicke auf das grüne Icon')
+      );
     }
 
     dispatch(appActions.setIsLoading(false));

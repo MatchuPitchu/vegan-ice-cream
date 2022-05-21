@@ -26,7 +26,7 @@ import {
   iceCream,
 } from 'ionicons/icons';
 import CommentsBlock from './Comments/CommentsBlock';
-import BtnFavLoc from './Comments/BtnFavLoc';
+import ButtonFavoriteLocation from './Comments/ButtonFavoriteLocation';
 import FlavorsBlock from './Comments/FlavorsBlock';
 import Ratings from './Ratings';
 import LoadingError from './LoadingError';
@@ -92,7 +92,7 @@ const SelectedMarker = () => {
     >
       <IonItem lines='full'>
         <IonLabel>{selectedLocation.name}</IonLabel>
-        {user ? <BtnFavLoc selectedLoc={selectedLocation} /> : null}
+        {user ? <ButtonFavoriteLocation selectedLoc={selectedLocation} /> : null}
         <IonButton
           className='hoverTransparentBtn'
           fill='clear'

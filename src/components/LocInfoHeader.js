@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Context } from '../context/Context';
 import { IonAvatar, IonItem, IonLabel } from '@ionic/react';
-import BtnFavLoc from './Comments/BtnFavLoc';
+import ButtonFavoriteLocation from './Comments/ButtonFavoriteLocation';
 
 const LocInfoHeader = ({ loc }) => {
   const { user } = useContext(Context);
@@ -32,7 +32,7 @@ const LocInfoHeader = ({ loc }) => {
           </p>
         )}
       </IonLabel>
-      {user ? <BtnFavLoc selectedLoc={loc} /> : null}
+      {user ? <ButtonFavoriteLocation selectedLoc={loc} /> : null}
     </IonItem>
   );
 };

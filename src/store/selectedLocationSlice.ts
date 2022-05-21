@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Location } from '../types';
+import { IceCreamLocation } from '../types';
 
 interface SelectedLocationStateSlice {
-  selectedLocation: Location;
+  selectedLocation: IceCreamLocation;
 }
 
 const initialSelectedLocationState: SelectedLocationStateSlice = {

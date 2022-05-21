@@ -1,10 +1,8 @@
-import { useContext } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
 import { showActions } from '../store/showSlice';
 // Context
-import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import { menuController } from '@ionic/core';
 import {
@@ -38,8 +36,8 @@ const Menu: React.FC = () => {
   const dispatch = useAppDispatch();
   const { isAuth } = useAppSelector((state) => state.user);
   const { showProfil, showFeedback, showAbout } = useAppSelector((state) => state.show);
+  const { successMsg } = useAppSelector((state) => state.app);
 
-  const { successMsg } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const handleLogout = () => dispatch(userActions.logout());
