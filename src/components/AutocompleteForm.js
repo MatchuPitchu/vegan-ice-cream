@@ -17,10 +17,7 @@ import {
 } from '@ionic/react';
 import { checkbox, closeCircleOutline, informationCircleOutline } from 'ionicons/icons';
 import LoadingError from './LoadingError';
-
-const GOOGLE_API_URL = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
-// fetch results are restricted to countries DE, AT, CH, LI
-const GOOGLE_API_URL_CONFIG = `&components=country:DE|country:AT|country:CH|country:LI&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
+import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables';
 
 const AutocompleteForm = () => {
   const dispatch = useAppDispatch();
@@ -104,7 +101,7 @@ const AutocompleteForm = () => {
             'Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in D, AUT, CH und LIE eintragen.'
           )
         );
-        setTimeout(() => dispatch(appActions.setError('')), 5000);
+        setTimeout(() => dispatch(appActions.resetError()), 5000);
       }
     };
 
@@ -115,7 +112,7 @@ const AutocompleteForm = () => {
     if (duplicate) {
       setResult(null);
       dispatch(appActions.setError('Adresse gibt es schon'));
-      setTimeout(() => dispatch(appActions.setError('')), 5000);
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     } else {
       fetchData();
       dispatch(
@@ -153,7 +150,7 @@ const AutocompleteForm = () => {
       });
     } else {
       dispatch(appActions.setError('Autocomplete kann gerade nicht geladen werden'));
-      setTimeout(() => dispatch(appActions.setError('')), 5000);
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
   };
 

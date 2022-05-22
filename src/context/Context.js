@@ -47,8 +47,7 @@ const AppStateProvider = ({ children }) => {
   const [result, setResult] = useState(null);
   const [formattedAddress, setFormattedAddress] = useState(null);
   const [openComments, setOpenComments] = useState(false);
-  const [locPage, setLocPage] = useState(1);
-  const [num, setNum] = useState(4);
+
   const [all, setAll] = useState(false);
   const [disableInfScroll, setDisableInfScroll] = useState(false);
   const [searchText, setSearchText] = useState('');
@@ -253,14 +252,6 @@ const AppStateProvider = ({ children }) => {
     dispatch(mapActions.setViewport(latLngBounds));
   };
 
-  const loadMore = (e) => {
-    setLocPage((prev) => prev + 1);
-    const newArr = locations.slice(num, num + 4);
-    setNum((prev) => prev + 4);
-    setLocationsList([...locationsList, ...newArr]);
-    e.target.complete();
-  };
-
   const createPricing = async (data) => {
     const token = localStorage.getItem('token');
     try {
@@ -288,7 +279,7 @@ const AppStateProvider = ({ children }) => {
     } catch (err) {
       console.log(err.message);
       dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal'));
-      setTimeout(() => dispatch(appActions.setError('')), 5000);
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
   };
 
@@ -320,8 +311,6 @@ const AppStateProvider = ({ children }) => {
         setResult,
         formattedAddress,
         setFormattedAddress,
-        locPage,
-        setLocPage,
         all,
         setAll,
         disableInfScroll,
@@ -345,7 +334,6 @@ const AppStateProvider = ({ children }) => {
         setPosition,
         newLocation,
         setNewLocation,
-        loadMore,
         infoModal,
         setInfoModal,
         newLocModal,

@@ -121,7 +121,7 @@ const UpdateComment = ({ comment }) => {
     } catch (error) {
       console.log(error);
       dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal.'));
-      setTimeout(() => dispatch(appActions.setError('')), 5000);
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
     dispatch(showActions.setShowUpdateComment({ state: false, comment_id: '' }));
     dispatch(appActions.setIsLoading(false));

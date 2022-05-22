@@ -1,7 +1,7 @@
 // Redux Store
 import { useAppSelector } from '../store/hooks';
 // Context
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Context } from '../context/Context';
 import { IonCard, IonContent, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 import SelectedMarker from './SelectedMarker';
@@ -10,8 +10,17 @@ import ListResultComponent from './ListResultComponent';
 const ListMap = () => {
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
 
-  const { locationsList, listResults, disableInfScroll, loadMore, searchText } =
+  const { locationsList, locations, listResults, disableInfScroll, searchText } =
     useContext(Context);
+
+  const [numberOfLocationsInList, setNumberOfLocationsInList] = useState(4);
+
+  const loadMore = (e) => {
+    const newArr = locations.slice(numberOfLocationsInList, numberOfLocationsInList + 4);
+    setNumberOfLocationsInList((prev) => prev + 4);
+    setLocationsList([...locationsList, ...newArr]);
+    e.target.complete();
+  };
 
   return (
     <IonContent>

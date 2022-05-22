@@ -24,6 +24,9 @@ const appSlice = createSlice({
     setError: (state, { payload }: PayloadAction<AppStateSlice['error']>) => {
       state.error = payload;
     },
+    resetError: (state) => {
+      state.error = initialAppState.error;
+    },
     setSuccessMsg: (state, { payload }: PayloadAction<AppStateSlice['successMsg']>) => {
       state.successMsg = payload;
     },

@@ -3,7 +3,7 @@
 // generated when form is validated.
 const showError = (_fieldName, errors) => {
   let errorMsg;
-  if (errors.repeatPassword) errorMsg = errors.repeatPassword.message;
+  if (errors.repeatedPassword) errorMsg = errors.repeatedPassword.message;
 
   if (errors) {
     return (
@@ -14,7 +14,7 @@ const showError = (_fieldName, errors) => {
           {_fieldName === 'message' && 'Ops, das Textfeld ist noch leer'}
           {_fieldName === 'newPassword' && 'Bitte trage ein gültiges Passwort ein'}
           {_fieldName === 'password' && 'Bitte trage ein gültiges Passwort ein'}
-          {_fieldName === 'repeatPassword' && `${errorMsg} Schau, ob die Eingaben übereinstimmen`}
+          {_fieldName === 'repeatedPassword' && `${errorMsg} Schau, ob die Eingaben übereinstimmen`}
           {_fieldName === 'city' &&
             `Du kannst die Stadt jederzeit in deinem Profil ändern. Für deine Kartenansicht wird aber eine Angabe gebraucht`}
           {_fieldName === 'street' && 'Bitte ergänze die Straße'}

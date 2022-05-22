@@ -21,6 +21,7 @@ import { logIn } from 'ionicons/icons';
 import { citiesArray } from '../arrayCitiesGermany';
 import LoadingError from '../LoadingError';
 import InfoTextRegister from './InfoTextRegister';
+import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../../utils/variables';
 
 const Register = () => {
   const dispatch = useAppDispatch();
@@ -38,11 +39,8 @@ const Register = () => {
   const onSubmit = async (data) => {
     dispatch(appActions.setIsLoading(true));
     try {
-      const city = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(
-          data.city
-        )}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
-      );
+      const uri = encodeURI(data.city);
+      const city = await fetch(`${GOOGLE_API_URL}${uri}${GOOGLE_API_URL_CONFIG}`);
       const { results } = await city.json();
       const home_city = {
         city: data.city,
@@ -68,12 +66,12 @@ const Register = () => {
       if (errorMsg) {
         dispatch(appActions.setError('E-Mail ist bereits im System hinterlegt.'));
         dispatch(appActions.setIsLoading(false));
-        return setTimeout(() => dispatch(appActions.setError('')), 5000);
+        return setTimeout(() => dispatch(appActions.resetError()), 5000);
       }
       setEndRegister(true);
     } catch (error) {
       dispatch(appActions.setError(error.message));
-      setTimeout(() => dispatch(appActions.setError('')), 5000);
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
     reset();
     dispatch(appActions.setIsLoading(false));
@@ -211,7 +209,7 @@ const Register = () => {
               {showError('password', errors)}
 
               <IonItem lines='none' className='mb-1'>
-                <IonLabel position='stacked' htmlFor='repeatPassword'>
+                <IonLabel position='stacked' htmlFor='repeatedPassword'>
                   Passwort wiederholen
                 </IonLabel>
                 <Controller
@@ -220,13 +218,13 @@ const Register = () => {
                   render={({ field: { onChange, value } }) => (
                     <IonInput
                       type='password'
-                      id='repeatPassword'
+                      id='repeatedPassword'
                       inputmode='text'
                       value={value}
                       onIonChange={(e) => onChange(e.detail.value)}
                     />
                   )}
-                  name='repeatPassword'
+                  name='repeatedPassword'
                   rules={{
                     required: true,
                     pattern: {
@@ -237,7 +235,7 @@ const Register = () => {
                   }}
                 />
               </IonItem>
-              {showError('repeatPassword', errors)}
+              {showError('repeatedPassword', errors)}
               {error && <div className='alertMsg'>{error}</div>}
 
               <IonItem lines='none' className='mb-1'>

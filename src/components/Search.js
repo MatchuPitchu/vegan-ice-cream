@@ -8,6 +8,7 @@ import { Context } from '../context/Context';
 import Highlighter from 'react-highlight-words';
 import { IonIcon, IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/react';
 import { informationCircle } from 'ionicons/icons';
+import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables';
 
 const Search = () => {
   const dispatch = useAppDispatch();
@@ -32,14 +33,8 @@ const Search = () => {
     if (e.target.elements[0].value.length > 3 && segment === 'map') {
       dispatch(appActions.setIsLoading(true));
       try {
-        // fetch results are restricted to countries DE, AT, CH, LI
-        const res = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(
-            e.target.elements[0].value
-          )}&components=country:DE|country:AT|country:CH|country:LI&key=${
-            process.env.REACT_APP_GOOGLE_MAPS_API_KEY
-          }`
-        );
+        const uri = encodeURI(e.target.elements[0].value);
+        const res = await fetch(`${GOOGLE_API_URL}${uri}${GOOGLE_API_URL_CONFIG}`);
         const { results } = await res.json();
 
         if (results[0].geometry.location) {
@@ -58,7 +53,7 @@ const Search = () => {
             'Ups, schief gelaufen. Nur Orte in Deutschland, Österreich und der Schweiz möglich'
           )
         );
-        setTimeout(() => dispatch(appActions.setError('')), 5000);
+        setTimeout(() => dispatch(appActions.resetError()), 5000);
       }
       searchViewport();
       setPredictions([]);

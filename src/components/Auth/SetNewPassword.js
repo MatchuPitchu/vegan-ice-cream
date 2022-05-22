@@ -36,7 +36,7 @@ const SetNewPassword = () => {
   const { id } = useParams();
   const [endReset, setEndReset] = useState(false);
 
-  const onSubmit = async ({ email, password, repeatPassword }) => {
+  const onSubmit = async ({ email, password, repeatedPassword }) => {
     dispatch(appActions.setIsLoading(true));
     try {
       const options = {
@@ -48,7 +48,7 @@ const SetNewPassword = () => {
           resetToken: id,
           email,
           password,
-          repeatPassword,
+          repeatedPassword,
         }),
         credentials: 'include',
       };
@@ -57,7 +57,7 @@ const SetNewPassword = () => {
       if (message) setEndReset(true);
     } catch (error) {
       dispatch(appActions.setError(error.message));
-      setTimeout(() => dispatch(appActions.setError('')), 5000);
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
     dispatch(appActions.setIsLoading(false));
   };
@@ -126,7 +126,7 @@ const SetNewPassword = () => {
               {showError('password', errors)}
 
               <IonItem lines='none' className='mb-1'>
-                <IonLabel position='floating' htmlFor='repeatPassword'>
+                <IonLabel position='floating' htmlFor='repeatedPassword'>
                   Passwort wiederholen
                 </IonLabel>
                 <Controller
@@ -135,13 +135,13 @@ const SetNewPassword = () => {
                   render={({ field: { onChange, value } }) => (
                     <IonInput
                       type='password'
-                      id='repeatPassword'
+                      id='repeatedPassword'
                       inputmode='text'
                       value={value}
                       onIonChange={(e) => onChange(e.detail.value)}
                     />
                   )}
-                  name='repeatPassword'
+                  name='repeatedPassword'
                   rules={{
                     required: true,
                     pattern: {
@@ -152,7 +152,7 @@ const SetNewPassword = () => {
                   }}
                 />
               </IonItem>
-              {showError('repeatPassword', errors)}
+              {showError('repeatedPassword', errors)}
               {error && <div className='alertMsg'>{error}</div>}
 
               <IonButton className='my-3 confirm-btn' type='submit' expand='block'>

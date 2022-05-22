@@ -45,7 +45,7 @@ const ResetPassword = () => {
       const { message } = await res.json();
       if (!message) {
         dispatch(appActions.setError('Prüfe, ob du deine richtige Mailadresse eingetippt hast.'));
-        setTimeout(() => dispatch(appActions.setError('')), 5000);
+        setTimeout(() => dispatch(appActions.resetError()), 5000);
       } else {
         setSuccess(true);
       }

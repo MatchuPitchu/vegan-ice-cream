@@ -108,7 +108,7 @@ const ButtonFavoriteLocation = ({ selectedLoc }: ButtonFavoriteLocationProps) =>
     } catch (err: any) {
       console.log(err.message);
       dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal'));
-      setTimeout(() => dispatch(appActions.setError('')), 5000);
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
     dispatch(appActions.setIsLoading(false));
   };
@@ -145,7 +145,7 @@ const ButtonFavoriteLocation = ({ selectedLoc }: ButtonFavoriteLocationProps) =>
     } catch (err: any) {
       console.log(err.message);
       dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal'));
-      setTimeout(() => dispatch(appActions.setError('')), 5000);
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
     dispatch(appActions.setIsLoading(false));
   };

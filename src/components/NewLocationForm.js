@@ -88,11 +88,11 @@ const NewLocationForm = () => {
       setLocationsList([...locationsList, newData]);
       if (!newData) {
         dispatch(appActions.setError('Fehler beim Eintragen. Bitte versuch es später nochmal.'));
-        setTimeout(() => dispatch(appActions.setError('')), 5000);
+        setTimeout(() => dispatch(appActions.resetError()), 5000);
       }
     } catch (error) {
       dispatch(appActions.setError(error.message));
-      setTimeout(() => dispatch(appActions.setError('')), 5000);
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
     setNewLocation(null);
     searchViewport();

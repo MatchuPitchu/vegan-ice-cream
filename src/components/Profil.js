@@ -98,7 +98,7 @@ const Profil = () => {
             <IonItem color='background-color' className='borderBottom' lines='none'>
               <IonIcon icon={trailSign} slot='start' />
               <IonLabel>
-                {user.home_city.city ? user.home_city.city : 'keinen Ort angegeben'}
+                {user?.home_city?.city ? user.home_city.city : 'keinen Ort angegeben'}
               </IonLabel>
               <div>
                 <IonIcon

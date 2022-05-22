@@ -205,7 +205,7 @@ const Bewerten = () => {
 
       if (!createdComment) {
         dispatch(appActions.setError('Fehler beim Eintragen. Bitte versuch es später nochmal'));
-        setTimeout(() => dispatch(appActions.setError('')), 5000);
+        setTimeout(() => dispatch(appActions.resetError()), 5000);
       }
 
       // Create Flavor Function
@@ -245,7 +245,7 @@ const Bewerten = () => {
         } catch (error) {
           console.log(error);
           dispatch(appActions.setError('Fehler beim Eintragen. Bitte versuch es später nochmal.'));
-          setTimeout(() => dispatch(appActions.setError('')), 5000);
+          setTimeout(() => dispatch(appActions.resetError()), 5000);
         }
       };
 
@@ -266,7 +266,7 @@ const Bewerten = () => {
       setTimeout(() => setSuccess(true), 500);
     } catch (error) {
       dispatch(appActions.setError(error.message));
-      setTimeout(() => dispatch(appActions.setError('')), 5000);
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
 
     dispatch(appActions.setIsLoading(false));

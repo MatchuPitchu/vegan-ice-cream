@@ -58,7 +58,7 @@ const Search = () => {
       }
     } catch (error) {
       dispatch(appActions.setError('Ups, schief gelaufen. Versuche es später nochmal.'));
-      setTimeout(() => dispatch(appActions.setError('')), 5000);
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
 
     setPredictions([]);

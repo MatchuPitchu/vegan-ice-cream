@@ -76,13 +76,13 @@ const Entdecken = () => {
 
   useEffect(() => {
     // if user exists with indicated home city than first center + zoom
-    if (user?.home_city.geo.lat) {
-      dispatch(mapActions.setCenter({ lat: user.home_city.geo.lat, lng: user.home_city.geo.lng }));
-      dispatch(mapActions.setZoom(12));
-    } else {
-      dispatch(mapActions.setCenter({ lat: 52.524, lng: 13.41 }));
-      dispatch(mapActions.setZoom(12));
-    }
+    dispatch(
+      mapActions.setCenter({
+        lat: user?.home_city?.geo?.lat || 52.524,
+        lng: user?.home_city?.geo?.lng || 13.41,
+      })
+    );
+    dispatch(mapActions.setZoom(12));
   }, [user, dispatch]);
 
   useEffect(() => {
@@ -161,14 +161,14 @@ const Entdecken = () => {
                 className='zoomIcons'
                 fill='clear'
                 // Add customs zoom control https://developers.google.com/maps/documentation/javascript/examples/control-replacement#maps_control_replacement-javascript
-                onclick={() => map.setZoom(map.getZoom() + 1)}
+                onclick={() => dispatch(mapActions.incrementZoom())}
               >
                 <IonIcon icon={addCircleOutline} />
               </IonButton>
               <IonButton
                 className='zoom-control-out zoomIcons'
                 fill='clear'
-                onclick={() => map.setZoom(map.getZoom() - 1)}
+                onclick={() => dispatch(mapActions.decreaseZoom())}
               >
                 <IonIcon icon={removeCircleOutline} />
               </IonButton>
@@ -227,13 +227,15 @@ const Entdecken = () => {
                 title='Karte zentrieren: auf eigenen Standort (falls aktiviert), sonst auf Anfangspunkt'
                 onClick={() => {
                   // if no user position take users home city or general lat lng values + default zoom; otherwise recenter on users position
-                  !position
-                    ? map.setCenter({
-                        lat: (user && user.home_city.geo.lat) || 52.524,
-                        lng: (user && user.home_city.geo.lng) || 13.41,
-                      })
-                    : map.setCenter({ lat: position.lat, lng: position.lng });
-                  map.setZoom(user && user.home_city.geo.lat ? 12 : 9);
+                  position
+                    ? dispatch(mapActions.setCenter({ lat: position.lat, lng: position.lng }))
+                    : dispatch(
+                        mapActions.setCenter({
+                          lat: user?.home_city?.geo?.lat || 52.524,
+                          lng: user?.home_city?.geo?.lng || 13.41,
+                        })
+                      );
+                  dispatch(mapActions.setZoom(12));
                 }}
               >
                 <IonIcon icon={refreshCircle} />
@@ -321,7 +323,7 @@ const Entdecken = () => {
                 />
               ) : null}
 
-              {position ? (
+              {position && (
                 // Current position marker of user
                 <Marker
                   position={{ lat: position.lat, lng: position.lng }}
@@ -335,7 +337,7 @@ const Entdecken = () => {
                   }}
                   zIndex={1}
                 />
-              ) : null}
+              )}
 
               {newLocation ? (
                 // Marker for new ice cream location

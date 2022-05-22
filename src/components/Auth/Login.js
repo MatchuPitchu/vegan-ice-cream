@@ -66,7 +66,7 @@ const Login = () => {
           'Prüfe, ob du das richtige Passwort eingetippt hast oder ob du deine Mailadresse bestätigt hast.'
         )
       );
-      setTimeout(() => dispatch(appActions.setError('')), 5000);
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
       console.log(error.message);
     }
   };

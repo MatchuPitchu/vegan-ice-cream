@@ -44,7 +44,7 @@ const GeolocationBtn = () => {
     } catch (err) {
       console.log(err);
       dispatch(appActions.setError('Position kann nicht ermittelt werden. Berechtigung prüfen'));
-      setTimeout(() => dispatch(appActions.setError('')), 5000);
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
     dispatch(appActions.setIsLoading(false));
   };
