@@ -6,6 +6,7 @@ import { flavorSliceReducer } from './flavorSlice';
 import { showSliceReducer } from './showSlice';
 import { selectedLocationSliceReducer } from './selectedLocationSlice';
 import { commentSliceReducer } from './commentSlice';
+import { locationsSliceReducer } from './locationsSlice';
 import { authApi } from './auth-api-slice';
 import { userApi } from './user-api-slice';
 
@@ -17,6 +18,7 @@ const reducers = combineReducers({
   show: showSliceReducer,
   selectedLocation: selectedLocationSliceReducer,
   comment: commentSliceReducer,
+  locations: locationsSliceReducer,
   [authApi.reducerPath]: authApi.reducer, // Add generated reducer as a specific top-level slice
   [userApi.reducerPath]: userApi.reducer,
 });

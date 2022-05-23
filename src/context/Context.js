@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
 import { mapActions } from '../store/mapSlice';
 import { appActions } from '../store/appSlice';
+import { locationsActions } from '../store/locationsSlice';
 
 export const Context = createContext();
 
@@ -33,11 +34,11 @@ const AppStateProvider = ({ children }) => {
   //   addStatus: false,
   //   location: {},
   // });
+  // const [locationsList, setLocationsList] = useState([]);
 
   const [numNewLoc, setNumNewLoc] = useState();
   const [locations, setLocations] = useState([]);
   const [locationsMap, setLocationsMap] = useState([]);
-  const [locationsList, setLocationsList] = useState([]);
   const [topLocations, setTopLocations] = useState([]);
   const [cities, setCities] = useState([]);
   const [listResults, setListResults] = useState([]);
@@ -67,6 +68,7 @@ const AppStateProvider = ({ children }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { viewport } = useAppSelector((state) => state.map);
+  const { locationsList } = useAppSelector((state) => state.locations);
 
   // console.log(viewport);
   // How to use the hook: https://redux-toolkit.js.org/tutorials/rtk-query#create-an-api-service
@@ -163,8 +165,8 @@ const AppStateProvider = ({ children }) => {
 
         // set first elements for locations segment 'list' when mounting page
         if (locationsList.length < 4) {
-          const newArr = data.slice(0, 4);
-          setLocationsList(newArr);
+          const firstLocations = data.slice(0, 4);
+          dispatch(locationsActions.addToLocationsList(firstLocations));
         }
       } catch (err) {
         console.log(err.message);
@@ -181,7 +183,7 @@ const AppStateProvider = ({ children }) => {
       const newArr1 = locations.filter((loc) => loc._id !== updatedLoc._id);
       setLocations([...newArr1, updatedLoc]);
       const newArr2 = locationsList.filter((loc) => loc._id !== updatedLoc._id);
-      setLocationsList([...newArr2, updatedLoc]);
+      dispatch(locationsActions.setLocationsList([...newArr2, updatedLoc]));
     } catch (err) {
       console.log(err.message);
     }
@@ -275,9 +277,8 @@ const AppStateProvider = ({ children }) => {
       const newArr1 = locations.filter((loc) => loc._id !== updatedLoc._id);
       setLocations([...newArr1, updatedLoc]);
       const newArr2 = locationsList.filter((loc) => loc._id !== updatedLoc._id);
-      setLocationsList([...newArr2, updatedLoc]);
+      dispatch(locationsActions.setLocationsList([...newArr2, updatedLoc]));
     } catch (err) {
-      console.log(err.message);
       dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal'));
       setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
@@ -292,8 +293,6 @@ const AppStateProvider = ({ children }) => {
         setLocations,
         locationsMap,
         setLocationsMap,
-        locationsList,
-        setLocationsList,
         topLocations,
         setTopLocations,
         fetchUpdatedLoc,

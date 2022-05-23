@@ -1,39 +1,42 @@
 // Redux Store
-import { useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { locationsActions } from '../store/locationsSlice';
 // Context
 import { useContext, useState } from 'react';
 import { Context } from '../context/Context';
 import { IonCard, IonContent, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 import SelectedMarker from './SelectedMarker';
 import ListResultComponent from './ListResultComponent';
+import ListFilters from './ListFilters';
 
 const ListMap = () => {
+  const dispatch = useAppDispatch();
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
+  const { locationsList } = useAppSelector((state) => state.locations);
 
-  const { locationsList, locations, listResults, disableInfScroll, searchText } =
-    useContext(Context);
+  const { locations, listResults, disableInfScroll, searchText } = useContext(Context);
 
   const [numberOfLocationsInList, setNumberOfLocationsInList] = useState(4);
 
   const loadMore = (e) => {
     const newArr = locations.slice(numberOfLocationsInList, numberOfLocationsInList + 4);
     setNumberOfLocationsInList((prev) => prev + 4);
-    setLocationsList([...locationsList, ...newArr]);
+    dispatch(locationsActions.addToLocationsList(newArr));
     e.target.complete();
   };
 
   return (
     <IonContent>
-      {/* <ListFilters /> */}
+      <ListFilters />
 
       {/* if searchbar is used */}
       {listResults.length
-        ? listResults.map((loc) => <ListResultComponent key={loc._id} loc={loc} />)
+        ? listResults?.map((loc) => <ListResultComponent key={loc._id} loc={loc} />)
         : null}
 
       {/* if searchbar empty and so listResults array is empty */}
-      {!searchText && !listResults.length && locationsList
-        ? locationsList.map((loc) => <ListResultComponent key={loc._id} loc={loc} />)
+      {!searchText && !listResults.length
+        ? locationsList?.map((loc) => <ListResultComponent key={loc._id} loc={loc} />)
         : null}
 
       {/* if smth was typed into searchbar but no results were found  */}

@@ -68,6 +68,10 @@ const updateFavoritesStateReducer = (
   }
 };
 
+const isLocation = (locations: IceCreamLocation[] | string[]): locations is IceCreamLocation[] => {
+  return (locations as IceCreamLocation[])[0].name !== undefined;
+};
+
 const ButtonFavoriteLocation = ({ selectedLoc }: ButtonFavoriteLocationProps) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
@@ -152,13 +156,9 @@ const ButtonFavoriteLocation = ({ selectedLoc }: ButtonFavoriteLocationProps) =>
 
   if (!user) return;
 
-  const findLocation = user.favorite_locations.find((loc: IceCreamLocation) => {
-    if (typeof loc === 'string') {
-      return false;
-    }
-    if (loc._id) return loc._id === selectedLoc._id;
-    return false;
-  });
+  const findLocation =
+    isLocation(user.favorite_locations) &&
+    user.favorite_locations.find((location: IceCreamLocation) => location._id === selectedLoc._id);
 
   return (
     <>

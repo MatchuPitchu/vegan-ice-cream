@@ -56,7 +56,7 @@ export interface User {
   confirmed: boolean;
   home_city: Pick<Address, 'city' | 'geo'>;
   comments_list: Comment[] | string[];
-  favorite_locations: IceCreamLocation[]; // TODO: adjust e.g. with new property that fetched data could be first only string[] -> Union Type causes problems with array methods (find() ...) later
+  favorite_locations: IceCreamLocation[] | string[];
   favorite_flavors: Flavor[] | string[];
   needs_reset: boolean;
   num_loc_last_visit: number | null;

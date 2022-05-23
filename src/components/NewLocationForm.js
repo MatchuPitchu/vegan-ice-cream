@@ -1,6 +1,7 @@
 // Redux Store
 import { appActions } from '../store/appSlice';
 import { useAppDispatch } from '../store/hooks';
+import { locationsActions } from '../store/locationsSlice';
 // Context
 import { useContext } from 'react';
 import { Context } from '../context/Context';
@@ -26,8 +27,6 @@ const NewLocationForm = () => {
     setLocations,
     locationsMap,
     setLocationsMap,
-    locationsList,
-    setLocationsList,
     newLocation,
     setNewLocation,
     newLocModal,
@@ -85,7 +84,7 @@ const NewLocationForm = () => {
       const newData = await res.json();
       setLocations([...locations, newData]);
       setLocationsMap([...locationsMap, newData]);
-      setLocationsList([...locationsList, newData]);
+      dispatch(locationsActions.addToLocationsList(newData));
       if (!newData) {
         dispatch(appActions.setError('Fehler beim Eintragen. Bitte versuch es später nochmal.'));
         setTimeout(() => dispatch(appActions.resetError()), 5000);

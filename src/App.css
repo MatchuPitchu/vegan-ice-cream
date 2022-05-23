@@ -954,10 +954,8 @@ mark {
 
 /*********** Filter *************/
 .labelFilter {
-  --background: var(--ion-card-background);
   color: var(--ion-text-color);
   font-size: 0.8rem;
-  line-height: 1rem;
 }
 
 /*********** Modal Selected Location *************/

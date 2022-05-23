@@ -1,36 +1,130 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../types';
+import { IceCreamLocation } from '../types';
 
-interface UserStateSlice {
-  isAuth: boolean;
-  user: User | null;
+export enum SortType {
+  VEGAN_OFFER = 'vegan_offer',
+  QUALITY = 'quality',
+  CITY = 'city',
+  STORE = 'store',
 }
 
-const initialAuthState: UserStateSlice = {
-  isAuth: false,
-  user: null,
+const sortNumbersAsc = (type: SortType) => (a: IceCreamLocation, b: IceCreamLocation) => {
+  if (
+    type === SortType.VEGAN_OFFER &&
+    b.location_rating_vegan_offer &&
+    a.location_rating_vegan_offer
+  ) {
+    return a.location_rating_vegan_offer - b.location_rating_vegan_offer;
+  }
+
+  if (type === SortType.QUALITY && b.location_rating_quality && a.location_rating_quality) {
+    return a.location_rating_quality - b.location_rating_quality;
+  }
+
+  return 0;
 };
 
-const userSlice = createSlice({
-  name: 'user',
-  initialState: initialAuthState,
+const sortNumbersDesc = (type: SortType) => (a: IceCreamLocation, b: IceCreamLocation) => {
+  if (
+    type === SortType.VEGAN_OFFER &&
+    b.location_rating_vegan_offer &&
+    a.location_rating_vegan_offer
+  ) {
+    return b.location_rating_vegan_offer - a.location_rating_vegan_offer;
+  }
+
+  if (type === SortType.QUALITY && b.location_rating_quality && a.location_rating_quality) {
+    return b.location_rating_quality - a.location_rating_quality;
+  }
+
+  return 0;
+};
+
+const sortAtoZ = (type: SortType) => (a: IceCreamLocation, b: IceCreamLocation) => {
+  let nameA, nameB;
+  if (type === SortType.CITY) {
+    nameA = a.address.city.toUpperCase();
+    nameB = b.address.city.toUpperCase();
+  }
+
+  if (type === SortType.STORE) {
+    nameA = a.name.toUpperCase();
+    nameB = b.name.toUpperCase();
+  }
+
+  if (!nameA || !nameB) return 0;
+
+  if (nameA < nameB) return -1;
+  if (nameA > nameB) return 1;
+  return 0;
+};
+
+const sortZtoA = (type: SortType) => (a: IceCreamLocation, b: IceCreamLocation) => {
+  let nameA, nameB;
+  if (type === SortType.CITY) {
+    nameA = a.address.city.toUpperCase();
+    nameB = b.address.city.toUpperCase();
+  }
+
+  if (type === SortType.STORE) {
+    nameA = a.name.toUpperCase();
+    nameB = b.name.toUpperCase();
+  }
+
+  if (!nameA || !nameB) return 0;
+
+  if (nameA > nameB) return -1;
+  if (nameA < nameB) return 1;
+  return 0;
+};
+
+interface LocationsStateSlice {
+  locationsList: IceCreamLocation[];
+}
+
+const initialLocationsState: LocationsStateSlice = {
+  locationsList: [],
+};
+
+const locationsSlice = createSlice({
+  name: 'locations',
+  initialState: initialLocationsState,
   reducers: {
-    login: (state) => {
-      state.isAuth = true;
+    addToLocationsList: (
+      state,
+      { payload }: PayloadAction<LocationsStateSlice['locationsList']>
+    ) => {
+      state.locationsList = [...state.locationsList, ...payload];
     },
-    logout: (state) => {
-      localStorage.removeItem('token');
-      state.isAuth = false;
-      state.user = null;
+    setLocationsList: (state, { payload }: PayloadAction<LocationsStateSlice['locationsList']>) => {
+      state.locationsList = payload;
     },
-    updateUser: (state, { payload }: PayloadAction<Partial<User>>) => {
-      state.user = {
-        ...state.user,
-        ...payload,
-      } as User;
+    sortLocationsListVeganOffer: (state, { payload }: { payload: 'asc' | 'desc' }) => {
+      state.locationsList =
+        payload === 'asc'
+          ? state.locationsList.sort(sortNumbersAsc(SortType.VEGAN_OFFER))
+          : state.locationsList.sort(sortNumbersDesc(SortType.VEGAN_OFFER));
+    },
+    sortLocationsListQuality: (state, { payload }: { payload: 'asc' | 'desc' }) => {
+      state.locationsList =
+        payload === 'asc'
+          ? state.locationsList.sort(sortNumbersAsc(SortType.QUALITY))
+          : state.locationsList.sort(sortNumbersDesc(SortType.QUALITY));
+    },
+    sortLocationsListCity: (state, { payload }: { payload: 'asc' | 'desc' }) => {
+      state.locationsList =
+        payload === 'asc'
+          ? state.locationsList.sort(sortAtoZ(SortType.CITY))
+          : state.locationsList.sort(sortZtoA(SortType.CITY));
+    },
+    sortLocationsListStore: (state, { payload }: { payload: 'asc' | 'desc' }) => {
+      state.locationsList =
+        payload === 'asc'
+          ? state.locationsList.sort(sortAtoZ(SortType.STORE))
+          : state.locationsList.sort(sortZtoA(SortType.STORE));
     },
   },
 });
 
-export const userActions = userSlice.actions;
-export const userSliceReducer = userSlice.reducer;
+export const locationsActions = locationsSlice.actions;
+export const locationsSliceReducer = locationsSlice.reducer;
