@@ -1,8 +1,9 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 // Redux Store
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { mapActions } from '../store/mapSlice';
 import { appActions } from '../store/appSlice';
+import { locationsActions } from '../store/locationsSlice';
 // Context
 import { Context } from '../context/Context';
 import { Autocomplete } from '@react-google-maps/api';
@@ -21,20 +22,19 @@ import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables';
 
 const AutocompleteForm = () => {
   const dispatch = useAppDispatch();
+  const { locations } = useAppSelector((state) => state.locations);
+
+  const [result, setResult] = useState(null);
 
   const {
-    locations,
     autocomplete,
     setAutocomplete,
     autocompleteModal,
     setAutocompleteModal,
     searchAutocomplete,
     setSearchAutocomplete,
-    result,
-    setResult,
     formattedAddress,
     setFormattedAddress,
-    setNewLocation,
     setNewLocModal,
     enterAnimation,
     leaveAnimation,
@@ -51,39 +51,22 @@ const AutocompleteForm = () => {
         const res = await fetch(`${GOOGLE_API_URL}${uri}${GOOGLE_API_URL_CONFIG}`);
         const { results } = await res.json();
 
+        console.log(results[0].geometry.location);
+
         if (result.address.number) {
-          setNewLocation({
-            ...result,
-            address: {
-              ...result.address,
-              geo: {
-                lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
-                lng: results[0].geometry.location ? results[0].geometry.location.lng : null,
-              },
-            },
-          });
+          dispatch(
+            locationsActions.setNewLocationAutocomplete({
+              autocomplete: result,
+              geo: results[0].geometry.location,
+            })
+          );
         } else {
-          let address = {};
-          results[0].address_components &&
-            results[0].address_components.forEach((e) =>
-              e.types.forEach((type) => Object.assign(address, { [type]: e.long_name }))
-            );
-          setNewLocation({
-            name: '',
-            address: {
-              street: address.route ? address.route : '',
-              number: address.street_number ? parseInt(address.street_number) : '',
-              zipcode: address.postal_code ? address.postal_code : '',
-              city: address.locality ? address.locality : '',
-              country: address.country ? address.country : '',
-              geo: {
-                lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
-                lng: results[0].geometry.location ? results[0].geometry.location.lng : null,
-              },
-            },
-            location_url: '',
-            place_id: address.place_id ? address.place_id : '',
-          });
+          dispatch(
+            locationsActions.setNewLocationSearchbar({
+              address_components: results[0].address_components,
+              geo: results[0].geometry.location,
+            })
+          );
         }
 
         if (results[0].geometry.location) {
@@ -93,7 +76,7 @@ const AutocompleteForm = () => {
               lng: results[0].geometry.location.lng,
             })
           );
-          dispatch(mapActions.setZoom(18));
+          dispatch(mapActions.setZoom(15));
         }
       } catch (error) {
         dispatch(
@@ -174,7 +157,7 @@ const AutocompleteForm = () => {
           fill='clear'
           onClick={() => {
             setAutocompleteModal(false);
-            setNewLocation(null);
+            dispatch(locationsActions.resetNewLocation());
           }}
         >
           <IonIcon icon={closeCircleOutline} />

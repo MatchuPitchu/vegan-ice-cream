@@ -35,22 +35,21 @@ const AppStateProvider = ({ children }) => {
   //   location: {},
   // });
   // const [locationsList, setLocationsList] = useState([]);
+  // const [locations, setLocations] = useState([]);
+  // const [locationsMap, setLocationsMap] = useState([]);
+  // const [newLocation, setNewLocation] = useState(null);
 
   const [numNewLoc, setNumNewLoc] = useState();
-  const [locations, setLocations] = useState([]);
-  const [locationsMap, setLocationsMap] = useState([]);
   const [topLocations, setTopLocations] = useState([]);
   const [cities, setCities] = useState([]);
   const [listResults, setListResults] = useState([]);
   const [autocomplete, setAutocomplete] = useState(null);
   const [autocompleteModal, setAutocompleteModal] = useState(false);
   const [searchAutocomplete, setSearchAutocomplete] = useState('');
-  const [result, setResult] = useState(null);
   const [formattedAddress, setFormattedAddress] = useState(null);
   const [openComments, setOpenComments] = useState(false);
 
   const [all, setAll] = useState(false);
-  const [disableInfScroll, setDisableInfScroll] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [cityName, setCityName] = useState('');
   const [noTopLoc, setNoTopLoc] = useState(false);
@@ -59,7 +58,6 @@ const AppStateProvider = ({ children }) => {
   const [map, setMap] = useState(null);
   const [searchSelected, setSearchSelected] = useState(null);
   const [position, setPosition] = useState();
-  const [newLocation, setNewLocation] = useState(null);
   const [infoModal, setInfoModal] = useState(false);
   const [newLocModal, setNewLocModal] = useState(false);
   const [newComment, setNewComment] = useState(null);
@@ -68,9 +66,8 @@ const AppStateProvider = ({ children }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { viewport } = useAppSelector((state) => state.map);
-  const { locationsList } = useAppSelector((state) => state.locations);
+  const { locations } = useAppSelector((state) => state.locations);
 
-  // console.log(viewport);
   // How to use the hook: https://redux-toolkit.js.org/tutorials/rtk-query#create-an-api-service
   // const {
   //   data,
@@ -161,29 +158,19 @@ const AppStateProvider = ({ children }) => {
       try {
         const res = await fetch(`${process.env.REACT_APP_API_URL}/locations`);
         const data = await res.json();
-        setLocations(data);
-
-        // set first elements for locations segment 'list' when mounting page
-        if (locationsList.length < 4) {
-          const firstLocations = data.slice(0, 4);
-          dispatch(locationsActions.addToLocationsList(firstLocations));
-        }
+        dispatch(locationsActions.setLocations(data));
       } catch (err) {
         console.log(err.message);
       }
     };
     fetchLoc();
-  }, []);
+  }, [dispatch]);
 
   const fetchUpdatedLoc = async (loc) => {
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/${loc._id}`);
       const updatedLoc = await res.json();
-      // filter out updated loc of these two locations arrays, than via spread operator add updatedLoc to arrays
-      const newArr1 = locations.filter((loc) => loc._id !== updatedLoc._id);
-      setLocations([...newArr1, updatedLoc]);
-      const newArr2 = locationsList.filter((loc) => loc._id !== updatedLoc._id);
-      dispatch(locationsActions.setLocationsList([...newArr2, updatedLoc]));
+      dispatch(locationsActions.updateOneLocation(updatedLoc));
     } catch (err) {
       console.log(err.message);
     }
@@ -231,25 +218,20 @@ const AppStateProvider = ({ children }) => {
           options
         );
         const data = await res.json();
-        setLocationsMap(data);
+        dispatch(locationsActions.setLocationsVisibleOnMap(data));
       } catch (err) {
         console.log(err.message);
       }
     };
     if (viewport) updateLocInViewport();
-  }, [viewport, searchSelected]);
+  }, [viewport, searchSelected, dispatch]);
 
   const searchViewport = () => {
-    let southLat = map.getBounds().getSouthWest().lat();
-    let westLng = map.getBounds().getSouthWest().lng();
-    let northLat = map.getBounds().getNorthEast().lat();
-    let eastLng = map.getBounds().getNorthEast().lng();
-
     const latLngBounds = {
-      southLat,
-      westLng,
-      northLat,
-      eastLng,
+      southLat: map.getBounds().getSouthWest().lat(),
+      westLng: map.getBounds().getSouthWest().lng(),
+      northLat: map.getBounds().getNorthEast().lat(),
+      eastLng: map.getBounds().getNorthEast().lng(),
     };
     dispatch(mapActions.setViewport(latLngBounds));
   };
@@ -274,10 +256,7 @@ const AppStateProvider = ({ children }) => {
         options
       );
       const updatedLoc = await res.json();
-      const newArr1 = locations.filter((loc) => loc._id !== updatedLoc._id);
-      setLocations([...newArr1, updatedLoc]);
-      const newArr2 = locationsList.filter((loc) => loc._id !== updatedLoc._id);
-      dispatch(locationsActions.setLocationsList([...newArr2, updatedLoc]));
+      dispatch(locationsActions.updateOneLocation(updatedLoc));
     } catch (err) {
       dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal'));
       setTimeout(() => dispatch(appActions.resetError()), 5000);
@@ -289,10 +268,6 @@ const AppStateProvider = ({ children }) => {
       value={{
         numNewLoc,
         setNumNewLoc,
-        locations,
-        setLocations,
-        locationsMap,
-        setLocationsMap,
         topLocations,
         setTopLocations,
         fetchUpdatedLoc,
@@ -306,14 +281,10 @@ const AppStateProvider = ({ children }) => {
         setAutocompleteModal,
         searchAutocomplete,
         setSearchAutocomplete,
-        result,
-        setResult,
         formattedAddress,
         setFormattedAddress,
         all,
         setAll,
-        disableInfScroll,
-        setDisableInfScroll,
         searchText,
         setSearchText,
         cityName,
@@ -331,8 +302,6 @@ const AppStateProvider = ({ children }) => {
         setSearchSelected,
         position,
         setPosition,
-        newLocation,
-        setNewLocation,
         infoModal,
         setInfoModal,
         newLocModal,

@@ -1,12 +1,104 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IceCreamLocation } from '../types';
 
+interface GeoCoordinates {
+  lat?: number;
+  lng?: number;
+}
+
+type GoogleAddressResults = [
+  {
+    long_name: string;
+    short_name: string;
+    types: string[];
+  },
+  {
+    long_name: string;
+    short_name: string;
+    types: string[];
+  },
+  {
+    long_name: string;
+    short_name: string;
+    types: string[];
+  },
+  {
+    long_name: string;
+    short_name: string;
+    types: string[];
+  },
+  {
+    long_name: string;
+    short_name: string;
+    types: string[];
+  },
+  {
+    long_name: string;
+    short_name: string;
+    types: string[];
+  },
+  {
+    long_name: string;
+    short_name: string;
+    types: string[];
+  },
+  {
+    long_name: string;
+    short_name: string;
+    types: string[];
+  }
+];
+interface GoogleAddressResultsConverted {
+  street_number?: string;
+  route?: string;
+  political?: string;
+  sublocality?: string;
+  sublocality_level_1?: string;
+  locality?: string;
+  administrative_area_level_3?: string;
+  administrative_area_level_1?: string;
+  country?: string;
+  postal_code?: string;
+  place_id?: string;
+}
+
 export enum SortType {
   VEGAN_OFFER = 'vegan_offer',
   QUALITY = 'quality',
   CITY = 'city',
   STORE = 'store',
 }
+
+type SortDirection = 'asc' | 'desc';
+
+interface NewLocationType {
+  name: string;
+  address: {
+    street: string;
+    number: number | null;
+    zipcode: string;
+    city: string;
+    country: string;
+    geo: {
+      lat: number | null;
+      lng: number | null;
+    };
+  };
+  location_url: string;
+  place_id: string;
+}
+
+interface LocationsStateSlice {
+  locations: IceCreamLocation[];
+  newLocation: NewLocationType | null;
+  locationsVisibleOnMap: IceCreamLocation[];
+}
+
+const initialLocationsState: LocationsStateSlice = {
+  locations: [],
+  newLocation: null,
+  locationsVisibleOnMap: [],
+};
 
 const sortNumbersAsc = (type: SortType) => (a: IceCreamLocation, b: IceCreamLocation) => {
   if (
@@ -78,50 +170,108 @@ const sortZtoA = (type: SortType) => (a: IceCreamLocation, b: IceCreamLocation) 
   return 0;
 };
 
-interface LocationsStateSlice {
-  locationsList: IceCreamLocation[];
-}
-
-const initialLocationsState: LocationsStateSlice = {
-  locationsList: [],
-};
-
 const locationsSlice = createSlice({
   name: 'locations',
   initialState: initialLocationsState,
   reducers: {
-    addToLocationsList: (
+    setLocations: (state, { payload }: PayloadAction<IceCreamLocation[]>) => {
+      state.locations = payload;
+    },
+    addToLocations: (state, { payload }: PayloadAction<IceCreamLocation[]>) => {
+      state.locations = [...state.locations, ...payload];
+    },
+    updateOneLocation: (state, { payload }: PayloadAction<IceCreamLocation>) => {
+      const updatedLocationIndex = state.locations.findIndex(
+        (location) => location._id === payload._id
+      );
+      state.locations[updatedLocationIndex] = payload;
+    },
+    sortLocationsVeganOffer: (state, { payload }: { payload: SortDirection }) => {
+      state.locations =
+        payload === 'asc'
+          ? state.locations.sort(sortNumbersAsc(SortType.VEGAN_OFFER))
+          : state.locations.sort(sortNumbersDesc(SortType.VEGAN_OFFER));
+    },
+    sortLocationsQuality: (state, { payload }: { payload: SortDirection }) => {
+      state.locations =
+        payload === 'asc'
+          ? state.locations.sort(sortNumbersAsc(SortType.QUALITY))
+          : state.locations.sort(sortNumbersDesc(SortType.QUALITY));
+    },
+    sortLocationsCity: (state, { payload }: { payload: SortDirection }) => {
+      state.locations =
+        payload === 'asc'
+          ? state.locations.sort(sortAtoZ(SortType.CITY))
+          : state.locations.sort(sortZtoA(SortType.CITY));
+    },
+    sortLocationsStore: (state, { payload }: { payload: SortDirection }) => {
+      state.locations =
+        payload === 'asc'
+          ? state.locations.sort(sortAtoZ(SortType.STORE))
+          : state.locations.sort(sortZtoA(SortType.STORE));
+    },
+    // new location
+    resetNewLocation: (state) => {
+      state.newLocation = initialLocationsState.newLocation;
+    },
+    setNewLocationAutocomplete: (
       state,
-      { payload }: PayloadAction<LocationsStateSlice['locationsList']>
+      {
+        payload: { autocomplete, geo },
+      }: {
+        payload: { autocomplete: any; geo: GeoCoordinates };
+      }
     ) => {
-      state.locationsList = [...state.locationsList, ...payload];
+      console.log(geo);
+
+      state.newLocation = {
+        ...autocomplete,
+        address: {
+          ...autocomplete.address,
+          geo: {
+            lat: geo?.lat || null,
+            lng: geo?.lng || null,
+          },
+        },
+      };
     },
-    setLocationsList: (state, { payload }: PayloadAction<LocationsStateSlice['locationsList']>) => {
-      state.locationsList = payload;
+    setNewLocationSearchbar: (
+      state,
+      {
+        payload: { address_components, geo },
+      }: { payload: { address_components: GoogleAddressResults; geo: GeoCoordinates } }
+    ) => {
+      let address: GoogleAddressResultsConverted = {};
+      for (const object of address_components) {
+        for (const addressField of object.types) {
+          Object.assign(address, { [addressField]: object.long_name });
+        }
+      }
+      console.log(geo);
+
+      state.newLocation = {
+        name: '',
+        address: {
+          street: address.route || '',
+          number: +address.street_number! || null,
+          zipcode: address.postal_code || '',
+          city: address.locality || '',
+          country: address.country || '',
+          geo: {
+            lat: geo?.lat || null,
+            lng: geo?.lng || null,
+          },
+        },
+        location_url: '',
+        place_id: address.place_id || '',
+      };
     },
-    sortLocationsListVeganOffer: (state, { payload }: { payload: 'asc' | 'desc' }) => {
-      state.locationsList =
-        payload === 'asc'
-          ? state.locationsList.sort(sortNumbersAsc(SortType.VEGAN_OFFER))
-          : state.locationsList.sort(sortNumbersDesc(SortType.VEGAN_OFFER));
+    // for later user, if there are to many locations in database
+    setLocationsVisibleOnMap: (state, { payload }: PayloadAction<IceCreamLocation[]>) => {
+      state.locationsVisibleOnMap = payload;
     },
-    sortLocationsListQuality: (state, { payload }: { payload: 'asc' | 'desc' }) => {
-      state.locationsList =
-        payload === 'asc'
-          ? state.locationsList.sort(sortNumbersAsc(SortType.QUALITY))
-          : state.locationsList.sort(sortNumbersDesc(SortType.QUALITY));
-    },
-    sortLocationsListCity: (state, { payload }: { payload: 'asc' | 'desc' }) => {
-      state.locationsList =
-        payload === 'asc'
-          ? state.locationsList.sort(sortAtoZ(SortType.CITY))
-          : state.locationsList.sort(sortZtoA(SortType.CITY));
-    },
-    sortLocationsListStore: (state, { payload }: { payload: 'asc' | 'desc' }) => {
-      state.locationsList =
-        payload === 'asc'
-          ? state.locationsList.sort(sortAtoZ(SortType.STORE))
-          : state.locationsList.sort(sortZtoA(SortType.STORE));
+    addToLocationsVisibleOnMap: (state, { payload }: PayloadAction<IceCreamLocation[]>) => {
+      state.locationsVisibleOnMap = [...state.locations, ...payload];
     },
   },
 });

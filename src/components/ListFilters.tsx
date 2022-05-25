@@ -25,16 +25,16 @@ const ListFilters = () => {
     setSelected(value);
     switch (value) {
       case SortType.VEGAN_OFFER:
-        dispatch(locationsActions.sortLocationsListVeganOffer('desc'));
+        dispatch(locationsActions.sortLocationsVeganOffer('desc'));
         break;
       case SortType.QUALITY:
-        dispatch(locationsActions.sortLocationsListQuality('desc'));
+        dispatch(locationsActions.sortLocationsQuality('desc'));
         break;
       case SortType.CITY:
-        dispatch(locationsActions.sortLocationsListCity('asc'));
+        dispatch(locationsActions.sortLocationsCity('asc'));
         break;
       case SortType.STORE:
-        dispatch(locationsActions.sortLocationsListStore('asc'));
+        dispatch(locationsActions.sortLocationsStore('asc'));
         break;
       default:
         return;

@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 // Redux Store
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { mapActions } from '../store/mapSlice';
 import { appActions } from '../store/appSlice';
 // Context
@@ -12,16 +12,10 @@ import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables';
 
 const Search = () => {
   const dispatch = useAppDispatch();
+  const { locations } = useAppSelector((state) => state.locations);
 
-  const {
-    segment,
-    locations,
-    searchViewport,
-    setListResults,
-    setSearchSelected,
-    searchText,
-    setSearchText,
-  } = useContext(Context);
+  const { segment, searchViewport, setListResults, setSearchSelected, searchText, setSearchText } =
+    useContext(Context);
 
   const [predictions, setPredictions] = useState([]);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });

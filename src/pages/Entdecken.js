@@ -36,6 +36,7 @@ import Spinner from '../components/Spinner';
 import LoadingError from '../components/LoadingError';
 import AutocompleteForm from '../components/AutocompleteForm';
 import GeolocationBtn from '../components/GeolocationBtn';
+import { locationsActions } from '../store/locationsSlice';
 
 const Entdecken = () => {
   const dispatch = useAppDispatch();
@@ -43,21 +44,16 @@ const Entdecken = () => {
   const { center, zoom } = useAppSelector((state) => state.map);
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
   const { checkMsgNewLocation } = useAppSelector((state) => state.app);
+  const { locations, newLocation } = useAppSelector((state) => state.locations);
 
   const {
-    locations,
-    // if too many locations in database later, then detach locations on the map displayed in viewport from locations
-    // locationsMap,
     segment,
     setSegment,
-    map,
     setMap,
     setAutocompleteModal,
     searchSelected,
     position,
-    newLocation,
     setInfoModal,
-    setNewLocation,
     setNewLocModal,
     setOpenComments,
   } = useContext(Context);
@@ -65,14 +61,6 @@ const Entdecken = () => {
 
   const [libraries] = useState(['places']);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
-
-  // deactivated until there are so many locations in the database, that search in viewport is needed
-  // useEffect(() => {
-  //   if(map) {
-  //    const id = setTimeout(() => searchViewport(), 750);
-  //    return () => clearTimeout(id);
-  //   }
-  // }, [map])
 
   useEffect(() => {
     // if user exists with indicated home city than first center + zoom
@@ -174,20 +162,13 @@ const Entdecken = () => {
               </IonButton>
             </div>
             <div className='d-flex flex-column align-items-end control-right-top'>
-              {/* deactivated until there are so many locations in the database that, for performance reasons, loaded locations have to be decoupled  */}
-              {/* <IonButton className="viewport-control" onClick={searchViewport}>
-                <IonLabel className="me-1">Eisläden im Gebiet</IonLabel>
-                <IonIcon slot="start" icon={search} />
-              </IonButton> */}
-
               <IonButton
                 className='add-control'
                 onClick={(e) => {
                   if (user) {
-                    setNewLocation(null);
+                    dispatch(locationsActions.resetNewLocation());
                     setAutocompleteModal(true);
-                    // set to empty string for case that user adds new loc icon but never clicks on icon
-                    dispatch(appActions.setCheckMsgNewLocation(''));
+                    dispatch(appActions.setCheckMsgNewLocation('')); // remove message in case that user adds new location but never clicks on it
                   } else {
                     e.persist();
                     setPopoverShow({ show: true, event: e });
@@ -252,50 +233,48 @@ const Entdecken = () => {
             >
               <MarkerClusterer options={clusterOptions} imageExtension='png' averageCenter>
                 {(clusterer) =>
-                  locations
-                    ? locations.map((loc) =>
-                        // if searchSelected exists, than normal marker at this position is null
-                        searchSelected &&
-                        searchSelected.address.geo.lat === loc.address.geo.lat &&
-                        searchSelected.address.geo.lng === loc.address.geo.lng ? null : (
-                          <Marker
-                            key={loc._id}
-                            position={{ lat: loc.address.geo.lat, lng: loc.address.geo.lng }}
-                            clusterer={clusterer}
-                            icon={{
-                              url: './assets/icons/ice-cream-icon-dark.svg',
-                              scaledSize:
-                                searchSelected &&
-                                searchSelected.address.geo.lat === loc.address.geo.lat &&
-                                searchSelected.address.geo.lng === loc.address.geo.lng
-                                  ? new window.google.maps.Size(0, 0)
-                                  : new window.google.maps.Size(30, 30),
-                              origin: new window.google.maps.Point(0, 0),
-                              anchor: new window.google.maps.Point(15, 15),
-                            }}
-                            shape={{
-                              coords: [1, 1, 1, 28, 26, 28, 26, 1],
-                              type: 'poly',
-                            }}
-                            optimized={false}
-                            title={`${loc.name}, ${loc.address.street} ${loc.address.number}`}
-                            cursor='pointer'
-                            onClick={() => {
-                              setOpenComments(false);
-                              dispatch(selectedLocationActions.updateSelectedLocation(loc));
-                              setInfoModal(true);
-                              dispatch(
-                                mapActions.setCenter({
-                                  lat: loc.address.geo.lat,
-                                  lng: loc.address.geo.lng,
-                                })
-                              );
-                            }}
-                            zIndex={1}
-                          />
-                        )
-                      )
-                    : null
+                  locations?.map((loc) =>
+                    // if searchSelected exists, than normal marker at this position is null
+                    searchSelected &&
+                    searchSelected.address.geo.lat === loc.address.geo.lat &&
+                    searchSelected.address.geo.lng === loc.address.geo.lng ? null : (
+                      <Marker
+                        key={loc._id}
+                        position={{ lat: loc.address.geo.lat, lng: loc.address.geo.lng }}
+                        clusterer={clusterer}
+                        icon={{
+                          url: './assets/icons/ice-cream-icon-dark.svg',
+                          scaledSize:
+                            searchSelected &&
+                            searchSelected.address.geo.lat === loc.address.geo.lat &&
+                            searchSelected.address.geo.lng === loc.address.geo.lng
+                              ? new window.google.maps.Size(0, 0)
+                              : new window.google.maps.Size(30, 30),
+                          origin: new window.google.maps.Point(0, 0),
+                          anchor: new window.google.maps.Point(15, 15),
+                        }}
+                        shape={{
+                          coords: [1, 1, 1, 28, 26, 28, 26, 1],
+                          type: 'poly',
+                        }}
+                        optimized={false}
+                        title={`${loc.name}, ${loc.address.street} ${loc.address.number}`}
+                        cursor='pointer'
+                        onClick={() => {
+                          setOpenComments(false);
+                          dispatch(selectedLocationActions.updateSelectedLocation(loc));
+                          setInfoModal(true);
+                          dispatch(
+                            mapActions.setCenter({
+                              lat: loc.address.geo.lat,
+                              lng: loc.address.geo.lng,
+                            })
+                          );
+                        }}
+                        zIndex={1}
+                      />
+                    )
+                  )
                 }
               </MarkerClusterer>
 

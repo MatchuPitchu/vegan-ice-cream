@@ -1,11 +1,9 @@
-import { Fragment, useContext, useState } from 'react';
+import { Fragment, useState } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { showActions } from '../store/showSlice';
 // Context
-import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
-// https://www.npmjs.com/package/react-rating-stars-component
 import {
   IonButton,
   IonContent,
@@ -39,8 +37,8 @@ const Profil = () => {
   const { isAuth, user } = useAppSelector((state) => state.user);
   const { showUpdateProfil } = useAppSelector((state) => state.show);
   const { successMsg } = useAppSelector((state) => state.app);
+  const { locations } = useAppSelector((state) => state.locations);
 
-  const { locations } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [showComments, setShowComments] = useState(false);

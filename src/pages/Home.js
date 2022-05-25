@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect, useRef } from 'react';
 // Redux Store
-import { useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -32,12 +32,13 @@ import {
 } from 'ionicons/icons';
 import SearchTopLocations from '../components/SearchTopLocations';
 import TopLocations from '../components/TopLocations';
+import { locationsActions } from '../store/locationsSlice';
 
 const Home = () => {
+  const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
 
-  const { cityName, topLocations, noTopLoc, setNewLocation, setAutocompleteModal } =
-    useContext(Context);
+  const { cityName, topLocations, noTopLoc, setAutocompleteModal } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [show, setShow] = useState(false);
@@ -101,7 +102,7 @@ const Home = () => {
             fill='clear'
             onClick={(e) => {
               if (user) {
-                setNewLocation(null);
+                dispatch(locationsActions.resetNewLocation());
                 setAutocompleteModal(true);
               } else {
                 e.persist();

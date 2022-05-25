@@ -1,6 +1,6 @@
 // Redux Store
 import { appActions } from '../store/appSlice';
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { locationsActions } from '../store/locationsSlice';
 // Context
 import { useContext } from 'react';
@@ -21,29 +21,19 @@ import LoadingError from './LoadingError';
 
 const NewLocationForm = () => {
   const dispatch = useAppDispatch();
+  const { newLocation } = useAppSelector((state) => state.locations);
 
-  const {
-    locations,
-    setLocations,
-    locationsMap,
-    setLocationsMap,
-    newLocation,
-    setNewLocation,
-    newLocModal,
-    setNewLocModal,
-    enterAnimation,
-    leaveAnimation,
-    searchViewport,
-  } = useContext(Context);
+  const { newLocModal, setNewLocModal, enterAnimation, leaveAnimation, searchViewport } =
+    useContext(Context);
 
   const defaultValues = {
-    name: newLocation ? newLocation.name : '',
-    street: newLocation ? newLocation.address.street : '',
-    number: newLocation ? newLocation.address.number : '',
-    zipcode: newLocation ? newLocation.address.zipcode : '',
-    city: newLocation ? newLocation.address.city : '',
-    country: newLocation ? newLocation.address.country : '',
-    location_url: newLocation.location_url ? newLocation.location_url : '',
+    name: newLocation?.name || '',
+    street: newLocation?.address.street || '',
+    number: newLocation?.address.number || '',
+    zipcode: newLocation?.address.zipcode || '',
+    city: newLocation?.address.city || '',
+    country: newLocation?.address.country || '',
+    location_url: newLocation?.location_url || '',
   };
 
   const {
@@ -82,9 +72,7 @@ const NewLocationForm = () => {
 
       const res = await fetch(`${process.env.REACT_APP_API_URL}/locations`, options);
       const newData = await res.json();
-      setLocations([...locations, newData]);
-      setLocationsMap([...locationsMap, newData]);
-      dispatch(locationsActions.addToLocationsList(newData));
+      dispatch(locationsActions.addToLocations(newData));
       if (!newData) {
         dispatch(appActions.setError('Fehler beim Eintragen. Bitte versuch es später nochmal.'));
         setTimeout(() => dispatch(appActions.resetError()), 5000);
@@ -93,7 +81,7 @@ const NewLocationForm = () => {
       dispatch(appActions.setError(error.message));
       setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
-    setNewLocation(null);
+    dispatch(locationsActions.resetNewLocation());
     searchViewport();
     dispatch(appActions.setIsLoading(false));
   };
@@ -114,7 +102,7 @@ const NewLocationForm = () => {
           fill='clear'
           onClick={() => {
             setNewLocModal(false);
-            setNewLocation(null);
+            dispatch(locationsActions.resetNewLocation());
           }}
         >
           <IonIcon icon={closeCircleOutline} />

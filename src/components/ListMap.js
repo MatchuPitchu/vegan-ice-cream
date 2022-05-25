@@ -1,6 +1,5 @@
 // Redux Store
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { locationsActions } from '../store/locationsSlice';
+import { useAppSelector } from '../store/hooks';
 // Context
 import { useContext, useState } from 'react';
 import { Context } from '../context/Context';
@@ -10,19 +9,16 @@ import ListResultComponent from './ListResultComponent';
 import ListFilters from './ListFilters';
 
 const ListMap = () => {
-  const dispatch = useAppDispatch();
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
-  const { locationsList } = useAppSelector((state) => state.locations);
+  const { locations } = useAppSelector((state) => state.locations);
 
-  const { locations, listResults, disableInfScroll, searchText } = useContext(Context);
+  const { listResults, searchText } = useContext(Context);
 
-  const [numberOfLocationsInList, setNumberOfLocationsInList] = useState(4);
+  const [endIndexInLocationsList, setEndIndexInLocationsList] = useState(4);
 
-  const loadMore = (e) => {
-    const newArr = locations.slice(numberOfLocationsInList, numberOfLocationsInList + 4);
-    setNumberOfLocationsInList((prev) => prev + 4);
-    dispatch(locationsActions.addToLocationsList(newArr));
-    e.target.complete();
+  const loadMore = ({ target }) => {
+    setEndIndexInLocationsList((prev) => prev + 4);
+    target.complete();
   };
 
   return (
@@ -36,7 +32,9 @@ const ListMap = () => {
 
       {/* if searchbar empty and so listResults array is empty */}
       {!searchText && !listResults.length
-        ? locationsList?.map((loc) => <ListResultComponent key={loc._id} loc={loc} />)
+        ? locations
+            ?.slice(0, endIndexInLocationsList)
+            .map((loc) => <ListResultComponent key={loc._id} loc={loc} />)
         : null}
 
       {/* if smth was typed into searchbar but no results were found  */}
@@ -57,12 +55,8 @@ const ListMap = () => {
 
       {/* Infinite Scroll Ionic React: https://dev.to/daviddalbusco/infinite-scroll-with-ionic-react-3a3i */}
       {!listResults.length && (
-        <IonInfiniteScroll
-          threshold='10%'
-          disabled={disableInfScroll}
-          onIonInfinite={(e) => loadMore(e)}
-        >
-          <IonInfiniteScrollContent loadingSpinner='dots'></IonInfiniteScrollContent>
+        <IonInfiniteScroll onIonInfinite={loadMore} threshold='10%'>
+          <IonInfiniteScrollContent loadingSpinner='dots' />
         </IonInfiniteScroll>
       )}
     </IonContent>
