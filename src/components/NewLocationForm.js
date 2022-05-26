@@ -5,6 +5,7 @@ import { locationsActions } from '../store/locationsSlice';
 // Context
 import { useContext } from 'react';
 import { Context } from '../context/Context';
+import { useAnimation } from '../hooks/useAnimation';
 import { Controller, useForm } from 'react-hook-form';
 import {
   IonButton,
@@ -23,8 +24,9 @@ const NewLocationForm = () => {
   const dispatch = useAppDispatch();
   const { newLocation } = useAppSelector((state) => state.locations);
 
-  const { newLocModal, setNewLocModal, enterAnimation, leaveAnimation, searchViewport } =
-    useContext(Context);
+  const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
+
+  const { newLocModal, setNewLocModal, searchViewport } = useContext(Context);
 
   const defaultValues = {
     name: newLocation?.name || '',
@@ -71,9 +73,9 @@ const NewLocationForm = () => {
       };
 
       const res = await fetch(`${process.env.REACT_APP_API_URL}/locations`, options);
-      const newData = await res.json();
-      dispatch(locationsActions.addToLocations(newData));
-      if (!newData) {
+      const newLocationObj = await res.json();
+      dispatch(locationsActions.addToLocations(newLocationObj));
+      if (!newLocationObj) {
         dispatch(appActions.setError('Fehler beim Eintragen. Bitte versuch es später nochmal.'));
         setTimeout(() => dispatch(appActions.resetError()), 5000);
       }
@@ -93,8 +95,8 @@ const NewLocationForm = () => {
       swipeToClose={true}
       backdropDismiss={true}
       onDidDismiss={() => setNewLocModal(false)}
-      enterAnimation={enterAnimation}
-      leaveAnimation={leaveAnimation}
+      enterAnimation={enterAnimationFromBottom}
+      leaveAnimation={leaveAnimationToBottom}
     >
       <IonItem lines='full'>
         <IonLabel>Eisladen eintragen</IonLabel>

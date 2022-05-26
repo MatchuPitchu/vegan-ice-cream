@@ -1,54 +1,53 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IceCreamLocation } from '../types';
 
-interface GeoCoordinates {
-  lat?: number;
-  lng?: number;
+export enum SortType {
+  VEGAN_OFFER = 'vegan_offer',
+  QUALITY = 'quality',
+  CITY = 'city',
+  STORE = 'store',
 }
 
-type GoogleAddressResults = [
-  {
-    long_name: string;
-    short_name: string;
-    types: string[];
-  },
-  {
-    long_name: string;
-    short_name: string;
-    types: string[];
-  },
-  {
-    long_name: string;
-    short_name: string;
-    types: string[];
-  },
-  {
-    long_name: string;
-    short_name: string;
-    types: string[];
-  },
-  {
-    long_name: string;
-    short_name: string;
-    types: string[];
-  },
-  {
-    long_name: string;
-    short_name: string;
-    types: string[];
-  },
-  {
-    long_name: string;
-    short_name: string;
-    types: string[];
-  },
-  {
-    long_name: string;
-    short_name: string;
-    types: string[];
-  }
-];
-interface GoogleAddressResultsConverted {
+type SortDirection = 'asc' | 'desc';
+
+interface GeoCoordinates {
+  lat: number | null;
+  lng: number | null;
+}
+
+interface Address {
+  street: string;
+  number: number | null;
+  zipcode: string;
+  city: string;
+  country: string;
+  geo: GeoCoordinates;
+}
+
+interface NewLocationType {
+  name: string;
+  address: Address;
+  location_url: string;
+  place_id: string;
+}
+
+interface NewLocationWithAutocompletePayload {
+  autocomplete: NewLocationType;
+  geo: GeoCoordinates;
+}
+
+interface GoogleGeocodingResult {
+  long_name: string;
+  short_name: string;
+  types: string[];
+}
+
+interface NewLocationWithSearchbarPayload {
+  address_components: GoogleGeocodingResult[];
+  geo: GeoCoordinates;
+}
+
+interface GoogleGeocodingResultsConverted {
   street_number?: string;
   route?: string;
   political?: string;
@@ -60,32 +59,6 @@ interface GoogleAddressResultsConverted {
   country?: string;
   postal_code?: string;
   place_id?: string;
-}
-
-export enum SortType {
-  VEGAN_OFFER = 'vegan_offer',
-  QUALITY = 'quality',
-  CITY = 'city',
-  STORE = 'store',
-}
-
-type SortDirection = 'asc' | 'desc';
-
-interface NewLocationType {
-  name: string;
-  address: {
-    street: string;
-    number: number | null;
-    zipcode: string;
-    city: string;
-    country: string;
-    geo: {
-      lat: number | null;
-      lng: number | null;
-    };
-  };
-  location_url: string;
-  place_id: string;
 }
 
 interface LocationsStateSlice {
@@ -177,8 +150,8 @@ const locationsSlice = createSlice({
     setLocations: (state, { payload }: PayloadAction<IceCreamLocation[]>) => {
       state.locations = payload;
     },
-    addToLocations: (state, { payload }: PayloadAction<IceCreamLocation[]>) => {
-      state.locations = [...state.locations, ...payload];
+    addToLocations: (state, { payload }: PayloadAction<IceCreamLocation>) => {
+      state.locations = [...state.locations, payload];
     },
     updateOneLocation: (state, { payload }: PayloadAction<IceCreamLocation>) => {
       const updatedLocationIndex = state.locations.findIndex(
@@ -210,20 +183,14 @@ const locationsSlice = createSlice({
           ? state.locations.sort(sortAtoZ(SortType.STORE))
           : state.locations.sort(sortZtoA(SortType.STORE));
     },
-    // new location
+    // NEW LOCATION
     resetNewLocation: (state) => {
       state.newLocation = initialLocationsState.newLocation;
     },
     setNewLocationAutocomplete: (
       state,
-      {
-        payload: { autocomplete, geo },
-      }: {
-        payload: { autocomplete: any; geo: GeoCoordinates };
-      }
+      { payload: { autocomplete, geo } }: PayloadAction<NewLocationWithAutocompletePayload>
     ) => {
-      console.log(geo);
-
       state.newLocation = {
         ...autocomplete,
         address: {
@@ -237,17 +204,14 @@ const locationsSlice = createSlice({
     },
     setNewLocationSearchbar: (
       state,
-      {
-        payload: { address_components, geo },
-      }: { payload: { address_components: GoogleAddressResults; geo: GeoCoordinates } }
+      { payload: { address_components, geo } }: PayloadAction<NewLocationWithSearchbarPayload>
     ) => {
-      let address: GoogleAddressResultsConverted = {};
+      let address: GoogleGeocodingResultsConverted = {};
       for (const object of address_components) {
         for (const addressField of object.types) {
           Object.assign(address, { [addressField]: object.long_name });
         }
       }
-      console.log(geo);
 
       state.newLocation = {
         name: '',
@@ -266,7 +230,7 @@ const locationsSlice = createSlice({
         place_id: address.place_id || '',
       };
     },
-    // for later user, if there are to many locations in database
+    // LOCATIONS VISIBLE ON MAP: for later user, if there are to many locations in database
     setLocationsVisibleOnMap: (state, { payload }: PayloadAction<IceCreamLocation[]>) => {
       state.locationsVisibleOnMap = payload;
     },

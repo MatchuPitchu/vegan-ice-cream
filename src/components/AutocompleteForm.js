@@ -6,6 +6,7 @@ import { appActions } from '../store/appSlice';
 import { locationsActions } from '../store/locationsSlice';
 // Context
 import { Context } from '../context/Context';
+import { useAnimation } from '../hooks/useAnimation';
 import { Autocomplete } from '@react-google-maps/api';
 import {
   IonButton,
@@ -26,6 +27,8 @@ const AutocompleteForm = () => {
 
   const [result, setResult] = useState(null);
 
+  const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
+
   const {
     autocomplete,
     setAutocomplete,
@@ -36,8 +39,6 @@ const AutocompleteForm = () => {
     formattedAddress,
     setFormattedAddress,
     setNewLocModal,
-    enterAnimation,
-    leaveAnimation,
   } = useContext(Context);
 
   const onSubmit = (e) => {
@@ -50,8 +51,6 @@ const AutocompleteForm = () => {
         const uri = encodeURI(formattedAddress || searchAutocomplete);
         const res = await fetch(`${GOOGLE_API_URL}${uri}${GOOGLE_API_URL_CONFIG}`);
         const { results } = await res.json();
-
-        console.log(results[0].geometry.location);
 
         if (result.address.number) {
           dispatch(
@@ -137,9 +136,7 @@ const AutocompleteForm = () => {
     }
   };
 
-  const onAutocompleteLoad = (autocomplete) => {
-    setAutocomplete(autocomplete);
-  };
+  const onAutocompleteLoad = (autocomplete) => setAutocomplete(autocomplete);
 
   return (
     <IonModal
@@ -148,8 +145,8 @@ const AutocompleteForm = () => {
       swipeToClose={true}
       backdropDismiss={true}
       onDidDismiss={() => setNewLocModal(false)}
-      enterAnimation={enterAnimation}
-      leaveAnimation={leaveAnimation}
+      enterAnimation={enterAnimationFromBottom}
+      leaveAnimation={leaveAnimationToBottom}
     >
       <IonItem lines='full'>
         <IonLabel>Eisladen eintragen</IonLabel>

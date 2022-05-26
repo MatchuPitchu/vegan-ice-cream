@@ -6,6 +6,7 @@ import { appActions } from '../store/appSlice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
+import { useAnimation } from '../hooks/useAnimation';
 import {
   IonButton,
   IonCard,
@@ -37,15 +38,10 @@ const SelectedMarker = () => {
   const { user } = useAppSelector((state) => state.user);
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
 
-  const {
-    setSearchSelected,
-    openComments,
-    setOpenComments,
-    infoModal,
-    setInfoModal,
-    enterAnimation,
-    leaveAnimation,
-  } = useContext(Context);
+  const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
+
+  const { setSearchSelected, openComments, setOpenComments, infoModal, setInfoModal } =
+    useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   useEffect(() => {
@@ -87,8 +83,8 @@ const SelectedMarker = () => {
         dispatch(selectedLocationActions.resetSelectedLocation());
         setInfoModal(false);
       }}
-      enterAnimation={enterAnimation}
-      leaveAnimation={leaveAnimation}
+      enterAnimation={enterAnimationFromBottom}
+      leaveAnimation={leaveAnimationToBottom}
     >
       <IonItem lines='full'>
         <IonLabel>{selectedLocation.name}</IonLabel>
