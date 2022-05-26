@@ -1,7 +1,8 @@
+import { VFC } from 'react';
 import { useThemeContext } from '../context/ThemeContext';
 import classes from './SwitchTheme.module.css';
 
-const SwitchTheme = () => {
+const SwitchTheme: VFC = () => {
   const { isDarkTheme, handleTheme } = useThemeContext();
 
   return (
