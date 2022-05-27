@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../types';
+import { authApi } from './auth-api-slice';
+import { userApi } from './user-api-slice';
 
 interface UserStateSlice {
   isAuth: boolean;
@@ -29,6 +31,32 @@ const userSlice = createSlice({
         ...payload,
       } as User;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(authApi.endpoints.verifyUserSession.matchFulfilled, (state, { payload }) => {
+      state.isAuth = true;
+      state.user = {
+        ...state.user,
+        ...payload.user,
+      } as User;
+    });
+    builder.addMatcher(authApi.endpoints.loginUser.matchFulfilled, (state, { payload }) => {
+      localStorage.setItem('token', payload.token);
+      state.isAuth = payload.user.confirmed && true;
+      state.user = {
+        ...state.user,
+        ...payload.user,
+      } as User;
+    });
+    builder.addMatcher(
+      userApi.endpoints.getAdditionalInfosFromUser.matchFulfilled,
+      (state, { payload }) => {
+        state.user = {
+          ...state.user,
+          ...payload,
+        } as User;
+      }
+    );
   },
 });
 

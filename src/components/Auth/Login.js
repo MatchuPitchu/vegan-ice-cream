@@ -1,7 +1,7 @@
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { userActions } from '../../store/userSlice';
 import { appActions } from '../../store/appSlice';
 // Context
 import { useThemeContext } from '../../context/ThemeContext';
@@ -18,10 +18,13 @@ import {
 import { Redirect } from 'react-router-dom';
 import showError from '../showError';
 import { lockClosed, logIn, refreshCircle } from 'ionicons/icons';
+import { useLoginUserMutation } from '../../store/auth-api-slice';
+import { skipToken } from '@reduxjs/toolkit/dist/query';
+import { useGetAdditionalInfosFromUserQuery } from '../../store/user-api-slice';
 
 const Login = () => {
   const dispatch = useAppDispatch();
-  const { isAuth } = useAppSelector((state) => state.user);
+  const { isAuth, user } = useAppSelector((state) => state.user);
   const { error } = useAppSelector((state) => state.app);
 
   const { isDarkTheme } = useThemeContext();
@@ -32,44 +35,33 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async (data) => {
-    try {
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // converts JS data into JSON string.
-        body: JSON.stringify(data),
-        credentials: 'include',
-      };
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, options);
-      const { user, token } = await res.json();
-      if (user.confirmed) {
-        const options = {
-          headers: { token },
-          credentials: 'include',
-        };
-        const res = await fetch(
-          `${process.env.REACT_APP_API_URL}/users/${user._id}/infos`,
-          options
-        );
-        const data = await res.json();
-        localStorage.setItem('token', token);
-        dispatch(userActions.updateUser(data));
-        // setUser({ ...user, ...data });
-        dispatch(userActions.login());
-      }
-    } catch (error) {
+  // https://redux-toolkit.js.org/rtk-query/usage/mutations
+  const [triggerLogin] = useLoginUserMutation();
+  const {
+    data: additionUserData,
+    error: errorRTKQuery,
+    isFetching,
+    isLoading,
+    isSuccess,
+    isError,
+  } = useGetAdditionalInfosFromUserQuery(user?._id ?? skipToken);
+
+  useEffect(() => {
+    let timeoutId;
+    if (isError) {
       dispatch(
         appActions.setError(
           'Prüfe, ob du das richtige Passwort eingetippt hast oder ob du deine Mailadresse bestätigt hast.'
         )
       );
-      setTimeout(() => dispatch(appActions.resetError()), 5000);
-      console.log(error.message);
+      timeoutId = setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
-  };
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [isError, dispatch]);
+
+  const onSubmit = (loginData) => triggerLogin(loginData);
 
   if (isAuth) return <Redirect exact to='/home' />;
 

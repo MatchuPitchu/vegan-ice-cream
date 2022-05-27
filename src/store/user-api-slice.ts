@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Comment, Flavor, IceCreamLocation, User } from '../types';
+import { Comment, Flavor, IceCreamLocation } from '../types';
 
 interface ReturnTypeAdditionalInfosFromUser {
   comments_list: Comment[];
@@ -25,10 +25,7 @@ export const userApi = createApi({
   tagTypes: ['User'], // define tag(s) which can trigger an action
   endpoints: (builder) => {
     return {
-      getAdditionalInfosFromUser: builder.query<
-        ReturnTypeAdditionalInfosFromUser,
-        Pick<User, '_id'>
-      >({
+      getAdditionalInfosFromUser: builder.query<ReturnTypeAdditionalInfosFromUser, string>({
         query: (userId) => ({
           url: `/users/${userId}/infos`,
           method: 'GET',

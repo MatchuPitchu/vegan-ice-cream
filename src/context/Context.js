@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext } from 'react';
 import { skipToken } from '@reduxjs/toolkit/dist/query';
-import { useVerifySessionQuery } from '../store/auth-api-slice';
+import { useVerifyUserSessionQuery } from '../store/auth-api-slice';
 import { useGetAdditionalInfosFromUserQuery } from '../store/user-api-slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
@@ -68,59 +68,20 @@ const AppStateProvider = ({ children }) => {
   const { viewport } = useAppSelector((state) => state.map);
   const { locations } = useAppSelector((state) => state.locations);
 
-  // How to use the hook: https://redux-toolkit.js.org/tutorials/rtk-query#create-an-api-service
-  // const {
-  //   data,
-  //   error: errorRTKQuery,
-  //   isFetching,
-  //   isLoading,
-  //   isSuccess,
-  //   isError,
-  // } = useVerifySessionQuery();
-
-  // const {
-  //   data,
-  //   error: errorRTKQuery,
-  //   isFetching,
-  //   isLoading,
-  //   isSuccess,
-  //   isError,
-  // } = useGetAdditionalInfosFromUserQuery(user?._id ?? skipToken); // when `id` is nullish (null/undefined), query is skipped: https://redux-toolkit.js.org/rtk-query/usage-with-typescript#skipping-queries-with-typescript-using-skiptoken
-
-  // console.log(data, isLoading);
+  // How to use RTK hooks: https://redux-toolkit.js.org/tutorials/rtk-query#create-an-api-service
+  // NOTICE: RTK Query ensures that any component that subscribes to the same query will always use the same data.
+  // TODO: überall error messages und loading state catchen und in state speichern für Anzeige Loading Spinner
 
   // END REDUX TOOLKIT
 
   useEffect(() => {
-    dispatch(appActions.setIsLoading(true));
-    const token = localStorage.getItem('token');
-
-    // First check if token is valid, then fetch all user infos and set to state
+    // TODO: noch Abhängigkeit "newComment" in RTK Query integrieren, um Re-Fetch zu initiieren
+    // TODO: wie gehe ich mit Loading State aus RTK Query um -> Anzeige in Componenten, wo gefetcht wird
     const verifySession = async () => {
-      try {
-        const options = {
-          headers: { token },
-          credentials: 'include',
-        };
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/verify-session`, options);
-        const { success, user } = await res.json();
-        if (success) {
-          dispatch(userActions.login());
-          const res = await fetch(
-            `${process.env.REACT_APP_API_URL}/users/${user._id}/infos`,
-            options
-          );
-          const data = await res.json();
-          dispatch(userActions.updateUser({ ...user, ...data }));
-          // setUser({ ...user, ...data });
-        }
-      } catch (err) {
-        console.log(err.message);
-      }
+      dispatch(appActions.setIsLoading(true));
+      dispatch(appActions.setIsLoading(false));
     };
-    if (token) verifySession();
-
-    dispatch(appActions.setIsLoading(false));
+    verifySession();
   }, [newComment, dispatch]);
 
   useEffect(() => {

@@ -1,5 +1,7 @@
-import { useContext } from 'react';
-import { Context } from './context/Context';
+// Redux Store
+import { useAppSelector } from './store/hooks';
+import { useGetAdditionalInfosFromUserQuery } from './store/user-api-slice';
+import { skipToken } from '@reduxjs/toolkit/dist/query';
 import { Redirect, Route } from 'react-router-dom';
 import {
   IonApp,
@@ -50,7 +52,13 @@ import './theme/variables.css';
 import './App.css';
 
 const App: React.FC = () => {
-  const { user } = useContext(Context);
+  const { user } = useAppSelector((state) => state.user);
+
+  const {
+    data: additionUserData,
+    error: errorRTKQuery2,
+    isLoading: isLoading2,
+  } = useGetAdditionalInfosFromUserQuery(user?._id ?? skipToken); // when `id` is nullish (null/undefined), query is skipped: https://redux-toolkit.js.org/rtk-query/usage-with-typescript#skipping-queries-with-typescript-using-skiptoken
 
   // to display notification if update available (see ServiceWorkerWrapper.js)
   // without reload of page

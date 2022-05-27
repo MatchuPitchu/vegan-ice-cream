@@ -6,6 +6,16 @@ interface ReturnTypeVerifySession {
   user: User;
 }
 
+interface ReturnTypeLoginRequest {
+  user: User;
+  token: string;
+}
+
+interface LoginData {
+  email: string;
+  password: string;
+}
+
 // Define a service using a base URL and expected endpoints
 export const authApi = createApi({
   reducerPath: 'authApi',
@@ -24,10 +34,22 @@ export const authApi = createApi({
   tagTypes: ['Auth'], // define tag(s) which can trigger an action
   endpoints: (builder) => {
     return {
-      verifySession: builder.query<ReturnTypeVerifySession, string>({
+      // <ReturnType of Request, passed argument into query hook>
+      verifyUserSession: builder.query<ReturnTypeVerifySession, void>({
         query: () => ({
           url: '/auth/verify-session',
           method: 'GET',
+          credentials: 'include',
+        }),
+      }),
+      loginUser: builder.mutation<ReturnTypeLoginRequest, LoginData>({
+        query: ({ email, password }) => ({
+          url: '/auth/login',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: { email, password },
           credentials: 'include',
         }),
       }),
@@ -35,4 +57,4 @@ export const authApi = createApi({
   },
 });
 
-export const { useVerifySessionQuery } = authApi; // automatically generated query hook
+export const { useVerifyUserSessionQuery, useLoginUserMutation } = authApi; // automatically generated query hook

@@ -3,7 +3,7 @@
   border: none;
   margin: 0.4rem auto 0.4rem 0.4rem;
   height: 27px;
-  width: 55px;
+  width: 53px;
   border-radius: var(--border-radius);
   border: 1px solid var(--ion-border-color);
   background-image: linear-gradient(var(--ion-background-color), var(--ion-background-color));
@@ -33,7 +33,7 @@
   width: 20px;
   border-radius: 50%;
   position: absolute;
-  top: 3px;
+  top: 2px;
   left: 3px;
   box-shadow: 0 0 10px var(--ion-color-tertiary);
   z-index: 10;

@@ -9,6 +9,7 @@ import { commentSliceReducer } from './commentSlice';
 import { locationsSliceReducer } from './locationsSlice';
 import { authApi } from './auth-api-slice';
 import { userApi } from './user-api-slice';
+import { setupListeners } from '@reduxjs/toolkit/dist/query';
 
 const reducers = combineReducers({
   app: appSliceReducer,
@@ -30,6 +31,10 @@ const store = configureStore({
     return getDefaultMiddleware().concat(authApi.middleware);
   },
 });
+
+// optional, but required for refetchOnFocus/refetchOnReconnect behaviors
+// see `setupListeners` docs - takes an optional callback as the 2nd arg for customization
+setupListeners(store.dispatch);
 
 export default store;
 
