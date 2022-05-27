@@ -1,9 +1,5 @@
 import { useState, useEffect, createContext } from 'react';
-import { skipToken } from '@reduxjs/toolkit/dist/query';
-import { useVerifyUserSessionQuery } from '../store/auth-api-slice';
-import { useGetAdditionalInfosFromUserQuery } from '../store/user-api-slice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { userActions } from '../store/userSlice';
 import { mapActions } from '../store/mapSlice';
 import { appActions } from '../store/appSlice';
 import { locationsActions } from '../store/locationsSlice';

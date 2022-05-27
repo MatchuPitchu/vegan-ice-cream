@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Comment, Flavor, IceCreamLocation } from '../types';
+import { Comment, Flavor, IceCreamLocation } from '../../types';
 
 interface ReturnTypeAdditionalInfosFromUser {
   comments_list: Comment[];

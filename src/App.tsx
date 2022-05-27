@@ -1,6 +1,6 @@
 // Redux Store
 import { useAppSelector } from './store/hooks';
-import { useGetAdditionalInfosFromUserQuery } from './store/user-api-slice';
+import { useGetAdditionalInfosFromUserQuery } from './store/api/user-api-slice';
 import { skipToken } from '@reduxjs/toolkit/dist/query';
 import { Redirect, Route } from 'react-router-dom';
 import {

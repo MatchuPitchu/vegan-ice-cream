@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../types';
-import { authApi } from './auth-api-slice';
-import { userApi } from './user-api-slice';
+import { authApi } from './api/auth-api-slice';
+import { userApi } from './api/user-api-slice';
 
 interface UserStateSlice {
   isAuth: boolean;

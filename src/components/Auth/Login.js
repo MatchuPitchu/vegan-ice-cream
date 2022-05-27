@@ -3,6 +3,9 @@ import { Controller, useForm } from 'react-hook-form';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { appActions } from '../../store/appSlice';
+import { skipToken } from '@reduxjs/toolkit/dist/query';
+import { useLoginUserMutation } from '../../store/api/auth-api-slice';
+import { useGetAdditionalInfosFromUserQuery } from '../../store/api/user-api-slice';
 // Context
 import { useThemeContext } from '../../context/ThemeContext';
 import {
@@ -18,9 +21,6 @@ import {
 import { Redirect } from 'react-router-dom';
 import showError from '../showError';
 import { lockClosed, logIn, refreshCircle } from 'ionicons/icons';
-import { useLoginUserMutation } from '../../store/auth-api-slice';
-import { skipToken } from '@reduxjs/toolkit/dist/query';
-import { useGetAdditionalInfosFromUserQuery } from '../../store/user-api-slice';
 
 const Login = () => {
   const dispatch = useAppDispatch();

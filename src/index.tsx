@@ -7,7 +7,7 @@ import AppStateProvider from './context/Context';
 import App from './App';
 import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
 import { IonReactRouter } from '@ionic/react-router';
-import { authApi } from './store/auth-api-slice';
+import { authApi } from './store/api/auth-api-slice';
 
 // trigger verifyUserSession when App is started
 store.dispatch(authApi.endpoints.verifyUserSession.initiate());

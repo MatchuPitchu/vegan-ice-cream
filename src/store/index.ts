@@ -7,8 +7,8 @@ import { showSliceReducer } from './showSlice';
 import { selectedLocationSliceReducer } from './selectedLocationSlice';
 import { commentSliceReducer } from './commentSlice';
 import { locationsSliceReducer } from './locationsSlice';
-import { authApi } from './auth-api-slice';
-import { userApi } from './user-api-slice';
+import { authApi } from './api/auth-api-slice';
+import { userApi } from './api/user-api-slice';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
 
 const reducers = combineReducers({
