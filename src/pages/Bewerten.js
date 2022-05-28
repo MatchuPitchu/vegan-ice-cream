@@ -33,6 +33,9 @@ import Search from '../components/Search';
 import SearchFlavors from '../components/SearchFlavors';
 import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
+import { locationsActions } from '../store/locationsSlice';
+import { useGetOneLocationQuery } from '../store/api/locations-api-slice';
+import { skipToken } from '@reduxjs/toolkit/dist/query';
 
 // static data outside of React component to avoid redeclaring variable after each re-rendering
 const COLORS = [
@@ -98,15 +101,24 @@ const Bewerten = () => {
   const { isAuth, user } = useAppSelector((state) => state.user);
   const { flavor, searchTermFlavor } = useAppSelector((state) => state.flavor);
 
-  const {
-    searchSelected,
-    setSearchSelected,
-    setSearchText,
-    setNewComment,
-    createPricing,
-    fetchUpdatedLoc,
-  } = useContext(Context);
+  const { searchSelected, setSearchSelected, setSearchText, setNewComment, createPricing } =
+    useContext(Context);
   const { isDarkTheme } = useThemeContext();
+
+  const [refetchLocationId, setRefetchLocationId] = useState(null);
+  const {
+    data: updatedLocation,
+    error: errorFetchUpdatedLocation,
+    isLoading: isLoadingFetchUpdatedLocation,
+    isSuccess: isSuccessFetchUpdatedLocation,
+  } = useGetOneLocationQuery(refetchLocationId ?? skipToken);
+
+  useEffect(() => {
+    if (isSuccessFetchUpdatedLocation) {
+      dispatch(locationsActions.updateOneLocation(updatedLocation));
+      setRefetchLocationId(null);
+    }
+  }, [isSuccessFetchUpdatedLocation, updatedLocation, dispatch]);
 
   const [popoverInfo, setPopoverInfo] = useState({ show: false, event: undefined });
   const [showColorPicker, setShowColorPicker] = useState({ field1: false, field2: false });
@@ -252,7 +264,7 @@ const Bewerten = () => {
       createFlavor(data, createdComment);
 
       // replace data of updated loc in locations array
-      fetchUpdatedLoc(searchSelected);
+      setRefetchLocationId(searchSelected._id);
 
       // if newComment is set than user data is refetched in Context
       setNewComment(createdComment);

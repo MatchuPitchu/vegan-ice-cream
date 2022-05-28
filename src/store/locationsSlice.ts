@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IceCreamLocation } from '../types';
+import { locationsApi } from './api/locations-api-slice';
 
 export enum SortType {
   VEGAN_OFFER = 'vegan_offer',
@@ -237,6 +238,11 @@ const locationsSlice = createSlice({
     addToLocationsVisibleOnMap: (state, { payload }: PayloadAction<IceCreamLocation[]>) => {
       state.locationsVisibleOnMap = [...state.locations, ...payload];
     },
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(locationsApi.endpoints.getLocations.matchFulfilled, (state, { payload }) => {
+      state.locations = payload;
+    });
   },
 });
 

@@ -1,8 +1,7 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 // Redux Store
 import { useAppSelector } from '../store/hooks';
 // Context
-import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import { menuController } from '@ionic/core';
 import {
@@ -20,9 +19,8 @@ import Menu from './Menu';
 import SwitchTheme from './SwitchTheme';
 
 const HeaderApp = () => {
-  const { user } = useAppSelector((state) => state.user);
+  const { user, numberOfNewLocations } = useAppSelector((state) => state.user);
 
-  const { numNewLoc } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
@@ -48,7 +46,7 @@ const HeaderApp = () => {
                 title='Neue Eisläden seit letztem Besuch'
               />
               <IonBadge slot='end' color='secondary'>
-                {numNewLoc ? numNewLoc : 0}
+                {numberOfNewLocations || 0}
               </IonBadge>
 
               <IonPopover

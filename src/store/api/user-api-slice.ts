@@ -32,8 +32,22 @@ export const userApi = createApi({
           credentials: 'include',
         }),
       }),
+      updateNumberOfNewLocations: builder.mutation<
+        void,
+        { userId: string; numberOfLocations: number }
+      >({
+        query: ({ userId, numberOfLocations }) => ({
+          url: `/users/${userId}/num-loc-last-visit`,
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: { current_num_loc: numberOfLocations },
+        }),
+      }),
     };
   },
 });
 
-export const { useGetAdditionalInfosFromUserQuery } = userApi; // automatically generated query hook
+export const { useGetAdditionalInfosFromUserQuery, useUpdateNumberOfNewLocationsMutation } =
+  userApi; // automatically generated query hook

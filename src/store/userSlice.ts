@@ -6,11 +6,13 @@ import { userApi } from './api/user-api-slice';
 interface UserStateSlice {
   isAuth: boolean;
   user: User | null;
+  numberOfNewLocations: number | null;
 }
 
 const initialAuthState: UserStateSlice = {
   isAuth: false,
   user: null,
+  numberOfNewLocations: null,
 };
 
 const userSlice = createSlice({
@@ -30,6 +32,9 @@ const userSlice = createSlice({
         ...state.user,
         ...payload,
       } as User;
+    },
+    setNumberOfNewLocations: (state, { payload }: PayloadAction<number>) => {
+      state.numberOfNewLocations = payload;
     },
   },
   extraReducers: (builder) => {

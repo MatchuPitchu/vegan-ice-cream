@@ -3,6 +3,9 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { mapActions } from '../store/mapSlice';
 import { appActions } from '../store/appSlice';
 import { locationsActions } from '../store/locationsSlice';
+import { useUpdateNumberOfNewLocationsMutation } from '../store/api/user-api-slice';
+import { userActions } from '../store/userSlice';
+import { useGetLocationsQuery } from '../store/api/locations-api-slice';
 
 export const Context = createContext();
 
@@ -34,8 +37,8 @@ const AppStateProvider = ({ children }) => {
   // const [locations, setLocations] = useState([]);
   // const [locationsMap, setLocationsMap] = useState([]);
   // const [newLocation, setNewLocation] = useState(null);
+  // const [numNewLoc, setNumNewLoc] = useState();
 
-  const [numNewLoc, setNumNewLoc] = useState();
   const [topLocations, setTopLocations] = useState([]);
   const [cities, setCities] = useState([]);
   const [listResults, setListResults] = useState([]);
@@ -62,7 +65,9 @@ const AppStateProvider = ({ children }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { viewport } = useAppSelector((state) => state.map);
-  const { locations } = useAppSelector((state) => state.locations);
+  const numberOfLocations = useAppSelector((state) => state.locations.locations.length);
+
+  const [triggerUpdateNumberOfNewLocations, result] = useUpdateNumberOfNewLocationsMutation();
 
   // How to use RTK hooks: https://redux-toolkit.js.org/tutorials/rtk-query#create-an-api-service
   // NOTICE: RTK Query ensures that any component that subscribes to the same query will always use the same data.
@@ -81,57 +86,19 @@ const AppStateProvider = ({ children }) => {
   }, [newComment, dispatch]);
 
   useEffect(() => {
-    const updateNewNumLoc = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const options = {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            token,
-          },
-          // converts JS data into JSON string.
-          body: JSON.stringify({ current_num_loc: locations.length }),
-          credentials: 'include',
-        };
-        await fetch(
-          `${process.env.REACT_APP_API_URL}/users/${user._id}/num-loc-last-visit`,
-          options
-        );
-      } catch (err) {
-        console.log(err.message);
-      }
-    };
-
-    if (locations && user) {
-      const timer = setTimeout(() => updateNewNumLoc(), 25000);
-      setNumNewLoc(locations.length - user.num_loc_last_visit);
+    if (numberOfLocations && user) {
+      dispatch(userActions.setNumberOfNewLocations(numberOfLocations - user.num_loc_last_visit));
+      const timer = setTimeout(
+        () =>
+          triggerUpdateNumberOfNewLocations({
+            userId: user._id,
+            numberOfLocations,
+          }),
+        25000
+      );
       return () => clearTimeout(timer);
     }
-  }, [locations, user]);
-
-  useEffect(() => {
-    const fetchLoc = async () => {
-      try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/locations`);
-        const data = await res.json();
-        dispatch(locationsActions.setLocations(data));
-      } catch (err) {
-        console.log(err.message);
-      }
-    };
-    fetchLoc();
-  }, [dispatch]);
-
-  const fetchUpdatedLoc = async (loc) => {
-    try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/${loc._id}`);
-      const updatedLoc = await res.json();
-      dispatch(locationsActions.updateOneLocation(updatedLoc));
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
+  }, [numberOfLocations, user, triggerUpdateNumberOfNewLocations, dispatch]);
 
   useEffect(() => {
     const fetchAllCitiesWithLoc = async () => {
@@ -223,11 +190,8 @@ const AppStateProvider = ({ children }) => {
   return (
     <Context.Provider
       value={{
-        numNewLoc,
-        setNumNewLoc,
         topLocations,
         setTopLocations,
-        fetchUpdatedLoc,
         cities,
         setCities,
         listResults,
