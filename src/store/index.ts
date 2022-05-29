@@ -11,6 +11,8 @@ import { searchSliceReducer } from './searchSlice';
 import { authApi } from './api/auth-api-slice';
 import { userApi } from './api/user-api-slice';
 import { locationsApi } from './api/locations-api-slice';
+import { commentApi } from './api/comment-api-slice';
+import { flavorApi } from './api/flavor-api-slice';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
 
 const reducers = combineReducers({
@@ -26,6 +28,8 @@ const reducers = combineReducers({
   [authApi.reducerPath]: authApi.reducer, // Add generated reducer as a specific top-level slice
   [userApi.reducerPath]: userApi.reducer,
   [locationsApi.reducerPath]: locationsApi.reducer,
+  [commentApi.reducerPath]: commentApi.reducer,
+  [flavorApi.reducerPath]: flavorApi.reducer,
 });
 
 const store = configureStore({

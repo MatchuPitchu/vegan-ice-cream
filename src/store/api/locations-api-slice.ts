@@ -20,8 +20,8 @@ export const locationsApi = createApi({
         }),
       }),
       getOneLocation: builder.query<IceCreamLocation, string>({
-        query: (locationId) => ({
-          url: `/${locationId}`,
+        query: (location_id) => ({
+          url: `/${location_id}`,
           method: 'GET',
         }),
       }),
@@ -50,10 +50,10 @@ export const locationsApi = createApi({
           credentials: 'include',
         }),
       }),
-      postPricing: builder.mutation<IceCreamLocation, { locationId: string; pricing: number }>({
-        query: ({ locationId, pricing }) => {
+      postPricing: builder.mutation<IceCreamLocation, { location_id: string; pricing: number }>({
+        query: ({ location_id, pricing }) => {
           return {
-            url: `/pricing/${locationId}`,
+            url: `/pricing/${location_id}`,
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

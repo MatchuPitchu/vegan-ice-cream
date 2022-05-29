@@ -4,8 +4,12 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { flavorActions } from '../store/flavorSlice';
 import { appActions } from '../store/appSlice';
 import { locationsActions } from '../store/locationsSlice';
-import { useGetOneLocationQuery, usePostPricingMutation } from '../store/api/locations-api-slice';
+import { searchActions } from '../store/searchSlice';
+import { commentActions } from '../store/commentSlice';
 import { skipToken } from '@reduxjs/toolkit/dist/query';
+import { useGetOneLocationQuery, usePostPricingMutation } from '../store/api/locations-api-slice';
+import { usePostNewCommentMutation } from '../store/api/comment-api-slice';
+import { usePostFlavorMutation } from '../store/api/flavor-api-slice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -36,7 +40,7 @@ import Search from '../components/Search';
 import SearchFlavors from '../components/SearchFlavors';
 import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
-import { searchActions } from '../store/searchSlice';
+import { useGetAdditionalInfosFromUserQuery } from '../store/api/user-api-slice';
 
 // static data outside of React component to avoid redeclaring variable after each re-rendering
 const COLORS = [
@@ -102,12 +106,16 @@ const Bewerten = () => {
   const { isAuth, user } = useAppSelector((state) => state.user);
   const { flavor, searchTermFlavor } = useAppSelector((state) => state.flavor);
 
-  const { searchSelected, setSearchSelected, setNewComment } = useContext(Context);
+  const { searchSelected, setSearchSelected } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
-  const [triggerPriceUpdate, result] = usePostPricingMutation();
+  const [triggerPriceUpdate, result1] = usePostPricingMutation();
+  const [triggerPostComment, result2] = usePostNewCommentMutation();
+  const [triggerPostFlavor, result3] = usePostFlavorMutation();
 
   const [refetchLocationId, setRefetchLocationId] = useState(null);
+  const [refetchUserId, setRefetchUserId] = useState(null);
+
   const {
     data: updatedLocation,
     error: errorFetchUpdatedLocation,
@@ -115,12 +123,24 @@ const Bewerten = () => {
     isSuccess: isSuccessFetchUpdatedLocation,
   } = useGetOneLocationQuery(refetchLocationId ?? skipToken);
 
+  const {
+    error: error2,
+    isLoading: isLoading2,
+    isSuccess: isSuccessFetchAddtionalUserInfo,
+  } = useGetAdditionalInfosFromUserQuery(refetchUserId ?? skipToken);
+
   useEffect(() => {
     if (isSuccessFetchUpdatedLocation) {
       dispatch(locationsActions.updateOneLocation(updatedLocation));
       setRefetchLocationId(null);
     }
   }, [isSuccessFetchUpdatedLocation, updatedLocation, dispatch]);
+
+  useEffect(() => {
+    if (isSuccessFetchAddtionalUserInfo) {
+      setRefetchUserId(null);
+    }
+  }, [isSuccessFetchAddtionalUserInfo]);
 
   const [popoverInfo, setPopoverInfo] = useState({ show: false, event: undefined });
   const [showColorPicker, setShowColorPicker] = useState({ field1: false, field2: false });
@@ -184,94 +204,46 @@ const Bewerten = () => {
 
   const onSubmit = async (data) => {
     dispatch(appActions.setIsLoading(true));
-    const token = localStorage.getItem('token');
 
     // Create Pricing and add to database
     if (data?.pricing > 0) {
-      triggerPriceUpdate({ locationId: searchSelected._id, pricing: data.pricing });
+      triggerPriceUpdate({ location_id: searchSelected._id, pricing: data.pricing });
     }
 
-    // Create Comment Function
     try {
-      const body = {
+      const { data: createdComment } = await triggerPostComment({
+        location_id: searchSelected._id,
         user_id: user._id,
-        text: data.text,
-        rating_quality: data.rating_quality,
-        bio: data.bio,
-        vegan: data.vegan,
-        lactose_free: data.lactose_free,
-        not_specified: data.not_specified,
-        rating_vegan_offer: data.rating_vegan_offer,
-        date: data.date || undefined,
-      };
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          token,
+        newCommentData: data,
+      });
+
+      const flavorData = {
+        name: data.name,
+        type_fruit: data.type_fruit,
+        type_cream: data.type_cream,
+        color: {
+          primary: data.color1,
+          secondary: data.color2,
         },
-        body: JSON.stringify(body),
-        credentials: 'include',
-      };
-      const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/comments/${searchSelected._id}`,
-        options
-      );
-      const createdComment = await res.json();
-
-      if (!createdComment) {
-        dispatch(appActions.setError('Fehler beim Eintragen. Bitte versuch es später nochmal'));
-        setTimeout(() => dispatch(appActions.resetError()), 5000);
-      }
-
-      // Create Flavor Function
-      const createFlavor = (data, comment) => {
-        const token = localStorage.getItem('token');
-        try {
-          const uploadFlavor = async (name, type_fruit, type_cream, primary, secondary) => {
-            const body = {
-              location_id: searchSelected._id,
-              user_id: user._id,
-              name,
-              type_fruit,
-              type_cream,
-              color: {
-                primary,
-                secondary,
-              },
-            };
-
-            const options = {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                token,
-              },
-              body: JSON.stringify(body),
-              credentials: 'include',
-            };
-            const res = await fetch(
-              `${process.env.REACT_APP_API_URL}/flavors/${comment._id}`,
-              options
-            );
-            await res.json();
-          };
-          const { name, type_fruit, type_cream, color1, color2 } = data;
-          uploadFlavor(name, type_fruit, type_cream, color1, color2);
-        } catch (error) {
-          console.log(error);
-          dispatch(appActions.setError('Fehler beim Eintragen. Bitte versuch es später nochmal.'));
-          setTimeout(() => dispatch(appActions.resetError()), 5000);
-        }
       };
 
-      createFlavor(data, createdComment);
+      const result = await triggerPostFlavor({
+        comment_id: createdComment._id,
+        location_id: searchSelected._id,
+        user_id: user._id,
+        flavorData,
+      });
+
+      console.log(result);
 
       // replace data of updated loc in locations array
       setRefetchLocationId(searchSelected._id);
 
-      // if newComment is set than user data is refetched in Context
-      setNewComment(createdComment);
+      // TODO: IF NEW COMMENT POST REQUEST + FLAVOR POST REQUEST FULLFILLED, THAN TRIGGER REFETCH USER DATA
+      // OLD: look at context useEffect -> if newComment is set than user data is refetched in Context
+      // dispatch(commentActions.setNewComment(createdComment));
+      setRefetchUserId(user._id);
+
       // clean values that are needed for form searchbars
       dispatch(searchActions.setSearchText(''));
       dispatch(flavorActions.setSearchTermFlavor(''));

@@ -2,14 +2,9 @@ import { useState, useEffect, createContext } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { mapActions } from '../store/mapSlice';
 import { appActions } from '../store/appSlice';
-import { locationsActions } from '../store/locationsSlice';
-import { useUpdateNumberOfNewLocationsMutation } from '../store/api/user-api-slice';
 import { userActions } from '../store/userSlice';
-import {
-  useGetLocationsQuery,
-  useUpdateLocationsInViewportMutation,
-} from '../store/api/locations-api-slice';
-import { searchActions } from '../store/searchSlice';
+import { useUpdateNumberOfNewLocationsMutation } from '../store/api/user-api-slice';
+import { useUpdateLocationsInViewportMutation } from '../store/api/locations-api-slice';
 
 export const Context = createContext();
 
@@ -45,6 +40,7 @@ const AppStateProvider = ({ children }) => {
   // const [cities, setCities] = useState([]);
   // const [searchText, setSearchText] = useState('');
   // const [segment, setSegment] = useState('map');
+  // const [newComment, setNewComment] = useState(null);
 
   const [map, setMap] = useState(null);
   const [topLocations, setTopLocations] = useState([]);
@@ -63,12 +59,12 @@ const AppStateProvider = ({ children }) => {
   const [position, setPosition] = useState();
   const [infoModal, setInfoModal] = useState(false);
   const [newLocModal, setNewLocModal] = useState(false);
-  const [newComment, setNewComment] = useState(null);
 
   // START REDUX TOOLKIT UPDATE
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { viewport } = useAppSelector((state) => state.map);
+  const { newComment } = useAppSelector((state) => state.comment);
   const numberOfLocations = useAppSelector((state) => state.locations.locations.length);
 
   const [triggerUpdateNumberOfNewLocations, result] = useUpdateNumberOfNewLocationsMutation();
@@ -96,7 +92,7 @@ const AppStateProvider = ({ children }) => {
       const timer = setTimeout(
         () =>
           triggerUpdateNumberOfNewLocations({
-            userId: user._id,
+            user_id: user._id,
             numberOfLocations,
           }),
         25000
@@ -158,8 +154,6 @@ const AppStateProvider = ({ children }) => {
         setNewLocModal,
         openComments,
         setOpenComments,
-        newComment,
-        setNewComment,
       }}
     >
       {children}

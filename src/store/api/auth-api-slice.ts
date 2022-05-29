@@ -21,7 +21,7 @@ export const authApi = createApi({
   reducerPath: 'authApi',
   // built-in fetch wrapper
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.REACT_APP_API_URL,
+    baseUrl: `${process.env.REACT_APP_API_URL}/auth`,
     // include automatically token in headers of every Request defined here
     // prepareHeaders is the last piece in the chain: has access to store, it could merge some header coming from the endpoint with a store value or similar things.
     // it's the most powerful & most dynamic api, so it is called last in the chain and can override everything.
@@ -39,14 +39,14 @@ export const authApi = createApi({
       // <ReturnType of Request, passed argument into query hook>
       verifyUserSession: builder.query<ReturnTypeVerifySession, void>({
         query: () => ({
-          url: '/auth/verify-session',
+          url: '/verify-session',
           method: 'GET',
           credentials: 'include',
         }),
       }),
       loginUser: builder.mutation<ReturnTypeLoginRequest, LoginData>({
         query: ({ email, password }) => ({
-          url: '/auth/login',
+          url: '/login',
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

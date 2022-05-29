@@ -12,7 +12,7 @@ export const userApi = createApi({
   reducerPath: 'userApi',
   // built-in fetch wrapper
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.REACT_APP_API_URL,
+    baseUrl: `${process.env.REACT_APP_API_URL}/users`,
     // include automatically token in headers of every Request defined here
     prepareHeaders: (headers) => {
       const token = localStorage.getItem('token');
@@ -26,18 +26,18 @@ export const userApi = createApi({
   endpoints: (builder) => {
     return {
       getAdditionalInfosFromUser: builder.query<ReturnTypeAdditionalInfosFromUser, string>({
-        query: (userId) => ({
-          url: `/users/${userId}/infos`,
+        query: (user_id) => ({
+          url: `/${user_id}/infos`,
           method: 'GET',
           credentials: 'include',
         }),
       }),
       updateNumberOfNewLocations: builder.mutation<
         void,
-        { userId: string; numberOfLocations: number }
+        { user_id: string; numberOfLocations: number }
       >({
-        query: ({ userId, numberOfLocations }) => ({
-          url: `/users/${userId}/num-loc-last-visit`,
+        query: ({ user_id, numberOfLocations }) => ({
+          url: `/${user_id}/num-loc-last-visit`,
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
