@@ -207,7 +207,7 @@ const Bewerten = () => {
 
     // Create Pricing and add to database
     if (data?.pricing > 0) {
-      triggerPriceUpdate({ location_id: searchSelected._id, pricing: data.pricing });
+      await triggerPriceUpdate({ location_id: searchSelected._id, pricing: data.pricing });
     }
 
     try {

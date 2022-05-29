@@ -90,8 +90,8 @@ const AppStateProvider = ({ children }) => {
     if (numberOfLocations && user) {
       dispatch(userActions.setNumberOfNewLocations(numberOfLocations - user.num_loc_last_visit));
       const timer = setTimeout(
-        () =>
-          triggerUpdateNumberOfNewLocations({
+        async () =>
+          await triggerUpdateNumberOfNewLocations({
             user_id: user._id,
             numberOfLocations,
           }),
@@ -103,9 +103,10 @@ const AppStateProvider = ({ children }) => {
 
   // fetch data of locations in viewport
   useEffect(() => {
-    if (viewport) {
-      triggerUpdateLocationsInViewport({ limit: 500, viewport });
-    }
+    const updateLocation = async () => {
+      await triggerUpdateLocationsInViewport({ limit: 500, viewport });
+    };
+    if (viewport) updateLocation();
   }, [viewport, triggerUpdateLocationsInViewport]);
 
   const searchViewport = () => {

@@ -54,7 +54,7 @@ const Preis = () => {
   const onSubmit = async (data) => {
     dispatch(appActions.setIsLoading(true));
     if (data.pricing && data.pricing > 0) {
-      triggerPriceUpdate({ location_id: searchSelected._id, pricing: data.pricing });
+      await triggerPriceUpdate({ location_id: searchSelected._id, pricing: data.pricing });
     }
 
     setIsFormVisible(false);

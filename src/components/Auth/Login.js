@@ -61,7 +61,7 @@ const Login = () => {
     };
   }, [isError, dispatch]);
 
-  const onSubmit = (loginData) => triggerLogin(loginData);
+  const onSubmit = async (loginData) => await triggerLogin(loginData);
 
   if (isAuth) return <Redirect exact to='/home' />;
 
