@@ -23,6 +23,8 @@ export const authApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.REACT_APP_API_URL,
     // include automatically token in headers of every Request defined here
+    // prepareHeaders is the last piece in the chain: has access to store, it could merge some header coming from the endpoint with a store value or similar things.
+    // it's the most powerful & most dynamic api, so it is called last in the chain and can override everything.
     prepareHeaders: (headers) => {
       const token = localStorage.getItem('token');
       if (token) {

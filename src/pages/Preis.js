@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { appActions } from '../store/appSlice';
+import { usePostPricingMutation } from '../store/api/locations-api-slice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -28,10 +29,12 @@ const Preis = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
 
-  const { searchSelected, setSearchSelected, createPricing } = useContext(Context);
+  const { searchSelected, setSearchSelected } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [endReset, setEndReset] = useState(false);
+
+  const [triggerPriceUpdate, result] = usePostPricingMutation();
 
   const defaultValues = {
     pricing: 0,
@@ -48,7 +51,9 @@ const Preis = () => {
 
   const onSubmit = async (data) => {
     dispatch(appActions.setIsLoading(true));
-    if (data.pricing && data.pricing > 0) createPricing(data);
+    if (data.pricing && data.pricing > 0) {
+      triggerPriceUpdate({ locationId: searchSelected._id, pricing: data.pricing });
+    }
 
     setSearchSelected(null);
     setEndReset(true);

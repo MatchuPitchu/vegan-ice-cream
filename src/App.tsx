@@ -54,6 +54,7 @@ import './App.css';
 const App: React.FC = () => {
   const { user } = useAppSelector((state) => state.user);
 
+  // GET Request: Additional User Informationen
   const {
     data: additionUserData,
     error: errorRTKQuery2,

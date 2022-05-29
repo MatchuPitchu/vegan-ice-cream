@@ -3,6 +3,9 @@ import { useContext, useState, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { flavorActions } from '../store/flavorSlice';
 import { appActions } from '../store/appSlice';
+import { locationsActions } from '../store/locationsSlice';
+import { useGetOneLocationQuery, usePostPricingMutation } from '../store/api/locations-api-slice';
+import { skipToken } from '@reduxjs/toolkit/dist/query';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -33,9 +36,6 @@ import Search from '../components/Search';
 import SearchFlavors from '../components/SearchFlavors';
 import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
-import { locationsActions } from '../store/locationsSlice';
-import { useGetOneLocationQuery } from '../store/api/locations-api-slice';
-import { skipToken } from '@reduxjs/toolkit/dist/query';
 
 // static data outside of React component to avoid redeclaring variable after each re-rendering
 const COLORS = [
@@ -101,9 +101,10 @@ const Bewerten = () => {
   const { isAuth, user } = useAppSelector((state) => state.user);
   const { flavor, searchTermFlavor } = useAppSelector((state) => state.flavor);
 
-  const { searchSelected, setSearchSelected, setSearchText, setNewComment, createPricing } =
-    useContext(Context);
+  const { searchSelected, setSearchSelected, setSearchText, setNewComment } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
+
+  const [triggerPriceUpdate, result] = usePostPricingMutation();
 
   const [refetchLocationId, setRefetchLocationId] = useState(null);
   const {
@@ -185,7 +186,8 @@ const Bewerten = () => {
     const token = localStorage.getItem('token');
 
     // Create Pricing and add to database
-    if (data.pricing && data.pricing > 0) createPricing(data);
+    if (data.pricing && data.pricing > 0)
+      triggerPriceUpdate({ locationId: searchSelected._id, pricing: data.pricing });
 
     // Create Comment Function
     try {

@@ -1,15 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export interface ViewportType {
+  southLat: google.maps.LatLng;
+  westLng: google.maps.LatLng;
+  northLat: google.maps.LatLng;
+  eastLng: google.maps.LatLng;
+}
+
 // TS and Google Maps: https://developers.google.com/maps/documentation/javascript/using-typescript
 interface MapStateSlice {
   center: google.maps.LatLngLiteral | null;
   zoom: number;
-  viewport: {
-    southLat: number;
-    westLng: number;
-    northLat: number;
-    eastLng: number;
-  } | null;
+  viewport: ViewportType | null;
 }
 
 const initialMapState: MapStateSlice = {

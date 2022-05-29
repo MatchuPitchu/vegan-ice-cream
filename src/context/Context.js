@@ -160,33 +160,6 @@ const AppStateProvider = ({ children }) => {
     dispatch(mapActions.setViewport(latLngBounds));
   };
 
-  const createPricing = async (data) => {
-    const token = localStorage.getItem('token');
-    try {
-      const body = {
-        pricing: data.pricing,
-      };
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          token,
-        },
-        body: JSON.stringify(body),
-        credentials: 'include',
-      };
-      const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/locations/pricing/${searchSelected._id}`,
-        options
-      );
-      const updatedLoc = await res.json();
-      dispatch(locationsActions.updateOneLocation(updatedLoc));
-    } catch (err) {
-      dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal'));
-      setTimeout(() => dispatch(appActions.resetError()), 5000);
-    }
-  };
-
   return (
     <Context.Provider
       value={{
@@ -227,7 +200,6 @@ const AppStateProvider = ({ children }) => {
         setInfoModal,
         newLocModal,
         setNewLocModal,
-        createPricing,
         openComments,
         setOpenComments,
         newComment,

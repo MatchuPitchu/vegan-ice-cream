@@ -243,6 +243,12 @@ const locationsSlice = createSlice({
     builder.addMatcher(locationsApi.endpoints.getLocations.matchFulfilled, (state, { payload }) => {
       state.locations = payload;
     });
+    builder.addMatcher(locationsApi.endpoints.postPricing.matchFulfilled, (state, { payload }) => {
+      const updatedLocationIndex = state.locations.findIndex(
+        (location) => location._id === payload._id
+      );
+      state.locations[updatedLocationIndex] = payload;
+    });
   },
 });
 
