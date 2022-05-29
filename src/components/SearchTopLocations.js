@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 // Redux Store
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { appActions } from '../store/appSlice';
 // Context
 import { Context } from '../context/Context';
@@ -11,10 +11,10 @@ import LoadingError from './LoadingError';
 
 const Search = () => {
   const dispatch = useAppDispatch();
+  const { citiesWithLocations } = useAppSelector((state) => state.locations);
 
   const {
     isDarkTheme,
-    cities,
     setTopLocations,
     cityName,
     setCityName,
@@ -70,7 +70,7 @@ const Search = () => {
     if (value) {
       // make array from input string -> each item is created after one space " "
       const searchQuery = value.split(' ').filter((word) => word);
-      const res = await cities.filter((city) => {
+      const res = await citiesWithLocations.filter((city) => {
         const found = searchQuery.map((word) => {
           // return if exists just a space or a space and then nothing
           if (word === ' ' || word === '') return undefined;

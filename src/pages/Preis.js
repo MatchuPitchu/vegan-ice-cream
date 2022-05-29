@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { appActions } from '../store/appSlice';
@@ -32,7 +33,8 @@ const Preis = () => {
   const { searchSelected, setSearchSelected } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
-  const [endReset, setEndReset] = useState(false);
+  const [finishPriceUpdate, setFinishPriceUpdate] = useState(false);
+  const [isFormVisible, setIsFormVisible] = useState(true);
 
   const [triggerPriceUpdate, result] = usePostPricingMutation();
 
@@ -55,13 +57,24 @@ const Preis = () => {
       triggerPriceUpdate({ locationId: searchSelected._id, pricing: data.pricing });
     }
 
+    setIsFormVisible(false);
     setSearchSelected(null);
-    setEndReset(true);
-    setTimeout(() => setEndReset(false), 5000);
+    setTimeout(() => setFinishPriceUpdate(true), 2000);
+    setTimeout(() => setIsFormVisible(true), 3000);
+    setTimeout(() => setFinishPriceUpdate(false), 3000);
     dispatch(appActions.setIsLoading(false));
   };
 
-  return isAuth && user ? (
+  if (finishPriceUpdate) return <Redirect to='/home' exact />;
+
+  if (!isAuth && !user)
+    return (
+      <IonPage>
+        <Spinner />
+      </IonPage>
+    );
+
+  return (
     <IonPage>
       <IonHeader>
         <img
@@ -74,7 +87,7 @@ const Preis = () => {
       </IonHeader>
 
       <IonContent>
-        {!endReset ? (
+        {isFormVisible && (
           <div className='container mt-3 text-center'>
             <form onSubmit={handleSubmit(onSubmit)}>
               <IonItem lines='none' className='mb-1'>
@@ -123,7 +136,9 @@ const Preis = () => {
               </IonButton>
             </form>
           </div>
-        ) : (
+        )}
+
+        {!isFormVisible && (
           <div className='container text-center'>
             <IonCard>
               <IonCardContent>
@@ -135,10 +150,6 @@ const Preis = () => {
 
         <LoadingError />
       </IonContent>
-    </IonPage>
-  ) : (
-    <IonPage>
-      <Spinner />
     </IonPage>
   );
 };

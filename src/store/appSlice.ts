@@ -5,6 +5,7 @@ interface AppStateSlice {
   error: string;
   successMsg: string;
   checkMsgNewLocation: string;
+  entdeckenSegment: 'map' | 'list';
 }
 
 const initialAppState: AppStateSlice = {
@@ -12,6 +13,7 @@ const initialAppState: AppStateSlice = {
   error: '',
   successMsg: '',
   checkMsgNewLocation: '',
+  entdeckenSegment: 'map',
 };
 
 const appSlice = createSlice({
@@ -35,6 +37,9 @@ const appSlice = createSlice({
       { payload }: PayloadAction<AppStateSlice['checkMsgNewLocation']>
     ) => {
       state.checkMsgNewLocation = payload;
+    },
+    setEntdeckenSegment: (state, { payload }: PayloadAction<AppStateSlice['entdeckenSegment']>) => {
+      state.entdeckenSegment = payload;
     },
   },
 });

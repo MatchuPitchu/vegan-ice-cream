@@ -1,8 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IceCreamLocation } from '../../types';
+import type { CityName } from '../locationsSlice';
 import { ViewportType } from '../mapSlice';
-
-type CityName = string;
 
 // Define a service using a base URL and expected endpoints
 export const locationsApi = createApi({
@@ -75,5 +74,6 @@ export const {
   useGetLocationsQuery,
   useGetOneLocationQuery,
   useGetAllCitiesWithLocationsQuery,
+  useUpdateLocationsInViewportMutation,
   usePostPricingMutation,
 } = locationsApi; // automatically generated query hook

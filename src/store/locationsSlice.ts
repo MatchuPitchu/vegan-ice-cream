@@ -62,16 +62,20 @@ interface GoogleGeocodingResultsConverted {
   place_id?: string;
 }
 
+export type CityName = string;
+
 interface LocationsStateSlice {
   locations: IceCreamLocation[];
   newLocation: NewLocationType | null;
   locationsVisibleOnMap: IceCreamLocation[];
+  citiesWithLocations: CityName[];
 }
 
 const initialLocationsState: LocationsStateSlice = {
   locations: [],
   newLocation: null,
   locationsVisibleOnMap: [],
+  citiesWithLocations: [],
 };
 
 const sortNumbersAsc = (type: SortType) => (a: IceCreamLocation, b: IceCreamLocation) => {
@@ -231,6 +235,9 @@ const locationsSlice = createSlice({
         place_id: address.place_id || '',
       };
     },
+    setCitiesWithLocations: (state, { payload }: PayloadAction<CityName[]>) => {
+      state.citiesWithLocations = payload;
+    },
     // LOCATIONS VISIBLE ON MAP: for later user, if there are to many locations in database
     setLocationsVisibleOnMap: (state, { payload }: PayloadAction<IceCreamLocation[]>) => {
       state.locationsVisibleOnMap = payload;
@@ -249,6 +256,18 @@ const locationsSlice = createSlice({
       );
       state.locations[updatedLocationIndex] = payload;
     });
+    builder.addMatcher(
+      locationsApi.endpoints.updateLocationsInViewport.matchFulfilled,
+      (state, { payload }) => {
+        state.locationsVisibleOnMap = payload;
+      }
+    );
+    builder.addMatcher(
+      locationsApi.endpoints.getAllCitiesWithLocations.matchFulfilled,
+      (state, { payload }) => {
+        state.citiesWithLocations = payload;
+      }
+    );
   },
 });
 

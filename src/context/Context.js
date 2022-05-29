@@ -5,7 +5,11 @@ import { appActions } from '../store/appSlice';
 import { locationsActions } from '../store/locationsSlice';
 import { useUpdateNumberOfNewLocationsMutation } from '../store/api/user-api-slice';
 import { userActions } from '../store/userSlice';
-import { useGetLocationsQuery } from '../store/api/locations-api-slice';
+import {
+  useGetLocationsQuery,
+  useUpdateLocationsInViewportMutation,
+} from '../store/api/locations-api-slice';
+import { searchActions } from '../store/searchSlice';
 
 export const Context = createContext();
 
@@ -38,9 +42,12 @@ const AppStateProvider = ({ children }) => {
   // const [locationsMap, setLocationsMap] = useState([]);
   // const [newLocation, setNewLocation] = useState(null);
   // const [numNewLoc, setNumNewLoc] = useState();
+  // const [cities, setCities] = useState([]);
+  // const [searchText, setSearchText] = useState('');
+  // const [segment, setSegment] = useState('map');
 
+  const [map, setMap] = useState(null);
   const [topLocations, setTopLocations] = useState([]);
-  const [cities, setCities] = useState([]);
   const [listResults, setListResults] = useState([]);
   const [autocomplete, setAutocomplete] = useState(null);
   const [autocompleteModal, setAutocompleteModal] = useState(false);
@@ -49,12 +56,9 @@ const AppStateProvider = ({ children }) => {
   const [openComments, setOpenComments] = useState(false);
 
   const [all, setAll] = useState(false);
-  const [searchText, setSearchText] = useState('');
   const [cityName, setCityName] = useState('');
   const [noTopLoc, setNoTopLoc] = useState(false);
   const [showTopLoc, setShowTopLoc] = useState(false);
-  const [segment, setSegment] = useState('map');
-  const [map, setMap] = useState(null);
   const [searchSelected, setSearchSelected] = useState(null);
   const [position, setPosition] = useState();
   const [infoModal, setInfoModal] = useState(false);
@@ -68,6 +72,7 @@ const AppStateProvider = ({ children }) => {
   const numberOfLocations = useAppSelector((state) => state.locations.locations.length);
 
   const [triggerUpdateNumberOfNewLocations, result] = useUpdateNumberOfNewLocationsMutation();
+  const [triggerUpdateLocationsInViewport, result2] = useUpdateLocationsInViewportMutation();
 
   // How to use RTK hooks: https://redux-toolkit.js.org/tutorials/rtk-query#create-an-api-service
   // NOTICE: RTK Query ensures that any component that subscribes to the same query will always use the same data.
@@ -100,55 +105,12 @@ const AppStateProvider = ({ children }) => {
     }
   }, [numberOfLocations, user, triggerUpdateNumberOfNewLocations, dispatch]);
 
-  useEffect(() => {
-    const fetchAllCitiesWithLoc = async () => {
-      try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/locations/cities-with-locations`);
-        const data = await res.json();
-        setCities(data);
-      } catch (err) {
-        console.log(err.message);
-      }
-    };
-    fetchAllCitiesWithLoc();
-  }, []);
-
-  useEffect(() => {
-    // if user changes segment ('map' or 'list') than value of searchbar is reseted
-    setSearchText('');
-  }, [segment]);
-
   // fetch data of locations in viewport
   useEffect(() => {
-    const updateLocInViewport = async () => {
-      try {
-        const limit = 500;
-        const options = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          // converts JS data into JSON string.
-          body: JSON.stringify({
-            southLat: viewport.southLat,
-            westLng: viewport.westLng,
-            northLat: viewport.northLat,
-            eastLng: viewport.eastLng,
-          }),
-          credentials: 'include',
-        };
-        const res = await fetch(
-          `${process.env.REACT_APP_API_URL}/locations/viewport?limit=${limit}`,
-          options
-        );
-        const data = await res.json();
-        dispatch(locationsActions.setLocationsVisibleOnMap(data));
-      } catch (err) {
-        console.log(err.message);
-      }
-    };
-    if (viewport) updateLocInViewport();
-  }, [viewport, searchSelected, dispatch]);
+    if (viewport) {
+      triggerUpdateLocationsInViewport({ limit: 500, viewport });
+    }
+  }, [viewport, triggerUpdateLocationsInViewport]);
 
   const searchViewport = () => {
     const latLngBounds = {
@@ -165,8 +127,6 @@ const AppStateProvider = ({ children }) => {
       value={{
         topLocations,
         setTopLocations,
-        cities,
-        setCities,
         listResults,
         setListResults,
         autocomplete,
@@ -179,16 +139,12 @@ const AppStateProvider = ({ children }) => {
         setFormattedAddress,
         all,
         setAll,
-        searchText,
-        setSearchText,
         cityName,
         setCityName,
         noTopLoc,
         setNoTopLoc,
         showTopLoc,
         setShowTopLoc,
-        segment,
-        setSegment,
         map,
         setMap,
         searchViewport,

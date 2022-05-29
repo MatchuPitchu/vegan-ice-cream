@@ -11,8 +11,9 @@ import ListFilters from './ListFilters';
 const ListMap = () => {
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
   const { locations } = useAppSelector((state) => state.locations);
+  const { searchText } = useAppSelector((state) => state.search);
 
-  const { listResults, searchText } = useContext(Context);
+  const { listResults } = useContext(Context);
 
   const [endIndexInLocationsList, setEndIndexInLocationsList] = useState(4);
 

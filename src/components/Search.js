@@ -9,13 +9,15 @@ import Highlighter from 'react-highlight-words';
 import { IonIcon, IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/react';
 import { informationCircle } from 'ionicons/icons';
 import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables';
+import { searchActions } from '../store/searchSlice';
 
 const Search = () => {
   const dispatch = useAppDispatch();
   const { locations } = useAppSelector((state) => state.locations);
+  const { searchText } = useAppSelector((state) => state.search);
+  const { entdeckenSegement } = useAppSelector((state) => state.app);
 
-  const { segment, searchViewport, setListResults, setSearchSelected, searchText, setSearchText } =
-    useContext(Context);
+  const { searchViewport, setListResults, setSearchSelected } = useContext(Context);
 
   const [predictions, setPredictions] = useState([]);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
@@ -23,8 +25,7 @@ const Search = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    setSearchText('');
-    if (e.target.elements[0].value.length > 3 && segment === 'map') {
+    if (e.target.elements[0].value.length > 3 && entdeckenSegement === 'map') {
       dispatch(appActions.setIsLoading(true));
       try {
         const uri = encodeURI(e.target.elements[0].value);
@@ -54,6 +55,7 @@ const Search = () => {
       setListResults([]);
       dispatch(appActions.setIsLoading(false));
     }
+    dispatch(searchActions.setSearchText(''));
   };
 
   const forAutocompleteChange = async (value) => {
@@ -79,7 +81,7 @@ const Search = () => {
       const result = res.slice(0, 4);
       setPredictions(result);
       // if user is on map list page and uses search than resultsList is displayed
-      if (segment === 'list') setListResults(res);
+      if (entdeckenSegement === 'list') setListResults(res);
     }
     if (!value) {
       setPredictions([]);
@@ -106,10 +108,10 @@ const Search = () => {
           cancel-button-text=''
           value={searchText}
           debounce={500}
-          onIonChange={(e) => {
-            setSearchText(e.detail.value);
-            forAutocompleteChange(e.detail.value);
-            setSearchWords(() => e.detail.value.split(' ').filter((word) => word));
+          onIonChange={({ detail: { value } }) => {
+            dispatch(searchActions.setSearchText(value));
+            forAutocompleteChange(value);
+            setSearchWords(() => value.split(' ').filter((word) => word));
           }}
         />
         <div>
@@ -134,15 +136,17 @@ const Search = () => {
           </IonPopover>
         </div>
       </div>
-      {predictions && segment === 'map' ? (
+      {predictions && entdeckenSegement === 'map' ? (
         <IonList className='py-0'>
           {predictions.map((loc) => (
             <IonItem
               key={loc._id}
               button
               onClick={() => {
-                setSearchText(
-                  `${loc.name}, ${loc.address.street} ${loc.address.number}, ${loc.address.city}`
+                dispatch(
+                  searchActions.setSearchText(
+                    `${loc.name}, ${loc.address.street} ${loc.address.number}, ${loc.address.city}`
+                  )
                 );
                 initMarker(loc);
               }}

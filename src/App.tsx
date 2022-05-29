@@ -1,8 +1,9 @@
+import { Redirect, Route } from 'react-router-dom';
 // Redux Store
 import { useAppSelector } from './store/hooks';
 import { useGetAdditionalInfosFromUserQuery } from './store/api/user-api-slice';
+import { useGetAllCitiesWithLocationsQuery } from './store/api/locations-api-slice';
 import { skipToken } from '@reduxjs/toolkit/dist/query';
-import { Redirect, Route } from 'react-router-dom';
 import {
   IonApp,
   IonIcon,
@@ -55,12 +56,15 @@ import './App.css';
 const App: React.FC = () => {
   const { user } = useAppSelector((state) => state.user);
 
-  // GET Request: Additional User Informationen
+  // GET Request: additional user informationen
   const {
     data: additionUserData,
-    error: errorRTKQuery2,
-    isLoading: isLoading2,
+    error: errorRTKQuery1,
+    isLoading: isLoading1,
   } = useGetAdditionalInfosFromUserQuery(user?._id ?? skipToken); // when `id` is nullish (null/undefined), query is skipped: https://redux-toolkit.js.org/rtk-query/usage-with-typescript#skipping-queries-with-typescript-using-skiptoken
+
+  // GET Request: all cities with locations
+  const { error: errorRTKQuery2, isLoading: isLoading2 } = useGetAllCitiesWithLocationsQuery();
 
   // to display notification if update available (see ServiceWorkerWrapper.js)
   // without reload of page

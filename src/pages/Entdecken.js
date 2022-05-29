@@ -37,18 +37,17 @@ import LoadingError from '../components/LoadingError';
 import AutocompleteForm from '../components/AutocompleteForm';
 import GeolocationBtn from '../components/GeolocationBtn';
 import { locationsActions } from '../store/locationsSlice';
+import { searchActions } from '../store/searchSlice';
 
 const Entdecken = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { center, zoom } = useAppSelector((state) => state.map);
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
-  const { checkMsgNewLocation } = useAppSelector((state) => state.app);
+  const { checkMsgNewLocation, entdeckenSegment } = useAppSelector((state) => state.app);
   const { locations, newLocation } = useAppSelector((state) => state.locations);
 
   const {
-    segment,
-    setSegment,
     setMap,
     setAutocompleteModal,
     searchSelected,
@@ -57,6 +56,7 @@ const Entdecken = () => {
     setNewLocModal,
     setOpenComments,
   } = useContext(Context);
+
   const { mapStyles } = useThemeContext();
 
   const [libraries] = useState(['places']);
@@ -123,8 +123,11 @@ const Entdecken = () => {
     <IonPage>
       <div>
         <IonSegment
-          onIonChange={(e) => setSegment(e.detail.value)}
-          value={segment}
+          onIonChange={({ detail: { value } }) => {
+            dispatch(appActions.setEntdeckenSegment(value));
+            dispatch(searchActions.setSearchText('')); // if segment is changed, then reset searchbar
+          }}
+          value={entdeckenSegment}
           swipe-gesture
           className='segments'
         >
@@ -141,7 +144,7 @@ const Entdecken = () => {
 
       <Search />
 
-      {segment === 'map' && (
+      {entdeckenSegment === 'map' && (
         <IonContent>
           <div className='containerMap'>
             <div className='control-left d-flex flex-column'>
@@ -353,7 +356,7 @@ const Entdecken = () => {
         </IonContent>
       )}
 
-      {segment === 'list' && <ListMap />}
+      {entdeckenSegment === 'list' && <ListMap />}
 
       <LoadingError />
     </IonPage>

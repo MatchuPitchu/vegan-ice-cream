@@ -36,6 +36,7 @@ import Search from '../components/Search';
 import SearchFlavors from '../components/SearchFlavors';
 import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
+import { searchActions } from '../store/searchSlice';
 
 // static data outside of React component to avoid redeclaring variable after each re-rendering
 const COLORS = [
@@ -101,7 +102,7 @@ const Bewerten = () => {
   const { isAuth, user } = useAppSelector((state) => state.user);
   const { flavor, searchTermFlavor } = useAppSelector((state) => state.flavor);
 
-  const { searchSelected, setSearchSelected, setSearchText, setNewComment } = useContext(Context);
+  const { searchSelected, setSearchSelected, setNewComment } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [triggerPriceUpdate, result] = usePostPricingMutation();
@@ -186,8 +187,9 @@ const Bewerten = () => {
     const token = localStorage.getItem('token');
 
     // Create Pricing and add to database
-    if (data.pricing && data.pricing > 0)
+    if (data?.pricing > 0) {
       triggerPriceUpdate({ locationId: searchSelected._id, pricing: data.pricing });
+    }
 
     // Create Comment Function
     try {
@@ -270,8 +272,8 @@ const Bewerten = () => {
 
       // if newComment is set than user data is refetched in Context
       setNewComment(createdComment);
-      // clean for form needed values in searchbars
-      setSearchText('');
+      // clean values that are needed for form searchbars
+      dispatch(searchActions.setSearchText(''));
       dispatch(flavorActions.setSearchTermFlavor(''));
       dispatch(flavorActions.setFlavor(null));
       setSearchSelected(null);
