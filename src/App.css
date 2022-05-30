@@ -990,6 +990,11 @@ mark {
   margin-right: 7px;
 }
 
+.pricing-form__display-location > input {
+  cursor: default;
+  user-select: none;
+}
+
 .pricingInfo {
   /* position: absolute; */
   /* top: 15px;
@@ -1112,8 +1117,9 @@ ion-range::part(knob) {
   --placeholder-color: var(--ion-color-medium);
 }
 
-.priceInfo {
+.pricing__info {
   margin: 0 auto;
+  border-bottom: 3px solid var(--ion-color-primary);
 }
 
 .flavor-search-preview {

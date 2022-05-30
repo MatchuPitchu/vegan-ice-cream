@@ -5,17 +5,16 @@ import { flavorActions } from '../store/flavorSlice';
 import { appActions } from '../store/appSlice';
 import { locationsActions } from '../store/locationsSlice';
 import { searchActions } from '../store/searchSlice';
-import { commentActions } from '../store/commentSlice';
 import { skipToken } from '@reduxjs/toolkit/dist/query';
-import { useGetOneLocationQuery, usePostPricingMutation } from '../store/api/locations-api-slice';
-import { usePostNewCommentMutation } from '../store/api/comment-api-slice';
-import { usePostFlavorMutation } from '../store/api/flavor-api-slice';
+import { useGetOneLocationQuery, useUpdatePricingMutation } from '../store/api/locations-api-slice';
+import { useAddCommentMutation } from '../store/api/comment-api-slice';
+import { useAddFlavorMutation } from '../store/api/flavor-api-slice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import ReactStars from 'react-rating-stars-component';
 import { CirclePicker } from 'react-color';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useController } from 'react-hook-form';
 import {
   IonButton,
   IonCard,
@@ -109,9 +108,9 @@ const Bewerten = () => {
   const { searchSelected, setSearchSelected } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
-  const [triggerPriceUpdate, result1] = usePostPricingMutation();
-  const [triggerPostComment, result2] = usePostNewCommentMutation();
-  const [triggerPostFlavor, result3] = usePostFlavorMutation();
+  const [triggerUpdatePricing, result1] = useUpdatePricingMutation();
+  const [triggerAddComment, result2] = useAddCommentMutation();
+  const [triggerAddFlavor, result3] = useAddFlavorMutation();
 
   const [refetchLocationId, setRefetchLocationId] = useState(null);
   const [refetchUserId, setRefetchUserId] = useState(null);
@@ -178,6 +177,14 @@ const Bewerten = () => {
     defaultValues,
   });
 
+  const {
+    field: { onChange, name: pricingFieldName, value },
+  } = useController({
+    name: 'pricing',
+    control,
+    defaultValue: '0',
+  });
+
   useEffect(() => {
     setValue('name', flavor?.name ? searchTermFlavor : undefined);
     setValue('type_fruit', flavor?.name ? flavor.type_fruit : false);
@@ -207,11 +214,11 @@ const Bewerten = () => {
 
     // Create Pricing and add to database
     if (data?.pricing > 0) {
-      await triggerPriceUpdate({ location_id: searchSelected._id, pricing: data.pricing });
+      await triggerUpdatePricing({ location_id: searchSelected._id, pricing: data.pricing });
     }
 
     try {
-      const { data: createdComment } = await triggerPostComment({
+      const { data: createdComment } = await triggerAddComment({
         location_id: searchSelected._id,
         user_id: user._id,
         newCommentData: data,
@@ -227,7 +234,7 @@ const Bewerten = () => {
         },
       };
 
-      const result = await triggerPostFlavor({
+      const result = await triggerAddFlavor({
         comment_id: createdComment._id,
         location_id: searchSelected._id,
         user_id: user._id,
@@ -313,11 +320,11 @@ const Bewerten = () => {
                   control={control}
                   render={({ field: { onChange, value } }) => (
                     <IonInput
-                      readonly
                       className='inputField'
+                      readonly
                       type='text'
                       placeholder='Nutze die Suche'
-                      value={(value = searchSelected ? searchSelected.name : '')}
+                      value={(value = searchSelected?.name ?? '')}
                       onIonChange={(e) => onChange(e.detail.value)}
                     />
                   )}
@@ -328,32 +335,27 @@ const Bewerten = () => {
               {showError('location', errors)}
 
               <IonItem className='mb-1' lines='none'>
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <>
-                      <IonLabel position='stacked' className='pb-1'>
-                        Preis Eiskugel
-                      </IonLabel>
-                      <div className='priceInfo'>
-                        {parseFloat(value) !== 0 && `${parseFloat(value).toFixed(2)} €`}
-                      </div>
-                      <IonRange
-                        className='px-0'
-                        min={0}
-                        max={3}
-                        step={0.1}
-                        snaps
-                        value={value}
-                        onIonChange={(e) => onChange(e.detail.value)}
-                      >
-                        <IonIcon slot='start' size='small' icon={cashOutline} />
-                        <IonIcon slot='end' icon={cashOutline} />
-                      </IonRange>
-                    </>
-                  )}
-                  name='pricing'
-                />
+                <IonLabel position='stacked' className='pb-1'>
+                  Preis Eiskugel
+                </IonLabel>
+                <div className='pricing__info'>
+                  {parseFloat(value) !== 0 &&
+                    `${parseFloat(value).toFixed(2).replace(/\./, ',')} €`}
+                </div>
+                <IonRange
+                  name={pricingFieldName}
+                  className='px-0'
+                  value={value}
+                  onIonChange={({ detail }) => onChange(detail.value)}
+                  min={0.0}
+                  max={4.0}
+                  step={0.1}
+                  snaps={true}
+                  ticks={false}
+                >
+                  <IonIcon slot='start' size='small' icon={cashOutline} />
+                  <IonIcon slot='end' icon={cashOutline} />
+                </IonRange>
               </IonItem>
 
               <SearchFlavors />

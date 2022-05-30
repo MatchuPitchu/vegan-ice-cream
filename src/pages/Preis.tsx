@@ -1,13 +1,13 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, VFC } from 'react';
 import { Redirect } from 'react-router-dom';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { appActions } from '../store/appSlice';
-import { usePostPricingMutation } from '../store/api/locations-api-slice';
+import { useUpdatePricingMutation } from '../store/api/locations-api-slice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
-import { Controller, useForm } from 'react-hook-form';
+import { SubmitHandler, useController, useForm } from 'react-hook-form';
 import {
   IonButton,
   IonCard,
@@ -26,7 +26,11 @@ import { add, cashOutline } from 'ionicons/icons';
 import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
 
-const Preis = () => {
+interface PricingSubmitData {
+  pricing: number;
+}
+
+const Preis: VFC = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
 
@@ -36,32 +40,35 @@ const Preis = () => {
   const [finishPriceUpdate, setFinishPriceUpdate] = useState(false);
   const [isFormVisible, setIsFormVisible] = useState(true);
 
-  const [triggerPriceUpdate, result] = usePostPricingMutation();
+  const [triggerUpdatePricing, result] = useUpdatePricingMutation();
 
-  const defaultValues = {
-    pricing: 0,
-  };
-
-  // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    defaultValues,
+  } = useForm();
+
+  const {
+    field: { onChange, name, value },
+    fieldState: { invalid, isTouched, isDirty },
+  } = useController({
+    name: 'pricing',
+    control,
+    defaultValue: 0,
   });
 
-  const onSubmit = async (data) => {
-    dispatch(appActions.setIsLoading(true));
-    if (data.pricing && data.pricing > 0) {
-      await triggerPriceUpdate({ location_id: searchSelected._id, pricing: data.pricing });
-    }
+  const onSubmit: SubmitHandler<PricingSubmitData> = async ({ pricing }) => {
+    if (!pricing) return;
 
+    dispatch(appActions.setIsLoading(true));
+    if (pricing > 0) {
+      await triggerUpdatePricing({ location_id: searchSelected._id, pricing });
+    }
     setIsFormVisible(false);
-    setSearchSelected(null);
     setTimeout(() => setFinishPriceUpdate(true), 2000);
     setTimeout(() => setIsFormVisible(true), 3000);
     setTimeout(() => setFinishPriceUpdate(false), 3000);
+    setSearchSelected(null);
     dispatch(appActions.setIsLoading(false));
   };
 
@@ -91,10 +98,9 @@ const Preis = () => {
           <div className='container mt-3 text-center'>
             <form onSubmit={handleSubmit(onSubmit)}>
               <IonItem lines='none' className='mb-1'>
-                <IonLabel position='stacked' htmlFor='location'>
-                  Name des Eisladens
-                </IonLabel>
+                <IonLabel position='stacked'>Name des Eisladens</IonLabel>
                 <IonInput
+                  className='pricing-form__display-location'
                   readonly
                   type='text'
                   value={
@@ -104,30 +110,27 @@ const Preis = () => {
               </IonItem>
 
               <IonItem lines='none' className='mb-1'>
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <>
-                      <IonLabel position='stacked' className='pb-1'>
-                        Preis Eiskugel
-                      </IonLabel>
-                      <div className='priceInfo'>{parseFloat(value).toFixed(2)} €</div>
-                      <IonRange
-                        className='px-0'
-                        min={0}
-                        max={3}
-                        step={0.1}
-                        snaps
-                        value={value}
-                        onIonChange={(e) => onChange(e.detail.value)}
-                      >
-                        <IonIcon slot='start' size='small' icon={cashOutline} />
-                        <IonIcon slot='end' icon={cashOutline} />
-                      </IonRange>
-                    </>
-                  )}
-                  name='pricing'
-                />
+                <IonLabel position='stacked' className='pb-1'>
+                  Preis Eiskugel
+                </IonLabel>
+                <div className='pricing__info'>
+                  {parseFloat(value) !== 0 &&
+                    `${parseFloat(value).toFixed(2).replace(/\./, ',')} €`}
+                </div>
+                <IonRange
+                  className='px-0'
+                  name={name}
+                  value={value}
+                  onIonChange={({ detail }) => onChange(detail.value)}
+                  min={0.0}
+                  max={4.0}
+                  step={0.1}
+                  snaps={true}
+                  ticks={false}
+                >
+                  <IonIcon slot='start' size='small' icon={cashOutline} />
+                  <IonIcon slot='end' icon={cashOutline} />
+                </IonRange>
               </IonItem>
 
               <IonButton fill='solid' className='check-btn my-3' type='submit'>

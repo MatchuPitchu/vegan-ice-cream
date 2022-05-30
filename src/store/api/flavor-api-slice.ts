@@ -19,7 +19,7 @@ export const flavorApi = createApi({
   tagTypes: ['Flavor'], // define tag(s) which can trigger an action
   endpoints: (builder) => {
     return {
-      postFlavor: builder.mutation<
+      addFlavor: builder.mutation<
         void,
         {
           comment_id: string;
@@ -46,4 +46,4 @@ export const flavorApi = createApi({
   },
 });
 
-export const { usePostFlavorMutation } = flavorApi;
+export const { useAddFlavorMutation } = flavorApi;

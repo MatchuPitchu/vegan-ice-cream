@@ -66,6 +66,7 @@ export type CityName = string;
 
 interface LocationsStateSlice {
   locations: IceCreamLocation[];
+  locationsSearchResultsList: IceCreamLocation[];
   newLocation: NewLocationType | null;
   locationsVisibleOnMap: IceCreamLocation[];
   citiesWithLocations: CityName[];
@@ -73,6 +74,7 @@ interface LocationsStateSlice {
 
 const initialLocationsState: LocationsStateSlice = {
   locations: [],
+  locationsSearchResultsList: [],
   newLocation: null,
   locationsVisibleOnMap: [],
   citiesWithLocations: [],
@@ -188,6 +190,13 @@ const locationsSlice = createSlice({
           ? state.locations.sort(sortAtoZ(SortType.STORE))
           : state.locations.sort(sortZtoA(SortType.STORE));
     },
+    // LOCATIONS IN SEARCH RESULT LIST
+    setLocationsSearchResults: (state, { payload }: PayloadAction<IceCreamLocation[]>) => {
+      state.locationsSearchResultsList = payload;
+    },
+    resetLocationsSearchResults: (state) => {
+      state.locationsSearchResultsList = initialLocationsState.locationsSearchResultsList;
+    },
     // NEW LOCATION
     resetNewLocation: (state) => {
       state.newLocation = initialLocationsState.newLocation;
@@ -250,12 +259,15 @@ const locationsSlice = createSlice({
     builder.addMatcher(locationsApi.endpoints.getLocations.matchFulfilled, (state, { payload }) => {
       state.locations = payload;
     });
-    builder.addMatcher(locationsApi.endpoints.postPricing.matchFulfilled, (state, { payload }) => {
-      const updatedLocationIndex = state.locations.findIndex(
-        (location) => location._id === payload._id
-      );
-      state.locations[updatedLocationIndex] = payload;
-    });
+    builder.addMatcher(
+      locationsApi.endpoints.updatePricing.matchFulfilled,
+      (state, { payload }) => {
+        const updatedLocationIndex = state.locations.findIndex(
+          (location) => location._id === payload._id
+        );
+        state.locations[updatedLocationIndex] = payload;
+      }
+    );
     builder.addMatcher(
       locationsApi.endpoints.updateLocationsInViewport.matchFulfilled,
       (state, { payload }) => {

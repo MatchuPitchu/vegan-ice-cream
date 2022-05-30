@@ -41,10 +41,10 @@ const AppStateProvider = ({ children }) => {
   // const [searchText, setSearchText] = useState('');
   // const [segment, setSegment] = useState('map');
   // const [newComment, setNewComment] = useState(null);
+  // const [listResults, setListResults] = useState([]);
 
   const [map, setMap] = useState(null);
   const [topLocations, setTopLocations] = useState([]);
-  const [listResults, setListResults] = useState([]);
   const [autocomplete, setAutocomplete] = useState(null);
   const [autocompleteModal, setAutocompleteModal] = useState(false);
   const [searchAutocomplete, setSearchAutocomplete] = useState('');
@@ -124,8 +124,6 @@ const AppStateProvider = ({ children }) => {
       value={{
         topLocations,
         setTopLocations,
-        listResults,
-        setListResults,
         autocomplete,
         setAutocomplete,
         autocompleteModal,

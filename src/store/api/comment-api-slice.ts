@@ -29,7 +29,7 @@ export const commentApi = createApi({
   tagTypes: ['Comment'], // define tag(s) which can trigger an action
   endpoints: (builder) => {
     return {
-      postNewComment: builder.mutation<
+      addComment: builder.mutation<
         Comment,
         {
           location_id: string;
@@ -61,4 +61,4 @@ export const commentApi = createApi({
   },
 });
 
-export const { usePostNewCommentMutation } = commentApi;
+export const { useAddCommentMutation } = commentApi;

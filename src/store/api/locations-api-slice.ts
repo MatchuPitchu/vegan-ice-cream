@@ -50,7 +50,7 @@ export const locationsApi = createApi({
           credentials: 'include',
         }),
       }),
-      postPricing: builder.mutation<IceCreamLocation, { location_id: string; pricing: number }>({
+      updatePricing: builder.mutation<IceCreamLocation, { location_id: string; pricing: number }>({
         query: ({ location_id, pricing }) => {
           return {
             url: `/pricing/${location_id}`,
@@ -75,5 +75,5 @@ export const {
   useGetOneLocationQuery,
   useGetAllCitiesWithLocationsQuery,
   useUpdateLocationsInViewportMutation,
-  usePostPricingMutation,
+  useUpdatePricingMutation,
 } = locationsApi; // automatically generated query hook
