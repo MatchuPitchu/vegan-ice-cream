@@ -83,20 +83,8 @@ const Search = () => {
 
     const searchTerms = value.split(/\s/).filter(Boolean); // create array of search terms, remove all whitespaces
     const filteredLocations = locations.filter((location) => {
-      // test if all search terms are found in this location; only if true for every searchTerm, then this location is returned
-      const match = searchTerms
-        .map((searchTerm) => {
-          const regex = new RegExp(searchTerm, 'i'); // case insensitive
-          return regex.test(
-            `${location.name} ${location.address.street} ${location.address.number} ${location.address.zipcode} ${location.address.city}`
-          );
-        })
-        .every(Boolean);
-      if (match) {
-        return true;
-      } else {
-        return false;
-      }
+      const text = `${location.name} ${location.address.street} ${location.address.number} ${location.address.zipcode} ${location.address.city}`.toLowerCase();
+      return searchTerms.every((searchTerm) => text.includes(searchTerm.toLowerCase());
     });
     // if user is on map list page and uses searchbar then resultsList is displayed
     if (entdeckenSegment === 'list') {
