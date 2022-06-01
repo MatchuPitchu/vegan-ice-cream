@@ -39,55 +39,55 @@ const TopLocations = () => {
       pager={true}
       options={slideOpts}
     >
-      {topLocations.map((loc, i) => (
-        <IonSlide key={loc._id} className='text-start'>
+      {topLocations.map((location, i) => (
+        <IonSlide key={location._id} className='text-start'>
           <div className='slideCardContainer'>
             <IonButton className='slideBtn'>{i + 1}.</IonButton>
             <IonCard className='slideCard'>
               <IonItem lines='full'>
                 <IonLabel className='ion-text-wrap'>
-                  {loc.name}
+                  {location.name}
                   <p>
-                    {loc.address.street} {loc.address.number}
+                    {location.address.street} {location.address.number}
                   </p>
                   <p className='mb-1'>
-                    {loc.address.zipcode} {loc.address.city}
+                    {location.address.zipcode} {location.address.city}
                   </p>
-                  {loc.location_url && (
+                  {location.location_url && (
                     <p>
                       <a
                         className='websiteLink'
                         href={
-                          loc.location_url.includes('http')
-                            ? loc.location_url
-                            : `//${loc.location_url}`
+                          location.location_url.includes('http')
+                            ? location.location_url
+                            : `//${location.location_url}`
                         }
                         target='_blank'
                         rel='noopener noreferrer'
                       >
-                        {loc.location_url}
+                        {location.location_url}
                       </a>
                     </p>
                   )}
                 </IonLabel>
-                {loc.pricing.length > 0 && <Pricing loc={loc} />}
+                {location.pricing.length > 0 && <Pricing pricing={location.pricing} />}
               </IonItem>
               <div className='px-3 py-2'>
-                {loc.location_rating_quality && (
+                {location.location_rating_quality && (
                   <>
                     <Ratings
-                      rating_vegan_offer={loc.location_rating_vegan_offer}
-                      rating_quality={loc.location_rating_quality}
+                      rating_vegan_offer={location.location_rating_vegan_offer}
+                      rating_quality={location.location_rating_quality}
                       showNum={true}
                     />
-                    <BtnInfoRating loc={loc} />
+                    <BtnInfoRating location={location} />
                   </>
                 )}
               </div>
             </IonCard>
           </div>
 
-          {selectedLocation ? <SelectedMarker /> : null}
+          {selectedLocation && <SelectedMarker />}
         </IonSlide>
       ))}
     </IonSlides>

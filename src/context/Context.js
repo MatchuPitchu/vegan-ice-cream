@@ -42,6 +42,7 @@ const AppStateProvider = ({ children }) => {
   // const [segment, setSegment] = useState('map');
   // const [newComment, setNewComment] = useState(null);
   // const [listResults, setListResults] = useState([]);
+  // const [searchSelected, setSearchSelected] = useState(null);
 
   const [map, setMap] = useState(null);
   const [topLocations, setTopLocations] = useState([]);
@@ -55,7 +56,6 @@ const AppStateProvider = ({ children }) => {
   const [cityName, setCityName] = useState('');
   const [noTopLoc, setNoTopLoc] = useState(false);
   const [showTopLoc, setShowTopLoc] = useState(false);
-  const [searchSelected, setSearchSelected] = useState(null);
   const [position, setPosition] = useState();
   const [infoModal, setInfoModal] = useState(false);
   const [newLocModal, setNewLocModal] = useState(false);
@@ -143,8 +143,6 @@ const AppStateProvider = ({ children }) => {
         map,
         setMap,
         searchViewport,
-        searchSelected,
-        setSearchSelected,
         position,
         setPosition,
         infoModal,

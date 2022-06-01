@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from 'react';
+import { useContext, useEffect } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectedLocationActions } from '../store/selectedLocationSlice';
@@ -40,14 +40,13 @@ const SelectedMarker = () => {
 
   const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
 
-  const { setSearchSelected, openComments, setOpenComments, infoModal, setInfoModal } =
-    useContext(Context);
+  const { openComments, setOpenComments, infoModal, setInfoModal } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   useEffect(() => {
     // no need to fetch if no comments ids available or if detailed comments already fetched
-    if (selectedLocation.comments_list.length === 0 || selectedLocation.comments_list[0].text)
-      return;
+    if (selectedLocation.comments_list.length === 0) return;
+    if (selectedLocation.comments_list[0].text) return;
 
     dispatch(appActions.setIsLoading(true));
     const fetchData = async () => {
@@ -80,15 +79,15 @@ const SelectedMarker = () => {
       backdropDismiss={true}
       onDidDismiss={() => {
         setOpenComments(false);
-        dispatch(selectedLocationActions.resetSelectedLocation());
         setInfoModal(false);
+        dispatch(selectedLocationActions.resetSelectedLocation());
       }}
       enterAnimation={enterAnimationFromBottom}
       leaveAnimation={leaveAnimationToBottom}
     >
       <IonItem lines='full'>
         <IonLabel>{selectedLocation.name}</IonLabel>
-        {user ? <ButtonFavoriteLocation selectedLoc={selectedLocation} /> : null}
+        {user && <ButtonFavoriteLocation selectedLocation={selectedLocation} />}
         <IonButton
           className='hoverTransparentBtn'
           fill='clear'
@@ -132,15 +131,15 @@ const SelectedMarker = () => {
                   {selectedLocation.location_url}
                 </a>
               </IonLabel>
-              {selectedLocation.pricing.length > 0 && <Pricing loc={selectedLocation} />}
+              {selectedLocation.pricing.length > 0 && (
+                <Pricing pricing={selectedLocation.pricing} />
+              )}
             </IonItem>
 
             <IonItem
               button
               onClick={() => {
-                setSearchSelected(selectedLocation);
                 setOpenComments(false);
-                dispatch(selectedLocationActions.resetSelectedLocation());
                 setInfoModal(false);
               }}
               routerLink='/preis'
@@ -162,9 +161,7 @@ const SelectedMarker = () => {
             <IonItem
               button
               onClick={() => {
-                setSearchSelected(selectedLocation);
                 setOpenComments(false);
-                dispatch(selectedLocationActions.resetSelectedLocation());
                 setInfoModal(false);
               }}
               routerLink='/bewerten'
@@ -183,7 +180,7 @@ const SelectedMarker = () => {
 
         <IonCard className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
           <div style={{ backgroundColor: 'var(--ion-item-background)' }}>
-            {selectedLocation.comments_list.length ? (
+            {selectedLocation.comments_list.length > 0 ? (
               <IonItemGroup>
                 <div className='px-3 py-1 borderBottom'>
                   <Ratings
@@ -193,54 +190,47 @@ const SelectedMarker = () => {
                   />
                 </div>
 
-                {selectedLocation.comments_list[0] && (
-                  <>
-                    <IonItem
-                      color='background-color'
-                      className={`${!openComments && 'borderBottom'}`}
-                      lines='none'
-                    >
-                      <IonIcon
-                        className='me-2'
-                        color='primary'
-                        icon={openComments ? caretDownCircle : caretForwardCircle}
-                        button
-                        onClick={() => {
-                          setOpenComments((prev) => !prev);
-                        }}
-                      />
-                      <IonLabel>Bewertungen</IonLabel>
-                      <IonButton
-                        fill='solid'
-                        className='commentNum'
-                        onClick={() => setOpenComments((prev) => !prev)}
-                      >
-                        {selectedLocation.comments_list.length}
-                      </IonButton>
-                    </IonItem>
+                <IonItem
+                  color='background-color'
+                  className={`${!openComments && 'borderBottom'}`}
+                  lines='none'
+                >
+                  <IonIcon
+                    className='me-2'
+                    color='primary'
+                    icon={openComments ? caretDownCircle : caretForwardCircle}
+                    button
+                    onClick={() => {
+                      setOpenComments((prev) => !prev);
+                    }}
+                  />
+                  <IonLabel>Bewertungen</IonLabel>
+                  <IonButton
+                    fill='solid'
+                    className='commentNum'
+                    onClick={() => setOpenComments((prev) => !prev)}
+                  >
+                    {selectedLocation.comments_list.length}
+                  </IonButton>
+                </IonItem>
 
-                    {openComments
-                      ? selectedLocation.comments_list.map((comment) => (
-                          <CommentsBlock comment={comment} key={comment._id} />
-                        ))
-                      : null}
+                {openComments &&
+                  selectedLocation.comments_list.map((comment) => (
+                    <CommentsBlock key={comment._id} comment={comment} />
+                  ))}
 
-                    <IonItem lines='none'>
-                      <IonIcon className='me-2' color='primary' icon={iceCream} />
-                      <IonLabel>Bewertete Eissorten</IonLabel>
-                    </IonItem>
+                <IonItem lines='none'>
+                  <IonIcon className='me-2' color='primary' icon={iceCream} />
+                  <IonLabel>Bewertete Eissorten</IonLabel>
+                </IonItem>
 
-                    <FlavorsBlock flavorsList={selectedLocation.flavors_listed} />
-                  </>
-                )}
+                <FlavorsBlock flavorsList={selectedLocation.flavors_listed} />
               </IonItemGroup>
             ) : (
               <IonItem
                 button
                 onClick={() => {
-                  setSearchSelected(selectedLocation);
                   setOpenComments(false);
-                  dispatch(selectedLocationActions.resetSelectedLocation());
                   setInfoModal(false);
                 }}
                 routerLink='/bewerten'

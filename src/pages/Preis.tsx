@@ -1,11 +1,11 @@
-import { useContext, useState, VFC } from 'react';
+import { useState, VFC } from 'react';
 import { Redirect } from 'react-router-dom';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { appActions } from '../store/appSlice';
 import { useUpdatePricingMutation } from '../store/api/locations-api-slice';
+import { selectedLocationActions } from '../store/selectedLocationSlice';
 // Context
-import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import { SubmitHandler, useController, useForm } from 'react-hook-form';
 import {
@@ -33,8 +33,8 @@ interface PricingSubmitData {
 const Preis: VFC = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
+  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
 
-  const { searchSelected, setSearchSelected } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [finishPriceUpdate, setFinishPriceUpdate] = useState(false);
@@ -62,13 +62,13 @@ const Preis: VFC = () => {
 
     dispatch(appActions.setIsLoading(true));
     if (pricing > 0) {
-      await triggerUpdatePricing({ location_id: searchSelected._id, pricing });
+      await triggerUpdatePricing({ location_id: selectedLocation!._id, pricing });
     }
     setIsFormVisible(false);
     setTimeout(() => setFinishPriceUpdate(true), 2000);
     setTimeout(() => setIsFormVisible(true), 3000);
     setTimeout(() => setFinishPriceUpdate(false), 3000);
-    setSearchSelected(null);
+    dispatch(selectedLocationActions.resetSelectedLocation());
     dispatch(appActions.setIsLoading(false));
   };
 
@@ -104,7 +104,9 @@ const Preis: VFC = () => {
                   readonly
                   type='text'
                   value={
-                    searchSelected ? `${searchSelected.name} in ${searchSelected.address.city}` : ''
+                    selectedLocation
+                      ? `${selectedLocation.name} in ${selectedLocation.address.city}`
+                      : ''
                   }
                 />
               </IonItem>

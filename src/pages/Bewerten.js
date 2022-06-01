@@ -10,7 +10,6 @@ import { useGetOneLocationQuery, useUpdatePricingMutation } from '../store/api/l
 import { useAddCommentMutation } from '../store/api/comment-api-slice';
 import { useAddFlavorMutation } from '../store/api/flavor-api-slice';
 // Context
-import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import ReactStars from 'react-rating-stars-component';
 import { CirclePicker } from 'react-color';
@@ -40,6 +39,7 @@ import SearchFlavors from '../components/SearchFlavors';
 import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
 import { useGetAdditionalInfosFromUserQuery } from '../store/api/user-api-slice';
+import { selectedLocationActions } from '../store/selectedLocationSlice';
 
 // static data outside of React component to avoid redeclaring variable after each re-rendering
 const COLORS = [
@@ -104,8 +104,8 @@ const Bewerten = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
   const { flavor, searchTermFlavor } = useAppSelector((state) => state.flavor);
+  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
 
-  const { searchSelected, setSearchSelected } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [triggerUpdatePricing, result1] = useUpdatePricingMutation();
@@ -150,11 +150,11 @@ const Bewerten = () => {
   const defaultValues = {
     location: '',
     pricing: 0,
-    name: undefined,
+    name: '',
     type_cream: false,
     type_fruit: false,
-    color1: undefined,
-    color2: undefined,
+    color1: '',
+    color2: '',
     text: '',
     rating_quality: 0,
     bio: false,
@@ -162,7 +162,7 @@ const Bewerten = () => {
     lactose_free: false,
     not_specified: false,
     rating_vegan_offer: 0,
-    date: undefined,
+    date: '',
   };
 
   // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
@@ -186,14 +186,14 @@ const Bewerten = () => {
   });
 
   useEffect(() => {
-    setValue('name', flavor?.name ? searchTermFlavor : undefined);
-    setValue('type_fruit', flavor?.name ? flavor.type_fruit : false);
-    setValue('type_cream', flavor?.name ? flavor.type_cream : false);
-    setValue('color1', flavor?.name ? flavor.color.primary : undefined);
-    setValue('color2', flavor?.name ? flavor.color.secondary : undefined);
+    setValue('name', flavor ? searchTermFlavor : '');
+    setValue('type_fruit', flavor?.type_fruit ?? false);
+    setValue('type_cream', flavor?.type_cream ?? false);
+    setValue('color1', flavor?.color.primary ?? '');
+    setValue('color2', flavor?.color.secondary ?? '');
     // if user selects location for example on map, than this location name is set as value is form
-    setValue('location', searchSelected ? searchSelected.name : '');
-  }, [flavor, searchTermFlavor, searchSelected, setValue]);
+    setValue('location', selectedLocation?.name || '');
+  }, [flavor, searchTermFlavor, selectedLocation, setValue]);
 
   const unCheckToggles = () => {
     setValue('bio', false);
@@ -214,12 +214,12 @@ const Bewerten = () => {
 
     // Create Pricing and add to database
     if (data?.pricing > 0) {
-      await triggerUpdatePricing({ location_id: searchSelected._id, pricing: data.pricing });
+      await triggerUpdatePricing({ location_id: selectedLocation._id, pricing: data.pricing });
     }
 
     try {
       const { data: createdComment } = await triggerAddComment({
-        location_id: searchSelected._id,
+        location_id: selectedLocation._id,
         user_id: user._id,
         newCommentData: data,
       });
@@ -236,7 +236,7 @@ const Bewerten = () => {
 
       const result = await triggerAddFlavor({
         comment_id: createdComment._id,
-        location_id: searchSelected._id,
+        location_id: selectedLocation._id,
         user_id: user._id,
         flavorData,
       });
@@ -244,7 +244,7 @@ const Bewerten = () => {
       console.log(result);
 
       // replace data of updated loc in locations array
-      setRefetchLocationId(searchSelected._id);
+      setRefetchLocationId(selectedLocation._id);
 
       // TODO: IF NEW COMMENT POST REQUEST + FLAVOR POST REQUEST FULLFILLED, THAN TRIGGER REFETCH USER DATA
       // OLD: look at context useEffect -> if newComment is set than user data is refetched in Context
@@ -255,7 +255,7 @@ const Bewerten = () => {
       dispatch(searchActions.setSearchText(''));
       dispatch(flavorActions.setSearchTermFlavor(''));
       dispatch(flavorActions.setFlavor(null));
-      setSearchSelected(null);
+      dispatch(selectedLocationActions.resetSelectedLocation());
 
       // delay is needed, otherwise memory leak if state updates on unmounted component
       setTimeout(() => setSuccess(true), 500);
@@ -324,7 +324,7 @@ const Bewerten = () => {
                       readonly
                       type='text'
                       placeholder='Nutze die Suche'
-                      value={(value = searchSelected?.name ?? '')}
+                      value={(value = selectedLocation?.name || '')}
                       onIonChange={(e) => onChange(e.detail.value)}
                     />
                   )}
@@ -542,7 +542,7 @@ const Bewerten = () => {
                   rules={{ required: true }}
                 />
               </IonItem>
-              {searchSelected && showError('text', errors)}
+              {selectedLocation && showError('text', errors)}
 
               <IonItem lines='none' className='itemRating'>
                 <IonLabel position='stacked' htmlFor='rating_quality'>

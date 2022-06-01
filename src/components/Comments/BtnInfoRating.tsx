@@ -1,16 +1,21 @@
+import { useContext, VFC } from 'react';
+import type { IceCreamLocation } from '../../types';
 // Redux Store
 import { useAppDispatch } from '../../store/hooks';
 // Context
-import { useContext } from 'react';
 import { Context } from '../../context/Context';
 import { IonButton, IonIcon } from '@ionic/react';
 import { add, open } from 'ionicons/icons';
 import { selectedLocationActions } from '../../store/selectedLocationSlice';
 
-const BtnInfoRating = ({ loc }) => {
+interface Props {
+  location: IceCreamLocation;
+}
+
+const BtnInfoRating: VFC<Props> = ({ location }) => {
   const dispatch = useAppDispatch();
 
-  const { setSearchSelected, setOpenComments, setInfoModal } = useContext(Context);
+  const { setOpenComments, setInfoModal } = useContext(Context);
 
   return (
     <div className='text-center mt-1'>
@@ -20,7 +25,7 @@ const BtnInfoRating = ({ loc }) => {
         fill='solid'
         onClick={() => {
           setOpenComments(false);
-          dispatch(selectedLocationActions.updateSelectedLocation(loc));
+          dispatch(selectedLocationActions.setSelectedLocation(location));
           setInfoModal(true);
         }}
       >
@@ -30,9 +35,8 @@ const BtnInfoRating = ({ loc }) => {
       <IonButton
         className='more-infos mt-1'
         onClick={() => {
-          setSearchSelected(loc);
           setOpenComments(false);
-          dispatch(selectedLocationActions.resetSelectedLocationt());
+          dispatch(selectedLocationActions.setSelectedLocation(location));
           setInfoModal(false);
         }}
         fill='solid'

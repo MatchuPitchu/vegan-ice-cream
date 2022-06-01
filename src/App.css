@@ -995,7 +995,7 @@ mark {
   user-select: none;
 }
 
-.pricingInfo {
+.pricing-info {
   /* position: absolute; */
   /* top: 15px;
   right: 20px; */
@@ -1020,19 +1020,6 @@ mark {
 .priceStyling::first-letter {
   font-size: 1.5rem;
   font-weight: 800;
-}
-
-.pricingInfoAsked {
-  border-radius: 10px;
-  background-color: var(--ion-color-step-900);
-  color: var(--ion-color-primary-contrast);
-  font-size: 0.7rem;
-  height: 55px;
-  width: 90px;
-  padding: 5px;
-  text-align: center;
-  display: flex;
-  align-items: center;
 }
 
 .locationTitle {

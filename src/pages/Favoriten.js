@@ -32,7 +32,7 @@ const Favoriten = () => {
   const { isAuth, user } = useAppSelector((state) => state.user);
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
 
-  const { setOpenComments, setSearchSelected, setInfoModal } = useContext(Context);
+  const { setOpenComments, setInfoModal } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [reorderDeactivated, setReorderDeactivated] = useState(true);
@@ -77,7 +77,14 @@ const Favoriten = () => {
     dispatch(appActions.setIsLoading(false));
   };
 
-  return isAuth && user ? (
+  if (!user && !isAuth)
+    return (
+      <IonPage>
+        <Spinner />
+      </IonPage>
+    );
+
+  return (
     <IonPage>
       <IonHeader>
         <img
@@ -113,8 +120,8 @@ const Favoriten = () => {
         </IonCard>
 
         <IonReorderGroup disabled={reorderDeactivated} onIonItemReorder={doReorder}>
-          {user?.favorite_locations?.map((loc, i) => (
-            <IonCard key={loc._id} className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
+          {user?.favorite_locations?.map((location, i) => (
+            <IonCard key={location._id} className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
               <IonButton className='favOrderNum'>{i + 1}.</IonButton>
 
               {!reorderDeactivated && (
@@ -125,26 +132,25 @@ const Favoriten = () => {
                 </IonItem>
               )}
 
-              <LocInfoHeader loc={loc} />
+              <LocInfoHeader location={location} />
 
               <div className='px-3 py-2'>
-                {loc.location_rating_quality ? (
+                {location.location_rating_quality ? (
                   <>
                     <Ratings
-                      rating_vegan_offer={loc.location_rating_vegan_offer}
-                      rating_quality={loc.location_rating_quality}
+                      rating_vegan_offer={location.location_rating_vegan_offer}
+                      rating_quality={location.location_rating_quality}
                       showNum={true}
                     />
-                    <BtnInfoRating loc={loc} />
+                    <BtnInfoRating location={location} />
                   </>
                 ) : (
                   <IonButton
                     className='more-infos mt-1'
                     fill='solid'
                     onClick={() => {
-                      setSearchSelected(loc);
                       setOpenComments(false);
-                      dispatch(selectedLocationActions.resetSelectedLocation());
+                      dispatch(selectedLocationActions.setSelectedLocation(location));
                       setInfoModal(false);
                     }}
                     routerLink='/bewerten'
@@ -159,14 +165,10 @@ const Favoriten = () => {
           ))}
         </IonReorderGroup>
 
-        {selectedLocation ? <SelectedMarker /> : null}
+        {selectedLocation && <SelectedMarker />}
 
         <LoadingError />
       </IonContent>
-    </IonPage>
-  ) : (
-    <IonPage>
-      <Spinner />
     </IonPage>
   );
 };

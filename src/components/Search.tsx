@@ -12,6 +12,7 @@ import { IonIcon, IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/reac
 import { informationCircle } from 'ionicons/icons';
 import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables';
 import type { IceCreamLocation } from '../types';
+import { selectedLocationActions } from '../store/selectedLocationSlice';
 
 interface PopoverState {
   showPopover: boolean;
@@ -24,7 +25,7 @@ const Search = () => {
   const { searchText } = useAppSelector((state) => state.search);
   const { entdeckenSegment } = useAppSelector((state) => state.app);
 
-  const { searchViewport, setSearchSelected } = useContext(Context);
+  const { searchViewport } = useContext(Context);
 
   const [predictions, setPredictions] = useState<IceCreamLocation[]>([]);
   const [showPopover, setShowPopover] = useState<PopoverState>({
@@ -77,26 +78,24 @@ const Search = () => {
     if (value.length < 3) {
       setPredictions([]);
       dispatch(locationsActions.resetLocationsSearchResults());
-      setSearchSelected(null);
+      dispatch(selectedLocationActions.resetSelectedLocation());
       return;
     }
 
     const searchTerms = value.split(/\s/).filter(Boolean); // create array of search terms, remove all whitespaces
     const filteredLocations = locations.filter((location) => {
-      const text = `${location.name} ${location.address.street} ${location.address.number} ${location.address.zipcode} ${location.address.city}`.toLowerCase();
-      return searchTerms.every((searchTerm) => text.includes(searchTerm.toLowerCase());
+      const text =
+        `${location.name} ${location.address.street} ${location.address.number} ${location.address.zipcode} ${location.address.city}`.toLowerCase();
+      return searchTerms.every((searchTerm) => text.includes(searchTerm.toLowerCase()));
     });
     // if user is on map list page and uses searchbar then resultsList is displayed
     if (entdeckenSegment === 'list') {
       dispatch(locationsActions.setLocationsSearchResults(filteredLocations));
     }
-    setPredictions(filteredLocations.slice(0, 4));
+    if (entdeckenSegment === 'map') {
+      setPredictions(filteredLocations.slice(0, 4));
+    }
     setSearchWords(searchTerms);
-  };
-
-  const showMarkerOnMap = (location: IceCreamLocation) => {
-    setSearchSelected(location);
-    setPredictions([]);
   };
 
   return (
@@ -140,7 +139,7 @@ const Search = () => {
           </IonPopover>
         </div>
       </div>
-      {predictions && entdeckenSegment === 'map' ? (
+      {predictions && entdeckenSegment === 'map' && (
         <IonList className='py-0'>
           {predictions.map((location) => (
             <IonItem
@@ -152,7 +151,8 @@ const Search = () => {
                     `${location.name}, ${location.address.street} ${location.address.number}, ${location.address.city}`
                   )
                 );
-                showMarkerOnMap(location);
+                dispatch(selectedLocationActions.setSelectedLocation(location));
+                setPredictions([]);
               }}
               lines='full'
             >
@@ -167,7 +167,7 @@ const Search = () => {
             </IonItem>
           ))}
         </IonList>
-      ) : null}
+      )}
     </form>
   );
 };

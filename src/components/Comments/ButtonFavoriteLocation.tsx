@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useReducer, VFC } from 'react';
 import type { IceCreamLocation } from '../../types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -8,8 +8,8 @@ import { userActions } from '../../store/userSlice';
 import { IonAlert, IonButton, IonIcon } from '@ionic/react';
 import { heartOutline, heart } from 'ionicons/icons';
 
-interface ButtonFavoriteLocationProps {
-  selectedLoc: IceCreamLocation;
+interface Props {
+  selectedLocation: IceCreamLocation;
 }
 
 interface UpdateFavorites {
@@ -72,7 +72,7 @@ const isLocation = (locations: IceCreamLocation[] | string[]): locations is IceC
   return (locations as IceCreamLocation[])[0].name !== undefined;
 };
 
-const ButtonFavoriteLocation = ({ selectedLoc }: ButtonFavoriteLocationProps) => {
+const ButtonFavoriteLocation: VFC<Props> = ({ selectedLocation }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const [updateFavoritesState, dispatchUpdateFavoritesState] = useReducer(
@@ -154,11 +154,13 @@ const ButtonFavoriteLocation = ({ selectedLoc }: ButtonFavoriteLocationProps) =>
     dispatch(appActions.setIsLoading(false));
   };
 
-  if (!user) return;
+  if (!user) return null;
 
   const findLocation =
     isLocation(user.favorite_locations) &&
-    user.favorite_locations.find((location: IceCreamLocation) => location._id === selectedLoc._id);
+    user.favorite_locations.find(
+      (location: IceCreamLocation) => location._id === selectedLocation._id
+    );
 
   return (
     <>
@@ -168,7 +170,7 @@ const ButtonFavoriteLocation = ({ selectedLoc }: ButtonFavoriteLocationProps) =>
           onClick={() =>
             dispatchUpdateFavoritesState({
               type: Actions.REMOVE,
-              payload: { willRemove: true, location: selectedLoc },
+              payload: { willRemove: true, location: selectedLocation },
             })
           }
         >
@@ -181,7 +183,7 @@ const ButtonFavoriteLocation = ({ selectedLoc }: ButtonFavoriteLocationProps) =>
           onClick={() =>
             dispatchUpdateFavoritesState({
               type: Actions.ADD,
-              payload: { willAdd: true, location: selectedLoc },
+              payload: { willAdd: true, location: selectedLocation },
             })
           }
         >

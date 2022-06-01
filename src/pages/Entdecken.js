@@ -47,15 +47,8 @@ const Entdecken = () => {
   const { checkMsgNewLocation, entdeckenSegment } = useAppSelector((state) => state.app);
   const { locations, newLocation } = useAppSelector((state) => state.locations);
 
-  const {
-    setMap,
-    setAutocompleteModal,
-    searchSelected,
-    position,
-    setInfoModal,
-    setNewLocModal,
-    setOpenComments,
-  } = useContext(Context);
+  const { setMap, setAutocompleteModal, position, setInfoModal, setNewLocModal, setOpenComments } =
+    useContext(Context);
 
   const { mapStyles } = useThemeContext();
 
@@ -74,19 +67,19 @@ const Entdecken = () => {
   }, [user, dispatch]);
 
   useEffect(() => {
-    if (searchSelected) {
+    if (selectedLocation) {
       // zoom + center when user chooses item in prediction list
       dispatch(
         mapActions.setCenter({
-          lat: searchSelected.address.geo.lat,
-          lng: searchSelected.address.geo.lng,
+          lat: selectedLocation.address.geo.lat,
+          lng: selectedLocation.address.geo.lng,
         })
       );
       dispatch(mapActions.setZoom(15));
     } else {
       dispatch(mapActions.setZoom(12));
     }
-  }, [searchSelected, dispatch]);
+  }, [selectedLocation, dispatch]);
 
   const clusterOptions = {
     imagePath: './assets/icons/m',
@@ -236,21 +229,21 @@ const Entdecken = () => {
             >
               <MarkerClusterer options={clusterOptions} imageExtension='png' averageCenter>
                 {(clusterer) =>
-                  locations?.map((loc) =>
-                    // if searchSelected exists, than normal marker at this position is null
-                    searchSelected &&
-                    searchSelected.address.geo.lat === loc.address.geo.lat &&
-                    searchSelected.address.geo.lng === loc.address.geo.lng ? null : (
+                  locations?.map((location) =>
+                    // if selectedLocation exists, than normal marker at this position is null
+                    selectedLocation &&
+                    selectedLocation.address.geo.lat === location.address.geo.lat &&
+                    selectedLocation.address.geo.lng === location.address.geo.lng ? null : (
                       <Marker
-                        key={loc._id}
-                        position={{ lat: loc.address.geo.lat, lng: loc.address.geo.lng }}
+                        key={location._id}
+                        position={{ lat: location.address.geo.lat, lng: location.address.geo.lng }}
                         clusterer={clusterer}
                         icon={{
                           url: './assets/icons/ice-cream-icon-dark.svg',
                           scaledSize:
-                            searchSelected &&
-                            searchSelected.address.geo.lat === loc.address.geo.lat &&
-                            searchSelected.address.geo.lng === loc.address.geo.lng
+                            selectedLocation &&
+                            selectedLocation.address.geo.lat === location.address.geo.lat &&
+                            selectedLocation.address.geo.lng === location.address.geo.lng
                               ? new window.google.maps.Size(0, 0)
                               : new window.google.maps.Size(30, 30),
                           origin: new window.google.maps.Point(0, 0),
@@ -261,16 +254,16 @@ const Entdecken = () => {
                           type: 'poly',
                         }}
                         optimized={false}
-                        title={`${loc.name}, ${loc.address.street} ${loc.address.number}`}
+                        title={`${location.name}, ${location.address.street} ${location.address.number}`}
                         cursor='pointer'
                         onClick={() => {
                           setOpenComments(false);
-                          dispatch(selectedLocationActions.updateSelectedLocation(loc));
+                          dispatch(selectedLocationActions.setSelectedLocation(location));
                           setInfoModal(true);
                           dispatch(
                             mapActions.setCenter({
-                              lat: loc.address.geo.lat,
-                              lng: loc.address.geo.lng,
+                              lat: location.address.geo.lat,
+                              lng: location.address.geo.lng,
                             })
                           );
                         }}
@@ -281,12 +274,12 @@ const Entdecken = () => {
                 }
               </MarkerClusterer>
 
-              {searchSelected ? (
+              {selectedLocation ? (
                 // Marker of ice cream location selected in searchbar
                 <Marker
                   position={{
-                    lat: searchSelected.address.geo.lat,
-                    lng: searchSelected.address.geo.lng,
+                    lat: selectedLocation.address.geo.lat,
+                    lng: selectedLocation.address.geo.lng,
                   }}
                   icon={{
                     url: './assets/icons/selected-ice-location.svg',
@@ -295,10 +288,9 @@ const Entdecken = () => {
                     anchor: new window.google.maps.Point(15, 15),
                   }}
                   optimized={false}
-                  title={`${searchSelected.address.street} ${searchSelected.address.number} ${searchSelected.address.zipcode} ${searchSelected.address.city}`}
+                  title={`${selectedLocation.address.street} ${selectedLocation.address.number} ${selectedLocation.address.zipcode} ${selectedLocation.address.city}`}
                   onClick={() => {
                     setOpenComments(false);
-                    dispatch(selectedLocationActions.updateSelectedLocation(searchSelected));
                     setInfoModal(true);
                   }}
                   zIndex={2}
@@ -348,7 +340,7 @@ const Entdecken = () => {
                 </>
               ) : null}
 
-              {selectedLocation ? <SelectedMarker /> : null}
+              {selectedLocation && <SelectedMarker />}
             </GoogleMap>
 
             {checkMsgNewLocation && <div className='checkMsg'>{checkMsgNewLocation}</div>}

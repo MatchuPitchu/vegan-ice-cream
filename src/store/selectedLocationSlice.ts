@@ -2,46 +2,25 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IceCreamLocation } from '../types';
 
 interface SelectedLocationStateSlice {
-  selectedLocation: IceCreamLocation;
+  selectedLocation: IceCreamLocation | null;
 }
 
 const initialSelectedLocationState: SelectedLocationStateSlice = {
-  selectedLocation: {
-    _id: '',
-    name: '',
-    address: {
-      city: '',
-      country: '',
-      geo: {
-        lat: null,
-        lng: null,
-      },
-      number: null,
-      street: '',
-      zipcode: '',
-    },
-    comments_list: [],
-    flavors_listed: [],
-    location_num: null,
-    location_rating_quality: null,
-    location_rating_vegan_offer: null,
-    location_url: '',
-    pricing: [],
-  },
+  selectedLocation: null,
 };
 
 const selectedLocationSlice = createSlice({
   name: 'selectedLocation',
   initialState: initialSelectedLocationState,
   reducers: {
-    updateSelectedLocation: (
-      state,
-      { payload }: PayloadAction<SelectedLocationStateSlice['selectedLocation']>
-    ) => {
+    setSelectedLocation: (state, { payload }: PayloadAction<IceCreamLocation>) => {
+      state.selectedLocation = payload;
+    },
+    updateSelectedLocation: (state, { payload }: PayloadAction<IceCreamLocation>) => {
       state.selectedLocation = { ...state.selectedLocation, ...payload };
     },
     resetSelectedLocation: (state) => {
-      state.selectedLocation = initialSelectedLocationState.selectedLocation;
+      state.selectedLocation = null;
     },
   },
 });

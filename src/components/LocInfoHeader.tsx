@@ -1,9 +1,14 @@
-import { useContext } from 'react';
+import { useContext, VFC } from 'react';
 import { Context } from '../context/Context';
+import type { IceCreamLocation } from '../types';
 import { IonAvatar, IonItem, IonLabel } from '@ionic/react';
 import ButtonFavoriteLocation from './Comments/ButtonFavoriteLocation';
 
-const LocInfoHeader = ({ loc }) => {
+interface Props {
+  location: IceCreamLocation;
+}
+
+const LocInfoHeader: VFC<Props> = ({ location }) => {
   const { user } = useContext(Context);
 
   return (
@@ -12,27 +17,31 @@ const LocInfoHeader = ({ loc }) => {
         <img src='./assets/icons/ice-cream-icon-dark.svg' alt='' />
       </IonAvatar>
       <IonLabel className='ion-text-wrap'>
-        <p style={{ color: 'var(--ion-text-color)' }}>{loc.name}</p>
+        <p style={{ color: 'var(--ion-text-color)' }}>{location.name}</p>
         <p>
-          {loc.address.street} {loc.address.number}
+          {location?.address?.street} {location?.address?.number}
         </p>
         <p className='mb-1'>
-          {loc.address.zipcode} {loc.address.city}
+          {location?.address?.zipcode} {location?.address?.city}
         </p>
-        {loc.location_url && (
+        {location?.location_url && (
           <p>
             <a
               className='websiteLink'
-              href={loc.location_url.includes('http') ? loc.location_url : `//${loc.location_url}`}
+              href={
+                location.location_url.includes('http')
+                  ? location.location_url
+                  : `//${location.location_url}`
+              }
               target='_blank'
               rel='noopener noreferrer'
             >
-              {loc.location_url}
+              {location.location_url}
             </a>
           </p>
         )}
       </IonLabel>
-      {user ? <ButtonFavoriteLocation selectedLoc={loc} /> : null}
+      {user && location && <ButtonFavoriteLocation selectedLocation={location} />}
     </IonItem>
   );
 };
