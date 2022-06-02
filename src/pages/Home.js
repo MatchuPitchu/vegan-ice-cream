@@ -1,12 +1,12 @@
 import { useContext, useState, useEffect, useRef } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { locationsActions } from '../store/locationsSlice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import {
   IonButton,
-  IonCard,
   IonContent,
   IonFab,
   IonFabButton,
@@ -28,17 +28,14 @@ import {
   logoGooglePlaystore,
   logoPaypal,
   phonePortraitOutline,
-  star,
 } from 'ionicons/icons';
-import SearchTopLocations from '../components/SearchTopLocations';
-import TopLocations from '../components/TopLocations';
-import { locationsActions } from '../store/locationsSlice';
+import TopLocations from '../components/TopLocations/TopLocations';
 
 const Home = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
 
-  const { cityName, topLocations, noTopLoc, setAutocompleteModal } = useContext(Context);
+  const { topLocations, setAutocompleteModal } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [show, setShow] = useState(false);
@@ -145,23 +142,7 @@ const Home = () => {
           </IonPopover>
         </div>
 
-        <SearchTopLocations />
-
-        {noTopLoc && (
-          <div className='container text-center'>
-            <IonCard>
-              <div className='noTopLocCard'>
-                Noch keine Top Eisläden mit 3+
-                <IonIcon size='small' color='primary' icon={star} />
-                <br />
-                in <span className='highlightSpan'>{cityName}</span> gefunden.
-                <br />
-              </div>
-            </IonCard>
-          </div>
-        )}
-
-        {topLocations.length ? <TopLocations /> : null}
+        <TopLocations />
       </IonContent>
 
       <IonFab className='me-2' vertical='bottom' horizontal='end' slot='fixed'>

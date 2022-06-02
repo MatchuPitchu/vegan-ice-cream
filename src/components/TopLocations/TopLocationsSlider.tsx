@@ -1,8 +1,8 @@
+import { useContext, VFC } from 'react';
 // Redux Store
-import { useAppSelector } from '../store/hooks';
+import { useAppSelector } from '../../store/hooks';
 // Context
-import { useContext } from 'react';
-import { Context } from '../context/Context';
+import { Context } from '../../context/Context';
 import {
   isPlatform,
   IonSlide,
@@ -12,37 +12,34 @@ import {
   IonItem,
   IonButton,
 } from '@ionic/react';
-import SelectedMarker from './SelectedMarker';
-import Ratings from './Ratings';
-import BtnInfoRating from './Comments/BtnInfoRating';
-import Pricing from './Pricing';
+import SelectedMarker from '../SelectedMarker';
+import Ratings from '../Ratings';
+import BtnInfoRating from '../Comments/BtnInfoRating';
+import Pricing from '../Pricing';
+import type { IceCreamLocation } from '../../types';
 
-// Optional parameters to pass to the swiper instance.
-// See http://idangero.us/swiper/api/ for valid options.
-
-const TopLocations = () => {
+const TopLocationsSlider: VFC = () => {
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
 
-  const { topLocations, showTopLoc } = useContext(Context);
+  const { topLocations, hideTopLocations } = useContext(Context);
 
-  const slideOpts = {
+  const slideOptions = {
     initialSlide: 0,
     speed: 400,
   };
 
   return (
     <IonSlides
-      hidden={showTopLoc ? false : true}
-      // key important, otherwise IonSlides is breaking: https://github.com/ionic-team/ionic-framework/issues/18782
-      key={topLocations[0]._id}
+      hidden={hideTopLocations}
+      key={topLocations[0]._id} // key important, otherwise IonSlides is breaking: https://github.com/ionic-team/ionic-framework/issues/18782
       className={`${isPlatform('desktop') ? 'slideDesktop' : 'slideMobile'}`}
       pager={true}
-      options={slideOpts}
+      options={slideOptions}
     >
-      {topLocations.map((location, i) => (
+      {topLocations.map((location: IceCreamLocation, index: number) => (
         <IonSlide key={location._id} className='text-start'>
           <div className='slideCardContainer'>
-            <IonButton className='slideBtn'>{i + 1}.</IonButton>
+            <IonButton className='slideBtn'>{index + 1}.</IonButton>
             <IonCard className='slideCard'>
               <IonItem lines='full'>
                 <IonLabel className='ion-text-wrap'>
@@ -94,4 +91,4 @@ const TopLocations = () => {
   );
 };
 
-export default TopLocations;
+export default TopLocationsSlider;

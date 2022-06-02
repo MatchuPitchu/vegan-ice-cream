@@ -73,7 +73,7 @@ const SelectedMarker = () => {
 
   return (
     <IonModal
-      cssClass='mapModal'
+      cssClass='map-modal'
       isOpen={infoModal}
       swipeToClose={true}
       backdropDismiss={true}

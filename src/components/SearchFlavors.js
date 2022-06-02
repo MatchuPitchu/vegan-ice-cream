@@ -33,29 +33,19 @@ const SearchFlavors = () => {
     dispatch(appActions.setIsLoading(false));
   }, [dispatch]);
 
-  const forAutocompleteChange = (value) => {
-    if (value.length >= 3 && flavors) {
-      // make array from input string -> each item is created after one space " "
-      const searchQuery = value.split(' ').filter((word) => word);
-      const res = flavors.filter((flavor) => {
-        const found = searchQuery.map((word) => {
-          // return if exists just a space or a space and then nothing
-          if (word === ' ' || word === '') return undefined;
-          // explanation: http://stackoverflow.com/a/18622606/1147859
-          const reg = '(' + word + ')(?![^<]*>|[^<>]*</)';
-          // i means case-insensitive mode
-          const regex = new RegExp(reg, 'i');
-          return regex.test(flavor.name);
-        });
-        // found is array with as many items as there are search words
-        // if every item is true, than this location is returned
-        if (found.every((v) => v === true)) return flavor;
-        return false;
-      });
-      const result = res.slice(0, 8);
-      setFlavorsPredict(result);
+  const handleSearchTextChange = (value) => {
+    if (!flavors) return;
+    if (value.length < 3) {
+      setFlavorsPredict([]);
+      return;
     }
-    if (!value) setFlavorsPredict([]);
+
+    const searchTerms = value.split(/\s/).filter(Boolean); // create array of search terms, remove all whitespaces
+    const filteredFlavors = flavors.filter((flavor) => {
+      const text = `${flavor.name}`.toLowerCase();
+      return searchTerms.every((searchTerm) => text.includes(searchTerm.toLowerCase()));
+    });
+    setFlavorsPredict(filteredFlavors.slice(0, 8));
   };
 
   return (
@@ -79,7 +69,7 @@ const SearchFlavors = () => {
           debounce={100}
           onIonChange={(e) => {
             dispatch(flavorActions.setSearchTermFlavor(e.detail.value));
-            forAutocompleteChange(e.detail.value);
+            handleSearchTextChange(e.detail.value);
             setSearchWords(() => e.detail.value.split(' ').filter((word) => word));
           }}
           onIonCancel={() => dispatch(flavorActions.setFlavor(null))}

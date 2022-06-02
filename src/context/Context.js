@@ -54,8 +54,8 @@ const AppStateProvider = ({ children }) => {
 
   const [all, setAll] = useState(false);
   const [cityName, setCityName] = useState('');
-  const [noTopLoc, setNoTopLoc] = useState(false);
-  const [showTopLoc, setShowTopLoc] = useState(false);
+  const [noTopLocation, setNoTopLocation] = useState(false);
+  const [hideTopLocations, setHideTopLocations] = useState(true);
   const [position, setPosition] = useState();
   const [infoModal, setInfoModal] = useState(false);
   const [newLocModal, setNewLocModal] = useState(false);
@@ -136,10 +136,10 @@ const AppStateProvider = ({ children }) => {
         setAll,
         cityName,
         setCityName,
-        noTopLoc,
-        setNoTopLoc,
-        showTopLoc,
-        setShowTopLoc,
+        noTopLocation,
+        setNoTopLocation,
+        hideTopLocations,
+        setHideTopLocations,
         map,
         setMap,
         searchViewport,

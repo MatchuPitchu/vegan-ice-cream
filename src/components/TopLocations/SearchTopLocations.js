@@ -1,29 +1,28 @@
 import { useContext, useState } from 'react';
 // Redux Store
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { appActions } from '../store/appSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { appActions } from '../../store/appSlice';
 // Context
-import { Context } from '../context/Context';
+import { Context } from '../../context/Context';
 import { Controller, useForm } from 'react-hook-form';
 import Highlighter from 'react-highlight-words';
 import { IonItem, IonSearchbar, isPlatform } from '@ionic/react';
-import LoadingError from './LoadingError';
+import LoadingError from '../LoadingError';
 
-const Search = () => {
+const SearchTopLocations = () => {
   const dispatch = useAppDispatch();
   const { citiesWithLocations } = useAppSelector((state) => state.locations);
 
   const {
     isDarkTheme,
     setTopLocations,
-    cityName,
     setCityName,
-    noTopLoc,
-    setNoTopLoc,
-    setShowTopLoc,
+    noTopLocation,
+    setNoTopLocation,
+    setHideTopLocations,
   } = useContext(Context);
+
   const [predictions, setPredictions] = useState([]);
-  const [showPredict, setShowPredict] = useState(false);
   const [searchWords, setSearchWords] = useState([]);
 
   const { control, handleSubmit } = useForm();
@@ -39,8 +38,6 @@ const Search = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        // converts JS data into JSON string
-        // backend expects key city
         body: JSON.stringify({ city: cityCapitalized }),
         credentials: 'include',
       };
@@ -51,10 +48,10 @@ const Search = () => {
       const data = await res.json();
       if (data.length) {
         setTopLocations(data);
-        setShowTopLoc(true);
+        setHideTopLocations(false);
       } else {
-        setNoTopLoc(true);
-        setShowTopLoc(false);
+        setNoTopLocation(true);
+        setHideTopLocations(true);
       }
     } catch (error) {
       dispatch(appActions.setError('Ups, schief gelaufen. Versuche es später nochmal.'));
@@ -62,38 +59,29 @@ const Search = () => {
     }
 
     setPredictions([]);
-    setShowPredict(false);
     dispatch(appActions.setIsLoading(false));
   };
 
-  const forAutocompleteChange = async (value) => {
-    if (value) {
-      // make array from input string -> each item is created after one space " "
-      const searchQuery = value.split(' ').filter((word) => word);
-      const res = await citiesWithLocations.filter((city) => {
-        const found = searchQuery.map((word) => {
-          // return if exists just a space or a space and then nothing
-          if (word === ' ' || word === '') return undefined;
-          // explanation: http://stackoverflow.com/a/18622606/1147859
-          const reg = '(' + word + ')(?![^<]*>|[^<>]*</)';
-          // i means case-insensitive mode
-          const regex = new RegExp(reg, 'i');
-          return regex.test(city);
-        });
-        // found is array with as many items as there are search words
-        // if every item is true, than this location is returned
-        if (found.every((v) => v === true)) return city;
-        return false;
-      });
-      const result = res.slice(0, 4);
-      setPredictions(result);
-      value !== cityName && setShowPredict(true);
+  const handleSearchTextChange = (value) => {
+    if (noTopLocation) {
+      setNoTopLocation(false);
     }
+
     if (!value) {
       setPredictions([]);
-      setNoTopLoc(false);
-      setShowTopLoc(false);
+      setNoTopLocation(false);
+      setHideTopLocations(true);
+      return;
     }
+
+    const searchTerms = value.split(/\s/).filter(Boolean); // create array of search terms, remove all whitespaces
+    const filteredCities = citiesWithLocations.filter((city) => {
+      const text = `${city}`.toLowerCase();
+      return searchTerms.every((searchTerm) => text.includes(searchTerm.toLowerCase()));
+    });
+
+    setPredictions(filteredCities.slice(0, 4));
+    setSearchWords(searchTerms);
   };
 
   return (
@@ -112,25 +100,23 @@ const Search = () => {
             cancel-button-text=''
             value={value}
             debounce={0}
-            onIonChange={(e) => {
-              onChange(e.detail.value);
-              setCityName(e.detail.value);
-              forAutocompleteChange(e.detail.value);
-              setSearchWords(() => e.detail.value.split(' ').filter((word) => word));
-              noTopLoc && setNoTopLoc(false);
+            onIonChange={({ detail }) => {
+              onChange(detail.value);
+              setCityName(detail.value);
+              handleSearchTextChange(detail.value ?? '');
             }}
           />
         )}
       />
-      {predictions && showPredict ? (
+      {predictions.length !== 0 && (
         <div
           className={`py-0 d-flex flex-row flex-wrap container ${
             isPlatform('desktop') ? '' : 'justify-content-center'
           }`}
         >
-          {predictions.map((city, i) => (
+          {predictions.map((city) => (
             <IonItem
-              key={i}
+              key={city}
               className='predictItem mx-1'
               button
               onClick={() => onSubmit({ city })}
@@ -148,11 +134,11 @@ const Search = () => {
             </IonItem>
           ))}
         </div>
-      ) : null}
+      )}
 
       <LoadingError />
     </form>
   );
 };
 
-export default Search;
+export default SearchTopLocations;

@@ -833,14 +833,14 @@ mark {
   color: var(--ion-color-danger-tint);
 }
 
-.mapModal,
+.map-modal,
 .newLocModal {
   display: flex;
   justify-content: center;
   align-items: flex-end;
 }
 
-.mapModal .modal-wrapper,
+.map-modal .modal-wrapper,
 .newLocModal .modal-wrapper {
   height: 100%;
   width: 100%;
