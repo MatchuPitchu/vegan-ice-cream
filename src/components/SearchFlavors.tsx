@@ -1,22 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, VFC } from 'react';
+import type { Flavor, PopoverState } from '../types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { flavorActions } from '../store/flavorSlice';
 import { appActions } from '../store/appSlice';
-// Context
+import { useAutocomplete } from '../hooks/useAutocomplete';
 import Highlighter from 'react-highlight-words';
 import { IonIcon, IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/react';
 import { iceCream, informationCircle } from 'ionicons/icons';
-import LoadingError from '../components/LoadingError';
+import LoadingError from './LoadingError';
 
-const SearchFlavors = () => {
+const SearchFlavors: VFC = () => {
   const dispatch = useAppDispatch();
-  const { flavor, searchTermFlavor } = useAppSelector((state) => state.flavor);
+  const { flavor, searchTextFlavor } = useAppSelector((state) => state.flavor);
 
-  const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
+  const [popoverShow, setPopoverShow] = useState<PopoverState>({
+    showPopover: false,
+    event: undefined,
+  });
   const [flavors, setFlavors] = useState([]);
-  const [searchWords, setSearchWords] = useState([]);
-  const [flavorsPredict, setFlavorsPredict] = useState([]);
+
+  const { handleSearchTextChange, predictions, setPredictions, searchWords } =
+    useAutocomplete<Flavor>(flavors);
 
   useEffect(() => {
     dispatch(appActions.setIsLoading(true));
@@ -25,7 +30,7 @@ const SearchFlavors = () => {
         const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors`);
         const data = await res.json();
         setFlavors(data);
-      } catch (error) {
+      } catch (error: any) {
         console.log(error.message);
       }
     };
@@ -33,20 +38,7 @@ const SearchFlavors = () => {
     dispatch(appActions.setIsLoading(false));
   }, [dispatch]);
 
-  const handleSearchTextChange = (value) => {
-    if (!flavors) return;
-    if (value.length < 3) {
-      setFlavorsPredict([]);
-      return;
-    }
-
-    const searchTerms = value.split(/\s/).filter(Boolean); // create array of search terms, remove all whitespaces
-    const filteredFlavors = flavors.filter((flavor) => {
-      const text = `${flavor.name}`.toLowerCase();
-      return searchTerms.every((searchTerm) => text.includes(searchTerm.toLowerCase()));
-    });
-    setFlavorsPredict(filteredFlavors.slice(0, 8));
-  };
+  const onSearchTextChanged = (searchText: string) => handleSearchTextChange(searchText, 8);
 
   return (
     <>
@@ -65,50 +57,47 @@ const SearchFlavors = () => {
           cancel-button-text=''
           spellcheck={true}
           autocorrect='on'
-          value={searchTermFlavor}
+          value={searchTextFlavor}
           debounce={100}
-          onIonChange={(e) => {
-            dispatch(flavorActions.setSearchTermFlavor(e.detail.value));
-            handleSearchTextChange(e.detail.value);
-            setSearchWords(() => e.detail.value.split(' ').filter((word) => word));
+          onIonChange={({ detail: { value } }) => {
+            dispatch(flavorActions.setSearchTermFlavor(value ?? ''));
+            onSearchTextChanged(value ?? '');
           }}
-          onIonCancel={() => dispatch(flavorActions.setFlavor(null))}
-          onIonClear={() => dispatch(flavorActions.setFlavor(null))}
-          onKeyUp={(e) => e.key === 'Enter' && setFlavorsPredict([])}
+          onIonCancel={() => dispatch(flavorActions.resetFlavor())}
+          onIonClear={() => dispatch(flavorActions.resetFlavor())}
+          onKeyUp={(e) => e.key === 'Enter' && setPredictions([])}
         />
         <div>
           <IonIcon
             className='infoIcon me-2'
             color='primary'
-            button
             onClick={(e) => {
               e.persist();
-              setPopoverShow({ show: true, event: e });
+              setPopoverShow({ showPopover: true, event: e });
             }}
             icon={informationCircle}
           />
           <IonPopover
-            color='primary'
             cssClass='info-popover'
             event={popoverShow.event}
-            isOpen={popoverShow.show}
-            onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
+            isOpen={popoverShow.showPopover}
+            onDidDismiss={() => setPopoverShow({ showPopover: false, event: undefined })}
           >
             Keine passenden Vorschläge? Tippe einfach den Namen der neuen Eissorte ein.
           </IonPopover>
         </div>
       </div>
 
-      {flavorsPredict.length && searchTermFlavor !== flavor?.name ? (
+      {predictions.length && searchTextFlavor !== flavor?.name ? (
         <IonList className='py-0'>
           <div className='infoText pt-2'>... Auswahl bereits eingetragener Sorten</div>
-          {flavorsPredict.map((flavor) => (
+          {predictions.map((flavor) => (
             <IonItem
               key={flavor._id}
               button
               onClick={() => {
                 dispatch(flavorActions.setFlavor(flavor));
-                setFlavorsPredict([]);
+                setPredictions([]);
                 dispatch(flavorActions.setSearchTermFlavor(flavor.name));
               }}
               lines='full'

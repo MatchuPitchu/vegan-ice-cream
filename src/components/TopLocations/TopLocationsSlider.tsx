@@ -1,8 +1,8 @@
-import { useContext, VFC } from 'react';
+import { VFC } from 'react';
+import type { IceCreamLocation } from '../../types';
 // Redux Store
 import { useAppSelector } from '../../store/hooks';
 // Context
-import { Context } from '../../context/Context';
 import {
   isPlatform,
   IonSlide,
@@ -16,12 +16,14 @@ import SelectedMarker from '../SelectedMarker';
 import Ratings from '../Ratings';
 import BtnInfoRating from '../Comments/BtnInfoRating';
 import Pricing from '../Pricing';
-import type { IceCreamLocation } from '../../types';
 
-const TopLocationsSlider: VFC = () => {
+interface Props {
+  topLocations: IceCreamLocation[];
+  hideTopLocations: boolean;
+}
+
+const TopLocationsSlider: VFC<Props> = ({ topLocations, hideTopLocations }) => {
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
-
-  const { topLocations, hideTopLocations } = useContext(Context);
 
   const slideOptions = {
     initialSlide: 0,

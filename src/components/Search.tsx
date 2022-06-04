@@ -1,4 +1,5 @@
-import { FormEvent, useContext, useState } from 'react';
+import { useContext, useState } from 'react';
+import type { IceCreamLocation, PopoverState } from '../types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { mapActions } from '../store/mapSlice';
@@ -11,13 +12,8 @@ import Highlighter from 'react-highlight-words';
 import { IonIcon, IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/react';
 import { informationCircle } from 'ionicons/icons';
 import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables';
-import type { IceCreamLocation } from '../types';
 import { selectedLocationActions } from '../store/selectedLocationSlice';
-
-interface PopoverState {
-  showPopover: boolean;
-  event: any | undefined;
-}
+import { useAutocomplete } from '../hooks/useAutocomplete';
 
 const Search = () => {
   const dispatch = useAppDispatch();
@@ -27,12 +23,16 @@ const Search = () => {
 
   const { searchViewport } = useContext(Context);
 
-  const [predictions, setPredictions] = useState<IceCreamLocation[]>([]);
+  const { handleSearchTextChange, predictions, setPredictions, searchWords } =
+    useAutocomplete<IceCreamLocation>(locations);
+
+  // const [predictions, setPredictions] = useState<IceCreamLocation[]>([]);
+  // const [searchWords, setSearchWords] = useState<string[]>([]);
+
   const [showPopover, setShowPopover] = useState<PopoverState>({
     showPopover: false,
     event: undefined,
   });
-  const [searchWords, setSearchWords] = useState<string[]>([]);
 
   const onSubmit = async (event: any) => {
     event.preventDefault();
@@ -73,29 +73,19 @@ const Search = () => {
     dispatch(searchActions.setSearchText(''));
   };
 
-  const handleSearchTextChange = (value: string) => {
-    if (!locations) return;
-    if (value.length < 3) {
-      setPredictions([]);
+  const onSearchTextChanged = (searchText: string) => {
+    if (searchText.length < 3) {
       dispatch(locationsActions.resetLocationsSearchResults());
       dispatch(selectedLocationActions.resetSelectedLocation());
-      return;
+      // no return here since execution stops in handleSearchTextChange()
     }
 
-    const searchTerms = value.split(/\s/).filter(Boolean); // create array of search terms, remove all whitespaces
-    const filteredLocations = locations.filter((location) => {
-      const text =
-        `${location.name} ${location.address.street} ${location.address.number} ${location.address.zipcode} ${location.address.city}`.toLowerCase();
-      return searchTerms.every((searchTerm) => text.includes(searchTerm.toLowerCase()));
-    });
-    // if user is on map list page and uses searchbar then resultsList is displayed
-    if (entdeckenSegment === 'list') {
+    const filteredLocations = handleSearchTextChange(searchText, 4, entdeckenSegment);
+
+    // if user is on map list page and uses searchbar then filteredLocations is returned from handleSearchTextChange and resultsList is displayed
+    if (filteredLocations !== undefined) {
       dispatch(locationsActions.setLocationsSearchResults(filteredLocations));
     }
-    if (entdeckenSegment === 'map') {
-      setPredictions(filteredLocations.slice(0, 4));
-    }
-    setSearchWords(searchTerms);
   };
 
   return (
@@ -113,7 +103,7 @@ const Search = () => {
           debounce={500}
           onIonChange={({ detail: { value } }) => {
             dispatch(searchActions.setSearchText(value ?? ''));
-            handleSearchTextChange(value ?? '');
+            onSearchTextChanged(value ?? '');
           }}
         />
         <div>

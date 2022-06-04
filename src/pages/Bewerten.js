@@ -103,7 +103,7 @@ const COLORS = [
 const Bewerten = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
-  const { flavor, searchTermFlavor } = useAppSelector((state) => state.flavor);
+  const { flavor, searchTextFlavor: searchTermFlavor } = useAppSelector((state) => state.flavor);
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
 
   const { isDarkTheme } = useThemeContext();
@@ -254,7 +254,7 @@ const Bewerten = () => {
       // clean values that are needed for form searchbars
       dispatch(searchActions.setSearchText(''));
       dispatch(flavorActions.setSearchTermFlavor(''));
-      dispatch(flavorActions.setFlavor(null));
+      dispatch(flavorActions.resetFlavor());
       dispatch(selectedLocationActions.resetSelectedLocation());
 
       // delay is needed, otherwise memory leak if state updates on unmounted component

@@ -45,7 +45,6 @@ const AppStateProvider = ({ children }) => {
   // const [searchSelected, setSearchSelected] = useState(null);
 
   const [map, setMap] = useState(null);
-  const [topLocations, setTopLocations] = useState([]);
   const [autocomplete, setAutocomplete] = useState(null);
   const [autocompleteModal, setAutocompleteModal] = useState(false);
   const [searchAutocomplete, setSearchAutocomplete] = useState('');
@@ -53,9 +52,6 @@ const AppStateProvider = ({ children }) => {
   const [openComments, setOpenComments] = useState(false);
 
   const [all, setAll] = useState(false);
-  const [cityName, setCityName] = useState('');
-  const [noTopLocation, setNoTopLocation] = useState(false);
-  const [hideTopLocations, setHideTopLocations] = useState(true);
   const [position, setPosition] = useState();
   const [infoModal, setInfoModal] = useState(false);
   const [newLocModal, setNewLocModal] = useState(false);
@@ -122,8 +118,6 @@ const AppStateProvider = ({ children }) => {
   return (
     <Context.Provider
       value={{
-        topLocations,
-        setTopLocations,
         autocomplete,
         setAutocomplete,
         autocompleteModal,
@@ -134,12 +128,6 @@ const AppStateProvider = ({ children }) => {
         setFormattedAddress,
         all,
         setAll,
-        cityName,
-        setCityName,
-        noTopLocation,
-        setNoTopLocation,
-        hideTopLocations,
-        setHideTopLocations,
         map,
         setMap,
         searchViewport,

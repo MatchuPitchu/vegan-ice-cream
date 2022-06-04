@@ -1,11 +1,12 @@
-import { useContext, VFC } from 'react';
-import { Context } from '../../context/Context';
+import { VFC } from 'react';
 import { IonCard, IonIcon } from '@ionic/react';
 import { star } from 'ionicons/icons';
 
-const NoTopLocation: VFC = () => {
-  const { cityName } = useContext(Context);
+interface Props {
+  cityName: string;
+}
 
+const NoTopLocation: VFC<Props> = ({ cityName }) => {
   return (
     <div className='container text-center'>
       <IonCard>

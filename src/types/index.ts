@@ -62,3 +62,8 @@ export interface User {
   num_loc_last_visit: number | null;
   resetToken: string;
 }
+
+export interface PopoverState {
+  showPopover: boolean;
+  event: any | undefined;
+}

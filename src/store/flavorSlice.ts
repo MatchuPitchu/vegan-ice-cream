@@ -3,26 +3,26 @@ import { Flavor } from '../types';
 
 interface FlavorStateSlice {
   flavor: Flavor | null;
-  searchTermFlavor: string;
+  searchTextFlavor: string;
 }
 
 const initialFlavorState: FlavorStateSlice = {
   flavor: null,
-  searchTermFlavor: '',
+  searchTextFlavor: '',
 };
 
 const flavorSlice = createSlice({
   name: 'flavor',
   initialState: initialFlavorState,
   reducers: {
-    setFlavor: (state, { payload }: PayloadAction<FlavorStateSlice['flavor']>) => {
+    setFlavor: (state, { payload }: PayloadAction<Flavor>) => {
       state.flavor = payload;
     },
-    setSearchTermFlavor: (
-      state,
-      { payload }: PayloadAction<FlavorStateSlice['searchTermFlavor']>
-    ) => {
-      state.searchTermFlavor = payload;
+    resetFlavor: (state) => {
+      state.flavor = initialFlavorState.flavor;
+    },
+    setSearchTermFlavor: (state, { payload }: PayloadAction<string>) => {
+      state.searchTextFlavor = payload;
     },
   },
 });

@@ -1,4 +1,6 @@
-import { useContext, useState } from 'react';
+import { Dispatch, SetStateAction, useContext, VFC } from 'react';
+import type { IceCreamLocation } from '../../types';
+import { useAutocomplete } from '../../hooks/useAutocomplete';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { appActions } from '../../store/appSlice';
@@ -9,31 +11,38 @@ import Highlighter from 'react-highlight-words';
 import { IonItem, IonSearchbar, isPlatform } from '@ionic/react';
 import LoadingError from '../LoadingError';
 
-const SearchTopLocations = () => {
+interface Props {
+  setTopLocations: Dispatch<SetStateAction<IceCreamLocation[]>>;
+  setHideTopLocations: Dispatch<SetStateAction<boolean>>;
+  setNoTopLocation: Dispatch<SetStateAction<boolean>>;
+  noTopLocation: boolean;
+  setCityName: Dispatch<SetStateAction<string>>;
+}
+
+const SearchTopLocations: VFC<Props> = ({
+  setTopLocations,
+  setHideTopLocations,
+  setNoTopLocation,
+  noTopLocation,
+  setCityName,
+}) => {
   const dispatch = useAppDispatch();
   const { citiesWithLocations } = useAppSelector((state) => state.locations);
 
-  const {
-    isDarkTheme,
-    setTopLocations,
-    setCityName,
-    noTopLocation,
-    setNoTopLocation,
-    setHideTopLocations,
-  } = useContext(Context);
+  const { isDarkTheme } = useContext(Context);
 
-  const [predictions, setPredictions] = useState([]);
-  const [searchWords, setSearchWords] = useState([]);
+  const { handleSearchTextChange, predictions, setPredictions, searchWords } =
+    useAutocomplete<string>(citiesWithLocations);
 
   const { control, handleSubmit } = useForm();
 
-  const onSubmit = async ({ city }) => {
+  const onSubmit = async ({ city }: { city: string }) => {
     dispatch(appActions.setIsLoading(true));
     const cityCapitalized = city.replace(/^(.)|\s+(.)/g, (l) => l.toUpperCase());
     setCityName(cityCapitalized);
     try {
       const limit = 20;
-      const options = {
+      const options: RequestInit = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,12 +50,12 @@ const SearchTopLocations = () => {
         body: JSON.stringify({ city: cityCapitalized }),
         credentials: 'include',
       };
-      const res = await fetch(
+      const response = await fetch(
         `${process.env.REACT_APP_API_URL}/locations/top-in-city?limit=${limit}`,
         options
       );
-      const data = await res.json();
-      if (data.length) {
+      const data = await response.json();
+      if (data.length !== 0) {
         setTopLocations(data);
         setHideTopLocations(false);
       } else {
@@ -62,26 +71,13 @@ const SearchTopLocations = () => {
     dispatch(appActions.setIsLoading(false));
   };
 
-  const handleSearchTextChange = (value) => {
-    if (noTopLocation) {
-      setNoTopLocation(false);
-    }
-
-    if (!value) {
-      setPredictions([]);
-      setNoTopLocation(false);
+  const onSearchTextChanged = (searchText: string) => {
+    if (!searchText) {
       setHideTopLocations(true);
-      return;
+      // no return here since execution stops in handleSearchTextChange()
     }
 
-    const searchTerms = value.split(/\s/).filter(Boolean); // create array of search terms, remove all whitespaces
-    const filteredCities = citiesWithLocations.filter((city) => {
-      const text = `${city}`.toLowerCase();
-      return searchTerms.every((searchTerm) => text.includes(searchTerm.toLowerCase()));
-    });
-
-    setPredictions(filteredCities.slice(0, 4));
-    setSearchWords(searchTerms);
+    handleSearchTextChange(searchText, 4);
   };
 
   return (
@@ -100,10 +96,11 @@ const SearchTopLocations = () => {
             cancel-button-text=''
             value={value}
             debounce={0}
-            onIonChange={({ detail }) => {
-              onChange(detail.value);
-              setCityName(detail.value);
-              handleSearchTextChange(detail.value ?? '');
+            onIonChange={({ detail: { value } }) => {
+              onChange(value);
+              setCityName(value ?? '');
+              if (noTopLocation) setNoTopLocation(false);
+              onSearchTextChanged(value ?? '');
             }}
           />
         )}

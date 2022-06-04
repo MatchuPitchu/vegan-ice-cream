@@ -1,21 +1,28 @@
-import { useContext, VFC } from 'react';
-import { Context } from '../../context/Context';
+import { useState, VFC } from 'react';
+import type { IceCreamLocation } from '../../types';
 import SearchTopLocations from './SearchTopLocations';
 import TopLocationsSlider from './TopLocationsSlider';
 import NoTopLocation from './NoTopLocation';
 
-interface Props {
-  city: string;
-}
-
-const TopLocations: VFC<Props> = () => {
-  const { noTopLocation, topLocations } = useContext(Context);
+const TopLocations: VFC = () => {
+  const [topLocations, setTopLocations] = useState<IceCreamLocation[]>([]);
+  const [hideTopLocations, setHideTopLocations] = useState(true);
+  const [noTopLocation, setNoTopLocation] = useState(false);
+  const [cityName, setCityName] = useState<string>('');
 
   return (
     <>
-      <SearchTopLocations />
-      {topLocations.length !== 0 && <TopLocationsSlider />}
-      {noTopLocation && <NoTopLocation />}
+      <SearchTopLocations
+        setTopLocations={setTopLocations}
+        setHideTopLocations={setHideTopLocations}
+        setNoTopLocation={setNoTopLocation}
+        noTopLocation={noTopLocation}
+        setCityName={setCityName}
+      />
+      {topLocations.length !== 0 && (
+        <TopLocationsSlider topLocations={topLocations} hideTopLocations={hideTopLocations} />
+      )}
+      {noTopLocation && <NoTopLocation cityName={cityName} />}
     </>
   );
 };

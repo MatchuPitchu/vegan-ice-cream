@@ -33,7 +33,7 @@ const ListMap = () => {
         locationsSearchResultsList.length === 0 &&
         locations
           ?.slice(0, endIndexInLocationsList)
-          .map((location) => <ListResultComponent key={location._id} loc={location} />)}
+          .map((location) => <ListResultComponent key={location._id} location={location} />)}
 
       {/* if searchbar is used, but not results */}
       {searchText && locationsSearchResultsList.length === 0 && (
