@@ -43,12 +43,11 @@ const AppStateProvider = ({ children }) => {
   // const [newComment, setNewComment] = useState(null);
   // const [listResults, setListResults] = useState([]);
   // const [searchSelected, setSearchSelected] = useState(null);
+  // const [autocomplete, setAutocomplete] = useState(null);
+  // const [autocompleteModal, setAutocompleteModal] = useState(false);
+  // const [searchAutocomplete, setSearchAutocomplete] = useState('');
 
   const [map, setMap] = useState(null);
-  const [autocomplete, setAutocomplete] = useState(null);
-  const [autocompleteModal, setAutocompleteModal] = useState(false);
-  const [searchAutocomplete, setSearchAutocomplete] = useState('');
-  const [formattedAddress, setFormattedAddress] = useState(null);
   const [openComments, setOpenComments] = useState(false);
 
   const [all, setAll] = useState(false);
@@ -118,14 +117,6 @@ const AppStateProvider = ({ children }) => {
   return (
     <Context.Provider
       value={{
-        autocomplete,
-        setAutocomplete,
-        autocompleteModal,
-        setAutocompleteModal,
-        searchAutocomplete,
-        setSearchAutocomplete,
-        formattedAddress,
-        setFormattedAddress,
         all,
         setAll,
         map,

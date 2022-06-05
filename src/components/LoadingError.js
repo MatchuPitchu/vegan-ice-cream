@@ -1,9 +1,8 @@
-import { useContext } from 'react';
-import { Context } from '../context/Context';
+import { useAppSelector } from '../store/hooks';
 import { IonLoading, IonToast } from '@ionic/react';
 
 const LoadingError = () => {
-  const { isLoading, error } = useContext(Context);
+  const { isLoading, error } = useAppSelector((state) => state.app);
 
   return (
     <>

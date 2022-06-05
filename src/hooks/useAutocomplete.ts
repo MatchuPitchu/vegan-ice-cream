@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { EntdeckenSegment } from '../store/appSlice';
 import { Flavor, IceCreamLocation } from '../types';
 
 export const useAutocomplete = <T extends Flavor | IceCreamLocation | string>(
@@ -10,7 +11,7 @@ export const useAutocomplete = <T extends Flavor | IceCreamLocation | string>(
   const handleSearchTextChange = (
     value: string,
     numberOfItemsInFilterResult: number,
-    entdeckenSegment?: 'map' | 'list'
+    entdeckenSegment?: EntdeckenSegment
   ) => {
     if (!searchableArray) return;
     if (value.length < 3) {
@@ -31,7 +32,7 @@ export const useAutocomplete = <T extends Flavor | IceCreamLocation | string>(
     const isString = (
       searchableItem: Flavor | IceCreamLocation | string
     ): searchableItem is string => {
-      return (searchableItem as string) !== undefined;
+      return typeof (searchableItem as string) === 'string';
     };
 
     const searchTerms = value.split(/\s/).filter(Boolean); // create array of search terms, remove all whitespaces

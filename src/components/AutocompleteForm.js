@@ -24,124 +24,101 @@ import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables';
 const AutocompleteForm = () => {
   const dispatch = useAppDispatch();
   const { locations } = useAppSelector((state) => state.locations);
+  const { showAddNewLocationModal } = useAppSelector((state) => state.app);
 
-  const [result, setResult] = useState(null);
+  const [googleAutocomplete, setGoogleAutocomplete] = useState(null);
+  const [searchText, setSearchText] = useState('');
+  const [locationName, setLocationName] = useState('');
+  const [locationWebsite, setLocationWebsite] = useState('');
 
   const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
 
-  const {
-    autocomplete,
-    setAutocomplete,
-    autocompleteModal,
-    setAutocompleteModal,
-    searchAutocomplete,
-    setSearchAutocomplete,
-    formattedAddress,
-    setFormattedAddress,
-    setNewLocModal,
-  } = useContext(Context);
+  const { setNewLocModal } = useContext(Context);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    if (!result) return;
+  const searchForDuplicate = (geoCodingResult) => {
+    const fetchedStreet =
+      geoCodingResult.address_components[1].types[0] === 'route' &&
+      geoCodingResult.address_components[1].long_name;
+    const fetchedNumber =
+      geoCodingResult.address_components[0].types[0] === 'street_number' &&
+      geoCodingResult.address_components[0].long_name;
+    return locations.some(
+      ({ address: { street, number } }) => street === fetchedStreet && number === +fetchedNumber
+    );
+  };
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
     dispatch(appActions.setIsLoading(true));
 
-    const fetchData = async () => {
-      try {
-        const uri = encodeURI(formattedAddress || searchAutocomplete);
-        const res = await fetch(`${GOOGLE_API_URL}${uri}${GOOGLE_API_URL_CONFIG}`);
-        const { results } = await res.json();
+    try {
+      const uri = encodeURI(searchText);
+      const response = await fetch(`${GOOGLE_API_URL}${uri}${GOOGLE_API_URL_CONFIG}`);
+      const {
+        results: [geoCodingResult],
+      } = await response.json();
 
-        if (result.address.number) {
-          dispatch(
-            locationsActions.setNewLocationAutocomplete({
-              autocomplete: result,
-              geo: results[0].geometry.location,
-            })
-          );
-        } else {
-          dispatch(
-            locationsActions.setNewLocationSearchbar({
-              address_components: results[0].address_components,
-              geo: results[0].geometry.location,
-            })
-          );
-        }
+      const isDuplicate = searchForDuplicate(geoCodingResult);
 
-        if (results[0].geometry.location) {
+      if (isDuplicate) {
+        dispatch(appActions.setError('Adresse gibt es schon'));
+        setTimeout(() => dispatch(appActions.resetError()), 5000);
+      }
+
+      if (!isDuplicate) {
+        dispatch(
+          locationsActions.setNewLocation({
+            name: locationName,
+            address_components: geoCodingResult.address_components,
+            geo: geoCodingResult.geometry.location,
+            location_url: locationWebsite,
+            place_id: geoCodingResult.place_id,
+          })
+        );
+
+        if (geoCodingResult.geometry.location) {
           dispatch(
             mapActions.setCenter({
-              lat: results[0].geometry.location.lat,
-              lng: results[0].geometry.location.lng,
+              lat: geoCodingResult.geometry.location.lat,
+              lng: geoCodingResult.geometry.location.lng,
             })
           );
           dispatch(mapActions.setZoom(15));
         }
-      } catch (error) {
-        dispatch(
-          appActions.setError(
-            'Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in D, AUT, CH und LIE eintragen.'
-          )
-        );
-        setTimeout(() => dispatch(appActions.resetError()), 5000);
-      }
-    };
 
-    const duplicate = locations.find(
-      ({ address: { street, number } }) =>
-        street === result.address.street && number === result.address.number
-    );
-    if (duplicate) {
-      setResult(null);
-      dispatch(appActions.setError('Adresse gibt es schon'));
-      setTimeout(() => dispatch(appActions.resetError()), 5000);
-    } else {
-      fetchData();
+        dispatch(
+          appActions.setCheckMsgNewLocation('Bestätige noch die Daten - klicke auf das grüne Icon')
+        );
+      }
+    } catch (error) {
       dispatch(
-        appActions.setCheckMsgNewLocation('Bestätige noch die Daten - klicke auf das grüne Icon')
+        appActions.setError(
+          'Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in D, AUT, CH und LIE eintragen.'
+        )
       );
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
 
     dispatch(appActions.setIsLoading(false));
-    setAutocompleteModal(false);
+    dispatch(appActions.setShowAddNewLocationModal(false));
   };
 
-  const onPlaceChanged = () => {
-    if (autocomplete !== null) {
-      const data = autocomplete.getPlace();
-      const address = {};
-      data?.address_components?.map((item) =>
-        item.types.map((type) => Object.assign(address, { [type]: item.long_name }))
-      );
-      setFormattedAddress(data.formatted_address);
-      setResult({
-        name: data.name ? data.name : '',
-        address: {
-          street: address.route ? address.route : '',
-          number: address.street_number ? +address.street_number : '',
-          zipcode: address.postal_code ? address.postal_code : '',
-          city: address.locality ? address.locality : '',
-          country: address.country ? address.country : '',
-          geo: {
-            lat: null,
-            lng: null,
-          },
-        },
-        location_url: data.website ? data.website : '',
-        place_id: data.place_id ? data.place_id : '',
-      });
-    } else {
-      dispatch(appActions.setError('Autocomplete kann gerade nicht geladen werden'));
-      setTimeout(() => dispatch(appActions.resetError()), 5000);
-    }
+  const handleSelectPlace = () => {
+    if (googleAutocomplete === null) return;
+    const data = googleAutocomplete.getPlace();
+
+    setSearchText(data.formatted_address);
+    // unique received data from google autocomplete: name, website
+    setLocationName(data.name || '');
+    setLocationWebsite(data.website || '');
   };
 
-  const onAutocompleteLoad = (autocomplete) => setAutocomplete(autocomplete);
+  const handleAutocompleteLoad = (autocomplete) => setGoogleAutocomplete(autocomplete);
 
   return (
     <IonModal
       cssClass='newLocModal'
-      isOpen={autocompleteModal}
+      isOpen={showAddNewLocationModal}
       swipeToClose={true}
       backdropDismiss={true}
       onDidDismiss={() => setNewLocModal(false)}
@@ -153,8 +130,8 @@ const AutocompleteForm = () => {
         <IonButton
           fill='clear'
           onClick={() => {
-            setAutocompleteModal(false);
             dispatch(locationsActions.resetNewLocation());
+            dispatch(appActions.setShowAddNewLocationModal(false));
           }}
         >
           <IonIcon icon={closeCircleOutline} />
@@ -177,8 +154,8 @@ const AutocompleteForm = () => {
           <IonItem className='addLocForm' lines='none'>
             <Autocomplete
               className='container-autocomplete'
-              onLoad={onAutocompleteLoad}
-              onPlaceChanged={onPlaceChanged}
+              onLoad={handleAutocompleteLoad}
+              onPlaceChanged={handleSelectPlace}
               restrictions={{ country: ['de', 'at', 'ch', 'li'] }} // Restricts autocomplete to countries DE, AT, CH, LI
               fields={['name', 'address_components', 'formatted_address', 'place_id', 'website']}
             >
@@ -186,11 +163,7 @@ const AutocompleteForm = () => {
                 type='text'
                 placeholder='Name, Adresse eintippen ...'
                 className='search-autocomplete'
-                // value={searchText}
-                onChange={(e) => {
-                  setSearchAutocomplete(e.target.value);
-                  setFormattedAddress(''); // reset formattedAddress if input is filled manually
-                }}
+                onChange={({ target: { value } }) => setSearchText(value)}
               />
             </Autocomplete>
           </IonItem>

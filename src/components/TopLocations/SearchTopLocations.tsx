@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction, useContext, VFC } from 'react';
-import type { IceCreamLocation } from '../../types';
 import { useAutocomplete } from '../../hooks/useAutocomplete';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { appActions } from '../../store/appSlice';
+import { locationsActions } from '../../store/locationsSlice';
 // Context
 import { Context } from '../../context/Context';
 import { Controller, useForm } from 'react-hook-form';
@@ -12,7 +12,6 @@ import { IonItem, IonSearchbar, isPlatform } from '@ionic/react';
 import LoadingError from '../LoadingError';
 
 interface Props {
-  setTopLocations: Dispatch<SetStateAction<IceCreamLocation[]>>;
   setHideTopLocations: Dispatch<SetStateAction<boolean>>;
   setNoTopLocation: Dispatch<SetStateAction<boolean>>;
   noTopLocation: boolean;
@@ -20,7 +19,6 @@ interface Props {
 }
 
 const SearchTopLocations: VFC<Props> = ({
-  setTopLocations,
   setHideTopLocations,
   setNoTopLocation,
   noTopLocation,
@@ -56,7 +54,7 @@ const SearchTopLocations: VFC<Props> = ({
       );
       const data = await response.json();
       if (data.length !== 0) {
-        setTopLocations(data);
+        dispatch(locationsActions.setTopLocationsInCity(data));
         setHideTopLocations(false);
       } else {
         setNoTopLocation(true);

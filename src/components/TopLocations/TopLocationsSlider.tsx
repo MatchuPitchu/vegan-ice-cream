@@ -18,11 +18,11 @@ import BtnInfoRating from '../Comments/BtnInfoRating';
 import Pricing from '../Pricing';
 
 interface Props {
-  topLocations: IceCreamLocation[];
+  topLocationsInCity: IceCreamLocation[];
   hideTopLocations: boolean;
 }
 
-const TopLocationsSlider: VFC<Props> = ({ topLocations, hideTopLocations }) => {
+const TopLocationsSlider: VFC<Props> = ({ topLocationsInCity, hideTopLocations }) => {
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
 
   const slideOptions = {
@@ -33,12 +33,12 @@ const TopLocationsSlider: VFC<Props> = ({ topLocations, hideTopLocations }) => {
   return (
     <IonSlides
       hidden={hideTopLocations}
-      key={topLocations[0]._id} // key important, otherwise IonSlides is breaking: https://github.com/ionic-team/ionic-framework/issues/18782
+      key={topLocationsInCity[0]._id} // key important, otherwise IonSlides is breaking: https://github.com/ionic-team/ionic-framework/issues/18782
       className={`${isPlatform('desktop') ? 'slideDesktop' : 'slideMobile'}`}
       pager={true}
       options={slideOptions}
     >
-      {topLocations.map((location: IceCreamLocation, index: number) => (
+      {topLocationsInCity.map((location: IceCreamLocation, index: number) => (
         <IonSlide key={location._id} className='text-start'>
           <div className='slideCardContainer'>
             <IonButton className='slideBtn'>{index + 1}.</IonButton>

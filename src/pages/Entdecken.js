@@ -47,8 +47,7 @@ const Entdecken = () => {
   const { checkMsgNewLocation, entdeckenSegment } = useAppSelector((state) => state.app);
   const { locations, newLocation } = useAppSelector((state) => state.locations);
 
-  const { setMap, setAutocompleteModal, position, setInfoModal, setNewLocModal, setOpenComments } =
-    useContext(Context);
+  const { setMap, position, setInfoModal, setNewLocModal, setOpenComments } = useContext(Context);
 
   const { mapStyles } = useThemeContext();
 
@@ -160,14 +159,14 @@ const Entdecken = () => {
             <div className='d-flex flex-column align-items-end control-right-top'>
               <IonButton
                 className='add-control'
-                onClick={(e) => {
+                onClick={(event) => {
                   if (user) {
                     dispatch(locationsActions.resetNewLocation());
-                    setAutocompleteModal(true);
                     dispatch(appActions.setCheckMsgNewLocation('')); // remove message in case that user adds new location but never clicks on it
+                    dispatch(appActions.setShowAddNewLocationModal(true));
                   } else {
-                    e.persist();
-                    setPopoverShow({ show: true, event: e });
+                    event.persist();
+                    setPopoverShow({ show: true, event });
                   }
                 }}
                 title='Neue Adresse hinzufügen'

@@ -25,27 +25,17 @@ interface Address {
   geo: GeoCoordinates;
 }
 
-interface NewLocationType {
+interface NewLocation {
   name: string;
   address: Address;
   location_url: string;
   place_id: string;
 }
 
-interface NewLocationWithAutocompletePayload {
-  autocomplete: NewLocationType;
-  geo: GeoCoordinates;
-}
-
 interface GoogleGeocodingResult {
   long_name: string;
   short_name: string;
   types: string[];
-}
-
-interface NewLocationWithSearchbarPayload {
-  address_components: GoogleGeocodingResult[];
-  geo: GeoCoordinates;
 }
 
 interface GoogleGeocodingResultsConverted {
@@ -62,12 +52,21 @@ interface GoogleGeocodingResultsConverted {
   place_id?: string;
 }
 
+interface NewLocationFetchedData {
+  name: string;
+  address_components: GoogleGeocodingResult[];
+  geo: GeoCoordinates;
+  location_url: string;
+  place_id: string;
+}
+
 export type CityName = string;
 
 interface LocationsStateSlice {
   locations: IceCreamLocation[];
   locationsSearchResultsList: IceCreamLocation[];
-  newLocation: NewLocationType | null;
+  topLocationsInCity: IceCreamLocation[];
+  newLocation: NewLocation | null;
   locationsVisibleOnMap: IceCreamLocation[];
   citiesWithLocations: CityName[];
 }
@@ -75,6 +74,7 @@ interface LocationsStateSlice {
 const initialLocationsState: LocationsStateSlice = {
   locations: [],
   locationsSearchResultsList: [],
+  topLocationsInCity: [],
   newLocation: null,
   locationsVisibleOnMap: [],
   citiesWithLocations: [],
@@ -197,28 +197,19 @@ const locationsSlice = createSlice({
     resetLocationsSearchResults: (state) => {
       state.locationsSearchResultsList = initialLocationsState.locationsSearchResultsList;
     },
+    // TOP LOCATIONS IN ONE CITY
+    setTopLocationsInCity: (state, { payload }: PayloadAction<IceCreamLocation[]>) => {
+      state.topLocationsInCity = payload;
+    },
     // NEW LOCATION
     resetNewLocation: (state) => {
       state.newLocation = initialLocationsState.newLocation;
     },
-    setNewLocationAutocomplete: (
+    setNewLocation: (
       state,
-      { payload: { autocomplete, geo } }: PayloadAction<NewLocationWithAutocompletePayload>
-    ) => {
-      state.newLocation = {
-        ...autocomplete,
-        address: {
-          ...autocomplete.address,
-          geo: {
-            lat: geo?.lat || null,
-            lng: geo?.lng || null,
-          },
-        },
-      };
-    },
-    setNewLocationSearchbar: (
-      state,
-      { payload: { address_components, geo } }: PayloadAction<NewLocationWithSearchbarPayload>
+      {
+        payload: { name, address_components, geo, location_url, place_id },
+      }: PayloadAction<NewLocationFetchedData>
     ) => {
       let address: GoogleGeocodingResultsConverted = {};
       for (const object of address_components) {
@@ -228,7 +219,7 @@ const locationsSlice = createSlice({
       }
 
       state.newLocation = {
-        name: '',
+        name,
         address: {
           street: address.route || '',
           number: +address.street_number! || null,
@@ -240,8 +231,8 @@ const locationsSlice = createSlice({
             lng: geo?.lng || null,
           },
         },
-        location_url: '',
-        place_id: address.place_id || '',
+        location_url,
+        place_id,
       };
     },
     setCitiesWithLocations: (state, { payload }: PayloadAction<CityName[]>) => {

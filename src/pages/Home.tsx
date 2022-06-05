@@ -1,7 +1,9 @@
-import { useContext, useState, useEffect, useRef } from 'react';
+import { useContext, useState, useEffect, useRef, VFC } from 'react';
+import type { PopoverState } from '../types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { locationsActions } from '../store/locationsSlice';
+import { appActions } from '../store/appSlice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -29,25 +31,26 @@ import {
   logoPaypal,
   phonePortraitOutline,
 } from 'ionicons/icons';
-import TopLocations from '../components/TopLocations/TopLocations';
+import TopLocationsInCity from '../components/TopLocations/TopLocationsInCity';
 
-const Home = () => {
-  const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state.user);
-
-  const { topLocations, setAutocompleteModal } = useContext(Context);
+const Home: VFC = () => {
   const { isDarkTheme } = useThemeContext();
 
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.user);
+  const { topLocationsInCity } = useAppSelector((state) => state.locations);
+
   const [show, setShow] = useState(false);
-  const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
-  const contentRef = useRef(null);
+  const [popoverShow, setPopoverShow] = useState<PopoverState>({
+    showPopover: false,
+    event: undefined,
+  });
+  const contentRef = useRef<HTMLIonContentElement>(null);
 
   useEffect(() => {
-    // (number) means duration
-    const id = setTimeout(() => contentRef.current && contentRef.current.scrollToBottom(500), 500);
-
-    return () => clearTimeout(id);
-  }, [topLocations]);
+    const timerId = setTimeout(() => contentRef?.current?.scrollToBottom(500), 500);
+    return () => clearTimeout(timerId);
+  }, [topLocationsInCity]);
 
   return (
     <IonPage>
@@ -97,13 +100,13 @@ const Home = () => {
             className='start-btn-wrapper'
             routerLink={`${user ? '/entdecken' : ''}`}
             fill='clear'
-            onClick={(e) => {
+            onClick={(event) => {
               if (user) {
                 dispatch(locationsActions.resetNewLocation());
-                setAutocompleteModal(true);
+                dispatch(appActions.setShowAddNewLocationModal(true));
               } else {
-                e.persist();
-                setPopoverShow({ show: true, event: e });
+                event.persist();
+                setPopoverShow({ showPopover: true, event });
               }
             }}
           >
@@ -122,11 +125,10 @@ const Home = () => {
             </div>
           </IonButton>
           <IonPopover
-            color='primary'
             cssClass='info-popover'
             event={popoverShow.event}
-            isOpen={popoverShow.show}
-            onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
+            isOpen={popoverShow.showPopover}
+            onDidDismiss={() => setPopoverShow({ showPopover: false, event: undefined })}
           >
             <div className='my-2'>
               <div>Nur für eingeloggte User</div>
@@ -142,7 +144,7 @@ const Home = () => {
           </IonPopover>
         </div>
 
-        <TopLocations />
+        <TopLocationsInCity />
       </IonContent>
 
       <IonFab className='me-2' vertical='bottom' horizontal='end' slot='fixed'>
@@ -178,33 +180,34 @@ const Home = () => {
         </IonFabList>
       </IonFab>
 
-      {isPlatform('desktop') || isPlatform('mobileweb') ? (
-        <IonFab vertical='bottom' horizontal='start' slot='fixed'>
-          <IonFabButton size='small' color='primary' className='logo-btn'>
-            <IonIcon icon={phonePortraitOutline} />
-          </IonFabButton>
-          <IonFabList side='top'>
-            <IonFabButton
-              color='primary'
-              className='logo-btn'
-              routerDirection='forward'
-              target='_blank'
-              rel='noopener noreferrer'
-              href='https://play.google.com/store/apps/details?id=eismitstil.app'
-            >
-              <IonIcon icon={logoGooglePlaystore} />
+      {isPlatform('desktop') ||
+        (isPlatform('mobileweb') && (
+          <IonFab vertical='bottom' horizontal='start' slot='fixed'>
+            <IonFabButton size='small' color='primary' className='logo-btn'>
+              <IonIcon icon={phonePortraitOutline} />
             </IonFabButton>
-            <IonFabButton
-              color='primary'
-              className='logo-btn'
-              routerDirection='forward'
-              routerLink='/ios'
-            >
-              <IonIcon icon={logoApple} />
-            </IonFabButton>
-          </IonFabList>
-        </IonFab>
-      ) : null}
+            <IonFabList side='top'>
+              <IonFabButton
+                color='primary'
+                className='logo-btn'
+                routerDirection='forward'
+                target='_blank'
+                rel='noopener noreferrer'
+                href='https://play.google.com/store/apps/details?id=eismitstil.app'
+              >
+                <IonIcon icon={logoGooglePlaystore} />
+              </IonFabButton>
+              <IonFabButton
+                color='primary'
+                className='logo-btn'
+                routerDirection='forward'
+                routerLink='/ios'
+              >
+                <IonIcon icon={logoApple} />
+              </IonFabButton>
+            </IonFabList>
+          </IonFab>
+        ))}
     </IonPage>
   );
 };

@@ -1,11 +1,13 @@
 import { useState, VFC } from 'react';
-import type { IceCreamLocation } from '../../types';
+// Redux Store
+import { useAppSelector } from '../../store/hooks';
 import SearchTopLocations from './SearchTopLocations';
 import TopLocationsSlider from './TopLocationsSlider';
 import NoTopLocation from './NoTopLocation';
 
-const TopLocations: VFC = () => {
-  const [topLocations, setTopLocations] = useState<IceCreamLocation[]>([]);
+const TopLocationsInCity: VFC = () => {
+  const { topLocationsInCity } = useAppSelector((state) => state.locations);
+
   const [hideTopLocations, setHideTopLocations] = useState(true);
   const [noTopLocation, setNoTopLocation] = useState(false);
   const [cityName, setCityName] = useState<string>('');
@@ -13,18 +15,20 @@ const TopLocations: VFC = () => {
   return (
     <>
       <SearchTopLocations
-        setTopLocations={setTopLocations}
         setHideTopLocations={setHideTopLocations}
         setNoTopLocation={setNoTopLocation}
         noTopLocation={noTopLocation}
         setCityName={setCityName}
       />
-      {topLocations.length !== 0 && (
-        <TopLocationsSlider topLocations={topLocations} hideTopLocations={hideTopLocations} />
-      )}
       {noTopLocation && <NoTopLocation cityName={cityName} />}
+      {topLocationsInCity.length !== 0 && (
+        <TopLocationsSlider
+          topLocationsInCity={topLocationsInCity}
+          hideTopLocations={hideTopLocations}
+        />
+      )}
     </>
   );
 };
 
-export default TopLocations;
+export default TopLocationsInCity;
