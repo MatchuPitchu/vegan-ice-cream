@@ -1,12 +1,10 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
+import { useThemeContext } from '../context/ThemeContext';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
 import { selectedLocationActions } from '../store/selectedLocationSlice';
 import { appActions } from '../store/appSlice';
-// Context
-import { Context } from '../context/Context';
-import { useThemeContext } from '../context/ThemeContext';
 import {
   IonContent,
   IonPage,
@@ -23,7 +21,7 @@ import { add, refreshCircle, reorderThreeOutline } from 'ionicons/icons';
 import Spinner from '../components/Spinner';
 import LoadingError from '../components/LoadingError';
 import Ratings from '../components/Ratings';
-import SelectedMarker from '../components/SelectedMarker';
+import LocationInfoModal from '../components/LocationInfoModal';
 import BtnInfoRating from '../components/Comments/BtnInfoRating';
 import LocInfoHeader from '../components/LocInfoHeader';
 
@@ -32,7 +30,6 @@ const Favoriten = () => {
   const { isAuth, user } = useAppSelector((state) => state.user);
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
 
-  const { setOpenComments, setInfoModal } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   const [reorderDeactivated, setReorderDeactivated] = useState(true);
@@ -148,11 +145,7 @@ const Favoriten = () => {
                   <IonButton
                     className='more-infos mt-1'
                     fill='solid'
-                    onClick={() => {
-                      setOpenComments(false);
-                      dispatch(selectedLocationActions.setSelectedLocation(location));
-                      setInfoModal(false);
-                    }}
+                    onClick={() => dispatch(selectedLocationActions.setSelectedLocation(location))}
                     routerLink='/bewerten'
                     routerDirection='forward'
                   >
@@ -165,7 +158,7 @@ const Favoriten = () => {
           ))}
         </IonReorderGroup>
 
-        {selectedLocation && <SelectedMarker />}
+        {selectedLocation && <LocationInfoModal />}
 
         <LoadingError />
       </IonContent>

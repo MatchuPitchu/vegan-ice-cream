@@ -30,7 +30,7 @@ import {
 import ProfilUpdate from '../components/ProfilUpdate';
 import Spinner from '../components/Spinner';
 import CommentsBlock from './Comments/CommentsBlock';
-import FlavorsBlock from './Comments/FlavorsBlock';
+import FlavorsList from './Comments/FlavorsList';
 
 const Profil = () => {
   const dispatch = useAppDispatch();
@@ -41,10 +41,12 @@ const Profil = () => {
 
   const { isDarkTheme } = useThemeContext();
 
-  const [showComments, setShowComments] = useState(false);
+  const [showUserComments, setShowUserComments] = useState(false);
   const [showFlavors, setShowFlavors] = useState(false);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
   const [popoverCity, setPopoverCity] = useState({ show: false, event: undefined });
+
+  const toggleComments = () => setShowUserComments((prev) => !prev);
 
   return isAuth && user && locations ? (
     <IonPage>
@@ -123,27 +125,23 @@ const Profil = () => {
             <IonItemGroup>
               <IonItem
                 color='background-color'
-                className={`${!showComments && 'borderBottom'}`}
+                className={`${!showUserComments && 'borderBottom'}`}
                 lines='none'
               >
                 <IonIcon
                   slot='start'
                   color='primary'
-                  icon={showComments ? caretDownCircle : caretForwardCircle}
+                  icon={showUserComments ? caretDownCircle : caretForwardCircle}
                   button
-                  onClick={() => setShowComments((prev) => !prev)}
+                  onClick={toggleComments}
                 />
                 <IonLabel>Meine Bewertungen</IonLabel>
-                <IonButton
-                  fill='solid'
-                  className='commentNum me-0'
-                  onClick={() => setShowComments((prev) => !prev)}
-                >
-                  {user.comments_list.length ? user.comments_list.length : '0'}
+                <IonButton fill='solid' className='commentNum me-0' onClick={toggleComments}>
+                  {user.comments_list.length || '0'}
                 </IonButton>
               </IonItem>
 
-              {showComments && user.comments_list
+              {showUserComments && user.comments_list
                 ? user.comments_list.map((comment) => {
                     return (
                       <Fragment key={comment._id}>
@@ -191,7 +189,7 @@ const Profil = () => {
               </IonItem>
 
               {showFlavors && user.favorite_flavors.length ? (
-                <FlavorsBlock flavorsList={user.favorite_flavors} />
+                <FlavorsList flavorsList={user.favorite_flavors} />
               ) : null}
             </IonItemGroup>
           </IonCard>

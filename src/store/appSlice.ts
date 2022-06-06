@@ -10,6 +10,8 @@ interface AppStateSlice {
   checkMsgNewLocation: string;
   entdeckenSegment: EntdeckenSegment;
   showAddNewLocationModal: boolean;
+  showComments: boolean;
+  showLocationInfoModal: boolean;
 }
 
 const initialAppState: AppStateSlice = {
@@ -19,6 +21,8 @@ const initialAppState: AppStateSlice = {
   checkMsgNewLocation: '',
   entdeckenSegment: 'map',
   showAddNewLocationModal: false,
+  showComments: false,
+  showLocationInfoModal: false,
 };
 
 const appSlice = createSlice({
@@ -45,6 +49,16 @@ const appSlice = createSlice({
     },
     setShowAddNewLocationModal: (state, { payload }: PayloadAction<boolean>) => {
       state.showAddNewLocationModal = payload;
+    },
+    toggleShowComments: (state) => {
+      state.showComments = state.showComments ? false : true;
+    },
+    closeCommentsAndLocationInfoModal: (state) => {
+      state.showComments = false;
+      state.showLocationInfoModal = false;
+    },
+    setShowLocationInfoModal: (state, { payload }: PayloadAction<boolean>) => {
+      state.showLocationInfoModal = payload;
     },
   },
 });

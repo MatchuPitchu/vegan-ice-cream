@@ -30,7 +30,7 @@ import {
 } from 'ionicons/icons';
 import NewLocationForm from '../components/NewLocationForm';
 import Search from '../components/Search';
-import SelectedMarker from '../components/SelectedMarker';
+import LocationInfoModal from '../components/LocationInfoModal';
 import ListMap from '../components/ListMap';
 import Spinner from '../components/Spinner';
 import LoadingError from '../components/LoadingError';
@@ -47,9 +47,10 @@ const Entdecken = () => {
   const { checkMsgNewLocation, entdeckenSegment } = useAppSelector((state) => state.app);
   const { locations, newLocation } = useAppSelector((state) => state.locations);
 
-  const { setMap, position, setInfoModal, setNewLocModal, setOpenComments } = useContext(Context);
-
   const { mapStyles } = useThemeContext();
+  const { setMap, setNewLocModal } = useContext(Context);
+
+  const [currentUserPosition, setCurrentUserPosition] = useState(null);
 
   const [libraries] = useState(['places']);
   const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
@@ -110,6 +111,23 @@ const Entdecken = () => {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries,
   });
+
+  const handleOpenLocationInfoModal = () => dispatch(appActions.setShowLocationInfoModal(true));
+
+  const handleCenterMap = () => {
+    // if no user position take users home city or general lat lng values + default zoom; otherwise recenter on users position
+    currentUserPosition
+      ? dispatch(
+          mapActions.setCenter({ lat: currentUserPosition.lat, lng: currentUserPosition.lng })
+        )
+      : dispatch(
+          mapActions.setCenter({
+            lat: user?.home_city?.geo?.lat || 52.524,
+            lng: user?.home_city?.geo?.lng || 13.41,
+          })
+        );
+    dispatch(mapActions.setZoom(12));
+  };
 
   return isLoaded ? (
     <IonPage>
@@ -196,23 +214,15 @@ const Entdecken = () => {
 
               <AutocompleteForm />
 
-              <GeolocationBtn />
+              <GeolocationBtn
+                currentUserPosition={currentUserPosition}
+                setCurrentUserPosition={setCurrentUserPosition}
+              />
 
               <IonButton
                 className='center-control'
                 title='Karte zentrieren: auf eigenen Standort (falls aktiviert), sonst auf Anfangspunkt'
-                onClick={() => {
-                  // if no user position take users home city or general lat lng values + default zoom; otherwise recenter on users position
-                  position
-                    ? dispatch(mapActions.setCenter({ lat: position.lat, lng: position.lng }))
-                    : dispatch(
-                        mapActions.setCenter({
-                          lat: user?.home_city?.geo?.lat || 52.524,
-                          lng: user?.home_city?.geo?.lng || 13.41,
-                        })
-                      );
-                  dispatch(mapActions.setZoom(12));
-                }}
+                onClick={handleCenterMap}
               >
                 <IonIcon icon={refreshCircle} />
               </IonButton>
@@ -256,9 +266,8 @@ const Entdecken = () => {
                         title={`${location.name}, ${location.address.street} ${location.address.number}`}
                         cursor='pointer'
                         onClick={() => {
-                          setOpenComments(false);
                           dispatch(selectedLocationActions.setSelectedLocation(location));
-                          setInfoModal(true);
+                          handleOpenLocationInfoModal();
                           dispatch(
                             mapActions.setCenter({
                               lat: location.address.geo.lat,
@@ -288,24 +297,26 @@ const Entdecken = () => {
                   }}
                   optimized={false}
                   title={`${selectedLocation.address.street} ${selectedLocation.address.number} ${selectedLocation.address.zipcode} ${selectedLocation.address.city}`}
-                  onClick={() => {
-                    setOpenComments(false);
-                    setInfoModal(true);
-                  }}
+                  onClick={handleOpenLocationInfoModal}
                   zIndex={2}
                 />
               ) : null}
 
-              {position && (
+              {currentUserPosition && (
                 // Current position marker of user
                 <Marker
-                  position={{ lat: position.lat, lng: position.lng }}
+                  position={{ lat: currentUserPosition.lat, lng: currentUserPosition.lng }}
                   icon={{
                     url: './assets/icons/current-position-marker.svg',
                     scaledSize: new window.google.maps.Size(50, 50),
                   }}
                   onClick={() => {
-                    dispatch(mapActions.setCenter({ lat: position.lat, lng: position.lng }));
+                    dispatch(
+                      mapActions.setCenter({
+                        lat: currentUserPosition.lat,
+                        lng: currentUserPosition.lng,
+                      })
+                    );
                     dispatch(mapActions.zoomIn());
                   }}
                   zIndex={1}
@@ -339,7 +350,7 @@ const Entdecken = () => {
                 </>
               ) : null}
 
-              {selectedLocation && <SelectedMarker />}
+              {selectedLocation && <LocationInfoModal />}
             </GoogleMap>
 
             {checkMsgNewLocation && <div className='checkMsg'>{checkMsgNewLocation}</div>}

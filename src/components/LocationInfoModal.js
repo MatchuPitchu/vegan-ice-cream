@@ -1,12 +1,10 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useThemeContext } from '../context/ThemeContext';
+import { useAnimation } from '../hooks/useAnimation';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectedLocationActions } from '../store/selectedLocationSlice';
 import { appActions } from '../store/appSlice';
-// Context
-import { Context } from '../context/Context';
-import { useThemeContext } from '../context/ThemeContext';
-import { useAnimation } from '../hooks/useAnimation';
 import {
   IonButton,
   IonCard,
@@ -28,19 +26,19 @@ import {
 } from 'ionicons/icons';
 import CommentsBlock from './Comments/CommentsBlock';
 import ButtonFavoriteLocation from './Comments/ButtonFavoriteLocation';
-import FlavorsBlock from './Comments/FlavorsBlock';
+import FlavorsList from './Comments/FlavorsList';
 import Ratings from './Ratings';
 import LoadingError from './LoadingError';
 import Pricing from './Pricing';
 
-const SelectedMarker = () => {
+const LocationInfoModal = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
+  const { showComments, showLocationInfoModal } = useAppSelector((state) => state.app);
 
   const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
 
-  const { openComments, setOpenComments, infoModal, setInfoModal } = useContext(Context);
   const { isDarkTheme } = useThemeContext();
 
   useEffect(() => {
@@ -71,17 +69,22 @@ const SelectedMarker = () => {
     dispatch(appActions.setIsLoading(false));
   }, [selectedLocation, dispatch]);
 
+  const handleResetAllOnCloseModal = () => {
+    dispatch(appActions.closeCommentsAndLocationInfoModal());
+    dispatch(selectedLocationActions.resetSelectedLocation());
+  };
+
+  const handleResetExceptSelectedLocationOnCloseModal = () => {
+    dispatch(appActions.closeCommentsAndLocationInfoModal());
+  };
+
   return (
     <IonModal
       cssClass='map-modal'
-      isOpen={infoModal}
+      isOpen={showLocationInfoModal}
       swipeToClose={true}
       backdropDismiss={true}
-      onDidDismiss={() => {
-        setOpenComments(false);
-        setInfoModal(false);
-        dispatch(selectedLocationActions.resetSelectedLocation());
-      }}
+      onDidDismiss={handleResetAllOnCloseModal}
       enterAnimation={enterAnimationFromBottom}
       leaveAnimation={leaveAnimationToBottom}
     >
@@ -91,11 +94,7 @@ const SelectedMarker = () => {
         <IonButton
           className='hoverTransparentBtn'
           fill='clear'
-          onClick={() => {
-            setOpenComments(false);
-            dispatch(selectedLocationActions.resetSelectedLocation());
-            setInfoModal(false);
-          }}
+          onClick={handleResetAllOnCloseModal}
         >
           <IonIcon icon={closeCircleOutline} />
         </IonButton>
@@ -138,10 +137,7 @@ const SelectedMarker = () => {
 
             <IonItem
               button
-              onClick={() => {
-                setOpenComments(false);
-                setInfoModal(false);
-              }}
+              onClick={handleResetExceptSelectedLocationOnCloseModal}
               routerLink='/preis'
               routerDirection='forward'
               className='modalItemSmall itemTextSmall'
@@ -160,10 +156,7 @@ const SelectedMarker = () => {
 
             <IonItem
               button
-              onClick={() => {
-                setOpenComments(false);
-                setInfoModal(false);
-              }}
+              onClick={handleResetExceptSelectedLocationOnCloseModal}
               routerLink='/bewerten'
               routerDirection='forward'
               className='modalItemSmall itemTextSmall'
@@ -192,29 +185,27 @@ const SelectedMarker = () => {
 
                 <IonItem
                   color='background-color'
-                  className={`${!openComments && 'borderBottom'}`}
+                  className={`${!showComments && 'borderBottom'}`}
                   lines='none'
                 >
                   <IonIcon
                     className='me-2'
                     color='primary'
-                    icon={openComments ? caretDownCircle : caretForwardCircle}
+                    icon={showComments ? caretDownCircle : caretForwardCircle}
                     button
-                    onClick={() => {
-                      setOpenComments((prev) => !prev);
-                    }}
+                    onClick={() => dispatch(appActions.toggleShowComments())}
                   />
                   <IonLabel>Bewertungen</IonLabel>
                   <IonButton
                     fill='solid'
                     className='commentNum'
-                    onClick={() => setOpenComments((prev) => !prev)}
+                    onClick={() => dispatch(appActions.toggleShowComments())}
                   >
                     {selectedLocation.comments_list.length}
                   </IonButton>
                 </IonItem>
 
-                {openComments &&
+                {showComments &&
                   selectedLocation.comments_list.map((comment) => (
                     <CommentsBlock key={comment._id} comment={comment} />
                   ))}
@@ -224,15 +215,12 @@ const SelectedMarker = () => {
                   <IonLabel>Bewertete Eissorten</IonLabel>
                 </IonItem>
 
-                <FlavorsBlock flavorsList={selectedLocation.flavors_listed} />
+                <FlavorsList flavorsList={selectedLocation.flavors_listed} />
               </IonItemGroup>
             ) : (
               <IonItem
                 button
-                onClick={() => {
-                  setOpenComments(false);
-                  setInfoModal(false);
-                }}
+                onClick={handleResetExceptSelectedLocationOnCloseModal}
                 routerLink='/bewerten'
                 routerDirection='forward'
                 className='itemTextSmall'
@@ -251,4 +239,4 @@ const SelectedMarker = () => {
   );
 };
 
-export default SelectedMarker;
+export default LocationInfoModal;

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { mapActions } from '../store/mapSlice';
@@ -35,17 +35,20 @@ const AutocompleteForm = () => {
 
   const { setNewLocModal } = useContext(Context);
 
-  const searchForDuplicate = (geoCodingResult) => {
-    const fetchedStreet =
-      geoCodingResult.address_components[1].types[0] === 'route' &&
-      geoCodingResult.address_components[1].long_name;
-    const fetchedNumber =
-      geoCodingResult.address_components[0].types[0] === 'street_number' &&
-      geoCodingResult.address_components[0].long_name;
-    return locations.some(
-      ({ address: { street, number } }) => street === fetchedStreet && number === +fetchedNumber
-    );
-  };
+  const searchForDuplicate = useCallback(
+    (geoCodingResult) => {
+      const fetchedStreet =
+        geoCodingResult.address_components[1].types[0] === 'route' &&
+        geoCodingResult.address_components[1].long_name;
+      const fetchedNumber =
+        geoCodingResult.address_components[0].types[0] === 'street_number' &&
+        geoCodingResult.address_components[0].long_name;
+      return locations.some(
+        ({ address: { street, number } }) => street === fetchedStreet && number === +fetchedNumber
+      );
+    },
+    [locations]
+  );
 
   const onSubmit = async (event) => {
     event.preventDefault();

@@ -12,7 +12,7 @@ import {
   IonItem,
   IonButton,
 } from '@ionic/react';
-import SelectedMarker from '../SelectedMarker';
+import LocationInfoModal from '../LocationInfoModal';
 import Ratings from '../Ratings';
 import BtnInfoRating from '../Comments/BtnInfoRating';
 import Pricing from '../Pricing';
@@ -86,7 +86,7 @@ const TopLocationsSlider: VFC<Props> = ({ topLocationsInCity, hideTopLocations }
             </IonCard>
           </div>
 
-          {selectedLocation && <SelectedMarker />}
+          {selectedLocation && <LocationInfoModal />}
         </IonSlide>
       ))}
     </IonSlides>

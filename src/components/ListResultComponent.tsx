@@ -1,15 +1,13 @@
+import { VFC } from 'react';
+import type { IceCreamLocation } from '../types';
 // Redux Store
 import { useAppDispatch } from '../store/hooks';
 import { selectedLocationActions } from '../store/selectedLocationSlice';
-// Context
-import { useContext, VFC } from 'react';
-import { Context } from '../context/Context';
 import { IonButton, IonCard, IonIcon, isPlatform } from '@ionic/react';
 import { add } from 'ionicons/icons';
 import Ratings from './Ratings';
 import BtnInfoRating from './Comments/BtnInfoRating';
 import LocInfoHeader from './LocInfoHeader';
-import type { IceCreamLocation } from '../types';
 
 interface Props {
   location: IceCreamLocation;
@@ -17,8 +15,6 @@ interface Props {
 
 const ListResultComponent: VFC<Props> = ({ location }) => {
   const dispatch = useAppDispatch();
-
-  const { setInfoModal, setOpenComments } = useContext(Context);
 
   return (
     <IonCard className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
@@ -37,11 +33,7 @@ const ListResultComponent: VFC<Props> = ({ location }) => {
         ) : (
           <IonButton
             className='more-infos mt-1'
-            onClick={() => {
-              dispatch(selectedLocationActions.setSelectedLocation(location));
-              setOpenComments(false);
-              setInfoModal(false);
-            }}
+            onClick={() => dispatch(selectedLocationActions.setSelectedLocation(location))}
             fill='solid'
             routerLink='/bewerten'
             routerDirection='forward'

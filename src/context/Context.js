@@ -46,13 +46,13 @@ const AppStateProvider = ({ children }) => {
   // const [autocomplete, setAutocomplete] = useState(null);
   // const [autocompleteModal, setAutocompleteModal] = useState(false);
   // const [searchAutocomplete, setSearchAutocomplete] = useState('');
+  // const [showComments, setShowComments] = useState(false);
+  // const [showLocationInfoModal, setShowLocationInfoModal] = useState(false);
+  // const [position, setPosition] = useState();
 
   const [map, setMap] = useState(null);
-  const [openComments, setOpenComments] = useState(false);
 
   const [all, setAll] = useState(false);
-  const [position, setPosition] = useState();
-  const [infoModal, setInfoModal] = useState(false);
   const [newLocModal, setNewLocModal] = useState(false);
 
   // START REDUX TOOLKIT UPDATE
@@ -122,14 +122,8 @@ const AppStateProvider = ({ children }) => {
         map,
         setMap,
         searchViewport,
-        position,
-        setPosition,
-        infoModal,
-        setInfoModal,
         newLocModal,
         setNewLocModal,
-        openComments,
-        setOpenComments,
       }}
     >
       {children}
