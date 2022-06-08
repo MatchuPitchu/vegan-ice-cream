@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, VFC } from 'react';
+import type { Comment, IceCreamLocation } from '../types';
 import { useThemeContext } from '../context/ThemeContext';
 import { useAnimation } from '../hooks/useAnimation';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { selectedLocationActions } from '../store/selectedLocationSlice';
+import { locationsActions } from '../store/locationsSlice';
 import { appActions } from '../store/appSlice';
 import {
   IonButton,
@@ -31,10 +32,21 @@ import Ratings from './Ratings';
 import LoadingError from './LoadingError';
 import Pricing from './Pricing';
 
-const LocationInfoModal = () => {
+type Props = {
+  selectedLocation: IceCreamLocation;
+};
+
+const isComment = (comment: string | Comment): comment is Comment => {
+  return (comment as Comment)._id !== undefined;
+};
+
+const isCommentsList = (commentList: string[] | Comment[]): commentList is Comment[] => {
+  return (commentList as Comment[])[0]._id !== undefined;
+};
+
+const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
-  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
   const { showComments, showLocationInfoModal } = useAppSelector((state) => state.app);
 
   const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
@@ -42,9 +54,8 @@ const LocationInfoModal = () => {
   const { isDarkTheme } = useThemeContext();
 
   useEffect(() => {
-    // no need to fetch if no comments ids available or if detailed comments already fetched
-    if (selectedLocation.comments_list.length === 0) return;
-    if (selectedLocation.comments_list[0].text) return;
+    if (selectedLocation.comments_list.length === 0) return; // no comments available
+    if (isComment(selectedLocation.comments_list[0])) return; // comment already fetched
 
     dispatch(appActions.setIsLoading(true));
     const fetchData = async () => {
@@ -54,7 +65,7 @@ const LocationInfoModal = () => {
         );
         const { comments_list, flavors_listed } = await res.json();
         dispatch(
-          selectedLocationActions.updateSelectedLocation({
+          locationsActions.updateSelectedLocation({
             comments_list,
             flavors_listed,
           })
@@ -71,7 +82,7 @@ const LocationInfoModal = () => {
 
   const handleResetAllOnCloseModal = () => {
     dispatch(appActions.closeCommentsAndLocationInfoModal());
-    dispatch(selectedLocationActions.resetSelectedLocation());
+    dispatch(locationsActions.resetSelectedLocation());
   };
 
   const handleResetExceptSelectedLocationOnCloseModal = () => {
@@ -90,7 +101,7 @@ const LocationInfoModal = () => {
     >
       <IonItem lines='full'>
         <IonLabel>{selectedLocation.name}</IonLabel>
-        {user && <ButtonFavoriteLocation selectedLocation={selectedLocation} />}
+        {user && <ButtonFavoriteLocation location={selectedLocation} />}
         <IonButton
           className='hoverTransparentBtn'
           fill='clear'
@@ -142,7 +153,7 @@ const LocationInfoModal = () => {
               routerDirection='forward'
               className='modalItemSmall itemTextSmall'
               lines='full'
-              detail='false'
+              detail={false}
             >
               <IonLabel>
                 {selectedLocation.pricing.length === 0
@@ -161,7 +172,7 @@ const LocationInfoModal = () => {
               routerDirection='forward'
               className='modalItemSmall itemTextSmall'
               lines='full'
-              detail='false'
+              detail={false}
             >
               <IonLabel>Bewerten</IonLabel>
               <IonButton fill='clear'>
@@ -192,7 +203,6 @@ const LocationInfoModal = () => {
                     className='me-2'
                     color='primary'
                     icon={showComments ? caretDownCircle : caretForwardCircle}
-                    button
                     onClick={() => dispatch(appActions.toggleShowComments())}
                   />
                   <IonLabel>Bewertungen</IonLabel>
@@ -206,6 +216,7 @@ const LocationInfoModal = () => {
                 </IonItem>
 
                 {showComments &&
+                  isCommentsList(selectedLocation.comments_list) &&
                   selectedLocation.comments_list.map((comment) => (
                     <CommentsBlock key={comment._id} comment={comment} />
                   ))}
@@ -225,7 +236,7 @@ const LocationInfoModal = () => {
                 routerDirection='forward'
                 className='itemTextSmall'
                 lines='none'
-                detail='false'
+                detail={false}
               >
                 ... wartet auf die erste Bewertung
               </IonItem>

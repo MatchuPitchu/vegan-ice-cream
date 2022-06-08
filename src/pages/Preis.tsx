@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { appActions } from '../store/appSlice';
 import { useUpdatePricingMutation } from '../store/api/locations-api-slice';
-import { selectedLocationActions } from '../store/selectedLocationSlice';
+import { getSelectedLocation, locationsActions } from '../store/locationsSlice';
 // Context
 import { useThemeContext } from '../context/ThemeContext';
 import { SubmitHandler, useController, useForm } from 'react-hook-form';
@@ -33,7 +33,7 @@ interface PricingSubmitData {
 const Preis: VFC = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
-  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
+  const selectedLocation = useAppSelector((state) => getSelectedLocation(state.locations));
 
   const { isDarkTheme } = useThemeContext();
 
@@ -68,7 +68,7 @@ const Preis: VFC = () => {
     setTimeout(() => setFinishPriceUpdate(true), 2000);
     setTimeout(() => setIsFormVisible(true), 3000);
     setTimeout(() => setFinishPriceUpdate(false), 3000);
-    dispatch(selectedLocationActions.resetSelectedLocation());
+    dispatch(locationsActions.resetSelectedLocation());
     dispatch(appActions.setIsLoading(false));
   };
 

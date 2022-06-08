@@ -9,7 +9,7 @@ import { IonAlert, IonButton, IonIcon } from '@ionic/react';
 import { heartOutline, heart } from 'ionicons/icons';
 
 interface Props {
-  selectedLocation: IceCreamLocation;
+  location: IceCreamLocation;
 }
 
 interface UpdateFavorites {
@@ -72,7 +72,7 @@ const isLocation = (locations: IceCreamLocation[] | string[]): locations is IceC
   return (locations as IceCreamLocation[])[0].name !== undefined;
 };
 
-const ButtonFavoriteLocation: VFC<Props> = ({ selectedLocation }) => {
+const ButtonFavoriteLocation: VFC<Props> = ({ location }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const [updateFavoritesState, dispatchUpdateFavoritesState] = useReducer(
@@ -159,7 +159,7 @@ const ButtonFavoriteLocation: VFC<Props> = ({ selectedLocation }) => {
   const findLocation =
     isLocation(user.favorite_locations) &&
     user.favorite_locations.find(
-      (location: IceCreamLocation) => location._id === selectedLocation._id
+      (favoriteLocation: IceCreamLocation) => favoriteLocation._id === location._id
     );
 
   return (
@@ -170,7 +170,7 @@ const ButtonFavoriteLocation: VFC<Props> = ({ selectedLocation }) => {
           onClick={() =>
             dispatchUpdateFavoritesState({
               type: Actions.REMOVE,
-              payload: { willRemove: true, location: selectedLocation },
+              payload: { willRemove: true, location },
             })
           }
         >
@@ -183,7 +183,7 @@ const ButtonFavoriteLocation: VFC<Props> = ({ selectedLocation }) => {
           onClick={() =>
             dispatchUpdateFavoritesState({
               type: Actions.ADD,
-              payload: { willAdd: true, location: selectedLocation },
+              payload: { willAdd: true, location },
             })
           }
         >

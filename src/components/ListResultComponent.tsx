@@ -2,7 +2,7 @@ import { VFC } from 'react';
 import type { IceCreamLocation } from '../types';
 // Redux Store
 import { useAppDispatch } from '../store/hooks';
-import { selectedLocationActions } from '../store/selectedLocationSlice';
+import { locationsActions } from '../store/locationsSlice';
 import { IonButton, IonCard, IonIcon, isPlatform } from '@ionic/react';
 import { add } from 'ionicons/icons';
 import Ratings from './Ratings';
@@ -33,7 +33,7 @@ const ListResultComponent: VFC<Props> = ({ location }) => {
         ) : (
           <IonButton
             className='more-infos mt-1'
-            onClick={() => dispatch(selectedLocationActions.setSelectedLocation(location))}
+            onClick={() => dispatch(locationsActions.setSelectedLocation(location._id))}
             fill='solid'
             routerLink='/bewerten'
             routerDirection='forward'

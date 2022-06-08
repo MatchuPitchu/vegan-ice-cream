@@ -2,7 +2,7 @@ import { VFC } from 'react';
 import type { IceCreamLocation } from '../../types';
 // Redux Store
 import { useAppDispatch } from '../../store/hooks';
-import { selectedLocationActions } from '../../store/selectedLocationSlice';
+import { locationsActions } from '../../store/locationsSlice';
 import { appActions } from '../../store/appSlice';
 import { IonButton, IonIcon } from '@ionic/react';
 import { add, open } from 'ionicons/icons';
@@ -14,6 +14,10 @@ interface Props {
 const BtnInfoRating: VFC<Props> = ({ location }) => {
   const dispatch = useAppDispatch();
 
+  const selectLocation = () => {
+    dispatch(locationsActions.setSelectedLocation(location._id));
+  };
+
   return (
     <div className='text-center mt-1'>
       <IonButton
@@ -21,7 +25,7 @@ const BtnInfoRating: VFC<Props> = ({ location }) => {
         title='Mehr Infos'
         fill='solid'
         onClick={() => {
-          dispatch(selectedLocationActions.setSelectedLocation(location));
+          selectLocation();
           dispatch(appActions.setShowLocationInfoModal(true));
         }}
       >
@@ -30,7 +34,7 @@ const BtnInfoRating: VFC<Props> = ({ location }) => {
       </IonButton>
       <IonButton
         className='more-infos mt-1'
-        onClick={() => dispatch(selectedLocationActions.setSelectedLocation(location))}
+        onClick={() => selectLocation()}
         fill='solid'
         routerLink='/bewerten'
         routerDirection='forward'

@@ -12,7 +12,6 @@ import Highlighter from 'react-highlight-words';
 import { IonIcon, IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/react';
 import { informationCircle } from 'ionicons/icons';
 import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables';
-import { selectedLocationActions } from '../store/selectedLocationSlice';
 import { useAutocomplete } from '../hooks/useAutocomplete';
 
 const Search = () => {
@@ -76,7 +75,7 @@ const Search = () => {
   const onSearchTextChanged = (searchText: string) => {
     if (searchText.length < 3) {
       dispatch(locationsActions.resetLocationsSearchResults());
-      dispatch(selectedLocationActions.resetSelectedLocation());
+      dispatch(locationsActions.resetSelectedLocation());
       // no return here since execution stops in handleSearchTextChange()
     }
 
@@ -141,7 +140,7 @@ const Search = () => {
                     `${location.name}, ${location.address.street} ${location.address.number}, ${location.address.city}`
                   )
                 );
-                dispatch(selectedLocationActions.setSelectedLocation(location));
+                dispatch(locationsActions.setSelectedLocation(location._id));
                 setPredictions([]);
               }}
               lines='full'

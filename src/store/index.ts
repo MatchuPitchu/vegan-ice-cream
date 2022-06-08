@@ -4,7 +4,6 @@ import { userSliceReducer } from './userSlice';
 import { mapSliceReducer } from './mapSlice';
 import { flavorSliceReducer } from './flavorSlice';
 import { showSliceReducer } from './showSlice';
-import { selectedLocationSliceReducer } from './selectedLocationSlice';
 import { commentSliceReducer } from './commentSlice';
 import { locationsSliceReducer } from './locationsSlice';
 import { searchSliceReducer } from './searchSlice';
@@ -21,7 +20,6 @@ const reducers = combineReducers({
   map: mapSliceReducer,
   flavor: flavorSliceReducer,
   show: showSliceReducer,
-  selectedLocation: selectedLocationSliceReducer,
   comment: commentSliceReducer,
   locations: locationsSliceReducer,
   search: searchSliceReducer,

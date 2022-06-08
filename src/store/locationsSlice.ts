@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IceCreamLocation } from '../types';
 import { locationsApi } from './api/locations-api-slice';
 
@@ -64,6 +64,7 @@ export type CityName = string;
 
 interface LocationsStateSlice {
   locations: IceCreamLocation[];
+  selectedLocationId: string;
   locationsSearchResultsList: IceCreamLocation[];
   topLocationsInCity: IceCreamLocation[];
   newLocation: NewLocation | null;
@@ -73,6 +74,7 @@ interface LocationsStateSlice {
 
 const initialLocationsState: LocationsStateSlice = {
   locations: [],
+  selectedLocationId: '',
   locationsSearchResultsList: [],
   topLocationsInCity: [],
   newLocation: null,
@@ -160,12 +162,29 @@ const locationsSlice = createSlice({
     addToLocations: (state, { payload }: PayloadAction<IceCreamLocation>) => {
       state.locations = [...state.locations, payload];
     },
-    updateOneLocation: (state, { payload }: PayloadAction<IceCreamLocation>) => {
+    updateSingleLocation: (state, { payload }: PayloadAction<IceCreamLocation>) => {
       const updatedLocationIndex = state.locations.findIndex(
         (location) => location._id === payload._id
       );
       state.locations[updatedLocationIndex] = payload;
     },
+    // SELECTED LOCATION
+    setSelectedLocation: (state, { payload }: PayloadAction<string>) => {
+      state.selectedLocationId = payload;
+    },
+    updateSelectedLocation: (state, { payload }: PayloadAction<Partial<IceCreamLocation>>) => {
+      const updatedLocationIndex = state.locations.findIndex(
+        (location) => location._id === state.selectedLocationId
+      );
+      state.locations[updatedLocationIndex] = {
+        ...state.locations[updatedLocationIndex],
+        ...payload,
+      };
+    },
+    resetSelectedLocation: (state) => {
+      state.selectedLocationId = '';
+    },
+    // SORT LOCATIONS
     sortLocationsVeganOffer: (state, { payload }: { payload: SortDirection }) => {
       state.locations =
         payload === 'asc'
@@ -273,6 +292,17 @@ const locationsSlice = createSlice({
     );
   },
 });
+
+export const getSelectedLocation = createSelector(
+  (state: LocationsStateSlice) => state.locations,
+  (state: LocationsStateSlice) => state.selectedLocationId,
+  (locations, selectedLocationId) => {
+    const selectedLocationIndex = locations.findIndex(
+      (location) => location._id === selectedLocationId
+    );
+    return locations[selectedLocationIndex];
+  }
+);
 
 export const locationsActions = locationsSlice.actions;
 export const locationsSliceReducer = locationsSlice.reducer;

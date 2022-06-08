@@ -3,7 +3,6 @@ import { useContext, useState, useEffect, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { appActions } from '../store/appSlice';
 import { mapActions } from '../store/mapSlice';
-import { selectedLocationActions } from '../store/selectedLocationSlice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -36,14 +35,14 @@ import Spinner from '../components/Spinner';
 import LoadingError from '../components/LoadingError';
 import AutocompleteForm from '../components/AutocompleteForm';
 import GeolocationBtn from '../components/GeolocationBtn';
-import { locationsActions } from '../store/locationsSlice';
+import { getSelectedLocation, locationsActions } from '../store/locationsSlice';
 import { searchActions } from '../store/searchSlice';
 
 const Entdecken = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { center, zoom } = useAppSelector((state) => state.map);
-  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
+  const selectedLocation = useAppSelector((state) => getSelectedLocation(state.locations));
   const { checkMsgNewLocation, entdeckenSegment } = useAppSelector((state) => state.app);
   const { locations, newLocation } = useAppSelector((state) => state.locations);
 
@@ -266,7 +265,7 @@ const Entdecken = () => {
                         title={`${location.name}, ${location.address.street} ${location.address.number}`}
                         cursor='pointer'
                         onClick={() => {
-                          dispatch(selectedLocationActions.setSelectedLocation(location));
+                          dispatch(locationsActions.setSelectedLocation(location._id));
                           handleOpenLocationInfoModal();
                           dispatch(
                             mapActions.setCenter({
@@ -323,7 +322,7 @@ const Entdecken = () => {
                 />
               )}
 
-              {newLocation ? (
+              {newLocation && (
                 // Marker for new ice cream location
                 <>
                   <Marker
@@ -348,9 +347,9 @@ const Entdecken = () => {
                   />
                   <NewLocationForm />
                 </>
-              ) : null}
+              )}
 
-              {selectedLocation && <LocationInfoModal />}
+              {selectedLocation && <LocationInfoModal selectedLocation={selectedLocation} />}
             </GoogleMap>
 
             {checkMsgNewLocation && <div className='checkMsg'>{checkMsgNewLocation}</div>}

@@ -3,8 +3,8 @@ import { useThemeContext } from '../context/ThemeContext';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
-import { selectedLocationActions } from '../store/selectedLocationSlice';
 import { appActions } from '../store/appSlice';
+import { getSelectedLocation, locationsActions } from '../store/locationsSlice';
 import {
   IonContent,
   IonPage,
@@ -28,7 +28,7 @@ import LocInfoHeader from '../components/LocInfoHeader';
 const Favoriten = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
-  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
+  const selectedLocation = useAppSelector((state) => getSelectedLocation(state.locations));
 
   const { isDarkTheme } = useThemeContext();
 
@@ -145,7 +145,7 @@ const Favoriten = () => {
                   <IonButton
                     className='more-infos mt-1'
                     fill='solid'
-                    onClick={() => dispatch(selectedLocationActions.setSelectedLocation(location))}
+                    onClick={() => dispatch(locationsActions.setSelectedLocation(location._id))}
                     routerLink='/bewerten'
                     routerDirection='forward'
                   >
@@ -158,7 +158,7 @@ const Favoriten = () => {
           ))}
         </IonReorderGroup>
 
-        {selectedLocation && <LocationInfoModal />}
+        {selectedLocation && <LocationInfoModal selectedLocation={selectedLocation} />}
 
         <LoadingError />
       </IonContent>

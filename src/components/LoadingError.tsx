@@ -1,20 +1,16 @@
+import { VFC } from 'react';
 import { useAppSelector } from '../store/hooks';
 import { IonLoading, IonToast } from '@ionic/react';
 
-const LoadingError = () => {
+const LoadingError: VFC = () => {
   const { isLoading, error } = useAppSelector((state) => state.app);
 
   return (
     <>
-      <IonLoading
-        // isLoading is only true or false
-        isOpen={isLoading}
-        message={'Einen Moment bitte ...'}
-      />
+      <IonLoading isOpen={isLoading} message={'Einen Moment bitte ...'} />
       <IonToast
         cssClass='errorToast'
-        // error is message, so need to spezify that if msg than true
-        isOpen={error ? true : false}
+        isOpen={!!error} // convert error string to boolean
         message={error}
       />
     </>

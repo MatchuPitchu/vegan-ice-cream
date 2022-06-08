@@ -2,9 +2,8 @@
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { userActions } from '../../store/userSlice';
 import { showActions } from '../../store/showSlice';
-import { selectedLocationActions } from '../../store/selectedLocationSlice';
 import { appActions } from '../../store/appSlice';
-// Context
+import { getSelectedLocation, locationsActions } from '../../store/locationsSlice';
 import ReactStars from 'react-rating-stars-component';
 import { Controller, useForm } from 'react-hook-form';
 import { IonButton, IonIcon, IonTextarea, IonToggle } from '@ionic/react';
@@ -15,7 +14,7 @@ import LoadingError from '../LoadingError';
 const UpdateComment = ({ comment }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
-  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
+  const selectedLocation = useAppSelector((state) => getSelectedLocation(state.locations));
 
   const defaultValues = {
     text: comment.text,
@@ -111,7 +110,7 @@ const UpdateComment = ({ comment }) => {
           Math.round((sumVegan / comments_list.length) * 10) / 10 || 0;
 
         dispatch(
-          selectedLocationActions.updateSelectedLocation({
+          locationsActions.updateSelectedLocation({
             comments_list,
             location_rating_quality,
             location_rating_vegan_offer,

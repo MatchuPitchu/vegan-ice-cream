@@ -1,9 +1,9 @@
-import { useContext, useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { flavorActions } from '../store/flavorSlice';
 import { appActions } from '../store/appSlice';
-import { locationsActions } from '../store/locationsSlice';
+import { getSelectedLocation, locationsActions } from '../store/locationsSlice';
 import { searchActions } from '../store/searchSlice';
 import { skipToken } from '@reduxjs/toolkit/dist/query';
 import { useGetOneLocationQuery, useUpdatePricingMutation } from '../store/api/locations-api-slice';
@@ -39,7 +39,6 @@ import SearchFlavors from '../components/SearchFlavors';
 import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
 import { useGetAdditionalInfosFromUserQuery } from '../store/api/user-api-slice';
-import { selectedLocationActions } from '../store/selectedLocationSlice';
 
 // static data outside of React component to avoid redeclaring variable after each re-rendering
 const COLORS = [
@@ -104,7 +103,7 @@ const Bewerten = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
   const { flavor, searchTextFlavor: searchTermFlavor } = useAppSelector((state) => state.flavor);
-  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
+  const selectedLocation = useAppSelector((state) => getSelectedLocation(state.locations));
 
   const { isDarkTheme } = useThemeContext();
 
@@ -130,7 +129,7 @@ const Bewerten = () => {
 
   useEffect(() => {
     if (isSuccessFetchUpdatedLocation) {
-      dispatch(locationsActions.updateOneLocation(updatedLocation));
+      dispatch(locationsActions.updateSingleLocation(updatedLocation));
       setRefetchLocationId(null);
     }
   }, [isSuccessFetchUpdatedLocation, updatedLocation, dispatch]);
@@ -255,7 +254,7 @@ const Bewerten = () => {
       dispatch(searchActions.setSearchText(''));
       dispatch(flavorActions.setSearchTermFlavor(''));
       dispatch(flavorActions.resetFlavor());
-      dispatch(selectedLocationActions.resetSelectedLocation());
+      dispatch(locationsActions.resetSelectedLocation());
 
       // delay is needed, otherwise memory leak if state updates on unmounted component
       setTimeout(() => setSuccess(true), 500);

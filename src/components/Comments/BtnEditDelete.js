@@ -2,7 +2,7 @@ import { useState } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { showActions } from '../../store/showSlice';
-import { selectedLocationActions } from '../../store/selectedLocationSlice';
+import { getSelectedLocation, locationsActions } from '../../store/locationsSlice';
 import { userActions } from '../../store/userSlice';
 import { appActions } from '../../store/appSlice';
 // Context
@@ -11,8 +11,8 @@ import { close, createOutline, trashOutline } from 'ionicons/icons';
 
 const BtnEditDelete = ({ comment }) => {
   const dispatch = useAppDispatch();
-  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
   const { user } = useAppSelector((state) => state.user);
+  const selectedLocation = useAppSelector((state) => getSelectedLocation(state.locations));
 
   const [showActionSheet, setShowActionSheet] = useState(false);
 
@@ -55,7 +55,7 @@ const BtnEditDelete = ({ comment }) => {
               Math.round((sumVegan / newList.length) * 10) / 10 || 0;
 
             dispatch(
-              selectedLocationActions.updateSelectedLocation({
+              locationsActions.updateSelectedLocation({
                 comments_list: newList,
                 location_rating_quality,
                 location_rating_vegan_offer,
@@ -63,7 +63,7 @@ const BtnEditDelete = ({ comment }) => {
             );
           } else {
             dispatch(
-              selectedLocationActions.updateSelectedLocation({
+              locationsActions.updateSelectedLocation({
                 comments_list: [],
               })
             );

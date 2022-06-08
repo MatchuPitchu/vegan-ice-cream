@@ -2,7 +2,7 @@ import { VFC } from 'react';
 import type { IceCreamLocation } from '../../types';
 // Redux Store
 import { useAppSelector } from '../../store/hooks';
-// Context
+import { getSelectedLocation } from '../../store/locationsSlice';
 import {
   isPlatform,
   IonSlide,
@@ -23,7 +23,7 @@ interface Props {
 }
 
 const TopLocationsSlider: VFC<Props> = ({ topLocationsInCity, hideTopLocations }) => {
-  const { selectedLocation } = useAppSelector((state) => state.selectedLocation);
+  const selectedLocation = useAppSelector((state) => getSelectedLocation(state.locations));
 
   const slideOptions = {
     initialSlide: 0,
@@ -86,7 +86,7 @@ const TopLocationsSlider: VFC<Props> = ({ topLocationsInCity, hideTopLocations }
             </IonCard>
           </div>
 
-          {selectedLocation && <LocationInfoModal />}
+          {selectedLocation && <LocationInfoModal selectedLocation={selectedLocation} />}
         </IonSlide>
       ))}
     </IonSlides>
