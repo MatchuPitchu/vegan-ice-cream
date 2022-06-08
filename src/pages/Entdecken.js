@@ -42,7 +42,7 @@ const Entdecken = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { center, zoom } = useAppSelector((state) => state.map);
-  const selectedLocation = useAppSelector((state) => getSelectedLocation(state.locations));
+  const selectedLocation = useAppSelector(getSelectedLocation);
   const { checkMsgNewLocation, entdeckenSegment } = useAppSelector((state) => state.app);
   const { locations, newLocation } = useAppSelector((state) => state.locations);
 

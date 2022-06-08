@@ -1,4 +1,5 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '.';
 import { IceCreamLocation } from '../types';
 import { locationsApi } from './api/locations-api-slice';
 
@@ -294,8 +295,8 @@ const locationsSlice = createSlice({
 });
 
 export const getSelectedLocation = createSelector(
-  (state: LocationsStateSlice) => state.locations,
-  (state: LocationsStateSlice) => state.selectedLocationId,
+  (state: RootState) => state.locations.locations,
+  (state: RootState) => state.locations.selectedLocationId,
   (locations, selectedLocationId) => {
     const selectedLocationIndex = locations.findIndex(
       (location) => location._id === selectedLocationId

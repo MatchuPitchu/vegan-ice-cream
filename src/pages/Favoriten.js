@@ -28,7 +28,7 @@ import LocInfoHeader from '../components/LocInfoHeader';
 const Favoriten = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
-  const selectedLocation = useAppSelector((state) => getSelectedLocation(state.locations));
+  const selectedLocation = useAppSelector(getSelectedLocation);
 
   const { isDarkTheme } = useThemeContext();
 

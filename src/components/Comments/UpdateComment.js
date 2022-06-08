@@ -14,7 +14,7 @@ import LoadingError from '../LoadingError';
 const UpdateComment = ({ comment }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
-  const selectedLocation = useAppSelector((state) => getSelectedLocation(state.locations));
+  const selectedLocation = useAppSelector(getSelectedLocation);
 
   const defaultValues = {
     text: comment.text,

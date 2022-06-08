@@ -12,7 +12,7 @@ import { close, createOutline, trashOutline } from 'ionicons/icons';
 const BtnEditDelete = ({ comment }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
-  const selectedLocation = useAppSelector((state) => getSelectedLocation(state.locations));
+  const selectedLocation = useAppSelector(getSelectedLocation);
 
   const [showActionSheet, setShowActionSheet] = useState(false);
 

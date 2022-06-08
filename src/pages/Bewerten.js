@@ -103,7 +103,7 @@ const Bewerten = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
   const { flavor, searchTextFlavor: searchTermFlavor } = useAppSelector((state) => state.flavor);
-  const selectedLocation = useAppSelector((state) => getSelectedLocation(state.locations));
+  const selectedLocation = useAppSelector(getSelectedLocation);
 
   const { isDarkTheme } = useThemeContext();
 

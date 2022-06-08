@@ -8,8 +8,9 @@ import ListResultComponent from './ListResultComponent';
 import ListFilters from './ListFilters';
 
 const ListMap = () => {
-  const selectedLocation = useAppSelector(getSelectedLocation);
   const { locations, locationsSearchResultsList } = useAppSelector((state) => state.locations);
+  const selectedLocation = useAppSelector(getSelectedLocation);
+
   const { searchText } = useAppSelector((state) => state.search);
 
   const [endIndexInLocationsList, setEndIndexInLocationsList] = useState(4);

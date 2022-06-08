@@ -23,7 +23,7 @@ interface Props {
 }
 
 const TopLocationsSlider: VFC<Props> = ({ topLocationsInCity, hideTopLocations }) => {
-  const selectedLocation = useAppSelector((state) => getSelectedLocation(state.locations));
+  const selectedLocation = useAppSelector(getSelectedLocation);
 
   const slideOptions = {
     initialSlide: 0,
