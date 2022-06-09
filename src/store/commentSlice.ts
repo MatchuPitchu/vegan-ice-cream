@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Comment } from '../types';
+import { Comment } from '../types/types';
 
 interface CommentStateSlice {
   // newComment: Comment;

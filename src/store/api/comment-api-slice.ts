@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Comment } from '../../types';
+import { Comment } from '../../types/types';
 
 type NewComment = Pick<
   Comment,

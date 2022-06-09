@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface TypeShowEditSection {
+  state: boolean;
+  comment_id: string;
+}
+
 export type EntdeckenSegment = 'map' | 'list';
 
 interface AppStateSlice {

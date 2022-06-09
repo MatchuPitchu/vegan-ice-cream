@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import type { Flavor, IceCreamLocation } from '../../types';
+import type { Flavor, IceCreamLocation } from '../../types/types';
 
 interface Props {
   flavorsList: IceCreamLocation['flavors_listed'];

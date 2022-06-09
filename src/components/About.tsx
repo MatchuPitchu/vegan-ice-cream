@@ -1,3 +1,4 @@
+import { VFC } from 'react';
 // Redux Store
 import { useAppDispatch } from '../store/hooks';
 import { showActions } from '../store/showSlice';
@@ -17,20 +18,31 @@ import {
   IonList,
   IonPage,
 } from '@ionic/react';
-import {
-  bulb,
-  closeCircleOutline,
-  documentLock,
-  helpCircle,
-  logoCss3,
-  logoHtml5,
-  logoIonic,
-  logoJavascript,
-  logoNodejs,
-  logoReact,
-} from 'ionicons/icons';
+import { bulb, closeCircleOutline, helpCircle } from 'ionicons/icons';
 
-const About = () => {
+const logoHTML5 = '/assets/logos/logo-HTML5.svg';
+const logoCSS3 = '/assets/logos/logo-CSS3.svg';
+const logoJavaScript = '/assets/logos/logo-javascript.svg';
+const logoTypeScript = '/assets/logos/logo-typescript.svg';
+const logoReact = '/assets/logos/logo-react.svg';
+const logoIonic = '/assets/logos/logo-ionic.svg';
+const logoNodejs = '/assets/logos/logo-nodejs.svg';
+const logoMongoDB = '/assets/logos/logo-mongodb.svg';
+const logoIllustrator = '/assets/logos/logo-adobe-illustrator.svg';
+
+const usedTechStack = [
+  { tech: 'HTML5', icon: logoHTML5 },
+  { tech: 'CSS und Bootstrap 5', icon: logoCSS3 },
+  { tech: 'JavaScript', icon: logoJavaScript },
+  { tech: 'TypeScript', icon: logoTypeScript },
+  { tech: 'React', icon: logoReact },
+  { tech: 'Ionic', icon: logoIonic },
+  { tech: 'NodeJS mit Express', icon: logoNodejs },
+  { tech: 'MongoDB mit Mongoose', icon: logoMongoDB },
+  { tech: 'Adobe Illustrator', icon: logoIllustrator },
+];
+
+const About: VFC = () => {
   const dispatch = useAppDispatch();
   const { isDarkTheme } = useThemeContext();
 
@@ -38,9 +50,7 @@ const About = () => {
     <IonPage>
       <IonHeader>
         <IonItem color='background-color' lines='none'>
-          <IonLabel size='' color='primary'>
-            About
-          </IonLabel>
+          <IonLabel color='primary'>About</IonLabel>
           <IonButton
             slot='end'
             fill='clear'
@@ -95,53 +105,19 @@ const About = () => {
 
           <IonItem lines='none'>
             <IonLabel className='ion-text-wrap'>
-              ... genutzte Sprachen, Frameworks und Libraries
+              ... genutzte Sprachen, Frameworks, Libraries und Tools
             </IonLabel>
           </IonItem>
 
           <IonList>
-            <IonItem>
-              <IonLabel color='primary' className='ion-text-wrap'>
-                HTML5
-              </IonLabel>
-              <IonIcon color='primary' slot='start' icon={logoHtml5} />
-            </IonItem>
-            <IonItem>
-              <IonLabel color='primary' className='ion-text-wrap'>
-                CSS und Bootstrap 5
-              </IonLabel>
-              <IonIcon color='primary' slot='start' icon={logoCss3} />
-            </IonItem>
-            <IonItem>
-              <IonLabel color='primary' className='ion-text-wrap'>
-                JavaScript
-              </IonLabel>
-              <IonIcon color='primary' slot='start' icon={logoJavascript} />
-            </IonItem>
-            <IonItem>
-              <IonLabel color='primary' className='ion-text-wrap'>
-                ReactJS
-              </IonLabel>
-              <IonIcon color='primary' slot='start' icon={logoReact} />
-            </IonItem>
-            <IonItem>
-              <IonLabel color='primary' className='ion-text-wrap'>
-                Ionic
-              </IonLabel>
-              <IonIcon color='primary' slot='start' icon={logoIonic} />
-            </IonItem>
-            <IonItem>
-              <IonLabel color='primary' className='ion-text-wrap'>
-                NodeJS mit Express
-              </IonLabel>
-              <IonIcon color='primary' slot='start' icon={logoNodejs} />
-            </IonItem>
-            <IonItem lines='none'>
-              <IonLabel color='primary' className='ion-text-wrap'>
-                MongoDB mit Mongoose
-              </IonLabel>
-              <IonIcon color='primary' slot='start' icon={documentLock} />
-            </IonItem>
+            {usedTechStack.map((item) => (
+              <IonItem>
+                <IonLabel color='primary' className='ion-text-wrap'>
+                  {item.tech}
+                </IonLabel>
+                <IonIcon color='primary' slot='start' icon={item.icon} />
+              </IonItem>
+            ))}
           </IonList>
         </IonCard>
 

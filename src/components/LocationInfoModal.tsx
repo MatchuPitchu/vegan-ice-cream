@@ -1,5 +1,6 @@
 import { useEffect, VFC } from 'react';
-import type { Comment, IceCreamLocation } from '../types';
+import type { IceCreamLocation } from '../types/types';
+import { isComment, isCommentsList } from '../types/typeguards';
 import { useThemeContext } from '../context/ThemeContext';
 import { useAnimation } from '../hooks/useAnimation';
 // Redux Store
@@ -34,14 +35,6 @@ import Pricing from './Pricing';
 
 type Props = {
   selectedLocation: IceCreamLocation;
-};
-
-const isComment = (comment: string | Comment): comment is Comment => {
-  return (comment as Comment)._id !== undefined;
-};
-
-const isCommentsList = (commentList: string[] | Comment[]): commentList is Comment[] => {
-  return (commentList as Comment[])[0]._id !== undefined;
 };
 
 const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
@@ -218,7 +211,11 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
                 {showComments &&
                   isCommentsList(selectedLocation.comments_list) &&
                   selectedLocation.comments_list.map((comment) => (
-                    <CommentsBlock key={comment._id} comment={comment} />
+                    <CommentsBlock
+                      key={comment._id}
+                      comment={comment}
+                      authorIdOfComment={comment.user_id._id}
+                    />
                   ))}
 
                 <IonItem lines='none'>

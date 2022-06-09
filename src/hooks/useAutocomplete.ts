@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { EntdeckenSegment } from '../store/appSlice';
-import { Flavor, IceCreamLocation } from '../types';
+import { Flavor, IceCreamLocation } from '../types/types';
 
 export const useAutocomplete = <T extends Flavor | IceCreamLocation | string>(
   searchableArray: T[]

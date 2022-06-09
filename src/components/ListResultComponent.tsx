@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import type { IceCreamLocation } from '../types';
+import type { IceCreamLocation } from '../types/types';
 // Redux Store
 import { useAppDispatch } from '../store/hooks';
 import { locationsActions } from '../store/locationsSlice';

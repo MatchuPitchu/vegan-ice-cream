@@ -1,6 +1,6 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '.';
-import { IceCreamLocation } from '../types';
+import { Comment, IceCreamLocation } from '../types/types';
 import { locationsApi } from './api/locations-api-slice';
 
 export enum SortType {
@@ -63,6 +63,10 @@ interface NewLocationFetchedData {
 
 export type CityName = string;
 
+interface AccumulatorTotal {
+  quality: number;
+  veganOffer: number;
+}
 interface LocationsStateSlice {
   locations: IceCreamLocation[];
   selectedLocationId: string;
@@ -153,6 +157,24 @@ const sortZtoA = (type: SortType) => (a: IceCreamLocation, b: IceCreamLocation) 
   return 0;
 };
 
+const calculateTotals = (commentsList: Comment[]) => {
+  const total = commentsList.reduce(
+    (acc: AccumulatorTotal, currentValue: Comment) => ({
+      quality: acc.quality + currentValue.rating_quality!,
+      veganOffer: acc.veganOffer + currentValue.rating_vegan_offer!,
+    }),
+    {
+      quality: 0,
+      veganOffer: 0,
+    }
+  );
+  return {
+    location_rating_quality: Math.round((total.quality / commentsList.length) * 10) / 10 || 0,
+    location_rating_vegan_offer:
+      Math.round((total.veganOffer / commentsList.length) * 10) / 10 || 0,
+  };
+};
+
 const locationsSlice = createSlice({
   name: 'locations',
   initialState: initialLocationsState,
@@ -173,10 +195,63 @@ const locationsSlice = createSlice({
     setSelectedLocation: (state, { payload }: PayloadAction<string>) => {
       state.selectedLocationId = payload;
     },
+    deleteCommentFromSelectedLocation: (state, { payload: commentId }: PayloadAction<string>) => {
+      const updatedLocationIndex = state.locations.findIndex(
+        (location) => location._id === state.selectedLocationId
+      );
+
+      const oldCommentsList = [...state.locations[updatedLocationIndex].comments_list] as Comment[];
+      const newCommentsList = oldCommentsList.filter((item) => item._id !== commentId);
+
+      if (!newCommentsList) return;
+
+      if (newCommentsList.length === 0) {
+        state.locations[updatedLocationIndex].comments_list = [];
+      }
+
+      if (newCommentsList.length > 0) {
+        const { location_rating_quality, location_rating_vegan_offer } =
+          calculateTotals(newCommentsList);
+
+        state.locations[updatedLocationIndex] = {
+          ...state.locations[updatedLocationIndex],
+          comments_list: newCommentsList,
+          location_rating_quality,
+          location_rating_vegan_offer,
+        };
+      }
+    },
+    updateCommentFromSelectedLocation: (
+      state,
+      { payload: updatedComment }: PayloadAction<Comment>
+    ) => {
+      const updatedLocationIndex = state.locations.findIndex(
+        (location) => location._id === state.selectedLocationId
+      );
+
+      const newCommentsList = [...state.locations[updatedLocationIndex].comments_list] as Comment[];
+      const updatedCommentIndex = newCommentsList.findIndex(
+        (item) => item._id === updatedComment._id
+      );
+
+      if (!updatedCommentIndex) return;
+      newCommentsList.splice(updatedCommentIndex, 1, updatedComment);
+
+      const { location_rating_quality, location_rating_vegan_offer } =
+        calculateTotals(newCommentsList);
+
+      state.locations[updatedLocationIndex] = {
+        ...state.locations[updatedLocationIndex],
+        comments_list: newCommentsList,
+        location_rating_quality,
+        location_rating_vegan_offer,
+      };
+    },
     updateSelectedLocation: (state, { payload }: PayloadAction<Partial<IceCreamLocation>>) => {
       const updatedLocationIndex = state.locations.findIndex(
         (location) => location._id === state.selectedLocationId
       );
+
       state.locations[updatedLocationIndex] = {
         ...state.locations[updatedLocationIndex],
         ...payload,

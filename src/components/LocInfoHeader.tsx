@@ -1,6 +1,6 @@
 import { useContext, VFC } from 'react';
 import { Context } from '../context/Context';
-import type { IceCreamLocation } from '../types';
+import type { IceCreamLocation } from '../types/types';
 import { IonAvatar, IonItem, IonLabel } from '@ionic/react';
 import ButtonFavoriteLocation from './Comments/ButtonFavoriteLocation';
 

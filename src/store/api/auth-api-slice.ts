@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { User } from '../../types';
+import { User } from '../../types/types';
 
 interface ReturnTypeVerifySession {
   success: string;

@@ -1,5 +1,5 @@
 import { useState, useEffect, VFC } from 'react';
-import type { Flavor, PopoverState } from '../types';
+import type { Flavor, PopoverState } from '../types/types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { flavorActions } from '../store/flavorSlice';

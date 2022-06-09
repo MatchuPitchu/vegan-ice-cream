@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import type { IceCreamLocation, PopoverState } from '../types';
+import type { IceCreamLocation, PopoverState } from '../types/types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { mapActions } from '../store/mapSlice';

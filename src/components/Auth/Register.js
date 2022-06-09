@@ -18,7 +18,7 @@ import {
 } from '@ionic/react';
 import showError from '../showError';
 import { logIn } from 'ionicons/icons';
-import { citiesArray } from '../arrayCitiesGermany';
+import { citiesInGermany } from '../../utils/citiesInGermany';
 import LoadingError from '../LoadingError';
 import InfoTextRegister from './InfoTextRegister';
 import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../../utils/variables';
@@ -89,7 +89,7 @@ const Register = () => {
 
   const valueChanged = (value) => {
     // Filter our suggestions that don't contain the user's input + slice array to show only 5 cit
-    const newFilteredArr = citiesArray
+    const newFilteredArr = citiesInGermany
       .filter((suggestion) => suggestion.toLowerCase().indexOf(value.toLowerCase()) > -1)
       .slice(0, 5);
     setActiveSuggestion(0);

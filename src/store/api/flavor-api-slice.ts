@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Flavor } from '../../types';
+import { Flavor } from '../../types/types';
 
 type NewFlavor = Pick<Flavor, 'name' | 'color' | 'type_cream' | 'type_fruit'>;
 

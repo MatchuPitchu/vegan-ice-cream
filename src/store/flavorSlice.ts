@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Flavor } from '../types';
+import { Flavor } from '../types/types';
 
 interface FlavorStateSlice {
   flavor: Flavor | null;

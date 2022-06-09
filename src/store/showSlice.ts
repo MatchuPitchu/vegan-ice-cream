@@ -1,14 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface TypeShowEditSection {
+  state: boolean;
+  comment_id: string;
+}
 interface ShowStateSlice {
   showProfil: boolean;
   showUpdateProfil: boolean;
   showFeedback: boolean;
   showAbout: boolean;
-  showUpdateComment: {
-    state: boolean;
-    comment_id: string;
-  };
+  showEditSectionComment: TypeShowEditSection;
 }
 
 const initialAuthState: ShowStateSlice = {
@@ -16,7 +17,7 @@ const initialAuthState: ShowStateSlice = {
   showUpdateProfil: false,
   showFeedback: false,
   showAbout: false,
-  showUpdateComment: {
+  showEditSectionComment: {
     state: false,
     comment_id: '',
   },
@@ -44,11 +45,8 @@ const showSlice = createSlice({
     setShowAbout: (state, { payload }: PayloadAction<ShowStateSlice['showAbout']>) => {
       state.showAbout = payload;
     },
-    setShowUpdateComment: (
-      state,
-      { payload }: PayloadAction<ShowStateSlice['showUpdateComment']>
-    ) => {
-      state.showUpdateComment = payload;
+    setShowEditSectionComment: (state, { payload }: PayloadAction<TypeShowEditSection>) => {
+      state.showEditSectionComment = payload;
     },
   },
 });

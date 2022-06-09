@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IceCreamLocation } from '../../types';
+import { IceCreamLocation } from '../../types/types';
 import type { CityName } from '../locationsSlice';
 import { ViewportType } from '../mapSlice';
 

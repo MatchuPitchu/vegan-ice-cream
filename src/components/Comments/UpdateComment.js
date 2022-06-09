@@ -89,40 +89,16 @@ const UpdateComment = ({ comment }) => {
       dispatch(userActions.updateUser({ comments_list }));
       // setUser({ ...user, comments_list });
 
+      // Important to distinguish between Update on Profil and Location Info Modal
       if (selectedLocation) {
-        // set new comments list
-        const comments_list = [...selectedLocation.comments_list];
-        const index = selectedLocation.comments_list.findIndex((item) => item._id === comment._id);
-        comments_list.splice(index, 1, updatedComment);
-        // calc new avg ratings without fetching data from API - rounded to one decimal
-        // if length list = 1 than take directly rating
-        const sumQuality =
-          comments_list.length === 1
-            ? comments_list[0].rating_quality
-            : comments_list.reduce((a, b) => a.rating_quality + b.rating_quality);
-        const sumVegan =
-          comments_list.length === 1
-            ? comments_list[0].rating_vegan_offer
-            : comments_list.reduce((a, b) => a.rating_vegan_offer + b.rating_vegan_offer);
-        const location_rating_quality =
-          Math.round((sumQuality / comments_list.length) * 10) / 10 || 0;
-        const location_rating_vegan_offer =
-          Math.round((sumVegan / comments_list.length) * 10) / 10 || 0;
-
-        dispatch(
-          locationsActions.updateSelectedLocation({
-            comments_list,
-            location_rating_quality,
-            location_rating_vegan_offer,
-          })
-        );
+        dispatch(locationsActions.updateCommentFromSelectedLocation(updatedComment));
       }
     } catch (error) {
       console.log(error);
       dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal.'));
       setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
-    dispatch(showActions.setShowUpdateComment({ state: false, comment_id: '' }));
+    dispatch(showActions.setShowEditSectionComment({ state: false, comment_id: '' }));
     dispatch(appActions.setIsLoading(false));
   };
 
@@ -276,7 +252,7 @@ const UpdateComment = ({ comment }) => {
           <IonButton
             className='check-btn'
             onClick={() =>
-              dispatch(showActions.setShowUpdateComment({ state: false, comment_id: '' }))
+              dispatch(showActions.setShowEditSectionComment({ state: false, comment_id: '' }))
             }
           >
             <IonIcon className='pe-1' size='small' icon={backspaceOutline} />

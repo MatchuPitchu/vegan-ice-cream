@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../types';
+import { User } from '../types/types';
 import { authApi } from './api/auth-api-slice';
 import { userApi } from './api/user-api-slice';
+import type { Comment } from '../types/types';
 
 interface UserStateSlice {
   isAuth: boolean;
@@ -32,6 +33,13 @@ const userSlice = createSlice({
         ...state.user,
         ...payload,
       } as User;
+    },
+    deleteCommentFromUser: (state, { payload: commentId }: PayloadAction<string>) => {
+      if (state.user) {
+        const commentsList = [...state.user.comments_list] as Comment[];
+        const newUserCommentsList = commentsList.filter((item) => item._id !== commentId);
+        state.user.comments_list = newUserCommentsList;
+      }
     },
     setNumberOfNewLocations: (state, { payload }: PayloadAction<number>) => {
       state.numberOfNewLocations = payload;

@@ -1,4 +1,4 @@
-export const citiesArray = [
+export const citiesInGermany = [
   'Aach',
   'Aachen',
   'Aalen',

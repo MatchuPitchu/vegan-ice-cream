@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect, useRef, VFC } from 'react';
-import type { PopoverState } from '../types';
+import type { PopoverState } from '../types/types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { locationsActions } from '../store/locationsSlice';
