@@ -32,6 +32,7 @@ import FlavorsList from './Comments/FlavorsList';
 import Ratings from './Ratings';
 import LoadingError from './LoadingError';
 import Pricing from './Pricing';
+import { showActions } from '../store/showSlice';
 
 type Props = {
   selectedLocation: IceCreamLocation;
@@ -40,7 +41,7 @@ type Props = {
 const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
-  const { showComments, showLocationInfoModal } = useAppSelector((state) => state.app);
+  const { showComments, showLocationInfoModal } = useAppSelector((state) => state.show);
 
   const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
 
@@ -74,13 +75,15 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
   }, [selectedLocation, dispatch]);
 
   const handleResetAllOnCloseModal = () => {
-    dispatch(appActions.closeCommentsAndLocationInfoModal());
+    dispatch(showActions.closeCommentsAndLocationInfoModal());
     dispatch(locationsActions.resetSelectedLocation());
   };
 
   const handleResetExceptSelectedLocationOnCloseModal = () => {
-    dispatch(appActions.closeCommentsAndLocationInfoModal());
+    dispatch(showActions.closeCommentsAndLocationInfoModal());
   };
+
+  const handleToggleShowComments = () => dispatch(showActions.toggleShowComments());
 
   return (
     <IonModal
@@ -196,14 +199,10 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
                     className='me-2'
                     color='primary'
                     icon={showComments ? caretDownCircle : caretForwardCircle}
-                    onClick={() => dispatch(appActions.toggleShowComments())}
+                    onClick={handleToggleShowComments}
                   />
                   <IonLabel>Bewertungen</IonLabel>
-                  <IonButton
-                    fill='solid'
-                    className='commentNum'
-                    onClick={() => dispatch(appActions.toggleShowComments())}
-                  >
+                  <IonButton fill='solid' className='commentNum' onClick={handleToggleShowComments}>
                     {selectedLocation.comments_list.length}
                   </IonButton>
                 </IonItem>

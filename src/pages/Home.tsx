@@ -32,6 +32,7 @@ import {
   phonePortraitOutline,
 } from 'ionicons/icons';
 import TopLocationsInCity from '../components/TopLocations/TopLocationsInCity';
+import { showActions } from '../store/showSlice';
 
 const Home: VFC = () => {
   const { isDarkTheme } = useThemeContext();
@@ -103,7 +104,7 @@ const Home: VFC = () => {
             onClick={(event) => {
               if (user) {
                 dispatch(locationsActions.resetNewLocation());
-                dispatch(appActions.setShowAddNewLocationModal(true));
+                dispatch(showActions.setShowAddNewLocationModal(true));
               } else {
                 event.persist();
                 setPopoverShow({ showPopover: true, event });

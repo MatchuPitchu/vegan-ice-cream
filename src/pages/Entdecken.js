@@ -37,6 +37,7 @@ import AutocompleteForm from '../components/AutocompleteForm';
 import GeolocationBtn from '../components/GeolocationBtn';
 import { getSelectedLocation, locationsActions } from '../store/locationsSlice';
 import { searchActions } from '../store/searchSlice';
+import { showActions } from '../store/showSlice';
 
 const Entdecken = () => {
   const dispatch = useAppDispatch();
@@ -111,7 +112,7 @@ const Entdecken = () => {
     libraries,
   });
 
-  const handleOpenLocationInfoModal = () => dispatch(appActions.setShowLocationInfoModal(true));
+  const handleOpenLocationInfoModal = () => dispatch(showActions.setShowLocationInfoModal(true));
 
   const handleCenterMap = () => {
     // if no user position take users home city or general lat lng values + default zoom; otherwise recenter on users position
@@ -180,7 +181,7 @@ const Entdecken = () => {
                   if (user) {
                     dispatch(locationsActions.resetNewLocation());
                     dispatch(appActions.setCheckMsgNewLocation('')); // remove message in case that user adds new location but never clicks on it
-                    dispatch(appActions.setShowAddNewLocationModal(true));
+                    dispatch(showActions.setShowAddNewLocationModal(true));
                   } else {
                     event.persist();
                     setPopoverShow({ show: true, event });

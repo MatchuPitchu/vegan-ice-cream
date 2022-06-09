@@ -10,6 +10,9 @@ interface ShowStateSlice {
   showFeedback: boolean;
   showAbout: boolean;
   showEditSectionComment: TypeShowEditSection;
+  showAddNewLocationModal: boolean;
+  showComments: boolean;
+  showLocationInfoModal: boolean;
 }
 
 const initialAuthState: ShowStateSlice = {
@@ -21,6 +24,9 @@ const initialAuthState: ShowStateSlice = {
     state: false,
     comment_id: '',
   },
+  showAddNewLocationModal: false,
+  showComments: false,
+  showLocationInfoModal: false,
 };
 
 const showSlice = createSlice({
@@ -47,6 +53,19 @@ const showSlice = createSlice({
     },
     setShowEditSectionComment: (state, { payload }: PayloadAction<TypeShowEditSection>) => {
       state.showEditSectionComment = payload;
+    },
+    setShowAddNewLocationModal: (state, { payload }: PayloadAction<boolean>) => {
+      state.showAddNewLocationModal = payload;
+    },
+    toggleShowComments: (state) => {
+      state.showComments = state.showComments ? false : true;
+    },
+    closeCommentsAndLocationInfoModal: (state) => {
+      state.showComments = false;
+      state.showLocationInfoModal = false;
+    },
+    setShowLocationInfoModal: (state, { payload }: PayloadAction<boolean>) => {
+      state.showLocationInfoModal = payload;
     },
   },
 });

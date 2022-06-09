@@ -20,11 +20,12 @@ import {
 import { checkbox, closeCircleOutline, informationCircleOutline } from 'ionicons/icons';
 import LoadingError from './LoadingError';
 import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables';
+import { showActions } from '../store/showSlice';
 
 const AutocompleteForm = () => {
   const dispatch = useAppDispatch();
   const { locations } = useAppSelector((state) => state.locations);
-  const { showAddNewLocationModal } = useAppSelector((state) => state.app);
+  const { showAddNewLocationModal } = useAppSelector((state) => state.show);
 
   const [googleAutocomplete, setGoogleAutocomplete] = useState(null);
   const [searchText, setSearchText] = useState('');
@@ -103,7 +104,7 @@ const AutocompleteForm = () => {
     }
 
     dispatch(appActions.setIsLoading(false));
-    dispatch(appActions.setShowAddNewLocationModal(false));
+    dispatch(showActions.setShowAddNewLocationModal(false));
   };
 
   const handleSelectPlace = () => {
@@ -134,7 +135,7 @@ const AutocompleteForm = () => {
           fill='clear'
           onClick={() => {
             dispatch(locationsActions.resetNewLocation());
-            dispatch(appActions.setShowAddNewLocationModal(false));
+            dispatch(showActions.setShowAddNewLocationModal(false));
           }}
         >
           <IonIcon icon={closeCircleOutline} />

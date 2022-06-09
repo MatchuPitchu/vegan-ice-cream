@@ -6,6 +6,7 @@ import { locationsActions } from '../../store/locationsSlice';
 import { appActions } from '../../store/appSlice';
 import { IonButton, IonIcon } from '@ionic/react';
 import { add, open } from 'ionicons/icons';
+import { showActions } from '../../store/showSlice';
 
 interface Props {
   location: IceCreamLocation;
@@ -26,7 +27,7 @@ const BtnInfoRating: VFC<Props> = ({ location }) => {
         fill='solid'
         onClick={() => {
           selectLocation();
-          dispatch(appActions.setShowLocationInfoModal(true));
+          dispatch(showActions.setShowLocationInfoModal(true));
         }}
       >
         <IonIcon className='me-1' icon={open} />
