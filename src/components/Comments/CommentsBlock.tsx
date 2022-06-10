@@ -7,6 +7,7 @@ import Ratings from '../Ratings';
 import ButtonsEditDelete from './ButtonsEditDelete';
 import UpdateComment from './UpdateComment';
 import { VFC } from 'react';
+import { hasNameProperty } from '../../types/typeguards';
 
 type Props = { comment: Comment; authorIdOfComment: string };
 
@@ -40,9 +41,6 @@ const CommentsBlock: VFC<Props> = ({ comment, authorIdOfComment }) => {
             rating_quality={comment.rating_quality}
             showNum={false}
           />
-
-          {/* Displays buttons a) if user has not deactivated his account and b) if user is author of comment */}
-          {/* ID in Profil = comment.user_id; ID in SelectedLocation = comment.user_id._id  */}
           {user && user._id === authorIdOfComment && <ButtonsEditDelete comment={comment} />}
         </div>
         {comment.flavors_referred.map((flavor) => {
@@ -56,13 +54,12 @@ const CommentsBlock: VFC<Props> = ({ comment, authorIdOfComment }) => {
             </div>
           );
         })}
-        {/* If user_id exists (so user account is not deleted), than check if user_id.name is there, if not than it's the profil section and I can user user.name */}
         <div className='textSmallGrey mt-2'>
           {`${
-            comment.user_id
-              ? comment.user_id.name !== undefined
-                ? comment.user_id.name
-                : user.name
+            comment.user_id // if false, than user account is deleted
+              ? hasNameProperty(comment.user_id)
+                ? comment.user_id.name // Comments Block in App
+                : user.name // Profil Section
               : 'User mit deaktiviertem Konto'
           }`}{' '}
           am {comment.date.replace('T', ' um ').slice(0, 19)} Uhr

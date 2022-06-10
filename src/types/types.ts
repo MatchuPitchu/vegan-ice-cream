@@ -36,8 +36,8 @@ export interface IceCreamLocation {
 
 export interface Comment {
   _id: string;
-  user_id: Pick<User, '_id' | 'name'>;
-  location_id: string;
+  user_id: Pick<User, '_id' | 'name'> | User['_id'];
+  location_id: Pick<IceCreamLocation, '_id' | 'name'> | IceCreamLocation['_id'];
   flavors_referred: Pick<Flavor, '_id' | 'name'>[];
   text: string;
   rating_vegan_offer: number | null;

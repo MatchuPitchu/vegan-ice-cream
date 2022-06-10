@@ -32,7 +32,7 @@ import ProfilUpdate from './ProfilUpdate';
 import Spinner from './Spinner';
 import CommentsBlock from './Comments/CommentsBlock';
 import FlavorsList from './Comments/FlavorsList';
-import { isCommentsList } from '../types/typeguards';
+import { hasNameProperty, isCommentsList, isString } from '../types/typeguards';
 
 const Profil: VFC = () => {
   const dispatch = useAppDispatch();
@@ -155,10 +155,15 @@ const Profil: VFC = () => {
                     return (
                       <Fragment key={comment._id}>
                         <div className='locationTitle mx-3 mt-3'>
-                          {comment.location_id.name}
+                          {hasNameProperty(comment.location_id) && comment.location_id.name}
                           <div className='underlining'></div>
                         </div>
-                        <CommentsBlock comment={comment} authorIdOfComment={comment.user_id} />
+                        <CommentsBlock
+                          comment={comment}
+                          authorIdOfComment={
+                            isString(comment.user_id) ? comment.user_id : comment.user_id._id
+                          }
+                        />
                       </Fragment>
                     );
                   })}

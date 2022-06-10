@@ -1,6 +1,6 @@
 import { useEffect, VFC } from 'react';
 import type { IceCreamLocation } from '../types/types';
-import { isComment, isCommentsList } from '../types/typeguards';
+import { isComment, isCommentsList, isString } from '../types/typeguards';
 import { useThemeContext } from '../context/ThemeContext';
 import { useAnimation } from '../hooks/useAnimation';
 // Redux Store
@@ -213,7 +213,10 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
                     <CommentsBlock
                       key={comment._id}
                       comment={comment}
-                      authorIdOfComment={comment.user_id._id}
+                      // TODO: Vereinheitlichen -> ID in Profil = comment.user_id; ID in SelectedLocation = comment.user_id._id
+                      authorIdOfComment={
+                        isString(comment.user_id) ? comment.user_id : comment.user_id._id
+                      }
                     />
                   ))}
 
