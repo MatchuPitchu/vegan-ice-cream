@@ -26,7 +26,7 @@ import { add, cashOutline } from 'ionicons/icons';
 import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
 
-interface PricingSubmitData {
+interface PricingFormValues {
   pricing: number;
 }
 
@@ -46,18 +46,18 @@ const Preis: VFC = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<PricingFormValues>();
 
   const {
     field: { onChange, name, value },
-    fieldState: { invalid, isTouched, isDirty },
+    fieldState,
   } = useController({
     name: 'pricing',
     control,
     defaultValue: 0,
   });
 
-  const onSubmit: SubmitHandler<PricingSubmitData> = async ({ pricing }) => {
+  const onSubmit: SubmitHandler<PricingFormValues> = async ({ pricing }) => {
     if (!pricing) return;
 
     dispatch(appActions.setIsLoading(true));
@@ -116,8 +116,12 @@ const Preis: VFC = () => {
                   Preis Eiskugel
                 </IonLabel>
                 <div className='pricing__info'>
-                  {parseFloat(value) !== 0 &&
-                    `${parseFloat(value).toFixed(2).replace(/\./, ',')} €`}
+                  {value !== 0 &&
+                    value.toLocaleString('de-DE', {
+                      style: 'currency',
+                      currency: 'EUR',
+                      currencyDisplay: 'symbol',
+                    })}
                 </div>
                 <IonRange
                   className='px-0'

@@ -959,6 +959,20 @@ mark {
 }
 
 /*********** Modal Selected Location *************/
+.rating {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 3px 10px;
+  font-size: 0.8rem;
+  color: var(--ion-color-primary-shade);
+}
+
+.react-stars-component {
+  display: flex;
+  align-items: flex-start;
+  margin-top: -3px;
+}
+
 .ratingContainer {
   padding-top: 4px;
   height: 20px;
@@ -970,6 +984,16 @@ mark {
 
 .itemRating .react-stars {
   height: 50px;
+}
+
+.react-stars__tooltip {
+  background-color: var(--ion-toolbar-background) !important;
+  font-size: 0.7rem !important;
+  color: var(--ion-color-primary) !important;
+  padding: 2px 5px !important;
+  margin-top: 3px;
+  border: 1px solid var(--ion-border-color);
+  border-radius: 4px !important;
 }
 
 .ratingNum {

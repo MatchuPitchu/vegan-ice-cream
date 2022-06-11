@@ -231,7 +231,7 @@ const locationsSlice = createSlice({
 
       const newCommentsList = [...state.locations[updatedLocationIndex].comments_list] as Comment[];
       const updatedCommentIndex = newCommentsList.findIndex(
-        (item) => item._id === updatedComment._id
+        (comment) => comment._id === updatedComment._id
       );
 
       if (!updatedCommentIndex) return;

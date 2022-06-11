@@ -6,10 +6,14 @@ import { appActions } from '../../store/appSlice';
 import { locationsActions } from '../../store/locationsSlice';
 // Context
 import { Context } from '../../context/Context';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import Highlighter from 'react-highlight-words';
 import { IonItem, IonSearchbar, isPlatform } from '@ionic/react';
 import LoadingError from '../LoadingError';
+
+interface SearchbarFormValues {
+  city: string;
+}
 
 interface Props {
   setHideTopLocations: Dispatch<SetStateAction<boolean>>;
@@ -32,9 +36,9 @@ const SearchTopLocations: VFC<Props> = ({
   const { handleSearchTextChange, predictions, setPredictions, searchWords } =
     useAutocomplete<string>(citiesWithLocations);
 
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit } = useForm<SearchbarFormValues>();
 
-  const onSubmit = async ({ city }: { city: string }) => {
+  const onSubmit: SubmitHandler<SearchbarFormValues> = async ({ city }: { city: string }) => {
     dispatch(appActions.setIsLoading(true));
     const cityCapitalized = city.replace(/^(.)|\s+(.)/g, (l) => l.toUpperCase());
     setCityName(cityCapitalized);

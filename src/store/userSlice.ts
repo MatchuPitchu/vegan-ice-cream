@@ -41,6 +41,18 @@ const userSlice = createSlice({
         state.user.comments_list = newUserCommentsList;
       }
     },
+    updateCommentsListFromUser: (state, { payload: updatedComment }: PayloadAction<Comment>) => {
+      if (!state.user) return;
+      const newCommentsList = [...state.user.comments_list] as Comment[];
+      const updatedCommentIndex = newCommentsList.findIndex(
+        (comment) => comment._id === updatedComment._id
+      );
+
+      if (!updatedCommentIndex) return;
+      newCommentsList.splice(updatedCommentIndex, 1, updatedComment);
+
+      state.user.comments_list = newCommentsList;
+    },
     setNumberOfNewLocations: (state, { payload }: PayloadAction<number>) => {
       state.numberOfNewLocations = payload;
     },

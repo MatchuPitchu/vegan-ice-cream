@@ -338,8 +338,12 @@ const Bewerten = () => {
                   Preis Eiskugel
                 </IonLabel>
                 <div className='pricing__info'>
-                  {parseFloat(value) !== 0 &&
-                    `${parseFloat(value).toFixed(2).replace(/\./, ',')} €`}
+                  {value !== 0 &&
+                    value.toLocaleString('de-DE', {
+                      style: 'currency',
+                      currency: 'EUR',
+                      currencyDisplay: 'symbol',
+                    })}
                 </div>
                 <IonRange
                   name={pricingFieldName}
