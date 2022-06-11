@@ -37,8 +37,8 @@ const CommentsBlock: VFC<Props> = ({ comment, authorIdOfComment }) => {
         )}
         <div className='d-flex align-items-center'>
           <Ratings
-            rating_vegan_offer={comment.rating_vegan_offer}
-            rating_quality={comment.rating_quality}
+            rating_vegan_offer={comment.rating_vegan_offer as number}
+            rating_quality={comment.rating_quality as number}
             showNum={false}
           />
           {user && user._id === authorIdOfComment && <ButtonsEditDelete comment={comment} />}

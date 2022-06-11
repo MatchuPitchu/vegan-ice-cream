@@ -962,49 +962,54 @@ mark {
 .rating {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: 3px 10px;
+  align-items: center;
+  column-gap: 10px;
   font-size: 0.8rem;
   color: var(--ion-color-primary-shade);
 }
 
-.react-stars-component {
-  display: flex;
-  align-items: flex-start;
-  margin-top: -3px;
+.rating--bewerten-page {
+  grid-template-columns: max-content;
 }
 
-.ratingContainer {
-  padding-top: 4px;
-  height: 20px;
+.rating--only-show {
+  width: 100%;
+  grid-template-columns: max-content max-content 1fr;
 }
 
 .react-stars {
-  height: 20px;
+  display: flex;
+  align-items: center;
+  height: 30px;
 }
 
-.itemRating .react-stars {
-  height: 50px;
+.react-stars--bewerten-page {
+  height: 32px;
+}
+
+.react-stars--only-show {
+  padding-bottom: 5px;
 }
 
 .react-stars__tooltip {
   background-color: var(--ion-toolbar-background) !important;
   font-size: 0.7rem !important;
   color: var(--ion-color-primary) !important;
-  padding: 2px 5px !important;
-  margin-top: 3px;
+  padding: 2px 6px !important;
+  margin-top: 2px;
   border: 1px solid var(--ion-border-color);
   border-radius: 4px !important;
 }
 
-.ratingNum {
-  border-radius: 5px;
+.rating__number {
+  justify-self: end;
+  border-radius: 4px;
   background-color: var(--ion-color-step-900);
   color: var(--ion-color-primary-contrast);
   opacity: 1;
   font-size: 0.7rem;
-  height: 19px;
+  height: 18px;
   width: 25px;
-  margin: 2px 0 0 0;
 }
 
 .commentNum {
@@ -1041,7 +1046,7 @@ mark {
   box-shadow: 0px 0px 10px 2px var(--ion-color-primary);
 }
 
-.priceStyling::first-letter {
+.price-info__number::first-letter {
   font-size: 1.5rem;
   font-weight: 800;
 }

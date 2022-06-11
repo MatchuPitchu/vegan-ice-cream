@@ -11,9 +11,8 @@ import { useAddCommentMutation } from '../store/api/comment-api-slice';
 import { useAddFlavorMutation } from '../store/api/flavor-api-slice';
 // Context
 import { useThemeContext } from '../context/ThemeContext';
-import ReactStars from 'react-rating-stars-component';
 import { CirclePicker } from 'react-color';
-import { Controller, useForm, useController } from 'react-hook-form';
+import { Controller, useForm, useController, SubmitHandler } from 'react-hook-form';
 import {
   IonButton,
   IonCard,
@@ -39,6 +38,9 @@ import SearchFlavors from '../components/SearchFlavors';
 import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
 import { useGetAdditionalInfosFromUserQuery } from '../store/api/user-api-slice';
+import RatingInput from '../components/FormFields/RatingInput';
+import { PopoverState } from '../types/types';
+import Checkbox from '../components/FormFields/Checkbox';
 
 // static data outside of React component to avoid redeclaring variable after each re-rendering
 const COLORS = [
@@ -99,6 +101,30 @@ const COLORS = [
   '#ffffff',
 ];
 
+interface BewertenFormValues {
+  location: string;
+  pricing: number;
+  name: string;
+  type_cream: boolean;
+  type_fruit: boolean;
+  color1: string;
+  color2: string;
+  text: string;
+  rating_quality: number;
+  bio: boolean;
+  vegan: boolean;
+  lactose_free: boolean;
+  not_specified: boolean;
+  rating_vegan_offer: number;
+  date: string;
+}
+
+export const factorToConvertRatingScale = 20;
+export const convertIntoNumberFrom0To100 = (numberFrom0To5: number) =>
+  numberFrom0To5 * factorToConvertRatingScale;
+export const convertIntoNumberFrom0To5 = (numberFrom0To100: number) =>
+  numberFrom0To100 / factorToConvertRatingScale;
+
 const Bewerten = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
@@ -111,8 +137,8 @@ const Bewerten = () => {
   const [triggerAddComment, result2] = useAddCommentMutation();
   const [triggerAddFlavor, result3] = useAddFlavorMutation();
 
-  const [refetchLocationId, setRefetchLocationId] = useState(null);
-  const [refetchUserId, setRefetchUserId] = useState(null);
+  const [refetchLocationId, setRefetchLocationId] = useState<string | null>(null);
+  const [refetchUserId, setRefetchUserId] = useState<string | null>(null);
 
   const {
     data: updatedLocation,
@@ -128,7 +154,7 @@ const Bewerten = () => {
   } = useGetAdditionalInfosFromUserQuery(refetchUserId ?? skipToken);
 
   useEffect(() => {
-    if (isSuccessFetchUpdatedLocation) {
+    if (isSuccessFetchUpdatedLocation && updatedLocation) {
       dispatch(locationsActions.updateSingleLocation(updatedLocation));
       setRefetchLocationId(null);
     }
@@ -140,13 +166,16 @@ const Bewerten = () => {
     }
   }, [isSuccessFetchAddtionalUserInfo]);
 
-  const [popoverInfo, setPopoverInfo] = useState({ show: false, event: undefined });
+  const [popoverInfo, setPopoverInfo] = useState<PopoverState>({
+    showPopover: false,
+    event: undefined,
+  });
   const [showColorPicker, setShowColorPicker] = useState({ field1: false, field2: false });
   const [success, setSuccess] = useState(false);
-  const flav1Ref = useRef(null);
-  const flav2Ref = useRef(null);
+  const flav1Ref = useRef<HTMLIonLabelElement>(null);
+  const flav2Ref = useRef<HTMLIonLabelElement>(null);
 
-  const defaultValues = {
+  const defaultValues: BewertenFormValues = {
     location: '',
     pricing: 0,
     name: '',
@@ -172,7 +201,7 @@ const Bewerten = () => {
     getValues,
     setValue,
     formState: { errors },
-  } = useForm({
+  } = useForm<BewertenFormValues>({
     defaultValues,
   });
 
@@ -181,7 +210,7 @@ const Bewerten = () => {
   } = useController({
     name: 'pricing',
     control,
-    defaultValue: '0',
+    defaultValue: 0,
   });
 
   useEffect(() => {
@@ -194,21 +223,36 @@ const Bewerten = () => {
     setValue('location', selectedLocation?.name || '');
   }, [flavor, searchTermFlavor, selectedLocation, setValue]);
 
-  const unCheckToggles = () => {
-    setValue('bio', false);
-    setValue('vegan', false);
-    setValue('lactose_free', false);
+  const handleChangeToggleGroup = ({ name, value }: { name: string; value: boolean }) => {
+    switch (name) {
+      case 'bio':
+        if (value) {
+          setValue('not_specified', false);
+        }
+        break;
+      case 'vegan':
+        if (value) {
+          setValue('not_specified', false);
+        }
+        setValue('lactose_free', value);
+        break;
+      case 'lactose_free':
+        if (value) {
+          setValue('not_specified', false);
+        }
+        break;
+      case 'not_specified':
+        if (value) {
+          setValue('bio', false);
+          setValue('vegan', false);
+          setValue('lactose_free', false);
+        }
+        break;
+    }
   };
 
-  const unCheckNotSpecified = () => {
-    setValue('not_specified', false);
-  };
-
-  const checkLactoseFree = () => {
-    setValue('lactose_free', true);
-  };
-
-  const onSubmit = async (data) => {
+  const onSubmit: SubmitHandler<BewertenFormValues> = async (data) => {
+    if (!user) return;
     dispatch(appActions.setIsLoading(true));
 
     // Create Pricing and add to database
@@ -217,11 +261,11 @@ const Bewerten = () => {
     }
 
     try {
-      const { data: createdComment } = await triggerAddComment({
+      const createdComment = await triggerAddComment({
         location_id: selectedLocation._id,
         user_id: user._id,
         newCommentData: data,
-      });
+      }).unwrap();
 
       const flavorData = {
         name: data.name,
@@ -238,7 +282,7 @@ const Bewerten = () => {
         location_id: selectedLocation._id,
         user_id: user._id,
         flavorData,
-      });
+      }).unwrap();
 
       console.log(result);
 
@@ -258,8 +302,8 @@ const Bewerten = () => {
 
       // delay is needed, otherwise memory leak if state updates on unmounted component
       setTimeout(() => setSuccess(true), 500);
-    } catch (error) {
-      dispatch(appActions.setError(error.message));
+    } catch (err: any) {
+      dispatch(appActions.setError(err.message));
       setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
 
@@ -285,21 +329,19 @@ const Bewerten = () => {
               <IonIcon
                 className='infoIcon me-1'
                 color='primary'
-                button
-                onClick={(e) => {
-                  e.persist();
-                  setPopoverInfo({ show: true, event: e });
+                onClick={(event) => {
+                  event.persist();
+                  setPopoverInfo({ showPopover: true, event: event });
                 }}
                 icon={informationCircle}
               />
               <IonLabel className='ion-text-wrap'>Bewerte nur 1 Eissorte</IonLabel>
 
               <IonPopover
-                color='primary'
                 cssClass='info-popover'
                 event={popoverInfo.event}
-                isOpen={popoverInfo.show}
-                onDidDismiss={() => setPopoverInfo({ show: false, event: undefined })}
+                isOpen={popoverInfo.showPopover}
+                onDidDismiss={() => setPopoverInfo({ showPopover: false, event: undefined })}
               >
                 Damit eine Bewertung fix zu tippen ist, bezieht sie sich nur auf 1 Eissorte. Hast du
                 mehr probiert, kannst du auch eine weitere Bewertung abgeben.
@@ -312,9 +354,7 @@ const Bewerten = () => {
 
             <form onSubmit={handleSubmit(onSubmit)}>
               <IonItem lines='none' className='mb-1'>
-                <IonLabel position='stacked' htmlFor='location'>
-                  Name Eisladen
-                </IonLabel>
+                <IonLabel position='stacked'>Name Eisladen</IonLabel>
                 <Controller
                   control={control}
                   render={({ field: { onChange, value } }) => (
@@ -387,9 +427,7 @@ const Bewerten = () => {
               <IonItem lines='none'>
                 <div className='row'>
                   <div className='col mt-2'>
-                    <IonLabel position='stacked' htmlFor='type_fruit'>
-                      Sorbet • Fruchteis
-                    </IonLabel>
+                    <IonLabel position='stacked'>Sorbet • Fruchteis</IonLabel>
                     <Controller
                       control={control}
                       render={({ field: { onChange, value } }) => (
@@ -403,9 +441,7 @@ const Bewerten = () => {
                     />
                   </div>
                   <div className='col mt-2'>
-                    <IonLabel position='stacked' htmlFor='type_cream'>
-                      Cremeeis • Milcheis • Pflanzenmilcheis
-                    </IonLabel>
+                    <IonLabel position='stacked'>Cremeeis • Milcheis • Pflanzenmilcheis</IonLabel>
                     <Controller
                       control={control}
                       render={({ field: { onChange, value } }) => (
@@ -422,7 +458,7 @@ const Bewerten = () => {
               </IonItem>
 
               <IonItem lines='none'>
-                <IonLabel ref={flav1Ref} className='mb-1' position='stacked' htmlFor='color1'>
+                <IonLabel ref={flav1Ref} className='mb-1' position='stacked'>
                   Farbmischung deiner Eiskugel
                 </IonLabel>
                 <Controller
@@ -455,7 +491,7 @@ const Bewerten = () => {
                             circleSize={25}
                             onChangeComplete={(e) => {
                               onChange(e.hex);
-                              flav1Ref.current.scrollIntoView();
+                              flav1Ref?.current?.scrollIntoView();
                               setShowColorPicker((prev) => ({ ...prev, field1: !prev.field1 }));
                             }}
                           />
@@ -471,12 +507,7 @@ const Bewerten = () => {
               {!getValues('color1') && showError('color1', errors)}
 
               <IonItem lines='none' className='mb-1'>
-                <IonLabel
-                  ref={flav2Ref}
-                  className='mb-1'
-                  position='stacked'
-                  htmlFor='color2'
-                ></IonLabel>
+                <IonLabel ref={flav2Ref} className='mb-1' position='stacked'></IonLabel>
                 <Controller
                   control={control}
                   render={({ field: { onChange, value } }) => (
@@ -508,7 +539,7 @@ const Bewerten = () => {
                             circleSize={25}
                             onChangeComplete={(e) => {
                               onChange(e.hex);
-                              flav2Ref.current.scrollIntoView();
+                              flav2Ref?.current?.scrollIntoView();
                               setShowColorPicker((prev) => ({
                                 field1: false,
                                 field2: !prev.field2,
@@ -524,9 +555,7 @@ const Bewerten = () => {
               </IonItem>
 
               <IonItem lines='none' className='mb-1'>
-                <IonLabel position='stacked' htmlFor='text'>
-                  Kommentar
-                </IonLabel>
+                <IonLabel position='stacked'>Kommentar</IonLabel>
                 <div className='ion-text-wrap textSmallLight'>
                   ... Geschmack, Konsistenz, Waffel, Preis-Leistung, Zusatzleistungen wie vegane
                   Sahne, Waffeln oder Soßen, Freundlichkeit ...
@@ -547,146 +576,73 @@ const Bewerten = () => {
               </IonItem>
               {selectedLocation && showError('text', errors)}
 
-              <IonItem lines='none' className='itemRating'>
-                <IonLabel position='stacked' htmlFor='rating_quality'>
-                  Eis-Erlebnis
-                </IonLabel>
+              <IonItem lines='none' className='rating--bewerten-page'>
+                <IonLabel position='stacked'>Eis-Erlebnis</IonLabel>
                 <div className='ion-text-wrap textSmallLight'>
                   ... gewählte Eiskugel, Waffel, dein Eindruck vom Eisladen ...
                 </div>
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <ReactStars
-                      className='react-stars'
-                      count={5}
-                      value={value}
-                      isHalf={true}
-                      onChange={(e) => onChange(e)}
-                      edit={true}
-                      size={30}
-                      color1='#cccccc90'
-                      color2='var(--ion-color-primary)'
-                    />
-                  )}
+                <RatingInput
                   name='rating_quality'
-                  rules={{ required: true, min: 0.5 }}
+                  control={control}
+                  rules={{ required: 'Die Sterne fehlen', min: 0.5 * factorToConvertRatingScale }}
+                  className='react-stars--bewerten-page'
                 />
               </IonItem>
-              {showError('rating_quality', errors)}
 
               {/* NEU CHECKEN MIT ERROR HANDLUNG UND BACKEND -> SOLL ALS ERGÄNZUNG ZU COMMENT GESPEICHERT WERDEN, NICHT IN FLAVOR */}
               <IonItem lines='none' className='mb-1'>
                 <IonLabel position='stacked'>Mein Eis-Erlebnis war ...</IonLabel>
                 <div className='row'>
                   <div className='col'>
-                    <IonLabel position='stacked' htmlFor='bio'>
-                      bio
-                    </IonLabel>
-                    <Controller
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <IonToggle
-                          onIonChange={(e) => {
-                            onChange(e.detail.checked);
-                            e.detail.checked && unCheckNotSpecified();
-                          }}
-                          checked={value}
-                        />
-                      )}
+                    <IonLabel position='stacked'>bio</IonLabel>
+                    <Checkbox
                       name='bio'
+                      control={control}
+                      onToggleClick={handleChangeToggleGroup}
                     />
                   </div>
                   <div className='col'>
-                    <IonLabel position='stacked' htmlFor='vegan'>
-                      vegan
-                    </IonLabel>
-                    <Controller
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <IonToggle
-                          onIonChange={(e) => {
-                            onChange(e.detail.checked);
-                            e.detail.checked && unCheckNotSpecified();
-                            e.detail.checked && checkLactoseFree();
-                          }}
-                          checked={value}
-                        />
-                      )}
+                    <IonLabel position='stacked'>vegan</IonLabel>
+                    <Checkbox
                       name='vegan'
+                      control={control}
+                      onToggleClick={handleChangeToggleGroup}
                     />
                   </div>
                   <div className='col'>
-                    <IonLabel position='stacked' htmlFor='lactose_free'>
-                      laktosefrei
-                    </IonLabel>
-                    <Controller
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <IonToggle
-                          onIonChange={(e) => {
-                            onChange(e.detail.checked);
-                            e.detail.checked && unCheckNotSpecified();
-                          }}
-                          checked={value}
-                        />
-                      )}
+                    <IonLabel position='stacked'>laktosefrei</IonLabel>
+                    <Checkbox
                       name='lactose_free'
+                      control={control}
+                      onToggleClick={handleChangeToggleGroup}
                     />
                   </div>
                   <div className='col'>
-                    <IonLabel position='stacked' htmlFor='not_specified '>
-                      weiß nicht
-                    </IonLabel>
-                    <Controller
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <IonToggle
-                          onIonChange={(e) => {
-                            onChange(e.detail.checked);
-                            e.detail.checked && unCheckToggles();
-                          }}
-                          checked={value}
-                        />
-                      )}
+                    <IonLabel position='stacked'>weiß nicht</IonLabel>
+                    <Checkbox
                       name='not_specified'
+                      control={control}
+                      onToggleClick={handleChangeToggleGroup}
                     />
                   </div>
                 </div>
               </IonItem>
 
-              <IonItem lines='none' className='itemRating mb-1'>
-                <IonLabel position='stacked' htmlFor='rating_vegan_offer'>
-                  Veganes Angebot Eisladen
-                </IonLabel>
+              <IonItem lines='none' className='rating--bewerten-page'>
+                <IonLabel position='stacked'>Veganes Angebot Eisladen</IonLabel>
                 <div className='ion-text-wrap textSmallLight'>
                   ... viele vegane Sorten, vegane Waffeln, vegane Sahne ...
                 </div>
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <ReactStars
-                      className='react-stars'
-                      count={5}
-                      value={value}
-                      isHalf={true}
-                      onChange={(e) => onChange(e)}
-                      edit={true}
-                      size={30}
-                      color1='#cccccc90'
-                      color2='var(--ion-color-primary)'
-                    />
-                  )}
+                <RatingInput
                   name='rating_vegan_offer'
-                  rules={{ required: true, min: 0.5 }}
+                  control={control}
+                  rules={{ required: 'Die Sterne fehlen', min: 0.5 * factorToConvertRatingScale }}
+                  className='react-stars--bewerten-page'
                 />
               </IonItem>
-              {showError('rating_vegan_offer', errors)}
 
-              <IonItem lines='none' className='mb-1'>
-                <IonLabel position='stacked' htmlFor='date'>
-                  Datum
-                </IonLabel>
+              <IonItem lines='none' className='my-1'>
+                <IonLabel position='stacked'>Datum</IonLabel>
                 <Controller
                   control={control}
                   render={({ field: { onChange, value } }) => (

@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { convertIntoNumberFrom0To5 } from '../../pages/Bewerten';
 import { Comment } from '../../types/types';
 
 type NewComment = Pick<
@@ -46,8 +47,10 @@ export const commentApi = createApi({
           body: {
             user_id,
             text: newCommentData.text,
-            rating_quality: newCommentData.rating_quality,
-            rating_vegan_offer: newCommentData.rating_vegan_offer,
+            rating_quality: convertIntoNumberFrom0To5(newCommentData.rating_quality as number),
+            rating_vegan_offer: convertIntoNumberFrom0To5(
+              newCommentData.rating_vegan_offer as number
+            ),
             bio: newCommentData.bio,
             vegan: newCommentData.vegan,
             lactose_free: newCommentData.lactose_free,

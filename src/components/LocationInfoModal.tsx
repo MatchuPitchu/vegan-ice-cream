@@ -184,8 +184,8 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
               <IonItemGroup>
                 <div className='px-3 py-1 borderBottom'>
                   <Ratings
-                    rating_vegan_offer={selectedLocation.location_rating_vegan_offer}
-                    rating_quality={selectedLocation.location_rating_quality}
+                    rating_vegan_offer={selectedLocation.location_rating_vegan_offer as number}
+                    rating_quality={selectedLocation.location_rating_quality as number}
                     showNum={true}
                   />
                 </div>

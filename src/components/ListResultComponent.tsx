@@ -24,8 +24,8 @@ const ListResultComponent: VFC<Props> = ({ location }) => {
         {location.location_rating_quality ? (
           <>
             <Ratings
-              rating_vegan_offer={location.location_rating_vegan_offer}
-              rating_quality={location.location_rating_quality}
+              rating_vegan_offer={location.location_rating_vegan_offer as number}
+              rating_quality={location.location_rating_quality as number}
               showNum={true}
             />
             <BtnInfoRating location={location} />

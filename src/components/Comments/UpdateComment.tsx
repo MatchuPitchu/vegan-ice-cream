@@ -6,38 +6,18 @@ import { userActions } from '../../store/userSlice';
 import { showActions } from '../../store/showSlice';
 import { appActions } from '../../store/appSlice';
 import { getSelectedLocation, locationsActions } from '../../store/locationsSlice';
-// @ts-ignore: No Type Declarations in Package
-import ReactStars from 'react-rating-stars-component';
-import { Rating } from 'react-simple-star-rating';
-import { Controller, SubmitHandler, useController, useForm } from 'react-hook-form';
-import { IonButton, IonIcon, IonTextarea, IonToggle } from '@ionic/react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { IonButton, IonIcon } from '@ionic/react';
 import { backspaceOutline, chatboxEllipses, checkboxOutline } from 'ionicons/icons';
 import LoadingError from '../LoadingError';
-
-const tooltipArray = [
-  'nie wieder',
-  'mangelhaft',
-  'ganz schlecht',
-  'schlecht',
-  'unterdurchschnittlich',
-  'durchschnittlich',
-  'gut',
-  'sehr gut',
-  'hervorragend',
-  'traumhaft',
-];
-const fillColorArray = [
-  '#f17a45',
-  '#f17a45',
-  '#f19745',
-  '#f19745',
-  '#f1a545',
-  '#f1a545',
-  '#f1b345',
-  '#f1b345',
-  'var(--ion-color-primary-tint',
-  'var(--ion-color-primary)',
-];
+import TextareaInput from '../FormFields/TextareaInput';
+import RatingInput from '../FormFields/RatingInput';
+import Checkbox from '../FormFields/Checkbox';
+import {
+  convertIntoNumberFrom0To100,
+  convertIntoNumberFrom0To5,
+  factorToConvertRatingScale,
+} from '../../pages/Bewerten';
 
 export interface UpdateCommentFormValues {
   text: string;
@@ -59,33 +39,44 @@ const UpdateComment: VFC<Props> = ({ comment }) => {
 
   const defaultValues: UpdateCommentFormValues = {
     text: comment.text,
-    rating_quality: comment.rating_quality,
+    rating_quality: convertIntoNumberFrom0To100(comment.rating_quality as number),
     bio: comment.bio,
     vegan: comment.vegan,
     lactose_free: comment.lactose_free,
     not_specified: comment.not_specified,
-    rating_vegan_offer: comment.rating_vegan_offer,
+    rating_vegan_offer: convertIntoNumberFrom0To100(comment.rating_vegan_offer as number),
   };
 
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<UpdateCommentFormValues>({ defaultValues });
+  const { control, handleSubmit, setValue } = useForm<UpdateCommentFormValues>({
+    defaultValues,
+  });
 
-  const unCheckToggles = () => {
-    setValue('bio', false);
-    setValue('vegan', false);
-    setValue('lactose_free', false);
-  };
-
-  const unCheckNotSpecified = () => {
-    setValue('not_specified', false);
-  };
-
-  const checkLactoseFree = () => {
-    setValue('lactose_free', true);
+  const handleChangeToggleGroup = ({ name, value }: { name: string; value: boolean }) => {
+    switch (name) {
+      case 'bio':
+        if (value) {
+          setValue('not_specified', false);
+        }
+        break;
+      case 'vegan':
+        if (value) {
+          setValue('not_specified', false);
+        }
+        setValue('lactose_free', value);
+        break;
+      case 'lactose_free':
+        if (value) {
+          setValue('not_specified', false);
+        }
+        break;
+      case 'not_specified':
+        if (value) {
+          setValue('bio', false);
+          setValue('vegan', false);
+          setValue('lactose_free', false);
+        }
+        break;
+    }
   };
 
   const onSubmit: SubmitHandler<UpdateCommentFormValues> = async (data) => {
@@ -98,12 +89,12 @@ const UpdateComment: VFC<Props> = ({ comment }) => {
         location_id: comment.location_id,
         flavors_referred: comment.flavors_referred,
         text: data.text,
-        rating_quality: data.rating_quality,
+        rating_quality: convertIntoNumberFrom0To5(data.rating_quality as number),
         bio: data.bio,
         vegan: data.vegan,
         lactose_free: data.lactose_free,
         not_specified: data.not_specified,
-        rating_vegan_offer: data.rating_vegan_offer,
+        rating_vegan_offer: convertIntoNumberFrom0To5(data.rating_vegan_offer as number),
         date: comment.date,
       };
 
@@ -135,105 +126,32 @@ const UpdateComment: VFC<Props> = ({ comment }) => {
     dispatch(appActions.setIsLoading(false));
   };
 
-  const {
-    field: {
-      onChange: onChangeTextarea,
-      name: nameTextarea,
-      value: valueTextarea,
-      ref: refTextarea,
-    },
-    fieldState: { error: errorTextarea },
-  } = useController({
-    name: 'text',
-    control,
-    rules: { required: 'Was möchtest du über den Eisladen teilen?' },
-  });
-
-  const {
-    field: { onChange: onChangeRatingQuality, value: valueRatingQuality },
-    fieldState: { error: errorRatingQuality },
-  } = useController({
-    name: 'rating_quality',
-    control,
-    rules: { required: 'Die Sterne fehlen', min: 0.5 },
-    defaultValue: 3,
-  });
-
-  const {
-    field: { onChange: onChangeRatingVeganOffer, value: valueRatingVeganOffer },
-    fieldState: { error: errorRatingVeganOffer },
-  } = useController({
-    name: 'rating_vegan_offer',
-    control,
-    rules: { required: 'Die Sterne fehlen', min: 0.5 },
-  });
-
   return (
     <form key={comment._id} onSubmit={handleSubmit(onSubmit)}>
       <div className='px-3 py-2 borderBottom'>
         <div className='commentText'>
           <IonIcon slot='start' className='me-2' color='text-color' icon={chatboxEllipses} />
           Kommentar
-          <IonTextarea
-            className='pb-2'
-            name={nameTextarea}
-            ref={refTextarea}
-            value={valueTextarea}
-            autoGrow={true}
-            rows={1}
-            onIonChange={(event) => onChangeTextarea(event.detail.value)}
+          <TextareaInput
+            name='text'
+            control={control}
+            rules={{ required: 'Was möchtest du über den Eisladen teilen?' }}
           />
-          {errorTextarea && <p>{errorTextarea.message}</p>}
         </div>
-
         <div className='d-flex align-items-center'>
           <div className='rating'>
             <div>Veganes Angebot</div>
-            <div className='react-stars-component'>
-              {/* TODO: Validation does NOT work */}
-              <Rating
-                className='react-stars'
-                ratingValue={valueRatingQuality as number}
-                onClick={(rate: number) => onChangeRatingQuality(rate)}
-                iconsCount={5}
-                size={15}
-                allowHalfIcon={true}
-                allowHover={true}
-                transition={true}
-                readonly={false}
-                showTooltip={true}
-                tooltipClassName='react-stars__tooltip'
-                tooltipDefaultText='Bewertung'
-                tooltipArray={tooltipArray}
-                fillColorArray={fillColorArray}
-                emptyColor='#cccccc90'
-                fillColor='var(--ion-color-primary)'
-              />
-              {errorRatingQuality && <p>{errorRatingQuality.message}</p>}
-            </div>
+            <RatingInput
+              name='rating_quality'
+              control={control}
+              rules={{ required: 'Die Sterne fehlen', min: 0.5 * factorToConvertRatingScale }}
+            />
             <div>Eis-Erlebnis</div>
-            <div className='react-stars-component'>
-              <Rating
-                className='react-stars'
-                ratingValue={valueRatingVeganOffer as number}
-                initialValue={defaultValues.rating_vegan_offer as number}
-                onClick={(rate: number) => onChangeRatingVeganOffer(rate)}
-                iconsCount={5}
-                size={15}
-                allowHalfIcon={true}
-                allowHover={true}
-                transition={true}
-                readonly={false}
-                showTooltip={true}
-                tooltipClassName='react-stars__tooltip'
-                tooltipDefaultText='Bewertung'
-                tooltipArray={tooltipArray}
-                fillColorArray={fillColorArray}
-                emptyColor='#cccccc90'
-                fillColor='var(--ion-color-primary)'
-              />
-              {errorRatingVeganOffer && <p>{errorRatingVeganOffer.message}</p>}
-            </div>
+            <RatingInput
+              name='rating_vegan_offer'
+              control={control}
+              rules={{ required: 'Die Sterne fehlen', min: 0.5 * factorToConvertRatingScale }}
+            />
           </div>
         </div>
         <div className='mt-3'>
@@ -241,67 +159,26 @@ const UpdateComment: VFC<Props> = ({ comment }) => {
           <div className='row mt-2'>
             <div className='col'>
               <div className='itemTextSmall mb-1'>bio</div>
-              <Controller
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <IonToggle
-                    onIonChange={(e) => {
-                      onChange(e.detail.checked);
-                      e.detail.checked && unCheckNotSpecified();
-                    }}
-                    checked={value}
-                  />
-                )}
-                name='bio'
-              />
+              <Checkbox name='bio' control={control} onToggleClick={handleChangeToggleGroup} />
             </div>
             <div className='col'>
               <div className='itemTextSmall mb-1'>vegan</div>
-              <Controller
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <IonToggle
-                    onIonChange={(e) => {
-                      onChange(e.detail.checked);
-                      e.detail.checked && unCheckNotSpecified();
-                      e.detail.checked && checkLactoseFree();
-                    }}
-                    checked={value}
-                  />
-                )}
-                name='vegan'
-              />
+              <Checkbox name='vegan' control={control} onToggleClick={handleChangeToggleGroup} />
             </div>
             <div className='col'>
               <div className='itemTextSmall mb-1'>laktosefrei</div>
-              <Controller
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <IonToggle
-                    onIonChange={(e) => {
-                      onChange(e.detail.checked);
-                      e.detail.checked && unCheckNotSpecified();
-                    }}
-                    checked={value}
-                  />
-                )}
+              <Checkbox
                 name='lactose_free'
+                control={control}
+                onToggleClick={handleChangeToggleGroup}
               />
             </div>
             <div className='col'>
               <div className='itemTextSmall mb-1'>weiß nicht</div>
-              <Controller
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <IonToggle
-                    onIonChange={(e) => {
-                      onChange(e.detail.checked);
-                      e.detail.checked && unCheckToggles();
-                    }}
-                    checked={value}
-                  />
-                )}
+              <Checkbox
                 name='not_specified'
+                control={control}
+                onToggleClick={handleChangeToggleGroup}
               />
             </div>
           </div>
