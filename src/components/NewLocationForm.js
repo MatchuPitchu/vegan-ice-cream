@@ -17,7 +17,7 @@ import {
   IonModal,
 } from '@ionic/react';
 import { add, closeCircleOutline } from 'ionicons/icons';
-import showError from './showError';
+import Error from './Error';
 import LoadingError from './LoadingError';
 
 const NewLocationForm = () => {
@@ -130,7 +130,7 @@ const NewLocationForm = () => {
                 rules={{ required: true }}
               />
             </IonItem>
-            {showError('name', errors)}
+            {Error('name', errors)}
 
             <IonItem lines='none' className='mb-1'>
               <IonLabel position='floating' htmlFor='street'>
@@ -150,7 +150,7 @@ const NewLocationForm = () => {
                 rules={{ required: true }}
               />
             </IonItem>
-            {showError('street', errors)}
+            {Error('street', errors)}
 
             <IonItem lines='none' className='mb-1'>
               <IonLabel position='floating' htmlFor='number'>
@@ -174,7 +174,7 @@ const NewLocationForm = () => {
                 }}
               />
             </IonItem>
-            {showError('number', errors)}
+            {Error('number', errors)}
 
             <IonItem lines='none' className='mb-1'>
               <IonLabel position='floating' htmlFor='zipcode'>
@@ -199,7 +199,7 @@ const NewLocationForm = () => {
                 }}
               />
             </IonItem>
-            {showError('zipcode', errors)}
+            {Error('zipcode', errors)}
 
             <IonItem lines='none' className='mb-1'>
               <IonLabel position='floating' htmlFor='city'>
@@ -219,7 +219,7 @@ const NewLocationForm = () => {
                 rules={{ required: true }}
               />
             </IonItem>
-            {showError('city', errors)}
+            {Error('city', errors)}
 
             <IonItem lines='none' className='mb-1'>
               <IonLabel position='floating' htmlFor='country'>
@@ -239,7 +239,7 @@ const NewLocationForm = () => {
                 rules={{ required: true }}
               />
             </IonItem>
-            {showError('country', errors)}
+            {Error('country', errors)}
 
             <IonItem lines='none' className='mb-1'>
               <IonLabel position='stacked' htmlFor='location_url'>
@@ -259,7 +259,7 @@ const NewLocationForm = () => {
                 name='location_url'
               />
             </IonItem>
-            {showError('location_url', errors)}
+            {Error('location_url', errors)}
 
             <IonButton className='my-3 confirm-btn' type='submit' expand='block'>
               <IonIcon className='pe-1' icon={add} />

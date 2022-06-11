@@ -16,7 +16,7 @@ import {
   IonTextarea,
 } from '@ionic/react';
 import { closeCircleOutline, mailUnread } from 'ionicons/icons';
-import showError from './showError';
+import Error from './Error';
 
 // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
 
@@ -96,7 +96,7 @@ const Feedback = () => {
               rules={{ required: true }}
             />
           </IonItem>
-          {showError('name', errors)}
+          {Error('name', errors)}
 
           <IonItem lines='none' className='mb-1'>
             <IonLabel position='stacked' htmlFor='email'>
@@ -116,7 +116,7 @@ const Feedback = () => {
               rules={{ required: true }}
             />
           </IonItem>
-          {showError('email', errors)}
+          {Error('email', errors)}
 
           <IonItem lines='none' className='mb-1'>
             <IonLabel position='stacked' htmlFor='message'>
@@ -134,7 +134,7 @@ const Feedback = () => {
               rules={{ required: true }}
             />
           </IonItem>
-          {showError('message', errors)}
+          {Error('message', errors)}
 
           <IonItem lines='none' className='mb-1'>
             <IonLabel position='stacked' className='ion-text-wrap mb-2' htmlFor='rating'>

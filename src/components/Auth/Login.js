@@ -19,7 +19,7 @@ import {
   IonIcon,
 } from '@ionic/react';
 import { Redirect } from 'react-router-dom';
-import showError from '../showError';
+import Error from '../Error';
 import { lockClosed, logIn, refreshCircle } from 'ionicons/icons';
 
 const Login = () => {
@@ -97,7 +97,7 @@ const Login = () => {
                 rules={{ required: true }}
               />
             </IonItem>
-            {showError('email', errors)}
+            {Error('email', errors)}
 
             <IonItem lines='none' className='mb-1'>
               <IonLabel position='floating' htmlFor='password'>
@@ -117,7 +117,7 @@ const Login = () => {
                 rules={{ required: true }}
               />
             </IonItem>
-            {showError('password', errors)}
+            {Error('password', errors)}
             {error && <div className='alertMsg'>{error}</div>}
 
             <IonButton className='my-3 confirm-btn' type='submit' fill='solid' expand='block'>

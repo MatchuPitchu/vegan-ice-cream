@@ -15,7 +15,7 @@ import {
   IonIcon,
   IonCard,
 } from '@ionic/react';
-import showError from '../showError';
+import Error from '../Error';
 import { refreshCircle } from 'ionicons/icons';
 import LoadingError from '../LoadingError';
 
@@ -88,7 +88,7 @@ const ResetPassword = () => {
                     rules={{ required: true }}
                   />
                 </IonItem>
-                {showError('email', errors)}
+                {Error('email', errors)}
 
                 <IonButton className='my-3 mx-3 confirm-btn' type='submit'>
                   <IonIcon slot='end' className='pe-1' icon={refreshCircle} />

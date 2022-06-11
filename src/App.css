@@ -220,7 +220,7 @@ ion-tab-bar {
 .icecream {
   width: 40px;
   height: 40px;
-  border-radius: 100%;
+  border-radius: var(--ion-border-radius-circle);
   position: relative;
   box-shadow: 10px 5px 20px #4a4a4a;
 }
@@ -255,7 +255,7 @@ ion-searchbar .searchbar-input-container .searchbar-input {
   height: 41px;
   margin-left: 5px;
   background-color: var(--ion-card-background);
-  border-radius: var(--border-radius);
+  border-radius: var(--ion-border-radius);
   padding: 0;
 }
 
@@ -271,20 +271,20 @@ ion-searchbar .searchbar-input-container .searchbar-input {
   height: 34px;
   padding: 0;
   --background: var(--ion-card-background);
-  --border-radius: 5px;
+  --border-radius: var(--ion-border-radius);
   margin: 2px;
 }
 
 .infoIcon:hover {
   border: 1px solid var(--ion-color-primary);
-  border-radius: 50%;
+  border-radius: var(--ion-border-radius-circle);
   background-color: var(--ion-background-color);
   cursor: pointer;
 }
 
 .warningIcon:hover {
   border: 1px solid var(--ion-color-warning);
-  border-radius: 50%;
+  border-radius: var(--ion-border-radius-circle);
   background-color: var(--ion-background-color);
   cursor: pointer;
 }
@@ -347,9 +347,8 @@ mark {
   font-weight: 400;
   height: auto;
   line-height: 30px;
-  border-radius: 5px;
   padding: 6px 10px;
-  border-radius: var(--border-radius);
+  border-radius: var(--ion-border-radius);
   width: 100%;
   border: 0;
   outline: none;
@@ -603,7 +602,7 @@ mark {
   position: relative;
   width: 105px;
   height: 105px;
-  border-radius: 50%;
+  border-radius: var(--ion-border-radius-circle);
   background-color: var(--ion-background-color);
 }
 
@@ -628,7 +627,7 @@ mark {
   position: absolute;
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+  border-radius: var(--ion-border-radius-circle);
   border: 15px var(--ion-color-primary) solid;
   opacity: 0;
   animation-name: scaleIn;
@@ -660,7 +659,7 @@ mark {
   position: absolute;
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+  border-radius: var(--ion-border-radius-circle);
   border: 3px transparent solid;
   background-origin: border-box;
   background-clip: content-box, border-box;
@@ -668,10 +667,9 @@ mark {
     linear-gradient(to top, var(--ion-color-primary), var(--ion-color-secondary));
 }
 
-.predictItem {
-  box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
-    0 1px 5px 0 rgba(0, 0, 0, 0.12);
-  border-radius: 10px;
+.predict-city {
+  box-shadow: var(--ion-box-shadow);
+  border-radius: var(--ion-border-radius);
   margin: 3px;
 }
 
@@ -705,7 +703,7 @@ mark {
   margin: 0 auto;
   height: 30px;
   width: 30px;
-  --border-radius: 50%;
+  --border-radius: var(--ion-border-radius-circle);
   z-index: 2;
 }
 
@@ -941,7 +939,7 @@ mark {
   color: var(--ion-color-primary);
   background-color: #f9ce6410;
   border: 1px solid var(--ion-color-primary);
-  border-radius: 5px;
+  border-radius: var(--ion-border-radius);
 }
 
 .coneIcon {
@@ -992,18 +990,18 @@ mark {
 }
 
 .react-stars__tooltip {
-  background-color: var(--ion-toolbar-background) !important;
+  background-color: var(--ion-background-color) !important;
   font-size: 0.7rem !important;
-  color: var(--ion-color-primary) !important;
+  color: var(--ion-color-primary-shade) !important;
   padding: 2px 6px !important;
   margin-top: 2px;
   border: 1px solid var(--ion-border-color);
-  border-radius: 4px !important;
+  border-radius: var(--ion-border-radius) !important;
 }
 
 .rating__number {
   justify-self: end;
-  border-radius: 4px;
+  border-radius: var(--ion-border-radius);
   background-color: var(--ion-color-step-900);
   color: var(--ion-color-primary-contrast);
   opacity: 1;
@@ -1025,11 +1023,12 @@ mark {
 }
 
 .pricing-info {
-  /* position: absolute; */
-  /* top: 15px;
-  right: 20px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   margin-right: 10px;
-  border-radius: 50%;
+  border-radius: var(--ion-border-radius-circle);
   border: 1px solid var(--ion-color-primary);
   background-color: var(--ion-color-primary);
   color: var(--ion-color-primary-contrast);
@@ -1037,10 +1036,6 @@ mark {
   height: 60px;
   width: 60px;
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   transform: rotate(15deg);
   line-height: 1.1rem;
   box-shadow: 0px 0px 10px 2px var(--ion-color-primary);
@@ -1073,7 +1068,7 @@ mark {
   line-height: 1rem;
 }
 
-.commentTag {
+.tag-comment {
   font-size: 0.7rem;
   color: var(--ion-color-primary);
   text-align: center;
@@ -1081,7 +1076,7 @@ mark {
   padding: 2px 7px 3px 7px;
   background-color: #fce3ab15;
   border: 1px solid var(--ion-color-primary);
-  border-radius: 10px;
+  border-radius: var(--ion-border-radius);
   cursor: default;
 }
 
@@ -1141,7 +1136,7 @@ ion-range::part(knob) {
 .flavor-search-preview {
   width: 0.9rem;
   height: 0.9rem;
-  border-radius: 100%;
+  border-radius: var(--ion-border-radius-circle);
   box-shadow: 10px 5px 20px #4a4a4a;
 }
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext, useContext } from 'react';
-import { mapDark, mapLight } from '../components/mapStyles';
+import { mapDark, mapLight } from '../utils/mapStyles';
 
 interface ThemeContextInterface {
   isDarkTheme: boolean;

@@ -16,12 +16,12 @@ import {
   IonIcon,
   IonCard,
 } from '@ionic/react';
-import showError from '../showError';
+import Error from '../Error';
 import { logIn } from 'ionicons/icons';
 import { citiesInGermany } from '../../utils/citiesInGermany';
 import LoadingError from '../LoadingError';
 import InfoTextRegister from './InfoTextRegister';
-import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../../utils/variables';
+import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../../utils/variables-and-functions';
 
 const Register = () => {
   const dispatch = useAppDispatch();
@@ -157,7 +157,7 @@ const Register = () => {
                   rules={{ required: true }}
                 />
               </IonItem>
-              {showError('name', errors)}
+              {Error('name', errors)}
 
               <IonItem lines='none' className='mb-1'>
                 <IonLabel position='stacked' htmlFor='email'>
@@ -178,7 +178,7 @@ const Register = () => {
                   rules={{ required: true }}
                 />
               </IonItem>
-              {showError('email', errors)}
+              {Error('email', errors)}
 
               <IonItem lines='none' className='mb-1'>
                 <IonLabel position='stacked' htmlFor='password'>
@@ -206,7 +206,7 @@ const Register = () => {
                   }}
                 />
               </IonItem>
-              {showError('password', errors)}
+              {Error('password', errors)}
 
               <IonItem lines='none' className='mb-1'>
                 <IonLabel position='stacked' htmlFor='repeatedPassword'>
@@ -235,7 +235,7 @@ const Register = () => {
                   }}
                 />
               </IonItem>
-              {showError('repeatedPassword', errors)}
+              {Error('repeatedPassword', errors)}
               {error && <div className='alertMsg'>{error}</div>}
 
               <IonItem lines='none' className='mb-1'>
@@ -279,7 +279,7 @@ const Register = () => {
                   rules={{ required: true }}
                 />
               </IonItem>
-              {showError('city', errors)}
+              {Error('city', errors)}
 
               <IonButton className='my-3 confirm-btn' type='submit' fill='solid' expand='block'>
                 <IonIcon className='pe-1' icon={logIn} />

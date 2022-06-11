@@ -30,9 +30,9 @@ const CommentsBlock: VFC<Props> = ({ comment, authorIdOfComment }) => {
         </div>
         {(comment.bio || comment.vegan || comment.lactose_free) && (
           <div className='d-flex mt-3'>
-            {comment.bio ? <div className='commentTag'>bio</div> : null}
-            {comment.vegan ? <div className='commentTag'>vegan</div> : null}
-            {comment.lactose_free ? <div className='commentTag'>laktosefrei</div> : null}
+            {comment.bio ? <div className='tag-comment'>bio</div> : null}
+            {comment.vegan ? <div className='tag-comment'>vegan</div> : null}
+            {comment.lactose_free ? <div className='tag-comment'>laktosefrei</div> : null}
           </div>
         )}
         <div className='d-flex align-items-center'>

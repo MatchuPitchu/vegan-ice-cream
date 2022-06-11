@@ -6,10 +6,10 @@ import { showActions } from '../store/showSlice';
 import { appActions } from '../store/appSlice';
 // Context
 import { IonInput, IonItem, IonLabel, IonButton, IonIcon } from '@ionic/react';
-import showError from './showError';
+import Error from './Error';
 import { refreshCircle } from 'ionicons/icons';
 import LoadingError from './LoadingError';
-import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables';
+import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables-and-functions';
 
 const ProfilUpdate = () => {
   const dispatch = useAppDispatch();
@@ -146,7 +146,7 @@ const ProfilUpdate = () => {
             name='name'
           />
         </IonItem>
-        {showError('name', errors)}
+        {Error('name', errors)}
 
         <IonItem lines='full'>
           <IonLabel position='stacked' htmlFor='email'>
@@ -165,7 +165,7 @@ const ProfilUpdate = () => {
             name='email'
           />
         </IonItem>
-        {showError('email', errors)}
+        {Error('email', errors)}
 
         <IonItem lines='full'>
           <IonLabel position='stacked' htmlFor='city'>
@@ -209,7 +209,7 @@ const ProfilUpdate = () => {
             }}
           />
         </IonItem>
-        {showError('newPassword', errors)}
+        {Error('newPassword', errors)}
 
         <IonItem lines='full'>
           <IonLabel position='stacked' htmlFor='repeatedPassword'>
@@ -235,7 +235,7 @@ const ProfilUpdate = () => {
             }}
           />
         </IonItem>
-        {showError('repeatedPassword', errors)}
+        {Error('repeatedPassword', errors)}
 
         <IonItem lines='none'>
           <IonLabel position='stacked' htmlFor='password'>
@@ -255,7 +255,7 @@ const ProfilUpdate = () => {
             rules={{ required: true }}
           />
         </IonItem>
-        {showError('password', errors)}
+        {Error('password', errors)}
         {error && <div className='alertMsg'>{error}</div>}
 
         <IonItem lines='none'>

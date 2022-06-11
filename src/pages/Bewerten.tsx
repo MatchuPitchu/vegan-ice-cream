@@ -32,7 +32,7 @@ import {
   IonToggle,
 } from '@ionic/react';
 import { add, cashOutline, colorPaletteOutline, informationCircle } from 'ionicons/icons';
-import showError from '../components/showError';
+import Error from '../components/Error';
 import Search from '../components/Search';
 import SearchFlavors from '../components/SearchFlavors';
 import LoadingError from '../components/LoadingError';
@@ -41,65 +41,7 @@ import { useGetAdditionalInfosFromUserQuery } from '../store/api/user-api-slice'
 import RatingInput from '../components/FormFields/RatingInput';
 import { PopoverState } from '../types/types';
 import Checkbox from '../components/FormFields/Checkbox';
-
-// static data outside of React component to avoid redeclaring variable after each re-rendering
-const COLORS = [
-  'TRANSPARENT',
-  '#b71c1c',
-  '#f44336',
-  '#e57373',
-  '#ffcdd2',
-  '#880e4f',
-  '#c2185b',
-  '#e91e63',
-  '#f06292',
-  '#f8bbd0',
-  '#4a148c',
-  '#7b1fa2',
-  '#9c27b0',
-  '#ba68c8',
-  '#e1bee7',
-  '#0d47a1',
-  '#1976d2',
-  '#2196f3',
-  '#64b5f6',
-  '#bbdefb',
-  '#004d40',
-  '#00796b',
-  '#009688',
-  '#4db6ac',
-  '#b2dfdb',
-  '#194d33',
-  '#388e3c',
-  '#4caf50',
-  '#81c784',
-  '#c8e6c9',
-  '#f57f17',
-  '#fbc02d',
-  '#ffeb3b',
-  '#fff176',
-  '#fff9c4',
-  '#e65100',
-  '#f57c00',
-  '#ff9800',
-  '#ffb74d',
-  '#ffe0b2',
-  '#bf360c',
-  '#e64a19',
-  '#ff5722',
-  '#ff8a65',
-  '#ffccbc',
-  '#3e2723',
-  '#5d4037',
-  '#795548',
-  '#a1887f',
-  '#d7ccc8',
-  '#000000',
-  '#4d2119',
-  '#693e18',
-  '#c98850',
-  '#ffffff',
-];
+import { colorPickerColors, factorToConvertRatingScale } from '../utils/variables-and-functions';
 
 interface BewertenFormValues {
   location: string;
@@ -118,12 +60,6 @@ interface BewertenFormValues {
   rating_vegan_offer: number;
   date: string;
 }
-
-export const factorToConvertRatingScale = 20;
-export const convertIntoNumberFrom0To100 = (numberFrom0To5: number) =>
-  numberFrom0To5 * factorToConvertRatingScale;
-export const convertIntoNumberFrom0To5 = (numberFrom0To100: number) =>
-  numberFrom0To100 / factorToConvertRatingScale;
 
 const Bewerten = () => {
   const dispatch = useAppDispatch();
@@ -371,7 +307,7 @@ const Bewerten = () => {
                   rules={{ required: true }}
                 />
               </IonItem>
-              {showError('location', errors)}
+              {Error('location', errors)}
 
               <IonItem className='mb-1' lines='none'>
                 <IonLabel position='stacked' className='pb-1'>
@@ -422,7 +358,7 @@ const Bewerten = () => {
                   rules={{ required: true }}
                 />
               </IonItem>
-              {showError('name', errors)}
+              {Error('name', errors)}
 
               <IonItem lines='none'>
                 <div className='row'>
@@ -486,7 +422,7 @@ const Bewerten = () => {
                       {showColorPicker.field1 && (
                         <div className='colorPicker ion-padding'>
                           <CirclePicker
-                            colors={COLORS}
+                            colors={colorPickerColors}
                             circleSpacing={15}
                             circleSize={25}
                             onChangeComplete={(e) => {
@@ -504,7 +440,7 @@ const Bewerten = () => {
                 />
               </IonItem>
               {/* getValues is needed, otherwise error is displayed even if user select flavor in search after first submit try of form */}
-              {!getValues('color1') && showError('color1', errors)}
+              {!getValues('color1') && Error('color1', errors)}
 
               <IonItem lines='none' className='mb-1'>
                 <IonLabel ref={flav2Ref} className='mb-1' position='stacked'></IonLabel>
@@ -534,7 +470,7 @@ const Bewerten = () => {
                       {showColorPicker.field2 && (
                         <div className='colorPicker ion-padding'>
                           <CirclePicker
-                            colors={COLORS}
+                            colors={colorPickerColors}
                             circleSpacing={15}
                             circleSize={25}
                             onChangeComplete={(e) => {
@@ -574,7 +510,7 @@ const Bewerten = () => {
                   rules={{ required: true }}
                 />
               </IonItem>
-              {selectedLocation && showError('text', errors)}
+              {selectedLocation && Error('text', errors)}
 
               <IonItem lines='none' className='rating--bewerten-page'>
                 <IonLabel position='stacked'>Eis-Erlebnis</IonLabel>
@@ -660,7 +596,7 @@ const Bewerten = () => {
                   name='date'
                 />
               </IonItem>
-              {showError('date', errors)}
+              {Error('date', errors)}
 
               <IonButton fill='solid' className='check-btn my-3' type='submit'>
                 <IonIcon className='pe-1' icon={add} />

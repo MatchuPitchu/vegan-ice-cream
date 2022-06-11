@@ -11,7 +11,7 @@ import { Context } from '../context/Context';
 import Highlighter from 'react-highlight-words';
 import { IonIcon, IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/react';
 import { informationCircle } from 'ionicons/icons';
-import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables';
+import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables-and-functions';
 import { useAutocomplete } from '../hooks/useAutocomplete';
 
 const Search = () => {

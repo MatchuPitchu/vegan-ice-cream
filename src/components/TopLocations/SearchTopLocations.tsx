@@ -1,11 +1,11 @@
-import { Dispatch, SetStateAction, useContext, VFC } from 'react';
+import { Dispatch, SetStateAction, VFC } from 'react';
 import { useAutocomplete } from '../../hooks/useAutocomplete';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { appActions } from '../../store/appSlice';
 import { locationsActions } from '../../store/locationsSlice';
 // Context
-import { Context } from '../../context/Context';
+import { useThemeContext } from '../../context/ThemeContext';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import Highlighter from 'react-highlight-words';
 import { IonItem, IonSearchbar, isPlatform } from '@ionic/react';
@@ -31,7 +31,7 @@ const SearchTopLocations: VFC<Props> = ({
   const dispatch = useAppDispatch();
   const { citiesWithLocations } = useAppSelector((state) => state.locations);
 
-  const { isDarkTheme } = useContext(Context);
+  const { isDarkTheme } = useThemeContext();
 
   const { handleSearchTextChange, predictions, setPredictions, searchWords } =
     useAutocomplete<string>(citiesWithLocations);
@@ -116,8 +116,7 @@ const SearchTopLocations: VFC<Props> = ({
           {predictions.map((city) => (
             <IonItem
               key={city}
-              className='predictItem mx-1'
-              button
+              className='predict-city mx-1'
               onClick={() => onSubmit({ city })}
               lines='none'
               color={`${isDarkTheme ? '' : 'secondary'}`}

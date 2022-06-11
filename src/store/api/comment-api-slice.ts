@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { convertIntoNumberFrom0To5 } from '../../pages/Bewerten';
 import { Comment } from '../../types/types';
+import { convertIntoNumberFrom0To5 } from '../../utils/variables-and-functions';
 
 type NewComment = Pick<
   Comment,

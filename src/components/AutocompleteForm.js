@@ -19,7 +19,7 @@ import {
 } from '@ionic/react';
 import { checkbox, closeCircleOutline, informationCircleOutline } from 'ionicons/icons';
 import LoadingError from './LoadingError';
-import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables';
+import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables-and-functions';
 import { showActions } from '../store/showSlice';
 
 const AutocompleteForm = () => {

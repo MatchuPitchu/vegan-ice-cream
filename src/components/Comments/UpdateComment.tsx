@@ -17,7 +17,7 @@ import {
   convertIntoNumberFrom0To100,
   convertIntoNumberFrom0To5,
   factorToConvertRatingScale,
-} from '../../pages/Bewerten';
+} from '../../utils/variables-and-functions';
 
 export interface UpdateCommentFormValues {
   text: string;

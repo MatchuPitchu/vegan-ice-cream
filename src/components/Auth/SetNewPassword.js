@@ -17,7 +17,7 @@ import {
   IonIcon,
   IonCard,
 } from '@ionic/react';
-import showError from '../showError';
+import Error from '../Error';
 import { logIn } from 'ionicons/icons';
 import LoadingError from '../LoadingError';
 import InfoTextRegister from './InfoTextRegister';
@@ -95,7 +95,7 @@ const SetNewPassword = () => {
                   rules={{ required: true }}
                 />
               </IonItem>
-              {showError('email', errors)}
+              {Error('email', errors)}
 
               <IonItem lines='none' className='mb-1'>
                 <IonLabel position='floating' htmlFor='password'>
@@ -123,7 +123,7 @@ const SetNewPassword = () => {
                   }}
                 />
               </IonItem>
-              {showError('password', errors)}
+              {Error('password', errors)}
 
               <IonItem lines='none' className='mb-1'>
                 <IonLabel position='floating' htmlFor='repeatedPassword'>
@@ -152,7 +152,7 @@ const SetNewPassword = () => {
                   }}
                 />
               </IonItem>
-              {showError('repeatedPassword', errors)}
+              {Error('repeatedPassword', errors)}
               {error && <div className='alertMsg'>{error}</div>}
 
               <IonButton className='my-3 confirm-btn' type='submit' expand='block'>

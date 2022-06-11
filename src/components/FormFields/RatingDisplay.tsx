@@ -1,6 +1,6 @@
 import { useState, VFC } from 'react';
 import { Rating } from 'react-simple-star-rating';
-import { factorToConvertRatingScale } from '../../pages/Bewerten';
+import { factorToConvertRatingScale } from '../../utils/variables-and-functions';
 import { fillColorArray } from './RatingInput';
 
 type FormRatingProps = {
