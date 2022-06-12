@@ -2,6 +2,7 @@ import { VFC } from 'react';
 import { useAppSelector } from '../store/hooks';
 import { IonLoading, IonToast } from '@ionic/react';
 
+// TODO: LoadingError create as Overlay with React Portal
 const LoadingError: VFC = () => {
   const { isLoading, error } = useAppSelector((state) => state.app);
 

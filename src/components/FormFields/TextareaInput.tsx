@@ -28,7 +28,7 @@ const TextareaInput = <TFieldValues extends FieldValues>({
         value={value}
         autoGrow={true}
         rows={1}
-        onIonChange={(event) => onChange(event.detail.value)}
+        onIonChange={({ detail }) => onChange(detail.value)}
       />
       {/* TODO: Error component styling */}
       {error && <p>{error.message}</p>}

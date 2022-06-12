@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { Controller, useForm, SubmitHandler } from 'react-hook-form';
+import type { PopoverState } from '../types/types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { flavorActions } from '../store/flavorSlice';
@@ -9,10 +11,10 @@ import { skipToken } from '@reduxjs/toolkit/dist/query';
 import { useGetOneLocationQuery, useUpdatePricingMutation } from '../store/api/locations-api-slice';
 import { useAddCommentMutation } from '../store/api/comment-api-slice';
 import { useAddFlavorMutation } from '../store/api/flavor-api-slice';
+import { useGetAdditionalInfosFromUserQuery } from '../store/api/user-api-slice';
 // Context
 import { useThemeContext } from '../context/ThemeContext';
 import { CirclePicker } from 'react-color';
-import { Controller, useForm, useController, SubmitHandler } from 'react-hook-form';
 import {
   IonButton,
   IonCard,
@@ -27,21 +29,19 @@ import {
   IonLabel,
   IonPage,
   IonPopover,
-  IonRange,
   IonTextarea,
   IonToggle,
 } from '@ionic/react';
-import { add, cashOutline, colorPaletteOutline, informationCircle } from 'ionicons/icons';
+import { add, colorPaletteOutline, informationCircle } from 'ionicons/icons';
+import { colorPickerColors, factorToConvertRatingScale } from '../utils/variables-and-functions';
 import Error from '../components/Error';
 import Search from '../components/Search';
 import SearchFlavors from '../components/SearchFlavors';
 import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
-import { useGetAdditionalInfosFromUserQuery } from '../store/api/user-api-slice';
 import RatingInput from '../components/FormFields/RatingInput';
-import { PopoverState } from '../types/types';
 import Checkbox from '../components/FormFields/Checkbox';
-import { colorPickerColors, factorToConvertRatingScale } from '../utils/variables-and-functions';
+import PricingRange from '../components/FormFields/PricingRange';
 
 interface BewertenFormValues {
   location: string;
@@ -111,7 +111,7 @@ const Bewerten = () => {
   const flav1Ref = useRef<HTMLIonLabelElement>(null);
   const flav2Ref = useRef<HTMLIonLabelElement>(null);
 
-  const defaultValues: BewertenFormValues = {
+  const defaultBewertenValues: BewertenFormValues = {
     location: '',
     pricing: 0,
     name: '',
@@ -138,15 +138,7 @@ const Bewerten = () => {
     setValue,
     formState: { errors },
   } = useForm<BewertenFormValues>({
-    defaultValues,
-  });
-
-  const {
-    field: { onChange, name: pricingFieldName, value },
-  } = useController({
-    name: 'pricing',
-    control,
-    defaultValue: 0,
+    defaultValues: defaultBewertenValues,
   });
 
   useEffect(() => {
@@ -261,7 +253,7 @@ const Bewerten = () => {
       <IonContent>
         {!success && (
           <div className='container mt-3'>
-            <IonItem lines='none' className='mb-1 itemTextSmall'>
+            <IonItem lines='none' className='mb-1 item-text--small'>
               <IonIcon
                 className='infoIcon me-1'
                 color='primary'
@@ -309,33 +301,7 @@ const Bewerten = () => {
               </IonItem>
               {Error('location', errors)}
 
-              <IonItem className='mb-1' lines='none'>
-                <IonLabel position='stacked' className='pb-1'>
-                  Preis Eiskugel
-                </IonLabel>
-                <div className='pricing__info'>
-                  {value !== 0 &&
-                    value.toLocaleString('de-DE', {
-                      style: 'currency',
-                      currency: 'EUR',
-                      currencyDisplay: 'symbol',
-                    })}
-                </div>
-                <IonRange
-                  name={pricingFieldName}
-                  className='px-0'
-                  value={value}
-                  onIonChange={({ detail }) => onChange(detail.value)}
-                  min={0.0}
-                  max={4.0}
-                  step={0.1}
-                  snaps={true}
-                  ticks={false}
-                >
-                  <IonIcon slot='start' size='small' icon={cashOutline} />
-                  <IonIcon slot='end' icon={cashOutline} />
-                </IonRange>
-              </IonItem>
+              <PricingRange name='pricing' control={control} />
 
               <SearchFlavors />
 

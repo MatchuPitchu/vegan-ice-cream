@@ -23,7 +23,7 @@ const Login = () => {
                 Logout erfolgreich
               </IonLabel>
             </IonItem>
-            <p className='text-center itemTextSmall ion-text-wrap px-2 my-2 '>
+            <p className='text-center item-text--small ion-text-wrap px-2 my-2 '>
               Melde dich wieder an, wenn du neue Eisläden eintragen, bewerten und zu deinen
               Favoriten hinzufügen möchtest.
             </p>

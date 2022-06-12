@@ -8,7 +8,7 @@ type FormRatingProps = {
   className?: string;
 };
 
-const RatingOnlyShow: VFC<FormRatingProps> = ({ initialValue, className }) => {
+const RatingReadonly: VFC<FormRatingProps> = ({ initialValue, className }) => {
   const [value, setValue] = useState(initialValue * factorToConvertRatingScale);
 
   return (
@@ -31,4 +31,4 @@ const RatingOnlyShow: VFC<FormRatingProps> = ({ initialValue, className }) => {
   );
 };
 
-export default RatingOnlyShow;
+export default RatingReadonly;

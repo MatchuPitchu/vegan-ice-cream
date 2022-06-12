@@ -1,4 +1,4 @@
-import { useEffect, VFC } from 'react';
+import { useEffect, useState, VFC } from 'react';
 import type { IceCreamLocation } from '../types/types';
 import { isComment, isCommentsList, isString } from '../types/typeguards';
 import { useThemeContext } from '../context/ThemeContext';
@@ -7,6 +7,7 @@ import { useAnimation } from '../hooks/useAnimation';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { locationsActions } from '../store/locationsSlice';
 import { appActions } from '../store/appSlice';
+import { showActions } from '../store/showSlice';
 import {
   IonButton,
   IonCard,
@@ -20,11 +21,13 @@ import {
   isPlatform,
 } from '@ionic/react';
 import {
-  add,
+  addCircleSharp,
   caretDownCircle,
   caretForwardCircle,
   closeCircleOutline,
   iceCream,
+  removeCircleOutline,
+  starHalfOutline,
 } from 'ionicons/icons';
 import CommentsBlock from './Comments/CommentsBlock';
 import ButtonFavoriteLocation from './Comments/ButtonFavoriteLocation';
@@ -32,7 +35,7 @@ import FlavorsList from './Comments/FlavorsList';
 import Ratings from './Ratings';
 import LoadingError from './LoadingError';
 import Pricing from './Pricing';
-import { showActions } from '../store/showSlice';
+import PricingForm from './PricingForm';
 
 type Props = {
   selectedLocation: IceCreamLocation;
@@ -42,6 +45,8 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { showComments, showLocationInfoModal } = useAppSelector((state) => state.show);
+
+  const [isPricingFormOpen, setIsPricingFormOpen] = useState(false);
 
   const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
 
@@ -81,6 +86,10 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
 
   const handleResetExceptSelectedLocationOnCloseModal = () => {
     dispatch(showActions.closeCommentsAndLocationInfoModal());
+  };
+
+  const handleTogglePricingForm = () => {
+    setIsPricingFormOpen((prev) => !prev);
   };
 
   const handleToggleShowComments = () => dispatch(showActions.toggleShowComments());
@@ -144,10 +153,8 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
 
             <IonItem
               button
-              onClick={handleResetExceptSelectedLocationOnCloseModal}
-              routerLink='/preis'
-              routerDirection='forward'
-              className='modalItemSmall itemTextSmall'
+              onClick={handleTogglePricingForm}
+              className='modal-item--small item-text--small'
               lines='full'
               detail={false}
             >
@@ -157,22 +164,27 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
                   : 'Kugelpreis aktualisieren'}
               </IonLabel>
               <IonButton fill='clear'>
-                <IonIcon icon={add} />
+                <IonIcon icon={isPricingFormOpen ? removeCircleOutline : addCircleSharp} />
               </IonButton>
             </IonItem>
+            {isPricingFormOpen && (
+              <IonItem className='modal-item--small item-text--small' lines='full' detail={false}>
+                <PricingForm onFinishUpdatePricing={handleTogglePricingForm} />
+              </IonItem>
+            )}
 
             <IonItem
               button
               onClick={handleResetExceptSelectedLocationOnCloseModal}
               routerLink='/bewerten'
               routerDirection='forward'
-              className='modalItemSmall itemTextSmall'
+              className='modal-item--small item-text--small'
               lines='full'
               detail={false}
             >
               <IonLabel>Bewerten</IonLabel>
               <IonButton fill='clear'>
-                <IonIcon icon={add} />
+                <IonIcon icon={starHalfOutline} />
               </IonButton>
             </IonItem>
           </IonItemGroup>
@@ -233,7 +245,7 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
                 onClick={handleResetExceptSelectedLocationOnCloseModal}
                 routerLink='/bewerten'
                 routerDirection='forward'
-                className='itemTextSmall'
+                className='item-text--small'
                 lines='none'
                 detail={false}
               >

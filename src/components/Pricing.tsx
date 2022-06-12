@@ -6,9 +6,9 @@ interface Props {
 
 const Pricing: VFC<Props> = ({ pricing }) => {
   return (
-    <div className='pricing-info'>
+    <div className='pricing-indication'>
       <div>Eiskugel</div>
-      <div className='price-info__number'>
+      <div className='pricing-indication__number'>
         {pricing[pricing.length - 1]
           .toLocaleString('de-DE', {
             style: 'currency',

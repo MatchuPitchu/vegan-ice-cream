@@ -287,7 +287,7 @@ const Register = () => {
               </IonButton>
             </form>
 
-            <p className='text-center itemTextSmall ion-text-wrap'>
+            <p className='text-center item-text--small ion-text-wrap'>
               Nach der Registrierung kannst du neue Eisläden eintragen, bewerten und zu deinen
               Favoriten hinzufügen.
             </p>
@@ -302,7 +302,7 @@ const Register = () => {
                   Registrierung erfolgreich
                 </IonLabel>
               </IonItem>
-              <p className='text-center itemTextSmall ion-text-wrap px-2 my-2 '>
+              <p className='text-center item-text--small ion-text-wrap px-2 my-2 '>
                 Du hast eine Mail erhalten. Klicke auf den Bestätigungs-Link. Kontrolliere auch den
                 Spam-Ordner.
               </p>

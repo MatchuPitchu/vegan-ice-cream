@@ -158,15 +158,15 @@ const UpdateComment: VFC<Props> = ({ comment }) => {
           <div className='commentText'>Mein Eis-Erlebnis war ...</div>
           <div className='row mt-2'>
             <div className='col'>
-              <div className='itemTextSmall mb-1'>bio</div>
+              <div className='item-text--small mb-1'>bio</div>
               <Checkbox name='bio' control={control} onToggleClick={handleChangeToggleGroup} />
             </div>
             <div className='col'>
-              <div className='itemTextSmall mb-1'>vegan</div>
+              <div className='item-text--small mb-1'>vegan</div>
               <Checkbox name='vegan' control={control} onToggleClick={handleChangeToggleGroup} />
             </div>
             <div className='col'>
-              <div className='itemTextSmall mb-1'>laktosefrei</div>
+              <div className='item-text--small mb-1'>laktosefrei</div>
               <Checkbox
                 name='lactose_free'
                 control={control}
@@ -174,7 +174,7 @@ const UpdateComment: VFC<Props> = ({ comment }) => {
               />
             </div>
             <div className='col'>
-              <div className='itemTextSmall mb-1'>weiß nicht</div>
+              <div className='item-text--small mb-1'>weiß nicht</div>
               <Checkbox
                 name='not_specified'
                 control={control}

@@ -129,11 +129,11 @@ const Login = () => {
               Passwort vergessen?
             </IonButton>
           </form>
-          <p className='text-center itemTextSmall ion-text-wrap'>
+          <p className='text-center item-text--small ion-text-wrap'>
             Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten
             hinzufügen.
           </p>
-          <p className='text-center itemTextSmall ion-text-wrap px-2 my-2 '>
+          <p className='text-center item-text--small ion-text-wrap px-2 my-2 '>
             Hier findest du die Datenschutzhinweise, denen du mit dem Login zustimmst
           </p>
           <p className='text-center'>

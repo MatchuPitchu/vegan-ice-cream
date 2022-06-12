@@ -44,7 +44,7 @@ const ListFilters = () => {
   return (
     <IonCard className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
       <IonItem
-        className='itemTextSmall'
+        className='item-text--small'
         lines={!showFilter ? 'none' : 'full'}
         detail={false}
         button

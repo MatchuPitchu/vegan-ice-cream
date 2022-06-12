@@ -20,7 +20,6 @@ import HeaderApp from './components/HeaderApp';
 import Home from './pages/Home';
 import Entdecken from './pages/Entdecken';
 import Bewerten from './pages/Bewerten';
-import Preis from './pages/Preis';
 import Favoriten from './pages/Favoriten';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
@@ -89,7 +88,6 @@ const App: React.FC = () => {
             <Route path='/home' component={Home} exact />
             <Route path='/entdecken' component={Entdecken} exact />
             <Route path='/bewerten' component={Bewerten} exact />
-            <Route path='/preis' component={Preis} exact />
             <Route path='/favoriten' component={Favoriten} exact />
             <Route path='/login' component={Login} exact />
             <Route path='/register' component={Register} exact />
