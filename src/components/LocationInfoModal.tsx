@@ -100,7 +100,7 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
       isOpen={showLocationInfoModal}
       swipeToClose={true}
       backdropDismiss={true}
-      onDidDismiss={handleResetAllOnCloseModal}
+      onDidDismiss={handleResetExceptSelectedLocationOnCloseModal}
       enterAnimation={enterAnimationFromBottom}
       leaveAnimation={leaveAnimationToBottom}
     >

@@ -10,6 +10,7 @@ import { IonIcon, IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/reac
 import { iceCream, informationCircle } from 'ionicons/icons';
 import LoadingError from './LoadingError';
 
+// TODO: Predictions mit Keyboard durchgehen
 const SearchFlavors: VFC = () => {
   const dispatch = useAppDispatch();
   const { flavor, searchTextFlavor } = useAppSelector((state) => state.flavor);
@@ -90,7 +91,7 @@ const SearchFlavors: VFC = () => {
 
       {predictions.length && searchTextFlavor !== flavor?.name ? (
         <IonList className='py-0'>
-          <div className='infoText pt-2'>... Auswahl bereits eingetragener Sorten</div>
+          <div className='info-text pt-2'>... von anderen Nutzer:innen eingetragene Sorten</div>
           {predictions.map((flavor) => (
             <IonItem
               key={flavor._id}

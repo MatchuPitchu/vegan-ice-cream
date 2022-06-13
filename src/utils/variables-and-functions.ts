@@ -8,6 +8,43 @@ export const convertIntoNumberFrom0To100 = (numberFrom0To5: number) =>
 export const convertIntoNumberFrom0To5 = (numberFrom0To100: number) =>
   numberFrom0To100 / factorToConvertRatingScale;
 
+export const handleChangeFlavorTypeToggleGroup = (
+  setValue: (fieldName: 'bio' | 'vegan' | 'lactose_free' | 'not_specified', value: boolean) => void,
+  {
+    name,
+    value,
+  }: {
+    name: string;
+    value: boolean;
+  }
+) => {
+  switch (name) {
+    case 'bio':
+      if (value) {
+        setValue('not_specified', false);
+      }
+      break;
+    case 'vegan':
+      if (value) {
+        setValue('not_specified', false);
+      }
+      setValue('lactose_free', value);
+      break;
+    case 'lactose_free':
+      if (value) {
+        setValue('not_specified', false);
+      }
+      break;
+    case 'not_specified':
+      if (value) {
+        setValue('bio', false);
+        setValue('vegan', false);
+        setValue('lactose_free', false);
+      }
+      break;
+  }
+};
+
 export const colorPickerColors = [
   'TRANSPARENT',
   '#b71c1c',

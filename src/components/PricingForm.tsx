@@ -14,6 +14,7 @@ import PricingRange from './FormFields/PricingRange';
 type Props = {
   onFinishUpdatePricing: () => void;
 };
+
 interface PricingFormValues {
   pricing: number;
 }
@@ -21,6 +22,7 @@ interface PricingFormValues {
 const defaultPricingValues = {
   pricing: 0,
 };
+
 const PricingForm: VFC<Props> = ({ onFinishUpdatePricing }) => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);

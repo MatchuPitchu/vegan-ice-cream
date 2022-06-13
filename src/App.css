@@ -5,6 +5,7 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  scroll-behavior: 'smooth';
 }
 
 ion-icon {
@@ -107,7 +108,7 @@ li {
   font-size: 0.8rem;
 }
 
-.infoText {
+.info-text {
   font-size: 0.8rem;
   padding: 0 25px;
   color: var(--ion-text-over-background);
@@ -1158,23 +1159,27 @@ ion-range::part(knob) {
   width: 0.9rem;
   height: 0.9rem;
   border-radius: var(--ion-border-radius-circle);
-  box-shadow: 10px 5px 20px #4a4a4a;
+  box-shadow: var(--ion-box-shadow);
 }
 
-.colorPicker {
-  margin: 0 auto;
+.color-picker__result {
+  width: 20px;
+  height: 20px;
+  margin-left: 0.5rem;
+  border-radius: var(--ion-border-radius-circle);
 }
 
-.colorPicker > div {
-  width: 100% !important;
+.circle-picker {
+  padding: 1rem;
 }
 
-.colorPicker > div > span > div {
-  border-radius: 90%;
-  box-shadow: 2px 2px 4px #000000;
+.circle-picker > span > div {
+  border-radius: var(--ion-border-radius-circle);
+  box-shadow: var(--ion-box-shadow);
 }
 
 .circle-picker > span:first-child > div {
+  border-radius: 0;
   background-color: #b53134;
   background-image: repeating-linear-gradient(
     135deg,

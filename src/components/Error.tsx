@@ -26,7 +26,6 @@ const Error = (_fieldName: string, errors: FieldErrors) => {
         {_fieldName === 'text' && 'Was möchtest du über den Eisladen teilen?'}
         {_fieldName === 'rating_quality' && 'Die Sterne fehlen noch'}
         {_fieldName === 'rating_vegan_offer' && 'Die Sterne fehlen noch'}
-        {_fieldName === 'date' && 'Mit dem Datum stimmt etwas nicht'}
       </div>
     );
   }

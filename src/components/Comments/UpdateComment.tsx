@@ -17,6 +17,7 @@ import {
   convertIntoNumberFrom0To100,
   convertIntoNumberFrom0To5,
   factorToConvertRatingScale,
+  handleChangeFlavorTypeToggleGroup,
 } from '../../utils/variables-and-functions';
 
 export interface UpdateCommentFormValues {
@@ -52,31 +53,7 @@ const UpdateComment: VFC<Props> = ({ comment }) => {
   });
 
   const handleChangeToggleGroup = ({ name, value }: { name: string; value: boolean }) => {
-    switch (name) {
-      case 'bio':
-        if (value) {
-          setValue('not_specified', false);
-        }
-        break;
-      case 'vegan':
-        if (value) {
-          setValue('not_specified', false);
-        }
-        setValue('lactose_free', value);
-        break;
-      case 'lactose_free':
-        if (value) {
-          setValue('not_specified', false);
-        }
-        break;
-      case 'not_specified':
-        if (value) {
-          setValue('bio', false);
-          setValue('vegan', false);
-          setValue('lactose_free', false);
-        }
-        break;
-    }
+    handleChangeFlavorTypeToggleGroup(setValue, { name, value });
   };
 
   const onSubmit: SubmitHandler<UpdateCommentFormValues> = async (data) => {

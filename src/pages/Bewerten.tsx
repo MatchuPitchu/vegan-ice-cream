@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Controller, useForm, SubmitHandler } from 'react-hook-form';
+import { Controller, useForm, SubmitHandler, useFieldArray, get } from 'react-hook-form';
 import type { PopoverState } from '../types/types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -14,7 +14,6 @@ import { useAddFlavorMutation } from '../store/api/flavor-api-slice';
 import { useGetAdditionalInfosFromUserQuery } from '../store/api/user-api-slice';
 // Context
 import { useThemeContext } from '../context/ThemeContext';
-import { CirclePicker } from 'react-color';
 import {
   IonButton,
   IonCard,
@@ -29,11 +28,20 @@ import {
   IonLabel,
   IonPage,
   IonPopover,
+  IonText,
   IonTextarea,
-  IonToggle,
 } from '@ionic/react';
-import { add, colorPaletteOutline, informationCircle } from 'ionicons/icons';
-import { colorPickerColors, factorToConvertRatingScale } from '../utils/variables-and-functions';
+import {
+  add,
+  addCircleSharp,
+  informationCircle,
+  removeCircleOutline,
+  starHalfOutline,
+} from 'ionicons/icons';
+import {
+  factorToConvertRatingScale,
+  handleChangeFlavorTypeToggleGroup,
+} from '../utils/variables-and-functions';
 import Error from '../components/Error';
 import Search from '../components/Search';
 import SearchFlavors from '../components/SearchFlavors';
@@ -42,6 +50,9 @@ import Spinner from '../components/Spinner';
 import RatingInput from '../components/FormFields/RatingInput';
 import Checkbox from '../components/FormFields/Checkbox';
 import PricingRange from '../components/FormFields/PricingRange';
+import ColorPicker from '../components/FormFields/ColorPicker';
+import DatePicker from '../components/FormFields/DatePicker';
+import TextareaInput from '../components/FormFields/TextareaInput';
 
 interface BewertenFormValues {
   location: string;
@@ -49,8 +60,7 @@ interface BewertenFormValues {
   name: string;
   type_cream: boolean;
   type_fruit: boolean;
-  color1: string;
-  color2: string;
+  colors: { value: string }[];
   text: string;
   rating_quality: number;
   bio: boolean;
@@ -69,12 +79,18 @@ const Bewerten = () => {
 
   const { isDarkTheme } = useThemeContext();
 
-  const [triggerUpdatePricing, result1] = useUpdatePricingMutation();
-  const [triggerAddComment, result2] = useAddCommentMutation();
-  const [triggerAddFlavor, result3] = useAddFlavorMutation();
+  const [popoverInfo, setPopoverInfo] = useState<PopoverState>({
+    showPopover: false,
+    event: undefined,
+  });
+  const [success, setSuccess] = useState(false);
 
   const [refetchLocationId, setRefetchLocationId] = useState<string | null>(null);
   const [refetchUserId, setRefetchUserId] = useState<string | null>(null);
+
+  const [triggerUpdatePricing, result1] = useUpdatePricingMutation();
+  const [triggerAddComment, result2] = useAddCommentMutation();
+  const [triggerAddFlavor, result3] = useAddFlavorMutation();
 
   const {
     data: updatedLocation,
@@ -102,14 +118,7 @@ const Bewerten = () => {
     }
   }, [isSuccessFetchAddtionalUserInfo]);
 
-  const [popoverInfo, setPopoverInfo] = useState<PopoverState>({
-    showPopover: false,
-    event: undefined,
-  });
-  const [showColorPicker, setShowColorPicker] = useState({ field1: false, field2: false });
-  const [success, setSuccess] = useState(false);
-  const flav1Ref = useRef<HTMLIonLabelElement>(null);
-  const flav2Ref = useRef<HTMLIonLabelElement>(null);
+  const flavorRef = useRef<HTMLIonLabelElement>(null);
 
   const defaultBewertenValues: BewertenFormValues = {
     location: '',
@@ -117,8 +126,11 @@ const Bewerten = () => {
     name: '',
     type_cream: false,
     type_fruit: false,
-    color1: '',
-    color2: '',
+    colors: [
+      {
+        value: '',
+      },
+    ],
     text: '',
     rating_quality: 0,
     bio: false,
@@ -129,55 +141,30 @@ const Bewerten = () => {
     date: '',
   };
 
-  // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
   const {
     control,
     handleSubmit,
     reset,
-    getValues,
     setValue,
     formState: { errors },
   } = useForm<BewertenFormValues>({
     defaultValues: defaultBewertenValues,
   });
 
-  useEffect(() => {
-    setValue('name', flavor ? searchTermFlavor : '');
-    setValue('type_fruit', flavor?.type_fruit ?? false);
-    setValue('type_cream', flavor?.type_cream ?? false);
-    setValue('color1', flavor?.color.primary ?? '');
-    setValue('color2', flavor?.color.secondary ?? '');
-    // if user selects location for example on map, than this location name is set as value is form
-    setValue('location', selectedLocation?.name || '');
-  }, [flavor, searchTermFlavor, selectedLocation, setValue]);
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'colors',
+  });
 
-  const handleChangeToggleGroup = ({ name, value }: { name: string; value: boolean }) => {
-    switch (name) {
-      case 'bio':
-        if (value) {
-          setValue('not_specified', false);
-        }
-        break;
-      case 'vegan':
-        if (value) {
-          setValue('not_specified', false);
-        }
-        setValue('lactose_free', value);
-        break;
-      case 'lactose_free':
-        if (value) {
-          setValue('not_specified', false);
-        }
-        break;
-      case 'not_specified':
-        if (value) {
-          setValue('bio', false);
-          setValue('vegan', false);
-          setValue('lactose_free', false);
-        }
-        break;
+  useEffect(() => {
+    if (flavor) {
+      setValue('name', flavor ? searchTermFlavor : '');
+      setValue('type_fruit', flavor?.type_fruit ?? false);
+      setValue('type_cream', flavor?.type_cream ?? false);
+      setValue('colors.0.value', flavor?.color.primary ?? '');
+      setValue('colors.1.value', flavor?.color.secondary ?? '');
     }
-  };
+  }, [flavor, searchTermFlavor, setValue]);
 
   const onSubmit: SubmitHandler<BewertenFormValues> = async (data) => {
     if (!user) return;
@@ -200,8 +187,8 @@ const Bewerten = () => {
         type_fruit: data.type_fruit,
         type_cream: data.type_cream,
         color: {
-          primary: data.color1,
-          secondary: data.color2,
+          primary: data.colors[0].value,
+          secondary: data.colors[1].value,
         },
       };
 
@@ -238,7 +225,41 @@ const Bewerten = () => {
     dispatch(appActions.setIsLoading(false));
   };
 
-  return isAuth && user ? (
+  const handleChangeToggleGroup = ({ name, value }: { name: string; value: boolean }) => {
+    handleChangeFlavorTypeToggleGroup(setValue, { name, value });
+  };
+
+  const handleScrollIntoView = () => flavorRef?.current?.scrollIntoView({ behavior: 'smooth' });
+
+  const successSection = success && (
+    <div className='container text-center'>
+      <IonCard>
+        <IonCardContent>
+          <IonCardTitle>Danke für deine Bewertung</IonCardTitle>
+          <IonButton
+            fill='solid'
+            className='check-btn my-3'
+            onClick={() => {
+              setSuccess(false);
+              reset(); // Reset React Hook Form
+            }}
+          >
+            <IonIcon className='pe-1' icon={add} />
+            Weitere Bewertung
+          </IonButton>
+        </IonCardContent>
+      </IonCard>
+    </div>
+  );
+
+  if (!isAuth && !user)
+    return (
+      <IonPage>
+        <Spinner />
+      </IonPage>
+    );
+
+  return (
     <IonPage>
       <IonHeader>
         <img
@@ -259,7 +280,7 @@ const Bewerten = () => {
                 color='primary'
                 onClick={(event) => {
                   event.persist();
-                  setPopoverInfo({ showPopover: true, event: event });
+                  setPopoverInfo({ showPopover: true, event });
                 }}
                 icon={informationCircle}
               />
@@ -281,23 +302,11 @@ const Bewerten = () => {
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)}>
-              <IonItem lines='none' className='mb-1'>
-                <IonLabel position='stacked'>Name Eisladen</IonLabel>
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <IonInput
-                      className='inputField'
-                      readonly
-                      type='text'
-                      placeholder='Nutze die Suche'
-                      value={(value = selectedLocation?.name || '')}
-                      onIonChange={(e) => onChange(e.detail.value)}
-                    />
-                  )}
-                  name='location'
-                  rules={{ required: true }}
-                />
+              <IonItem lines='none' className='mb-1 item-text--small'>
+                <IonLabel slot='start'>Gewählter Eisladen</IonLabel>
+                <IonText slot='start' color={`${selectedLocation?.name ? 'dark' : 'medium'}`}>
+                  {selectedLocation?.name ?? '... suche einen Eisladen'}
+                </IonText>
               </IonItem>
               {Error('location', errors)}
 
@@ -305,6 +314,7 @@ const Bewerten = () => {
 
               <SearchFlavors />
 
+              {/* TODO: ersetzen mit einfach setValue('name', searchTermFlavor) und checken, wie Validierung funktioniert mit error message */}
               {/* Hide Input Item because it only doubles searchbar value */}
               <IonItem hidden lines='none'>
                 <Controller
@@ -327,134 +337,45 @@ const Bewerten = () => {
               {Error('name', errors)}
 
               <IonItem lines='none'>
-                <div className='row'>
-                  <div className='col mt-2'>
-                    <IonLabel position='stacked'>Sorbet • Fruchteis</IonLabel>
-                    <Controller
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <IonToggle
-                          disabled={flavor?.name ? true : false}
-                          onIonChange={(e) => onChange(e.detail.checked)}
-                          checked={value}
-                        />
-                      )}
-                      name='type_fruit'
-                    />
-                  </div>
-                  <div className='col mt-2'>
-                    <IonLabel position='stacked'>Cremeeis • Milcheis • Pflanzenmilcheis</IonLabel>
-                    <Controller
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <IonToggle
-                          disabled={flavor?.name ? true : false}
-                          onIonChange={(e) => onChange(e.detail.checked)}
-                          checked={value}
-                        />
-                      )}
-                      name='type_cream'
-                    />
-                  </div>
-                </div>
+                <IonLabel position='stacked'>Sorbet • Fruchteis</IonLabel>
+                <Checkbox name='type_fruit' control={control} disabled={!!flavor?.name} />
               </IonItem>
-
               <IonItem lines='none'>
-                <IonLabel ref={flav1Ref} className='mb-1' position='stacked'>
-                  Farbmischung deiner Eiskugel
+                <IonLabel position='stacked'>Cremeeis • Milcheis • Pflanzenmilcheis</IonLabel>
+                <Checkbox name='type_cream' control={control} disabled={!!flavor?.name} />
+              </IonItem>
+              <IonItem lines='none'>
+                <IonLabel ref={flavorRef} className='mb-1' position='stacked'>
+                  Farbe(n) Eis (1 oder 2)
                 </IonLabel>
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <>
-                      <IonButton
-                        color='primary'
-                        fill='clear'
-                        onClick={() =>
-                          setShowColorPicker((prev) => ({ ...prev, field1: !prev.field1 }))
-                        }
-                      >
-                        <IonIcon icon={colorPaletteOutline} />
-                        <div
-                          className='ms-1'
-                          style={{
-                            width: '20px',
-                            height: '20px',
-                            borderRadius: '100%',
-                            backgroundColor: value,
-                          }}
-                        ></div>
-                      </IonButton>
-                      {showColorPicker.field1 && (
-                        <div className='colorPicker ion-padding'>
-                          <CirclePicker
-                            colors={colorPickerColors}
-                            circleSpacing={15}
-                            circleSize={25}
-                            onChangeComplete={(e) => {
-                              onChange(e.hex);
-                              flav1Ref?.current?.scrollIntoView();
-                              setShowColorPicker((prev) => ({ ...prev, field1: !prev.field1 }));
-                            }}
-                          />
-                        </div>
-                      )}
-                    </>
-                  )}
-                  name='color1'
-                  rules={{ required: true }}
-                />
+                <IonButton
+                  type='button'
+                  color='primary'
+                  fill='clear'
+                  slot='end'
+                  onClick={() => (fields.length === 1 ? append({ value: '' }) : remove(1))}
+                >
+                  <IonIcon icon={fields.length === 1 ? addCircleSharp : removeCircleOutline} />
+                </IonButton>
               </IonItem>
-              {/* getValues is needed, otherwise error is displayed even if user select flavor in search after first submit try of form */}
-              {!getValues('color1') && Error('color1', errors)}
-
-              <IonItem lines='none' className='mb-1'>
-                <IonLabel ref={flav2Ref} className='mb-1' position='stacked'></IonLabel>
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <>
-                      <IonButton
-                        className='mb-3'
-                        color='primary'
-                        fill='clear'
-                        onClick={() =>
-                          setShowColorPicker((prev) => ({ field1: false, field2: !prev.field2 }))
-                        }
-                      >
-                        <IonIcon icon={colorPaletteOutline} />
-                        <div
-                          className='ms-1'
-                          style={{
-                            width: '20px',
-                            height: '20px',
-                            borderRadius: '100%',
-                            backgroundColor: value,
-                          }}
-                        ></div>
-                      </IonButton>
-                      {showColorPicker.field2 && (
-                        <div className='colorPicker ion-padding'>
-                          <CirclePicker
-                            colors={colorPickerColors}
-                            circleSpacing={15}
-                            circleSize={25}
-                            onChangeComplete={(e) => {
-                              onChange(e.hex);
-                              flav2Ref?.current?.scrollIntoView();
-                              setShowColorPicker((prev) => ({
-                                field1: false,
-                                field2: !prev.field2,
-                              }));
-                            }}
-                          />
-                        </div>
-                      )}
-                    </>
-                  )}
-                  name='color2'
-                />
-              </IonItem>
+              <div className='mb-1'>
+                {fields.map((field, index) => (
+                  <ColorPicker
+                    key={field.id}
+                    name={`colors.${index}.value` as const}
+                    control={control}
+                    rules={{
+                      required: 'Wähle mindestens 1 Farbe aus',
+                      validate: (input) =>
+                        input !== 'transparent' || 'Wähle mindestens 1 Farbe aus',
+                    }}
+                    onSelectColor={handleScrollIntoView}
+                  />
+                ))}
+                {(errors.colors?.[0] || errors.colors?.[1]) && (
+                  <div className='pb-2'>{errors.colors?.[0].value?.message}</div>
+                )}
+              </div>
 
               <IonItem lines='none' className='mb-1'>
                 <IonLabel position='stacked'>Kommentar</IonLabel>
@@ -462,21 +383,12 @@ const Bewerten = () => {
                   ... Geschmack, Konsistenz, Waffel, Preis-Leistung, Zusatzleistungen wie vegane
                   Sahne, Waffeln oder Soßen, Freundlichkeit ...
                 </div>
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <IonTextarea
-                      className='textField'
-                      autoGrow={true}
-                      value={value}
-                      onIonChange={(e) => onChange(e.detail.value)}
-                    />
-                  )}
+                <TextareaInput
                   name='text'
-                  rules={{ required: true }}
+                  control={control}
+                  rules={{ required: 'Was möchtest du über den Eisladen teilen?' }}
                 />
               </IonItem>
-              {selectedLocation && Error('text', errors)}
 
               <IonItem lines='none' className='rating--bewerten-page'>
                 <IonLabel position='stacked'>Eis-Erlebnis</IonLabel>
@@ -493,7 +405,7 @@ const Bewerten = () => {
 
               {/* NEU CHECKEN MIT ERROR HANDLUNG UND BACKEND -> SOLL ALS ERGÄNZUNG ZU COMMENT GESPEICHERT WERDEN, NICHT IN FLAVOR */}
               <IonItem lines='none' className='mb-1'>
-                <IonLabel position='stacked'>Mein Eis-Erlebnis war ...</IonLabel>
+                <IonLabel position='stacked'>Mein Eis war ...</IonLabel>
                 <div className='row'>
                   <div className='col'>
                     <IonLabel position='stacked'>bio</IonLabel>
@@ -533,7 +445,7 @@ const Bewerten = () => {
               <IonItem lines='none' className='rating--bewerten-page'>
                 <IonLabel position='stacked'>Veganes Angebot Eisladen</IonLabel>
                 <div className='ion-text-wrap textSmallLight'>
-                  ... viele vegane Sorten, vegane Waffeln, vegane Sahne ...
+                  ... viele vegane Sorten, vegane Waffeln, vegane Sahne, vegane Sauce ...
                 </div>
                 <RatingInput
                   name='rating_vegan_offer'
@@ -545,60 +457,21 @@ const Bewerten = () => {
 
               <IonItem lines='none' className='my-1'>
                 <IonLabel position='stacked'>Datum</IonLabel>
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <IonDatetime
-                      min='2021'
-                      max='2023'
-                      monthNames='Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember'
-                      displayFormat='D. MMMM YYYY'
-                      value={value}
-                      onIonChange={(e) => onChange(e.detail.value)}
-                      cancelText='Zurück'
-                      doneText='OK'
-                    />
-                  )}
-                  name='date'
-                />
+                <DatePicker name='date' control={control} />
               </IonItem>
-              {Error('date', errors)}
 
               <IonButton fill='solid' className='check-btn my-3' type='submit'>
-                <IonIcon className='pe-1' icon={add} />
+                <IonIcon className='pe-1' slot='end' icon={starHalfOutline} />
                 Bewertung abgeben
               </IonButton>
             </form>
           </div>
         )}
-        {success && (
-          <div className='container text-center'>
-            <IonCard>
-              <IonCardContent>
-                <IonCardTitle>Danke für deine Bewertung</IonCardTitle>
-                <IonButton
-                  fill='solid'
-                  className='check-btn my-3'
-                  onClick={() => {
-                    setSuccess(false);
-                    // Reset React Hook Form
-                    reset();
-                  }}
-                >
-                  <IonIcon className='pe-1' icon={add} />
-                  Weitere Bewertung
-                </IonButton>
-              </IonCardContent>
-            </IonCard>
-          </div>
-        )}
+
+        {successSection}
 
         <LoadingError />
       </IonContent>
-    </IonPage>
-  ) : (
-    <IonPage>
-      <Spinner />
     </IonPage>
   );
 };
