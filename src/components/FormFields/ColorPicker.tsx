@@ -8,6 +8,7 @@ import { colorPickerColors } from '../../utils/variables-and-functions';
 type ColorPickerProps<TFieldValues extends FieldValues> = {
   name: Path<TFieldValues>;
   onSelectColor: () => void;
+  disabled: boolean;
 };
 
 // Types React Hook Form useController in child component: https://dev.to/texmeijin/component-design-idea-using-react-hook-form-v7-ie0
@@ -19,6 +20,7 @@ const ColorPicker = <TFieldValues extends FieldValues>({
   name,
   rules,
   onSelectColor,
+  disabled,
 }: ReactHookFormColorPickerProps<TFieldValues>) => {
   const {
     field: { onChange, value },
@@ -31,31 +33,39 @@ const ColorPicker = <TFieldValues extends FieldValues>({
   const [showColorPicker, setShowColorPicker] = useState(true);
 
   return (
-    <IonItem lines='inset'>
-      <IonButton color='primary' fill='clear' onClick={() => setShowColorPicker((prev) => !prev)}>
-        <IonIcon icon={colorPaletteOutline} />
+    <>
+      <IonItem>
+        <IonButton
+          color='primary'
+          fill='clear'
+          disabled={disabled}
+          onClick={() => setShowColorPicker((prev) => !prev)}
+        >
+          <IonIcon icon={colorPaletteOutline} />
+        </IonButton>
         <div
           className='color-picker__result'
           style={{
             backgroundColor: value,
           }}
-        />
-      </IonButton>
-
-      {showColorPicker && (
-        <CirclePicker
-          colors={colorPickerColors}
-          circleSpacing={15}
-          circleSize={25}
-          onChangeComplete={({ hex }) => {
-            onChange(hex);
-            onSelectColor();
-            setShowColorPicker(false);
-          }}
-          width='100%'
-        />
+        ></div>
+      </IonItem>
+      {showColorPicker && !disabled && (
+        <IonItem lines='inset' className='form__item--transparent'>
+          <CirclePicker
+            colors={colorPickerColors}
+            circleSpacing={15}
+            circleSize={25}
+            onChangeComplete={({ hex }) => {
+              onChange(hex);
+              onSelectColor();
+              setShowColorPicker(false);
+            }}
+            width='100%'
+          />
+        </IonItem>
       )}
-    </IonItem>
+    </>
   );
 };
 

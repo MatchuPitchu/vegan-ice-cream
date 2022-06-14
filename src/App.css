@@ -1151,6 +1151,19 @@ ion-range::part(knob) {
   --knob-size: 17px;
 }
 
+.form__item--transparent {
+  --background: var(--ion-card-background);
+}
+
+.text--bold {
+  color: var(--ion-text-color);
+  font-weight: 600;
+}
+
+.text--light {
+  color: var(--ion-color-medium);
+}
+
 .inputField {
   --placeholder-color: var(--ion-color-medium);
 }
@@ -1163,14 +1176,14 @@ ion-range::part(knob) {
 }
 
 .color-picker__result {
-  width: 20px;
-  height: 20px;
-  margin-left: 0.5rem;
+  width: 32px;
+  height: 32px;
   border-radius: var(--ion-border-radius-circle);
 }
 
 .circle-picker {
   padding: 1rem;
+  margin: 0 auto;
 }
 
 .circle-picker > span > div {

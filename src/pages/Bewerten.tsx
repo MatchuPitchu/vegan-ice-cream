@@ -57,7 +57,7 @@ import TextareaInput from '../components/FormFields/TextareaInput';
 interface BewertenFormValues {
   location: string;
   pricing: number;
-  name: string;
+  flavorName: string;
   type_cream: boolean;
   type_fruit: boolean;
   colors: { value: string }[];
@@ -74,7 +74,7 @@ interface BewertenFormValues {
 const Bewerten = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
-  const { flavor, searchTextFlavor: searchTermFlavor } = useAppSelector((state) => state.flavor);
+  const { flavor, searchTermFlavor } = useAppSelector((state) => state.flavor);
   const selectedLocation = useAppSelector(getSelectedLocation);
 
   const { isDarkTheme } = useThemeContext();
@@ -123,7 +123,7 @@ const Bewerten = () => {
   const defaultBewertenValues: BewertenFormValues = {
     location: '',
     pricing: 0,
-    name: '',
+    flavorName: '',
     type_cream: false,
     type_fruit: false,
     colors: [
@@ -156,18 +156,34 @@ const Bewerten = () => {
     name: 'colors',
   });
 
+  const [isFlavorSelectedFromDatabase, setIsFlavorSelectedFromDatabase] = useState(false);
+
+  // TODO: Labels fett lesbar Sorbet + Cremeeis ...
+  // TODO: Validierung mit error message einfügen -> flavorName is required
   useEffect(() => {
     if (flavor) {
-      setValue('name', flavor ? searchTermFlavor : '');
-      setValue('type_fruit', flavor?.type_fruit ?? false);
-      setValue('type_cream', flavor?.type_cream ?? false);
-      setValue('colors.0.value', flavor?.color.primary ?? '');
-      setValue('colors.1.value', flavor?.color.secondary ?? '');
+      setValue('flavorName', flavor.name);
+      setValue('type_fruit', flavor.type_fruit);
+      setValue('type_cream', flavor.type_cream);
+      remove([0, 1]);
+      append({ value: flavor.color.primary });
+      flavor.color.secondary && append({ value: flavor.color.secondary });
+      setIsFlavorSelectedFromDatabase(true);
+    } else {
+      setIsFlavorSelectedFromDatabase(false);
+      setValue('flavorName', '');
+      setValue('type_fruit', false);
+      setValue('type_cream', false);
+      remove([0, 1]);
+      append({ value: '' });
     }
-  }, [flavor, searchTermFlavor, setValue]);
+  }, [flavor, setValue, append, remove]);
 
   const onSubmit: SubmitHandler<BewertenFormValues> = async (data) => {
     if (!user) return;
+    // TODO: location required mit error message einfügen
+    if (!selectedLocation) return;
+
     dispatch(appActions.setIsLoading(true));
 
     // Create Pricing and add to database
@@ -183,7 +199,7 @@ const Bewerten = () => {
       }).unwrap();
 
       const flavorData = {
-        name: data.name,
+        name: data.flavorName,
         type_fruit: data.type_fruit,
         type_cream: data.type_cream,
         color: {
@@ -231,7 +247,7 @@ const Bewerten = () => {
 
   const handleScrollIntoView = () => flavorRef?.current?.scrollIntoView({ behavior: 'smooth' });
 
-  const successSection = success && (
+  const successSection = (
     <div className='container text-center'>
       <IonCard>
         <IonCardContent>
@@ -272,6 +288,8 @@ const Bewerten = () => {
       </IonHeader>
 
       <IonContent>
+        {success && successSection}
+
         {!success && (
           <div className='container mt-3'>
             <IonItem lines='none' className='mb-1 item-text--small'>
@@ -303,38 +321,17 @@ const Bewerten = () => {
 
             <form onSubmit={handleSubmit(onSubmit)}>
               <IonItem lines='none' className='mb-1 item-text--small'>
-                <IonLabel slot='start'>Gewählter Eisladen</IonLabel>
-                <IonText slot='start' color={`${selectedLocation?.name ? 'dark' : 'medium'}`}>
-                  {selectedLocation?.name ?? '... suche einen Eisladen'}
-                </IonText>
+                <IonLabel>
+                  Gewählter Eisladen:{' '}
+                  <span className={`${selectedLocation?.name ? 'text--bold' : 'text--light'}`}>
+                    {selectedLocation?.name ?? '... suche einen Eisladen'}
+                  </span>
+                </IonLabel>
               </IonItem>
-              {Error('location', errors)}
 
               <PricingRange name='pricing' control={control} />
 
               <SearchFlavors />
-
-              {/* TODO: ersetzen mit einfach setValue('name', searchTermFlavor) und checken, wie Validierung funktioniert mit error message */}
-              {/* Hide Input Item because it only doubles searchbar value */}
-              <IonItem hidden lines='none'>
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <IonInput
-                      readonly
-                      autocapitalize='words'
-                      type='text'
-                      value={(value = searchTermFlavor)}
-                      onIonChange={(e) => {
-                        onChange(e.detail.value);
-                      }}
-                    />
-                  )}
-                  name='name'
-                  rules={{ required: true }}
-                />
-              </IonItem>
-              {Error('name', errors)}
 
               <IonItem lines='none'>
                 <IonLabel position='stacked'>Sorbet • Fruchteis</IonLabel>
@@ -353,6 +350,7 @@ const Bewerten = () => {
                   color='primary'
                   fill='clear'
                   slot='end'
+                  disabled={isFlavorSelectedFromDatabase}
                   onClick={() => (fields.length === 1 ? append({ value: '' }) : remove(1))}
                 >
                   <IonIcon icon={fields.length === 1 ? addCircleSharp : removeCircleOutline} />
@@ -370,6 +368,7 @@ const Bewerten = () => {
                         input !== 'transparent' || 'Wähle mindestens 1 Farbe aus',
                     }}
                     onSelectColor={handleScrollIntoView}
+                    disabled={isFlavorSelectedFromDatabase}
                   />
                 ))}
                 {(errors.colors?.[0] || errors.colors?.[1]) && (
@@ -467,8 +466,6 @@ const Bewerten = () => {
             </form>
           </div>
         )}
-
-        {successSection}
 
         <LoadingError />
       </IonContent>

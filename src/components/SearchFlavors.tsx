@@ -13,7 +13,7 @@ import LoadingError from './LoadingError';
 // TODO: Predictions mit Keyboard durchgehen
 const SearchFlavors: VFC = () => {
   const dispatch = useAppDispatch();
-  const { flavor, searchTextFlavor } = useAppSelector((state) => state.flavor);
+  const { flavor, searchTermFlavor: searchTextFlavor } = useAppSelector((state) => state.flavor);
 
   const [popoverShow, setPopoverShow] = useState<PopoverState>({
     showPopover: false,
@@ -41,6 +41,7 @@ const SearchFlavors: VFC = () => {
 
   const onSearchTextChanged = (searchText: string) => handleSearchTextChange(searchText, 8);
 
+  // TODO mit Keyboard Auswahl durchgehen und bestätigen
   return (
     <>
       <div
@@ -72,9 +73,9 @@ const SearchFlavors: VFC = () => {
           <IonIcon
             className='infoIcon me-2'
             color='primary'
-            onClick={(e) => {
-              e.persist();
-              setPopoverShow({ showPopover: true, event: e });
+            onClick={(event) => {
+              event.persist();
+              setPopoverShow({ showPopover: true, event });
             }}
             icon={informationCircle}
           />
@@ -89,7 +90,7 @@ const SearchFlavors: VFC = () => {
         </div>
       </div>
 
-      {predictions.length && searchTextFlavor !== flavor?.name ? (
+      {predictions.length > 0 && searchTextFlavor !== flavor?.name && (
         <IonList className='py-0'>
           <div className='info-text pt-2'>... von anderen Nutzer:innen eingetragene Sorten</div>
           {predictions.map((flavor) => (
@@ -124,7 +125,7 @@ const SearchFlavors: VFC = () => {
             </IonItem>
           ))}
         </IonList>
-      ) : null}
+      )}
       <LoadingError />
     </>
   );
