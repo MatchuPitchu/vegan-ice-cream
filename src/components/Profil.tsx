@@ -113,7 +113,7 @@ const Profil: VFC = () => {
                 </IonLabel>
                 <div>
                   <IonIcon
-                    className='infoIcon'
+                    className='info-icon'
                     color='primary'
                     onClick={(event) => {
                       event.persist();
@@ -179,7 +179,7 @@ const Profil: VFC = () => {
                   <IonLabel>Meine Eissorten</IonLabel>
                   <div>
                     <IonIcon
-                      className='infoIcon'
+                      className='info-icon'
                       color='primary'
                       onClick={(event) => {
                         event.persist();

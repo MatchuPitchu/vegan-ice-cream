@@ -137,12 +137,12 @@ li {
 }
 
 .info-popover .popover-content {
-  background: var(--ion-background-color);
   font-size: 0.8rem;
   line-height: 1.2;
-  padding: 5px;
-  width: 150px;
+  padding: 0.4rem;
   text-align: center;
+  background: var(--ion-toolbar-background);
+  box-shadow: var(--ion-box-shadow);
 }
 
 .rotateIcon {
@@ -276,11 +276,29 @@ ion-searchbar .searchbar-input-container .searchbar-input {
   margin: 2px;
 }
 
-.infoIcon:hover {
-  border: 1px solid var(--ion-color-primary);
+.searchbar--flavor {
+  --icon-color: var(--ion-color-primary);
+  --placeholder-font-weight: 300;
+  --clear-button-color: var(--ion-color-primary);
+  --box-shadow: var(--ion-box-shadow);
+  --border-radius: var(--ion-border-radius);
+  --background: var(--ion-item-background);
+}
+
+.info-icon {
   border-radius: var(--ion-border-radius-circle);
   background-color: var(--ion-background-color);
+  box-shadow: var(--ion-box-shadow);
+  transition: all 0.3s;
+}
+
+.info-icon:hover {
+  fill: var(--ion-color-primary-shade);
   cursor: pointer;
+}
+
+.info-icon.info-icon--disabled {
+  display: none;
 }
 
 .warningIcon:hover {
@@ -861,13 +879,25 @@ mark {
   background: #233033;
 }
 
-.modalItem {
-  --background: transparent;
+.item--card-background {
+  --background: var(--ion-card-background);
+  background: var(--ion-card-background);
 }
 
-.modal-item--small {
+.item--small {
+  --min-height: 40px;
+}
+
+.item-transparent {
+  --background: transparent;
+  background: transparent;
+}
+
+.item-transparent--small {
   --background: transparent;
   --min-height: 40px;
+  display: flex;
+  align-items: center;
 }
 
 .websiteLink,
@@ -1151,10 +1181,6 @@ ion-range::part(knob) {
   --knob-size: 17px;
 }
 
-.form__item--transparent {
-  --background: var(--ion-card-background);
-}
-
 .text--bold {
   color: var(--ion-text-color);
   font-weight: 600;
@@ -1175,9 +1201,14 @@ ion-range::part(knob) {
   box-shadow: var(--ion-box-shadow);
 }
 
+.color-picker__button {
+  min-height: 2.5rem;
+}
+
 .color-picker__result {
-  width: 32px;
-  height: 32px;
+  width: 1.8rem;
+  height: 1.8rem;
+  margin-left: 1rem;
   border-radius: var(--ion-border-radius-circle);
 }
 

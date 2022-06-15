@@ -127,7 +127,7 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
           style={isDarkTheme ? { backgroundColor: '#23303399' } : { backgroundColor: '#ffffff99' }}
         >
           <IonItemGroup>
-            <IonItem className='modalItem' lines='full'>
+            <IonItem className='item-transparent' lines='full'>
               <IonLabel className='ion-text-wrap'>
                 {selectedLocation.address.street} {selectedLocation.address.number}
                 <br />
@@ -154,7 +154,7 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
             <IonItem
               button
               onClick={handleTogglePricingForm}
-              className='modal-item--small item-text--small'
+              className='item-transparent--small item-text--small'
               lines='full'
               detail={false}
             >
@@ -168,7 +168,11 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
               </IonButton>
             </IonItem>
             {isPricingFormOpen && (
-              <IonItem className='modal-item--small item-text--small' lines='full' detail={false}>
+              <IonItem
+                className='item-transparent--small item-text--small'
+                lines='full'
+                detail={false}
+              >
                 <PricingForm onFinishUpdatePricing={handleTogglePricingForm} />
               </IonItem>
             )}
@@ -178,7 +182,7 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
               onClick={handleResetExceptSelectedLocationOnCloseModal}
               routerLink='/bewerten'
               routerDirection='forward'
-              className='modal-item--small item-text--small'
+              className='item-transparent--small item-text--small'
               lines='full'
               detail={false}
             >

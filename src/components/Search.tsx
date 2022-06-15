@@ -9,8 +9,8 @@ import { searchActions } from '../store/searchSlice';
 // Context
 import { Context } from '../context/Context';
 import Highlighter from 'react-highlight-words';
-import { IonIcon, IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/react';
-import { informationCircle } from 'ionicons/icons';
+import { IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/react';
+import { searchCircleOutline, trash } from 'ionicons/icons';
 import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables-and-functions';
 import { useAutocomplete } from '../hooks/useAutocomplete';
 
@@ -24,14 +24,6 @@ const Search = () => {
 
   const { handleSearchTextChange, predictions, setPredictions, searchWords } =
     useAutocomplete<IceCreamLocation>(locations);
-
-  // const [predictions, setPredictions] = useState<IceCreamLocation[]>([]);
-  // const [searchWords, setSearchWords] = useState<string[]>([]);
-
-  const [showPopover, setShowPopover] = useState<PopoverState>({
-    showPopover: false,
-    event: undefined,
-  });
 
   const onSubmit = async (event: any) => {
     event.preventDefault();
@@ -87,17 +79,24 @@ const Search = () => {
     }
   };
 
+  // TODO: 1) Styling wie searchbar flavor oder anders (nutze das auch bei Entdecken)
+  // TODO: 2) React Hook Form implementieren
+
   return (
     <form onSubmit={onSubmit}>
-      <div className='d-flex align-items-center'>
+      <IonItem
+        lines={predictions && entdeckenSegment === 'map' ? 'none' : 'full'}
+        className='item--card-background'
+      >
         <IonSearchbar
-          className='searchbar'
+          className='searchbar--flavor'
           type='search'
           inputMode='search'
           placeholder='Eisladen oder Stadt suchen'
-          showCancelButton='always'
+          showCancelButton='never'
           showClearButton='always'
-          cancel-button-text=''
+          clearIcon={trash}
+          searchIcon={searchCircleOutline}
           value={searchText}
           debounce={500}
           onIonChange={({ detail: { value } }) => {
@@ -105,29 +104,8 @@ const Search = () => {
             onSearchTextChanged(value ?? '');
           }}
         />
-        <div>
-          <IonIcon
-            className='infoIcon me-2'
-            color='primary'
-            onClick={(e) => {
-              e.persist();
-              setShowPopover({ showPopover: true, event: e });
-            }}
-            icon={informationCircle}
-          />
-          <IonPopover
-            cssClass='info-popover'
-            animated={true}
-            event={showPopover.event}
-            isOpen={showPopover.showPopover}
-            onDidDismiss={() => setShowPopover({ showPopover: false, event: undefined })}
-            backdropDismiss={true}
-            translucent={true}
-          >
-            Nichts gefunden? Trage den Eisladen auf der Karte ein.
-          </IonPopover>
-        </div>
-      </div>
+      </IonItem>
+
       {predictions && entdeckenSegment === 'map' && (
         <IonList className='py-0'>
           {predictions.map((location) => (

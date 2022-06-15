@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Controller, useForm, SubmitHandler, useFieldArray, get } from 'react-hook-form';
+import { useForm, SubmitHandler, useFieldArray } from 'react-hook-form';
 import type { PopoverState } from '../types/types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -20,29 +20,24 @@ import {
   IonCardContent,
   IonCardTitle,
   IonContent,
-  IonDatetime,
   IonHeader,
   IonIcon,
-  IonInput,
   IonItem,
   IonLabel,
   IonPage,
   IonPopover,
-  IonText,
-  IonTextarea,
 } from '@ionic/react';
 import {
   add,
   addCircleSharp,
   informationCircle,
-  removeCircleOutline,
+  removeCircleSharp,
   starHalfOutline,
 } from 'ionicons/icons';
 import {
   factorToConvertRatingScale,
   handleChangeFlavorTypeToggleGroup,
 } from '../utils/variables-and-functions';
-import Error from '../components/Error';
 import Search from '../components/Search';
 import SearchFlavors from '../components/SearchFlavors';
 import LoadingError from '../components/LoadingError';
@@ -74,7 +69,7 @@ interface BewertenFormValues {
 const Bewerten = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
-  const { flavor, searchTermFlavor } = useAppSelector((state) => state.flavor);
+  const { flavor } = useAppSelector((state) => state.flavor);
   const selectedLocation = useAppSelector(getSelectedLocation);
 
   const { isDarkTheme } = useThemeContext();
@@ -83,6 +78,11 @@ const Bewerten = () => {
     showPopover: false,
     event: undefined,
   });
+  const [showPopover, setShowPopover] = useState<PopoverState>({
+    showPopover: false,
+    event: undefined,
+  });
+
   const [success, setSuccess] = useState(false);
 
   const [refetchLocationId, setRefetchLocationId] = useState<string | null>(null);
@@ -294,7 +294,7 @@ const Bewerten = () => {
           <div className='container mt-3'>
             <IonItem lines='none' className='mb-1 item-text--small'>
               <IonIcon
-                className='infoIcon me-1'
+                className='info-icon me-1'
                 color='primary'
                 onClick={(event) => {
                   event.persist();
@@ -315,46 +315,67 @@ const Bewerten = () => {
               </IonPopover>
             </IonItem>
 
-            <div className='pt-2' style={{ backgroundColor: 'var(--ion-item-background)' }}>
-              <Search />
-            </div>
+            <IonItem lines='none' className='item--small item--card-background item-text--small '>
+              <IonLabel>
+                Gewählter Eisladen:{' '}
+                <span className={`${selectedLocation?.name ? 'text--bold' : 'text--light'}`}>
+                  {selectedLocation?.name ?? '... suche einen Eisladen'}
+                </span>
+              </IonLabel>
+              <IonIcon
+                className='info-icon'
+                color='primary'
+                slot='end'
+                icon={informationCircle}
+                onClick={(event) => {
+                  event.persist();
+                  setShowPopover({ showPopover: true, event });
+                }}
+              />
+            </IonItem>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <IonItem lines='none' className='mb-1 item-text--small'>
-                <IonLabel>
-                  Gewählter Eisladen:{' '}
-                  <span className={`${selectedLocation?.name ? 'text--bold' : 'text--light'}`}>
-                    {selectedLocation?.name ?? '... suche einen Eisladen'}
-                  </span>
-                </IonLabel>
-              </IonItem>
+            <IonPopover
+              cssClass='info-popover'
+              animated={true}
+              event={showPopover.event}
+              isOpen={showPopover.showPopover}
+              onDidDismiss={() => setShowPopover({ showPopover: false, event: undefined })}
+              backdropDismiss={true}
+              translucent={true}
+            >
+              Nichts gefunden? Trage den Eisladen auf der Karte ein.
+            </IonPopover>
 
+            <Search />
+
+            <form className='mt-1' onSubmit={handleSubmit(onSubmit)}>
               <PricingRange name='pricing' control={control} />
 
               <SearchFlavors />
 
-              <IonItem lines='none'>
+              <IonItem lines='inset' className='item--card-background'>
                 <IonLabel position='stacked'>Sorbet • Fruchteis</IonLabel>
                 <Checkbox name='type_fruit' control={control} disabled={!!flavor?.name} />
               </IonItem>
-              <IonItem lines='none'>
+              <IonItem lines='inset' className='item--card-background'>
                 <IonLabel position='stacked'>Cremeeis • Milcheis • Pflanzenmilcheis</IonLabel>
                 <Checkbox name='type_cream' control={control} disabled={!!flavor?.name} />
               </IonItem>
-              <IonItem lines='none'>
+              <IonItem lines='none' className='item--small item--card-background'>
                 <IonLabel ref={flavorRef} className='mb-1' position='stacked'>
                   Farbe(n) Eis (1 oder 2)
                 </IonLabel>
-                <IonButton
-                  type='button'
+                <IonIcon
+                  className={`info-icon ${isFlavorSelectedFromDatabase && 'info-icon--disabled'}`}
                   color='primary'
-                  fill='clear'
                   slot='end'
-                  disabled={isFlavorSelectedFromDatabase}
-                  onClick={() => (fields.length === 1 ? append({ value: '' }) : remove(1))}
-                >
-                  <IonIcon icon={fields.length === 1 ? addCircleSharp : removeCircleOutline} />
-                </IonButton>
+                  icon={fields.length === 1 ? addCircleSharp : removeCircleSharp}
+                  onClick={() => {
+                    if (!isFlavorSelectedFromDatabase) {
+                      fields.length === 1 ? append({ value: '' }) : remove(1);
+                    }
+                  }}
+                />
               </IonItem>
               <div className='mb-1'>
                 {fields.map((field, index) => (
@@ -389,7 +410,7 @@ const Bewerten = () => {
                 />
               </IonItem>
 
-              <IonItem lines='none' className='rating--bewerten-page'>
+              <IonItem lines='none' className='rating--bewerten-page mb-1'>
                 <IonLabel position='stacked'>Eis-Erlebnis</IonLabel>
                 <div className='ion-text-wrap textSmallLight'>
                   ... gewählte Eiskugel, Waffel, dein Eindruck vom Eisladen ...

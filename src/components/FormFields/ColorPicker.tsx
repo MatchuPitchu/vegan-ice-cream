@@ -34,28 +34,30 @@ const ColorPicker = <TFieldValues extends FieldValues>({
 
   return (
     <>
-      <IonItem>
+      <IonItem lines='none' className='item--card-background'>
         <IonButton
+          className='color-picker__button'
           color='primary'
+          type='button'
           fill='clear'
           disabled={disabled}
           onClick={() => setShowColorPicker((prev) => !prev)}
         >
           <IonIcon icon={colorPaletteOutline} />
+          <div
+            className='color-picker__result'
+            style={{
+              backgroundColor: value,
+            }}
+          />
         </IonButton>
-        <div
-          className='color-picker__result'
-          style={{
-            backgroundColor: value,
-          }}
-        ></div>
       </IonItem>
       {showColorPicker && !disabled && (
-        <IonItem lines='inset' className='form__item--transparent'>
+        <IonItem lines='none' className='item--card-background'>
           <CirclePicker
             colors={colorPickerColors}
             circleSpacing={15}
-            circleSize={25}
+            circleSize={20}
             onChangeComplete={({ hex }) => {
               onChange(hex);
               onSelectColor();

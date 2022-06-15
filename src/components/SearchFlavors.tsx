@@ -6,16 +6,24 @@ import { flavorActions } from '../store/flavorSlice';
 import { appActions } from '../store/appSlice';
 import { useAutocomplete } from '../hooks/useAutocomplete';
 import Highlighter from 'react-highlight-words';
-import { IonIcon, IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/react';
-import { iceCream, informationCircle } from 'ionicons/icons';
+import {
+  IonContent,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonPopover,
+  IonSearchbar,
+} from '@ionic/react';
+import { informationCircle, pencil, trash } from 'ionicons/icons';
 import LoadingError from './LoadingError';
 
 // TODO: Predictions mit Keyboard durchgehen
 const SearchFlavors: VFC = () => {
   const dispatch = useAppDispatch();
-  const { flavor, searchTermFlavor: searchTextFlavor } = useAppSelector((state) => state.flavor);
+  const { flavor, searchTermFlavor } = useAppSelector((state) => state.flavor);
 
-  const [popoverShow, setPopoverShow] = useState<PopoverState>({
+  const [showPopover, setShowPopover] = useState<PopoverState>({
     showPopover: false,
     event: undefined,
   });
@@ -44,65 +52,65 @@ const SearchFlavors: VFC = () => {
   // TODO mit Keyboard Auswahl durchgehen und bestätigen
   return (
     <>
-      <div
-        className='d-flex align-items-center pt-2'
-        style={{ backgroundColor: 'var(--ion-item-background)' }}
+      <IonItem lines='none' className='item--small item--card-background'>
+        <IonLabel className='mb-1' position='stacked'>
+          Name Eissorte
+        </IonLabel>
+        <IonIcon
+          className='info-icon'
+          color='primary'
+          slot='end'
+          icon={informationCircle}
+          onClick={(event) => {
+            event.persist();
+            setShowPopover({ showPopover: true, event });
+          }}
+        />
+      </IonItem>
+
+      <IonItem
+        lines={predictions.length > 0 && searchTermFlavor !== flavor?.name ? 'none' : 'full'}
+        className='item--card-background'
       >
         <IonSearchbar
-          className='searchbar'
-          type='search'
+          className='searchbar--flavor'
+          type='text'
           inputMode='text'
-          placeholder='Name Eissorte eintippen'
-          showCancelButton='always'
+          placeholder='Welche Eissorte willst du bewerten?'
+          showCancelButton='never'
           showClearButton='always'
-          searchIcon={iceCream}
-          cancel-button-text=''
-          spellcheck={true}
-          autocorrect='on'
-          value={searchTextFlavor}
+          clearIcon={trash}
+          searchIcon={pencil}
+          value={searchTermFlavor}
           debounce={100}
           onIonChange={({ detail: { value } }) => {
+            if (flavor) {
+              dispatch(flavorActions.resetFlavor());
+            }
             dispatch(flavorActions.setSearchTermFlavor(value ?? ''));
             onSearchTextChanged(value ?? '');
           }}
-          onIonCancel={() => dispatch(flavorActions.resetFlavor())}
           onIonClear={() => dispatch(flavorActions.resetFlavor())}
           onKeyUp={(e) => e.key === 'Enter' && setPredictions([])}
         />
-        <div>
-          <IonIcon
-            className='infoIcon me-2'
-            color='primary'
-            onClick={(event) => {
-              event.persist();
-              setPopoverShow({ showPopover: true, event });
-            }}
-            icon={informationCircle}
-          />
-          <IonPopover
-            cssClass='info-popover'
-            event={popoverShow.event}
-            isOpen={popoverShow.showPopover}
-            onDidDismiss={() => setPopoverShow({ showPopover: false, event: undefined })}
-          >
-            Keine passenden Vorschläge? Tippe einfach den Namen der neuen Eissorte ein.
-          </IonPopover>
-        </div>
-      </div>
+      </IonItem>
 
-      {predictions.length > 0 && searchTextFlavor !== flavor?.name && (
-        <IonList className='py-0'>
-          <div className='info-text pt-2'>... von anderen Nutzer:innen eingetragene Sorten</div>
+      {predictions.length > 0 && searchTermFlavor !== flavor?.name && (
+        <IonList className='item--card-background py-0'>
+          <div className='info-text item--card-background'>
+            ... von anderen Nutzer:innen eingetragen
+          </div>
           {predictions.map((flavor) => (
             <IonItem
               key={flavor._id}
+              className='item--card-background'
+              lines='full'
               button
               onClick={() => {
                 dispatch(flavorActions.setFlavor(flavor));
                 setPredictions([]);
                 dispatch(flavorActions.setSearchTermFlavor(flavor.name));
               }}
-              lines='full'
             >
               <Highlighter
                 className='hightlighter-wrapper'
@@ -121,11 +129,26 @@ const SearchFlavors: VFC = () => {
                     flavor.color.secondary ? flavor.color.secondary : flavor.color.primary
                   })`,
                 }}
-              ></div>
+              />
             </IonItem>
           ))}
         </IonList>
       )}
+
+      <IonPopover
+        cssClass='info-popover'
+        animated={true}
+        translucent={true}
+        event={showPopover.event}
+        isOpen={showPopover.showPopover}
+        onDidDismiss={() => setShowPopover({ showPopover: false, event: undefined })}
+        backdropDismiss={true}
+      >
+        <IonContent>
+          Wähle aus den bereits verfügbaren Eissorten oder tippe einen neuen Namen ein.
+        </IonContent>
+      </IonPopover>
+
       <LoadingError />
     </>
   );

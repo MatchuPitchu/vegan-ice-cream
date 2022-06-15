@@ -1,3 +1,4 @@
+import { VFC } from 'react';
 import {
   IonCard,
   IonCardContent,
@@ -12,7 +13,7 @@ import {
 } from '@ionic/react';
 import { helpCircle } from 'ionicons/icons';
 
-const Datenschutz = () => (
+const Datenschutz: VFC = () => (
   <IonPage>
     <IonContent>
       <IonCard className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
