@@ -74,7 +74,7 @@ const Bewerten = () => {
 
   const { isDarkTheme } = useThemeContext();
 
-  const [popoverInfo, setPopoverInfo] = useState<PopoverState>({
+  const [showPopoverInfo, setShowPopoverInfo] = useState<PopoverState>({
     showPopover: false,
     event: undefined,
   });
@@ -253,8 +253,8 @@ const Bewerten = () => {
         <IonCardContent>
           <IonCardTitle>Danke für deine Bewertung</IonCardTitle>
           <IonButton
-            fill='solid'
-            className='check-btn my-3'
+            fill='clear'
+            className='button--check my-3'
             onClick={() => {
               setSuccess(false);
               reset(); // Reset React Hook Form
@@ -292,34 +292,35 @@ const Bewerten = () => {
 
         {!success && (
           <div className='container mt-3'>
-            <IonItem lines='none' className='mb-1 item-text--small'>
+            <IonItem lines='none' className='item--small item-text--small mb-1'>
+              <IonLabel className='ion-text-wrap'>Bewerte 1 Eissorte</IonLabel>
               <IonIcon
-                className='info-icon me-1'
+                className='info-icon'
                 color='primary'
+                slot='end'
+                icon={informationCircle}
                 onClick={(event) => {
                   event.persist();
-                  setPopoverInfo({ showPopover: true, event });
+                  setShowPopoverInfo({ showPopover: true, event });
                 }}
-                icon={informationCircle}
               />
-              <IonLabel className='ion-text-wrap'>Bewerte nur 1 Eissorte</IonLabel>
-
-              <IonPopover
-                cssClass='info-popover'
-                event={popoverInfo.event}
-                isOpen={popoverInfo.showPopover}
-                onDidDismiss={() => setPopoverInfo({ showPopover: false, event: undefined })}
-              >
-                Damit eine Bewertung fix zu tippen ist, bezieht sie sich nur auf 1 Eissorte. Hast du
-                mehr probiert, kannst du auch eine weitere Bewertung abgeben.
-              </IonPopover>
             </IonItem>
 
-            <IonItem lines='none' className='item--small item--card-background item-text--small '>
-              <IonLabel>
-                Gewählter Eisladen:{' '}
+            <IonPopover
+              cssClass='info-popover'
+              event={showPopoverInfo.event}
+              isOpen={showPopoverInfo.showPopover}
+              onDidDismiss={() => setShowPopoverInfo({ showPopover: false, event: undefined })}
+            >
+              Damit eine Bewertung fix zu tippen ist, bezieht sie sich auf 1 Eissorte. Natürlich
+              kannst du auch weitere Bewertungen abgeben.
+            </IonPopover>
+
+            <IonItem lines='none' className='item--small item--item-background'>
+              <IonLabel position='stacked'>
+                Eisladen:{' '}
                 <span className={`${selectedLocation?.name ? 'text--bold' : 'text--light'}`}>
-                  {selectedLocation?.name ?? '... suche einen Eisladen'}
+                  {selectedLocation?.name ?? '... nutze die Suche'}
                 </span>
               </IonLabel>
               <IonIcon
@@ -399,7 +400,7 @@ const Bewerten = () => {
 
               <IonItem lines='none' className='mb-1'>
                 <IonLabel position='stacked'>Kommentar</IonLabel>
-                <div className='ion-text-wrap textSmallLight'>
+                <div className='ion-text-wrap text--small-light'>
                   ... Geschmack, Konsistenz, Waffel, Preis-Leistung, Zusatzleistungen wie vegane
                   Sahne, Waffeln oder Soßen, Freundlichkeit ...
                 </div>
@@ -412,7 +413,7 @@ const Bewerten = () => {
 
               <IonItem lines='none' className='rating--bewerten-page mb-1'>
                 <IonLabel position='stacked'>Eis-Erlebnis</IonLabel>
-                <div className='ion-text-wrap textSmallLight'>
+                <div className='ion-text-wrap text--small-light'>
                   ... gewählte Eiskugel, Waffel, dein Eindruck vom Eisladen ...
                 </div>
                 <RatingInput
@@ -464,7 +465,7 @@ const Bewerten = () => {
 
               <IonItem lines='none' className='rating--bewerten-page'>
                 <IonLabel position='stacked'>Veganes Angebot Eisladen</IonLabel>
-                <div className='ion-text-wrap textSmallLight'>
+                <div className='ion-text-wrap text--small-light'>
                   ... viele vegane Sorten, vegane Waffeln, vegane Sahne, vegane Sauce ...
                 </div>
                 <RatingInput
@@ -480,8 +481,8 @@ const Bewerten = () => {
                 <DatePicker name='date' control={control} />
               </IonItem>
 
-              <IonButton fill='solid' className='check-btn my-3' type='submit'>
-                <IonIcon className='pe-1' slot='end' icon={starHalfOutline} />
+              <IonButton fill='clear' className='button--check my-3' type='submit'>
+                <IonIcon slot='end' icon={starHalfOutline} />
                 Bewertung abgeben
               </IonButton>
             </form>

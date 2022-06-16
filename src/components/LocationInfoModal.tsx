@@ -26,7 +26,7 @@ import {
   caretForwardCircle,
   closeCircleOutline,
   iceCream,
-  removeCircleOutline,
+  removeCircleSharp,
   starHalfOutline,
 } from 'ionicons/icons';
 import CommentsBlock from './Comments/CommentsBlock';
@@ -164,7 +164,7 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
                   : 'Kugelpreis aktualisieren'}
               </IonLabel>
               <IonButton fill='clear'>
-                <IonIcon icon={isPricingFormOpen ? removeCircleOutline : addCircleSharp} />
+                <IonIcon icon={isPricingFormOpen ? removeCircleSharp : addCircleSharp} />
               </IonButton>
             </IonItem>
             {isPricingFormOpen && (

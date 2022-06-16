@@ -161,12 +161,13 @@ const UpdateComment: VFC<Props> = ({ comment }) => {
           </div>
         </div>
         <div className='d-flex justify-content-center mt-1'>
-          <IonButton className='check-btn' type='submit'>
+          <IonButton className='button--check' type='submit' fill='clear'>
             <IonIcon className='pe-1' size='small' icon={checkboxOutline} />
             Updaten
           </IonButton>
           <IonButton
-            className='check-btn'
+            className='button--check'
+            fill='clear'
             onClick={() =>
               dispatch(showActions.setShowEditSectionComment({ state: false, comment_id: '' }))
             }

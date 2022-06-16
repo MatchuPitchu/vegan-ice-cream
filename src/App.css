@@ -884,8 +884,13 @@ mark {
   background: var(--ion-card-background);
 }
 
+.item--item-background {
+  --background: var(--ion-item-background);
+  background: var(--ion-item-background);
+}
+
 .item--small {
-  --min-height: 40px;
+  --min-height: 44px;
 }
 
 .item-transparent {
@@ -895,7 +900,7 @@ mark {
 
 .item-transparent--small {
   --background: transparent;
-  --min-height: 40px;
+  --min-height: 44px;
   display: flex;
   align-items: center;
 }
@@ -903,7 +908,7 @@ mark {
 .websiteLink,
 .item-text--small,
 .item-text--smallWarning,
-.textSmallLight {
+.text--small-light {
   font-size: 0.8rem;
   color: var(--ion-color-primary-shade);
   text-overflow: ellipsis;
@@ -915,21 +920,8 @@ mark {
   color: var(--ion-color-warning);
 }
 
-.textSmallLight {
-  color: var(--ion-text-over-background);
-  opacity: 0.6;
-  line-height: 1.1rem;
-  margin-top: 4px;
-}
-
 .websiteLink:hover {
   color: var(--ion-color-primary-tint);
-}
-
-.textSmallGrey {
-  font-size: 0.8rem;
-  line-height: 1rem;
-  opacity: 0.5;
 }
 
 .checkMsg {
@@ -948,14 +940,44 @@ mark {
   top: 100%;
 }
 
-.check-btn {
+.button--check {
   font-size: 0.7rem;
   text-transform: none;
   min-height: 33px;
   align-self: center;
+  box-shadow: var(--ion-box-shadow);
+  color: var(--ion-color-dark);
+  border-radius: var(--ion-border-radius);
+  position: relative;
+  overflow: hidden;
+  background-color: var(--ion-color-tertiary);
+  transition: all 0.3s;
+  z-index: 1;
 }
 
-.pricing-form__check-btn {
+.button--check::before {
+  content: '';
+  width: 0;
+  height: 400%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: var(--ion-card-background);
+  transition: 0.5s ease;
+  display: block;
+  z-index: -1;
+}
+
+.button--check:hover::before {
+  width: 120%;
+}
+
+.button--check:hover {
+  color: var(--ion-text-color--button);
+}
+
+.pricing-form__button--check {
   align-self: center;
   font-size: 0.7rem;
   height: 100%;
@@ -966,7 +988,7 @@ mark {
   --color: var(--ion-text-color);
 }
 
-.pricing-form__check-btn:hover {
+.pricing-form__button--check:hover {
   --color: var(--ion-color-primary);
 }
 
@@ -1183,11 +1205,30 @@ ion-range::part(knob) {
 
 .text--bold {
   color: var(--ion-text-color);
+  font-size: 1.1rem;
   font-weight: 600;
+  padding-bottom: 0.2rem;
+  border-bottom: 3px solid var(--ion-color-primary);
+  transition: all 0.3s;
 }
 
 .text--light {
-  color: var(--ion-color-medium);
+  color: var(--ion-text-over-background);
+  opacity: 0.7;
+  transition: all 0.3s;
+}
+
+.text--small-light {
+  color: var(--ion-text-over-background);
+  opacity: 0.7;
+  line-height: 1.5;
+  margin: 0.6rem 0 0.2rem 0;
+}
+
+.text--small-grey {
+  font-size: 0.8rem;
+  line-height: 1rem;
+  opacity: 0.5;
 }
 
 .inputField {

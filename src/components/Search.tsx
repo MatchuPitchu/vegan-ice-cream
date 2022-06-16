@@ -81,12 +81,13 @@ const Search = () => {
 
   // TODO: 1) Styling wie searchbar flavor oder anders (nutze das auch bei Entdecken)
   // TODO: 2) React Hook Form implementieren
+  // TODO: 3) Bootstrap rausschmeißen
 
   return (
     <form onSubmit={onSubmit}>
       <IonItem
         lines={predictions && entdeckenSegment === 'map' ? 'none' : 'full'}
-        className='item--card-background'
+        className='item--item-background'
       >
         <IonSearchbar
           className='searchbar--flavor'
@@ -110,6 +111,7 @@ const Search = () => {
         <IonList className='py-0'>
           {predictions.map((location) => (
             <IonItem
+              className='item--small'
               key={location._id}
               button
               onClick={() => {

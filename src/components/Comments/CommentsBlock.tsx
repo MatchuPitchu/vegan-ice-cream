@@ -54,7 +54,7 @@ const CommentsBlock: VFC<Props> = ({ comment, authorIdOfComment }) => {
             </div>
           );
         })}
-        <div className='textSmallGrey mt-2'>
+        <div className='text--small-grey mt-2'>
           {`${
             comment.user_id // if false, than user account is deleted
               ? hasNameProperty(comment.user_id)

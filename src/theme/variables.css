@@ -151,6 +151,7 @@ http://ionicframework.com/docs/theming/ */
 
   --ion-text-color: #4a4a4a;
   --ion-text-color-rgb: 35, 48, 51;
+  --ion-text-color--button: #4a4a4a;
 
   --ion-border-color: #f9ce64;
 
@@ -238,6 +239,7 @@ body[color-theme='dark'] {
 
   --ion-text-color: #ffffff;
   --ion-text-color-rgb: 255, 255, 255;
+  --ion-text-color--button: #f9ce64;
 
   --ion-text-over-background: #f9ce64;
   --ion-item-background: #2e3a3d;

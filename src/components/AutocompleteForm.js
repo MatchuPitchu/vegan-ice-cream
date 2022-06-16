@@ -171,7 +171,7 @@ const AutocompleteForm = () => {
               />
             </Autocomplete>
           </IonItem>
-          <IonButton fill='solid' className='check-btn my-3' type='submit'>
+          <IonButton fill='clear' className='button--check my-3' type='submit'>
             <IonIcon className='me-1' icon={checkbox} />
             Checke deine Eingabe
           </IonButton>

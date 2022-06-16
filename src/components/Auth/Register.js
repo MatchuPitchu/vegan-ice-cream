@@ -306,7 +306,12 @@ const Register = () => {
                 Du hast eine Mail erhalten. Klicke auf den Bestätigungs-Link. Kontrolliere auch den
                 Spam-Ordner.
               </p>
-              <IonButton className='my-3 check-btn' routerLink='/home' fill='solid' color='primary'>
+              <IonButton
+                className='my-3 button--check'
+                routerLink='/home'
+                fill='clear'
+                color='primary'
+              >
                 Zurück zur Startseite
               </IonButton>
             </IonCard>

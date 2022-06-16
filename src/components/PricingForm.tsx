@@ -63,7 +63,7 @@ const PricingForm: VFC<Props> = ({ onFinishUpdatePricing }) => {
         rules={{ min: { value: 0.1, message: 'Wähle einen Preis aus' } }}
         className='pricing-form__item'
       />
-      <IonButton fill='clear' type='submit' strong={true} className='pricing-form__check-btn'>
+      <IonButton fill='clear' type='submit' strong={true} className='pricing-form__button--check'>
         <IonIcon slot='end' icon={checkmarkCircleOutline} />
         Senden
       </IonButton>
