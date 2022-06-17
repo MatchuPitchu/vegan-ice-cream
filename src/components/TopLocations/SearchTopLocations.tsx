@@ -6,10 +6,11 @@ import { appActions } from '../../store/appSlice';
 import { locationsActions } from '../../store/locationsSlice';
 // Context
 import { useThemeContext } from '../../context/ThemeContext';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useController, useForm } from 'react-hook-form';
 import Highlighter from 'react-highlight-words';
 import { IonItem, IonSearchbar, isPlatform } from '@ionic/react';
 import LoadingError from '../LoadingError';
+import { searchCircleOutline, trash } from 'ionicons/icons';
 
 interface SearchbarFormValues {
   city: string;
@@ -36,9 +37,18 @@ const SearchTopLocations: VFC<Props> = ({
   const { handleSearchTextChange, predictions, setPredictions, searchWords } =
     useAutocomplete<string>(citiesWithLocations);
 
-  const { control, handleSubmit } = useForm<SearchbarFormValues>();
+  const { control, handleSubmit } = useForm<SearchbarFormValues>({
+    defaultValues: { city: '' },
+  });
 
-  const onSubmit: SubmitHandler<SearchbarFormValues> = async ({ city }: { city: string }) => {
+  const {
+    field: { onChange, value, ref },
+  } = useController({
+    control,
+    name: 'city',
+  });
+
+  const onSubmit: SubmitHandler<SearchbarFormValues> = async ({ city }: SearchbarFormValues) => {
     dispatch(appActions.setIsLoading(true));
     const cityCapitalized = city.replace(/^(.)|\s+(.)/g, (l) => l.toUpperCase());
     setCityName(cityCapitalized);
@@ -83,33 +93,30 @@ const SearchTopLocations: VFC<Props> = ({
   };
 
   return (
-    <form className='container' onSubmit={handleSubmit(onSubmit)}>
-      <Controller
-        name='city'
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <IonSearchbar
-            className='searchbar'
-            type='search'
-            inputMode='search'
-            placeholder='Stadtname ...'
-            showCancelButton='always'
-            showClearButton='always'
-            cancel-button-text=''
-            value={value}
-            debounce={0}
-            onIonChange={({ detail: { value } }) => {
-              onChange(value);
-              setCityName(value ?? '');
-              if (noTopLocation) setNoTopLocation(false);
-              onSearchTextChanged(value ?? '');
-            }}
-          />
-        )}
+    <form className='container-content' onSubmit={handleSubmit(onSubmit)}>
+      <IonSearchbar
+        className='searchbar--flavor'
+        ref={ref}
+        type='search'
+        inputMode='search'
+        placeholder='Stadtname ...'
+        showCancelButton='never'
+        showClearButton='always'
+        clearIcon={trash}
+        searchIcon={searchCircleOutline}
+        value={value}
+        debounce={500}
+        onIonChange={({ detail: { value } }) => {
+          onChange(value);
+          setCityName(value ?? '');
+          if (noTopLocation) setNoTopLocation(false);
+          onSearchTextChanged(value ?? '');
+        }}
       />
+
       {predictions.length !== 0 && (
         <div
-          className={`py-0 d-flex flex-row flex-wrap container ${
+          className={`py-0 d-flex flex-row flex-wrap container-content ${
             isPlatform('desktop') ? '' : 'justify-content-center'
           }`}
         >

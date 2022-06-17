@@ -39,7 +39,7 @@ const ListMap = () => {
 
       {/* if searchbar is used, but not results */}
       {searchText && locationsSearchResultsList.length === 0 && (
-        <div className='container text-center'>
+        <div className='container-content--center'>
           <IonCard>
             <div className='noTopLocCard'>
               Noch keine Eisläden

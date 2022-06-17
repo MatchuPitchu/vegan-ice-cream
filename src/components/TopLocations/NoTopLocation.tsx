@@ -8,15 +8,12 @@ interface Props {
 
 const NoTopLocation: VFC<Props> = ({ cityName }) => {
   return (
-    <div className='container text-center'>
-      <IonCard>
-        <div className='noTopLocCard'>
-          Noch keine Top Eisläden mit 3+
-          <IonIcon size='small' color='primary' icon={star} />
-          <br />
-          in <span className='highlightSpan'>{cityName}</span> gefunden.
-          <br />
-        </div>
+    <div className='container-content--center'>
+      <IonCard className='noTopLocCard'>
+        Noch keine Top Eisläden mit 3+
+        <IonIcon size='small' color='primary' icon={star} />
+        <br />
+        in <span className='highlightSpan'>{cityName}</span> gefunden.
       </IonCard>
     </div>
   );

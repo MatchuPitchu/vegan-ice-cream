@@ -66,7 +66,7 @@ const ResetPassword = () => {
         />
       </IonHeader>
       <IonContent>
-        <div className='container mt-3'>
+        <div className='container-content mt-3'>
           {!success ? (
             <IonCard className='text-center'>
               <form onSubmit={handleSubmit(onSubmit)}>

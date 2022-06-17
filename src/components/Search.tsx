@@ -9,7 +9,7 @@ import { searchActions } from '../store/searchSlice';
 // Context
 import { Context } from '../context/Context';
 import Highlighter from 'react-highlight-words';
-import { IonItem, IonList, IonPopover, IonSearchbar } from '@ionic/react';
+import { IonItem, IonList, IonSearchbar } from '@ionic/react';
 import { searchCircleOutline, trash } from 'ionicons/icons';
 import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables-and-functions';
 import { useAutocomplete } from '../hooks/useAutocomplete';
@@ -87,7 +87,7 @@ const Search = () => {
     <form onSubmit={onSubmit}>
       <IonItem
         lines={predictions && entdeckenSegment === 'map' ? 'none' : 'full'}
-        className='item--item-background'
+        className='item--card-background'
       >
         <IonSearchbar
           className='searchbar--flavor'

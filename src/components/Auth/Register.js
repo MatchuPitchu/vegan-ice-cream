@@ -136,7 +136,7 @@ const Register = () => {
       </IonHeader>
       <IonContent>
         {!endRegister ? (
-          <div className='container mt-5'>
+          <div className='container-content mt-5'>
             <form onSubmit={handleSubmit(onSubmit)}>
               <IonItem lines='none' className='mb-1'>
                 <IonLabel position='stacked' htmlFor='name'>
@@ -295,7 +295,7 @@ const Register = () => {
             <InfoTextRegister />
           </div>
         ) : (
-          <div className='container text-center'>
+          <div className='container-content--center'>
             <IonCard>
               <IonItem lines='full'>
                 <IonLabel className='text-center ion-text-wrap' color='primary'>

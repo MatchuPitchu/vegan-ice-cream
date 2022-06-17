@@ -4,6 +4,7 @@ import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
 type ToggleArgument = { name: string; value: boolean };
 
 type CheckboxProps = {
+  label: string;
   onToggleClick?: (object: ToggleArgument) => void;
   disabled?: boolean;
 };
@@ -15,6 +16,7 @@ type ReactHookFormCheckboxProps<TFieldValues extends FieldValues> = CheckboxProp
 const Checkbox = <TFieldValues extends FieldValues>({
   control,
   name,
+  label,
   onToggleClick,
   disabled,
 }: ReactHookFormCheckboxProps<TFieldValues>) => {
@@ -26,19 +28,22 @@ const Checkbox = <TFieldValues extends FieldValues>({
   });
 
   return (
-    <IonToggle
-      ref={ref}
-      checked={value}
-      onIonChange={({ detail }) => {
-        onToggleClick &&
-          onToggleClick({
-            name,
-            value: detail.checked,
-          });
-        onChange(detail.checked);
-      }}
-      disabled={disabled}
-    />
+    <div className='checkbox'>
+      <label className='checkbox_label item-text--small'>{label}</label>
+      <IonToggle
+        ref={ref}
+        checked={value}
+        onIonChange={({ detail }) => {
+          onToggleClick &&
+            onToggleClick({
+              name,
+              value: detail.checked,
+            });
+          onChange(detail.checked);
+        }}
+        disabled={disabled}
+      />
+    </div>
   );
 };
 

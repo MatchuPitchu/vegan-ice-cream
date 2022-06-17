@@ -7,7 +7,7 @@ import { showActions } from '../../store/showSlice';
 import { appActions } from '../../store/appSlice';
 import { getSelectedLocation, locationsActions } from '../../store/locationsSlice';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { IonButton, IonIcon } from '@ionic/react';
+import { IonButton, IonIcon, IonItem, IonLabel } from '@ionic/react';
 import { backspaceOutline, chatboxEllipses, checkboxOutline } from 'ionicons/icons';
 import LoadingError from '../LoadingError';
 import TextareaInput from '../FormFields/TextareaInput';
@@ -133,32 +133,38 @@ const UpdateComment: VFC<Props> = ({ comment }) => {
         </div>
         <div className='mt-3'>
           <div className='commentText'>Mein Eis-Erlebnis war ...</div>
-          <div className='row mt-2'>
-            <div className='col'>
-              <div className='item-text--small mb-1'>bio</div>
-              <Checkbox name='bio' control={control} onToggleClick={handleChangeToggleGroup} />
-            </div>
-            <div className='col'>
-              <div className='item-text--small mb-1'>vegan</div>
-              <Checkbox name='vegan' control={control} onToggleClick={handleChangeToggleGroup} />
-            </div>
-            <div className='col'>
-              <div className='item-text--small mb-1'>laktosefrei</div>
-              <Checkbox
-                name='lactose_free'
-                control={control}
-                onToggleClick={handleChangeToggleGroup}
-              />
-            </div>
-            <div className='col'>
-              <div className='item-text--small mb-1'>weiß nicht</div>
-              <Checkbox
-                name='not_specified'
-                control={control}
-                onToggleClick={handleChangeToggleGroup}
-              />
-            </div>
-          </div>
+          <IonItem lines='inset'>
+            <Checkbox
+              name='bio'
+              label='bio'
+              control={control}
+              onToggleClick={handleChangeToggleGroup}
+            />
+          </IonItem>
+          <IonItem lines='inset'>
+            <Checkbox
+              name='vegan'
+              label='vegan'
+              control={control}
+              onToggleClick={handleChangeToggleGroup}
+            />
+          </IonItem>
+          <IonItem lines='inset'>
+            <Checkbox
+              name='lactose_free'
+              label='laktosefrei'
+              control={control}
+              onToggleClick={handleChangeToggleGroup}
+            />
+          </IonItem>
+          <IonItem lines='none'>
+            <Checkbox
+              name='not_specified'
+              label='weiß nicht'
+              control={control}
+              onToggleClick={handleChangeToggleGroup}
+            />
+          </IonItem>
         </div>
         <div className='d-flex justify-content-center mt-1'>
           <IonButton className='button--check' type='submit' fill='clear'>

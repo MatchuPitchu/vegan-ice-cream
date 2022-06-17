@@ -16,7 +16,7 @@ const Login = () => {
         />
       </IonHeader>
       <IonContent>
-        <div className='container text-center'>
+        <div className='container-content--center'>
           <IonCard>
             <IonItem lines='full'>
               <IonLabel className='text-center ion-text-wrap' color='primary'>

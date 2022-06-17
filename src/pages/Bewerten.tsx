@@ -248,7 +248,7 @@ const Bewerten = () => {
   const handleScrollIntoView = () => flavorRef?.current?.scrollIntoView({ behavior: 'smooth' });
 
   const successSection = (
-    <div className='container text-center'>
+    <div className='container-content--center'>
       <IonCard>
         <IonCardContent>
           <IonCardTitle>Danke für deine Bewertung</IonCardTitle>
@@ -291,8 +291,11 @@ const Bewerten = () => {
         {success && successSection}
 
         {!success && (
-          <div className='container mt-3'>
-            <IonItem lines='none' className='item--small item-text--small mb-1'>
+          <section className='container-content mt-3'>
+            <IonItem
+              lines='none'
+              className='item--small item-text--small item--card-background mb-1'
+            >
               <IonLabel className='ion-text-wrap'>Bewerte 1 Eissorte</IonLabel>
               <IonIcon
                 className='info-icon'
@@ -316,7 +319,7 @@ const Bewerten = () => {
               kannst du auch weitere Bewertungen abgeben.
             </IonPopover>
 
-            <IonItem lines='none' className='item--small item--item-background'>
+            <IonItem lines='none' className='item--small item--card-background'>
               <IonLabel position='stacked'>
                 Eisladen:{' '}
                 <span className={`${selectedLocation?.name ? 'text--bold' : 'text--light'}`}>
@@ -355,12 +358,20 @@ const Bewerten = () => {
               <SearchFlavors />
 
               <IonItem lines='inset' className='item--card-background'>
-                <IonLabel position='stacked'>Sorbet • Fruchteis</IonLabel>
-                <Checkbox name='type_fruit' control={control} disabled={!!flavor?.name} />
+                <Checkbox
+                  name='type_fruit'
+                  label='Sorbet • Fruchteis'
+                  control={control}
+                  disabled={!!flavor?.name}
+                />
               </IonItem>
               <IonItem lines='inset' className='item--card-background'>
-                <IonLabel position='stacked'>Cremeeis • Milcheis • Pflanzenmilcheis</IonLabel>
-                <Checkbox name='type_cream' control={control} disabled={!!flavor?.name} />
+                <Checkbox
+                  name='type_cream'
+                  label='Creme • Milch • Pflanzendrink-Eis'
+                  control={control}
+                  disabled={!!flavor?.name}
+                />
               </IonItem>
               <IonItem lines='none' className='item--small item--card-background'>
                 <IonLabel ref={flavorRef} className='mb-1' position='stacked'>
@@ -398,7 +409,7 @@ const Bewerten = () => {
                 )}
               </div>
 
-              <IonItem lines='none' className='mb-1'>
+              <IonItem lines='none' className='item--card-background mb-1'>
                 <IonLabel position='stacked'>Kommentar</IonLabel>
                 <div className='ion-text-wrap text--small-light'>
                   ... Geschmack, Konsistenz, Waffel, Preis-Leistung, Zusatzleistungen wie vegane
@@ -411,7 +422,7 @@ const Bewerten = () => {
                 />
               </IonItem>
 
-              <IonItem lines='none' className='rating--bewerten-page mb-1'>
+              <IonItem lines='none' className='rating--bewerten-page item--card-background mb-1'>
                 <IonLabel position='stacked'>Eis-Erlebnis</IonLabel>
                 <div className='ion-text-wrap text--small-light'>
                   ... gewählte Eiskugel, Waffel, dein Eindruck vom Eisladen ...
@@ -425,45 +436,45 @@ const Bewerten = () => {
               </IonItem>
 
               {/* NEU CHECKEN MIT ERROR HANDLUNG UND BACKEND -> SOLL ALS ERGÄNZUNG ZU COMMENT GESPEICHERT WERDEN, NICHT IN FLAVOR */}
-              <IonItem lines='none' className='mb-1'>
-                <IonLabel position='stacked'>Mein Eis war ...</IonLabel>
-                <div className='row'>
-                  <div className='col'>
-                    <IonLabel position='stacked'>bio</IonLabel>
-                    <Checkbox
-                      name='bio'
-                      control={control}
-                      onToggleClick={handleChangeToggleGroup}
-                    />
-                  </div>
-                  <div className='col'>
-                    <IonLabel position='stacked'>vegan</IonLabel>
-                    <Checkbox
-                      name='vegan'
-                      control={control}
-                      onToggleClick={handleChangeToggleGroup}
-                    />
-                  </div>
-                  <div className='col'>
-                    <IonLabel position='stacked'>laktosefrei</IonLabel>
-                    <Checkbox
-                      name='lactose_free'
-                      control={control}
-                      onToggleClick={handleChangeToggleGroup}
-                    />
-                  </div>
-                  <div className='col'>
-                    <IonLabel position='stacked'>weiß nicht</IonLabel>
-                    <Checkbox
-                      name='not_specified'
-                      control={control}
-                      onToggleClick={handleChangeToggleGroup}
-                    />
-                  </div>
-                </div>
+              <IonItem lines='none' className='item--small item--card-background'>
+                <IonLabel className='mb-1' position='stacked'>
+                  Mein Eis war ...
+                </IonLabel>
+              </IonItem>
+              <IonItem lines='inset' className='item--card-background'>
+                <Checkbox
+                  name='bio'
+                  label='bio'
+                  control={control}
+                  onToggleClick={handleChangeToggleGroup}
+                />
+              </IonItem>
+              <IonItem lines='inset' className='item--card-background'>
+                <Checkbox
+                  name='vegan'
+                  label='vegan'
+                  control={control}
+                  onToggleClick={handleChangeToggleGroup}
+                />
+              </IonItem>
+              <IonItem lines='inset' className='item--card-background'>
+                <Checkbox
+                  name='lactose_free'
+                  label='laktosefrei'
+                  control={control}
+                  onToggleClick={handleChangeToggleGroup}
+                />
+              </IonItem>
+              <IonItem lines='none' className='item--card-background mb-1'>
+                <Checkbox
+                  name='not_specified'
+                  label='weiß nicht'
+                  control={control}
+                  onToggleClick={handleChangeToggleGroup}
+                />
               </IonItem>
 
-              <IonItem lines='none' className='rating--bewerten-page'>
+              <IonItem lines='none' className='rating--bewerten-page item--card-background mb-1'>
                 <IonLabel position='stacked'>Veganes Angebot Eisladen</IonLabel>
                 <div className='ion-text-wrap text--small-light'>
                   ... viele vegane Sorten, vegane Waffeln, vegane Sahne, vegane Sauce ...
@@ -476,7 +487,7 @@ const Bewerten = () => {
                 />
               </IonItem>
 
-              <IonItem lines='none' className='my-1'>
+              <IonItem lines='none' className='item--card-background mb-1'>
                 <IonLabel position='stacked'>Datum</IonLabel>
                 <DatePicker name='date' control={control} />
               </IonItem>
@@ -486,7 +497,7 @@ const Bewerten = () => {
                 Bewertung abgeben
               </IonButton>
             </form>
-          </div>
+          </section>
         )}
 
         <LoadingError />

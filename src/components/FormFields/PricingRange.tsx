@@ -26,7 +26,7 @@ const PricingRange = <TFieldValues extends FieldValues>({
   });
 
   return (
-    <IonItem className={`${className} mb-1`} lines='none'>
+    <IonItem className={`${className} item--card-background mb-1`} lines='none'>
       <IonLabel position='stacked' className='pb-1'>
         Preis Eiskugel
       </IonLabel>

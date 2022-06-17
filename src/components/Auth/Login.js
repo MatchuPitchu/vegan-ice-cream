@@ -77,7 +77,7 @@ const Login = () => {
         />
       </IonHeader>
       <IonContent>
-        <div className='container mt-3'>
+        <div className='container-content mt-3'>
           <form onSubmit={handleSubmit(onSubmit)}>
             <IonItem lines='none' className='mb-1'>
               <IonLabel position='floating' htmlFor='email'>

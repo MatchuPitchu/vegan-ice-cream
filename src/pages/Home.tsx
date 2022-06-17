@@ -1,11 +1,9 @@
-import { useContext, useState, useEffect, useRef, VFC } from 'react';
+import { useState, useEffect, useRef, VFC } from 'react';
 import type { PopoverState } from '../types/types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { locationsActions } from '../store/locationsSlice';
-import { appActions } from '../store/appSlice';
 // Context
-import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import {
   IonButton,
