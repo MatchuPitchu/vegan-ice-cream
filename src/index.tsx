@@ -21,7 +21,7 @@ ReactDOM.render(
         <AppStateProvider>
           <IonReactRouter>
             <App />
-            <ServiceWorkerWrapper />
+            {/* <ServiceWorkerWrapper /> */}
           </IonReactRouter>
         </AppStateProvider>
       </ThemeContextProvider>
