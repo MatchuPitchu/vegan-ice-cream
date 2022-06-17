@@ -13,9 +13,9 @@ const LocInfoHeader: VFC<Props> = ({ location }) => {
 
   if (!location) return null;
 
-  const href = location.location_url.includes('http')
-    ? location.location_url
-    : `//${location.location_url}`;
+  const href = location?.location_url.includes('http')
+    ? location?.location_url
+    : `//${location?.location_url}`;
 
   return (
     <IonItem lines='full'>
@@ -30,10 +30,10 @@ const LocInfoHeader: VFC<Props> = ({ location }) => {
         <p className='mb-1'>
           {location?.address?.zipcode} {location?.address?.city}
         </p>
-        {location.location_url && (
+        {location?.location_url && (
           <p>
             <a className='websiteLink' href={href} target='_blank' rel='noopener noreferrer'>
-              {location.location_url}
+              {location?.location_url}
             </a>
           </p>
         )}
