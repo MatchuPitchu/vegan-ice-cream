@@ -1,8 +1,11 @@
+import { useEffect } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 // Redux Store
+import store from './store';
 import { useAppSelector } from './store/hooks';
 import { useGetAdditionalInfosFromUserQuery } from './store/api/user-api-slice';
-import { useGetAllCitiesWithLocationsQuery } from './store/api/locations-api-slice';
+import { authApi } from './store/api/auth-api-slice';
+import { locationsApi, useGetAllCitiesWithLocationsQuery } from './store/api/locations-api-slice';
 import { skipToken } from '@reduxjs/toolkit/dist/query';
 import {
   IonApp,
@@ -54,6 +57,12 @@ import './App.css';
 
 const App: React.FC = () => {
   const { user } = useAppSelector((state) => state.user);
+
+  useEffect(() => {
+    // trigger verifyUserSession and getLocations when App is started
+    store.dispatch(authApi.endpoints.verifyUserSession.initiate());
+    store.dispatch(locationsApi.endpoints.getLocations.initiate());
+  }, []);
 
   // GET Request: additional user informationen
   const {
