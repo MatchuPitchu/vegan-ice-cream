@@ -117,9 +117,9 @@ const Favoriten = () => {
         </IonCard>
 
         <IonReorderGroup disabled={reorderDeactivated} onIonItemReorder={doReorder}>
-          {user?.favorite_locations?.map((location, i) => (
+          {user?.favorite_locations?.map((location, index) => (
             <IonCard key={location._id} className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
-              <IonButton className='favOrderNum'>{i + 1}.</IonButton>
+              <IonButton className='favOrderNum'>{index + 1}.</IonButton>
 
               {!reorderDeactivated && (
                 <IonItem className='reorderItem' lines='none'>
