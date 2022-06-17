@@ -1,6 +1,8 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
+// Redux Store
+import { useAppDispatch } from '../../store/hooks';
+import { appActions } from '../../store/appSlice';
 import { Controller, useForm } from 'react-hook-form';
-import { Context } from '../../context/Context';
 import { useThemeContext } from '../../context/ThemeContext';
 import {
   IonContent,
@@ -13,12 +15,12 @@ import {
   IonIcon,
   IonCard,
 } from '@ionic/react';
-import showError from '../showError';
+import Error from '../Error';
 import { refreshCircle } from 'ionicons/icons';
 import LoadingError from '../LoadingError';
 
 const ResetPassword = () => {
-  const { setError } = useContext(Context);
+  const dispatch = useAppDispatch();
   const { isDarkTheme } = useThemeContext();
 
   const [success, setSuccess] = useState(false);
@@ -42,8 +44,8 @@ const ResetPassword = () => {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/reset-password`, options);
       const { message } = await res.json();
       if (!message) {
-        setError('Prüfe, ob du deine richtige Mailadresse eingetippt hast.');
-        setTimeout(() => setError(null), 5000);
+        dispatch(appActions.setError('Prüfe, ob du deine richtige Mailadresse eingetippt hast.'));
+        setTimeout(() => dispatch(appActions.resetError()), 5000);
       } else {
         setSuccess(true);
       }
@@ -64,7 +66,7 @@ const ResetPassword = () => {
         />
       </IonHeader>
       <IonContent>
-        <div className='container mt-3'>
+        <div className='container-content mt-3'>
           {!success ? (
             <IonCard className='text-center'>
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -86,7 +88,7 @@ const ResetPassword = () => {
                     rules={{ required: true }}
                   />
                 </IonItem>
-                {showError('email', errors)}
+                {Error('email', errors)}
 
                 <IonButton className='my-3 mx-3 confirm-btn' type='submit'>
                   <IonIcon slot='end' className='pe-1' icon={refreshCircle} />

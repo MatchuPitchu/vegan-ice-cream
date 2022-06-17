@@ -1,4 +1,7 @@
 import { useContext } from 'react';
+// Redux Store
+import { useAppSelector } from '../store/hooks';
+// Context
 import { Context } from '../context/Context';
 // import spinner
 import { css } from '@emotion/core';
@@ -15,14 +18,16 @@ const override = css`
 `;
 
 const Spinner = () => {
-  const { isAuth, activateMessage } = useContext(Context);
+  const { isAuth } = useAppSelector((state) => state.user);
 
-  if (activateMessage === 'Aktivierung des Mail-Accounts erfolgreich')
+  const { activateMsg } = useContext(Context);
+
+  if (activateMsg === 'Aktivierung des Mail-Accounts erfolgreich')
     return (
       <div className='d-flex flex-column align-items-center'>
         <RingLoader color='var(--ion-color-primary)' css={override} size={50} />
         <h3 style={{ fontSize: '1.2em' }} className='display-3'>
-          {activateMessage}
+          {activateMsg}
         </h3>
         <IonButton routerLink='/login' fill='solid' className='disabled-btn my-3'>
           <IonLabel>Login</IonLabel>
@@ -35,7 +40,7 @@ const Spinner = () => {
     <div className='d-flex flex-column align-items-center text-center'>
       <RingLoader color='var(--ion-color-primary)' css={override} size={50} />
       <h3 style={{ fontSize: '1.2em' }} className='display-3'>
-        {isAuth ? 'Loading ...' : 'Nur für eingeloggte User sichtbar'}
+        {isAuth ? 'isLoading ...' : 'Nur für eingeloggte User sichtbar'}
       </h3>
       {!isAuth ? (
         <>

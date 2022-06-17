@@ -16,14 +16,14 @@ const Login = () => {
         />
       </IonHeader>
       <IonContent>
-        <div className='container text-center'>
+        <div className='container-content--center'>
           <IonCard>
             <IonItem lines='full'>
               <IonLabel className='text-center ion-text-wrap' color='primary'>
                 Logout erfolgreich
               </IonLabel>
             </IonItem>
-            <p className='text-center itemTextSmall ion-text-wrap px-2 my-2 '>
+            <p className='text-center item-text--small ion-text-wrap px-2 my-2 '>
               Melde dich wieder an, wenn du neue Eisläden eintragen, bewerten und zu deinen
               Favoriten hinzufügen möchtest.
             </p>

@@ -1,6 +1,12 @@
-import { useContext } from 'react';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Context } from '../../context/Context';
+// Redux Store
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { appActions } from '../../store/appSlice';
+import { skipToken } from '@reduxjs/toolkit/dist/query';
+import { useLoginUserMutation } from '../../store/api/auth-api-slice';
+import { useGetAdditionalInfosFromUserQuery } from '../../store/api/user-api-slice';
+// Context
 import { useThemeContext } from '../../context/ThemeContext';
 import {
   IonContent,
@@ -13,11 +19,14 @@ import {
   IonIcon,
 } from '@ionic/react';
 import { Redirect } from 'react-router-dom';
-import showError from '../showError';
+import Error from '../Error';
 import { lockClosed, logIn, refreshCircle } from 'ionicons/icons';
 
 const Login = () => {
-  const { isAuth, setIsAuth, error, setError, setUser } = useContext(Context);
+  const dispatch = useAppDispatch();
+  const { isAuth, user } = useAppSelector((state) => state.user);
+  const { error } = useAppSelector((state) => state.app);
+
   const { isDarkTheme } = useThemeContext();
 
   const {
@@ -26,41 +35,33 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async (data) => {
-    try {
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // converts JS data into JSON string.
-        body: JSON.stringify(data),
-        credentials: 'include',
-      };
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, options);
-      const { user, token } = await res.json();
-      if (user.confirmed) {
-        const options = {
-          headers: { token },
-          credentials: 'include',
-        };
-        const res = await fetch(
-          `${process.env.REACT_APP_API_URL}/users/${user._id}/infos`,
-          options
-        );
-        const data = await res.json();
-        localStorage.setItem('token', token);
-        setUser({ ...user, ...data });
-        setIsAuth(true);
-      }
-    } catch (error) {
-      setError(
-        'Prüfe, ob du das richtige Passwort eingetippt hast oder ob du deine Mailadresse bestätigt hast.'
+  // https://redux-toolkit.js.org/rtk-query/usage/mutations
+  const [triggerLogin] = useLoginUserMutation();
+  const {
+    data: additionUserData,
+    error: errorRTKQuery,
+    isFetching,
+    isLoading,
+    isSuccess,
+    isError,
+  } = useGetAdditionalInfosFromUserQuery(user?._id ?? skipToken);
+
+  useEffect(() => {
+    let timeoutId;
+    if (isError) {
+      dispatch(
+        appActions.setError(
+          'Prüfe, ob du das richtige Passwort eingetippt hast oder ob du deine Mailadresse bestätigt hast.'
+        )
       );
-      setTimeout(() => setError(null), 5000);
-      console.log(error.message);
+      timeoutId = setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
-  };
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [isError, dispatch]);
+
+  const onSubmit = async (loginData) => await triggerLogin(loginData);
 
   if (isAuth) return <Redirect exact to='/home' />;
 
@@ -76,7 +77,7 @@ const Login = () => {
         />
       </IonHeader>
       <IonContent>
-        <div className='container mt-3'>
+        <div className='container-content mt-3'>
           <form onSubmit={handleSubmit(onSubmit)}>
             <IonItem lines='none' className='mb-1'>
               <IonLabel position='floating' htmlFor='email'>
@@ -96,7 +97,7 @@ const Login = () => {
                 rules={{ required: true }}
               />
             </IonItem>
-            {showError('email', errors)}
+            {Error('email', errors)}
 
             <IonItem lines='none' className='mb-1'>
               <IonLabel position='floating' htmlFor='password'>
@@ -116,7 +117,7 @@ const Login = () => {
                 rules={{ required: true }}
               />
             </IonItem>
-            {showError('password', errors)}
+            {Error('password', errors)}
             {error && <div className='alertMsg'>{error}</div>}
 
             <IonButton className='my-3 confirm-btn' type='submit' fill='solid' expand='block'>
@@ -128,11 +129,11 @@ const Login = () => {
               Passwort vergessen?
             </IonButton>
           </form>
-          <p className='text-center itemTextSmall ion-text-wrap'>
+          <p className='text-center item-text--small ion-text-wrap'>
             Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten
             hinzufügen.
           </p>
-          <p className='text-center itemTextSmall ion-text-wrap px-2 my-2 '>
+          <p className='text-center item-text--small ion-text-wrap px-2 my-2 '>
             Hier findest du die Datenschutzhinweise, denen du mit dem Login zustimmst
           </p>
           <p className='text-center'>

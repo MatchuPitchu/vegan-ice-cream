@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { IonInput, IonItem, IonLabel } from '@ionic/react';
-import { citiesArray } from './arrayCitiesGermany';
+import { citiesInGermany } from '../utils/citiesInGermany';
 
 const Autocomplete = () => {
   // The active selection's index
@@ -14,7 +14,7 @@ const Autocomplete = () => {
 
   const onChange = (value) => {
     // Filter our suggestions that don't contain the user's input
-    const newFilteredArr = citiesArray.filter(
+    const newFilteredArr = citiesInGermany.filter(
       (suggestion) => suggestion.toLowerCase().indexOf(value.toLowerCase()) > -1
     );
 

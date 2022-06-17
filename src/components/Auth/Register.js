@@ -1,7 +1,10 @@
-import { useContext, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { Context } from '../../context/Context';
+import { useState } from 'react';
+// Redux Store
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { appActions } from '../../store/appSlice';
+// Context
 import { useThemeContext } from '../../context/ThemeContext';
+import { Controller, useForm } from 'react-hook-form';
 import {
   IonContent,
   IonInput,
@@ -13,14 +16,16 @@ import {
   IonIcon,
   IonCard,
 } from '@ionic/react';
-import showError from '../showError';
+import Error from '../Error';
 import { logIn } from 'ionicons/icons';
-import { citiesArray } from '../arrayCitiesGermany';
+import { citiesInGermany } from '../../utils/citiesInGermany';
 import LoadingError from '../LoadingError';
 import InfoTextRegister from './InfoTextRegister';
+import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../../utils/variables-and-functions';
 
 const Register = () => {
-  const { setLoading, error, setError } = useContext(Context);
+  const dispatch = useAppDispatch();
+  const { error } = useAppSelector((state) => state.app);
   const { isDarkTheme } = useThemeContext();
 
   const {
@@ -32,13 +37,10 @@ const Register = () => {
   const [endRegister, setEndRegister] = useState(false);
 
   const onSubmit = async (data) => {
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
     try {
-      const city = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(
-          data.city
-        )}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
-      );
+      const uri = encodeURI(data.city);
+      const city = await fetch(`${GOOGLE_API_URL}${uri}${GOOGLE_API_URL_CONFIG}`);
       const { results } = await city.json();
       const home_city = {
         city: data.city,
@@ -62,17 +64,17 @@ const Register = () => {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/register`, options);
       const { error: errorMsg } = await res.json();
       if (errorMsg) {
-        setError('E-Mail ist bereits im System hinterlegt.');
-        setLoading(false);
-        return setTimeout(() => setError(''), 5000);
+        dispatch(appActions.setError('E-Mail ist bereits im System hinterlegt.'));
+        dispatch(appActions.setIsLoading(false));
+        return setTimeout(() => dispatch(appActions.resetError()), 5000);
       }
       setEndRegister(true);
     } catch (error) {
-      setError(error);
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError(error.message));
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
     reset();
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   // Autocomplete list and functionality
@@ -87,7 +89,7 @@ const Register = () => {
 
   const valueChanged = (value) => {
     // Filter our suggestions that don't contain the user's input + slice array to show only 5 cit
-    const newFilteredArr = citiesArray
+    const newFilteredArr = citiesInGermany
       .filter((suggestion) => suggestion.toLowerCase().indexOf(value.toLowerCase()) > -1)
       .slice(0, 5);
     setActiveSuggestion(0);
@@ -134,7 +136,7 @@ const Register = () => {
       </IonHeader>
       <IonContent>
         {!endRegister ? (
-          <div className='container mt-5'>
+          <div className='container-content mt-5'>
             <form onSubmit={handleSubmit(onSubmit)}>
               <IonItem lines='none' className='mb-1'>
                 <IonLabel position='stacked' htmlFor='name'>
@@ -155,7 +157,7 @@ const Register = () => {
                   rules={{ required: true }}
                 />
               </IonItem>
-              {showError('name', errors)}
+              {Error('name', errors)}
 
               <IonItem lines='none' className='mb-1'>
                 <IonLabel position='stacked' htmlFor='email'>
@@ -176,7 +178,7 @@ const Register = () => {
                   rules={{ required: true }}
                 />
               </IonItem>
-              {showError('email', errors)}
+              {Error('email', errors)}
 
               <IonItem lines='none' className='mb-1'>
                 <IonLabel position='stacked' htmlFor='password'>
@@ -204,10 +206,10 @@ const Register = () => {
                   }}
                 />
               </IonItem>
-              {showError('password', errors)}
+              {Error('password', errors)}
 
               <IonItem lines='none' className='mb-1'>
-                <IonLabel position='stacked' htmlFor='repeatPassword'>
+                <IonLabel position='stacked' htmlFor='repeatedPassword'>
                   Passwort wiederholen
                 </IonLabel>
                 <Controller
@@ -216,13 +218,13 @@ const Register = () => {
                   render={({ field: { onChange, value } }) => (
                     <IonInput
                       type='password'
-                      id='repeatPassword'
+                      id='repeatedPassword'
                       inputmode='text'
                       value={value}
                       onIonChange={(e) => onChange(e.detail.value)}
                     />
                   )}
-                  name='repeatPassword'
+                  name='repeatedPassword'
                   rules={{
                     required: true,
                     pattern: {
@@ -233,7 +235,7 @@ const Register = () => {
                   }}
                 />
               </IonItem>
-              {showError('repeatPassword', errors)}
+              {Error('repeatedPassword', errors)}
               {error && <div className='alertMsg'>{error}</div>}
 
               <IonItem lines='none' className='mb-1'>
@@ -277,7 +279,7 @@ const Register = () => {
                   rules={{ required: true }}
                 />
               </IonItem>
-              {showError('city', errors)}
+              {Error('city', errors)}
 
               <IonButton className='my-3 confirm-btn' type='submit' fill='solid' expand='block'>
                 <IonIcon className='pe-1' icon={logIn} />
@@ -285,7 +287,7 @@ const Register = () => {
               </IonButton>
             </form>
 
-            <p className='text-center itemTextSmall ion-text-wrap'>
+            <p className='text-center item-text--small ion-text-wrap'>
               Nach der Registrierung kannst du neue Eisläden eintragen, bewerten und zu deinen
               Favoriten hinzufügen.
             </p>
@@ -293,18 +295,23 @@ const Register = () => {
             <InfoTextRegister />
           </div>
         ) : (
-          <div className='container text-center'>
+          <div className='container-content--center'>
             <IonCard>
               <IonItem lines='full'>
                 <IonLabel className='text-center ion-text-wrap' color='primary'>
                   Registrierung erfolgreich
                 </IonLabel>
               </IonItem>
-              <p className='text-center itemTextSmall ion-text-wrap px-2 my-2 '>
+              <p className='text-center item-text--small ion-text-wrap px-2 my-2 '>
                 Du hast eine Mail erhalten. Klicke auf den Bestätigungs-Link. Kontrolliere auch den
                 Spam-Ordner.
               </p>
-              <IonButton className='my-3 check-btn' routerLink='/home' fill='solid' color='primary'>
+              <IonButton
+                className='my-3 button--check'
+                routerLink='/home'
+                fill='clear'
+                color='primary'
+              >
                 Zurück zur Startseite
               </IonButton>
             </IonCard>

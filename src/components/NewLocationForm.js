@@ -1,5 +1,11 @@
+// Redux Store
+import { appActions } from '../store/appSlice';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { locationsActions } from '../store/locationsSlice';
+// Context
 import { useContext } from 'react';
 import { Context } from '../context/Context';
+import { useAnimation } from '../hooks/useAnimation';
 import { Controller, useForm } from 'react-hook-form';
 import {
   IonButton,
@@ -11,36 +17,25 @@ import {
   IonModal,
 } from '@ionic/react';
 import { add, closeCircleOutline } from 'ionicons/icons';
-import showError from './showError';
+import Error from './Error';
 import LoadingError from './LoadingError';
 
 const NewLocationForm = () => {
-  const {
-    setError,
-    setLoading,
-    locations,
-    setLocations,
-    locationsMap,
-    setLocationsMap,
-    locationsList,
-    setLocationsList,
-    newLocation,
-    setNewLocation,
-    newLocModal,
-    setNewLocModal,
-    enterAnimation,
-    leaveAnimation,
-    searchViewport,
-  } = useContext(Context);
+  const dispatch = useAppDispatch();
+  const { newLocation } = useAppSelector((state) => state.locations);
+
+  const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
+
+  const { newLocModal, setNewLocModal, searchViewport } = useContext(Context);
 
   const defaultValues = {
-    name: newLocation ? newLocation.name : '',
-    street: newLocation ? newLocation.address.street : '',
-    number: newLocation ? newLocation.address.number : '',
-    zipcode: newLocation ? newLocation.address.zipcode : '',
-    city: newLocation ? newLocation.address.city : '',
-    country: newLocation ? newLocation.address.country : '',
-    location_url: newLocation.location_url ? newLocation.location_url : '',
+    name: newLocation?.name || '',
+    street: newLocation?.address.street || '',
+    number: newLocation?.address.number || '',
+    zipcode: newLocation?.address.zipcode || '',
+    city: newLocation?.address.city || '',
+    country: newLocation?.address.country || '',
+    location_url: newLocation?.location_url || '',
   };
 
   const {
@@ -50,7 +45,7 @@ const NewLocationForm = () => {
   } = useForm({ defaultValues });
 
   const onSubmit = async ({ name, street, number, zipcode, city, country, location_url }) => {
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
     try {
       const body = {
         name,
@@ -78,21 +73,19 @@ const NewLocationForm = () => {
       };
 
       const res = await fetch(`${process.env.REACT_APP_API_URL}/locations`, options);
-      const newData = await res.json();
-      setLocations([...locations, newData]);
-      setLocationsMap([...locationsMap, newData]);
-      setLocationsList([...locationsList, newData]);
-      if (!newData) {
-        setError('Fehler beim Eintragen. Bitte versuch es später nochmal.');
-        setTimeout(() => setError(null), 5000);
+      const newLocationObj = await res.json();
+      dispatch(locationsActions.addToLocations(newLocationObj));
+      if (!newLocationObj) {
+        dispatch(appActions.setError('Fehler beim Eintragen. Bitte versuch es später nochmal.'));
+        setTimeout(() => dispatch(appActions.resetError()), 5000);
       }
     } catch (error) {
-      setError(error);
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError(error.message));
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
-    setNewLocation(null);
+    dispatch(locationsActions.resetNewLocation());
     searchViewport();
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   return (
@@ -102,8 +95,8 @@ const NewLocationForm = () => {
       swipeToClose={true}
       backdropDismiss={true}
       onDidDismiss={() => setNewLocModal(false)}
-      enterAnimation={enterAnimation}
-      leaveAnimation={leaveAnimation}
+      enterAnimation={enterAnimationFromBottom}
+      leaveAnimation={leaveAnimationToBottom}
     >
       <IonItem lines='full'>
         <IonLabel>Eisladen eintragen</IonLabel>
@@ -111,7 +104,7 @@ const NewLocationForm = () => {
           fill='clear'
           onClick={() => {
             setNewLocModal(false);
-            setNewLocation(null);
+            dispatch(locationsActions.resetNewLocation());
           }}
         >
           <IonIcon icon={closeCircleOutline} />
@@ -137,7 +130,7 @@ const NewLocationForm = () => {
                 rules={{ required: true }}
               />
             </IonItem>
-            {showError('name', errors)}
+            {Error('name', errors)}
 
             <IonItem lines='none' className='mb-1'>
               <IonLabel position='floating' htmlFor='street'>
@@ -157,7 +150,7 @@ const NewLocationForm = () => {
                 rules={{ required: true }}
               />
             </IonItem>
-            {showError('street', errors)}
+            {Error('street', errors)}
 
             <IonItem lines='none' className='mb-1'>
               <IonLabel position='floating' htmlFor='number'>
@@ -181,7 +174,7 @@ const NewLocationForm = () => {
                 }}
               />
             </IonItem>
-            {showError('number', errors)}
+            {Error('number', errors)}
 
             <IonItem lines='none' className='mb-1'>
               <IonLabel position='floating' htmlFor='zipcode'>
@@ -206,7 +199,7 @@ const NewLocationForm = () => {
                 }}
               />
             </IonItem>
-            {showError('zipcode', errors)}
+            {Error('zipcode', errors)}
 
             <IonItem lines='none' className='mb-1'>
               <IonLabel position='floating' htmlFor='city'>
@@ -226,7 +219,7 @@ const NewLocationForm = () => {
                 rules={{ required: true }}
               />
             </IonItem>
-            {showError('city', errors)}
+            {Error('city', errors)}
 
             <IonItem lines='none' className='mb-1'>
               <IonLabel position='floating' htmlFor='country'>
@@ -246,7 +239,7 @@ const NewLocationForm = () => {
                 rules={{ required: true }}
               />
             </IonItem>
-            {showError('country', errors)}
+            {Error('country', errors)}
 
             <IonItem lines='none' className='mb-1'>
               <IonLabel position='stacked' htmlFor='location_url'>
@@ -266,7 +259,7 @@ const NewLocationForm = () => {
                 name='location_url'
               />
             </IonItem>
-            {showError('location_url', errors)}
+            {Error('location_url', errors)}
 
             <IonButton className='my-3 confirm-btn' type='submit' expand='block'>
               <IonIcon className='pe-1' icon={add} />

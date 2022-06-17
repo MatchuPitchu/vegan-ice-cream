@@ -1,5 +1,6 @@
-import { useContext } from 'react';
-import { Context } from '../context/Context';
+// Redux Store
+import { useAppDispatch } from '../store/hooks';
+import { showActions } from '../store/showSlice';
 import { Controller, useForm } from 'react-hook-form';
 import {
   IonButton,
@@ -15,7 +16,7 @@ import {
   IonTextarea,
 } from '@ionic/react';
 import { closeCircleOutline, mailUnread } from 'ionicons/icons';
-import showError from './showError';
+import Error from './Error';
 
 // Schema Validation via JOI is supported - siehe https://react-hook-form.com/get-started
 
@@ -28,8 +29,8 @@ const defaultValues = {
 };
 
 const Feedback = () => {
-  const { setShowFeedback } = useContext(Context);
-  // with formState I can retrieve errors obj
+  const dispatch = useAppDispatch();
+
   const {
     control,
     handleSubmit,
@@ -58,7 +59,7 @@ const Feedback = () => {
       recommend_App: data.recommend,
     });
     reset(defaultValues);
-    setShowFeedback(false);
+    dispatch(showActions.setShowFeedback(false));
   };
 
   return (
@@ -66,7 +67,11 @@ const Feedback = () => {
       <IonHeader>
         <IonItem lines='none'>
           <IonLabel color='primary'>Feedback</IonLabel>
-          <IonButton slot='end' fill='clear' onClick={() => setShowFeedback(false)}>
+          <IonButton
+            slot='end'
+            fill='clear'
+            onClick={() => dispatch(showActions.setShowFeedback(false))}
+          >
             <IonIcon icon={closeCircleOutline} />
           </IonButton>
         </IonItem>
@@ -91,7 +96,7 @@ const Feedback = () => {
               rules={{ required: true }}
             />
           </IonItem>
-          {showError('name', errors)}
+          {Error('name', errors)}
 
           <IonItem lines='none' className='mb-1'>
             <IonLabel position='stacked' htmlFor='email'>
@@ -111,7 +116,7 @@ const Feedback = () => {
               rules={{ required: true }}
             />
           </IonItem>
-          {showError('email', errors)}
+          {Error('email', errors)}
 
           <IonItem lines='none' className='mb-1'>
             <IonLabel position='stacked' htmlFor='message'>
@@ -129,7 +134,7 @@ const Feedback = () => {
               rules={{ required: true }}
             />
           </IonItem>
-          {showError('message', errors)}
+          {Error('message', errors)}
 
           <IonItem lines='none' className='mb-1'>
             <IonLabel position='stacked' className='ion-text-wrap mb-2' htmlFor='rating'>

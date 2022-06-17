@@ -1,5 +1,12 @@
-import { useContext } from 'react';
+import { useCallback, useContext, useState } from 'react';
+// Redux Store
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { mapActions } from '../store/mapSlice';
+import { appActions } from '../store/appSlice';
+import { locationsActions } from '../store/locationsSlice';
+// Context
 import { Context } from '../context/Context';
+import { useAnimation } from '../hooks/useAnimation';
 import { Autocomplete } from '@react-google-maps/api';
 import {
   IonButton,
@@ -12,168 +19,123 @@ import {
 } from '@ionic/react';
 import { checkbox, closeCircleOutline, informationCircleOutline } from 'ionicons/icons';
 import LoadingError from './LoadingError';
+import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables-and-functions';
+import { showActions } from '../store/showSlice';
 
 const AutocompleteForm = () => {
-  const {
-    setError,
-    setLoading,
-    locations,
-    setCenter,
-    setZoom,
-    autocomplete,
-    setAutocomplete,
-    autocompleteModal,
-    setAutocompleteModal,
-    searchAutocomplete,
-    setSearchAutocomplete,
-    result,
-    setResult,
-    formattedAddress,
-    setFormattedAddress,
-    setNewLocation,
-    setCheckMsgNewLoc,
-    setNewLocModal,
-    enterAnimation,
-    leaveAnimation,
-  } = useContext(Context);
+  const dispatch = useAppDispatch();
+  const { locations } = useAppSelector((state) => state.locations);
+  const { showAddNewLocationModal } = useAppSelector((state) => state.show);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    if (!result) return;
-    setLoading(true);
+  const [googleAutocomplete, setGoogleAutocomplete] = useState(null);
+  const [searchText, setSearchText] = useState('');
+  const [locationName, setLocationName] = useState('');
+  const [locationWebsite, setLocationWebsite] = useState('');
 
-    const fetchData = async () => {
-      try {
-        // fetch results are restricted to countries DE, AT, CH, LI
-        const res = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(
-            formattedAddress ? formattedAddress : searchAutocomplete
-          )}&components=country:DE|country:AT|country:CH|country:LI&key=${
-            process.env.REACT_APP_GOOGLE_MAPS_API_KEY
-          }`
-        );
-        const { results } = await res.json();
+  const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
 
-        if (result.address.number) {
-          setNewLocation({
-            ...result,
-            address: {
-              ...result.address,
-              geo: {
-                lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
-                lng: results[0].geometry.location ? results[0].geometry.location.lng : null,
-              },
-            },
-          });
-        } else {
-          let address = {};
-          results[0].address_components &&
-            results[0].address_components.forEach((e) =>
-              e.types.forEach((type) => Object.assign(address, { [type]: e.long_name }))
-            );
-          setNewLocation({
-            name: '',
-            address: {
-              street: address.route ? address.route : '',
-              number: address.street_number ? parseInt(address.street_number) : '',
-              zipcode: address.postal_code ? address.postal_code : '',
-              city: address.locality ? address.locality : '',
-              country: address.country ? address.country : '',
-              geo: {
-                lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
-                lng: results[0].geometry.location ? results[0].geometry.location.lng : null,
-              },
-            },
-            location_url: '',
-            place_id: address.place_id ? address.place_id : '',
-          });
-        }
+  const { setNewLocModal } = useContext(Context);
 
-        if (results[0].geometry.location) {
-          setCenter({
-            lat: results[0].geometry.location.lat,
-            lng: results[0].geometry.location.lng,
-          });
-          setZoom(18);
-        }
-      } catch (error) {
-        setError(
-          'Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in Deutschland eintragen.'
-        );
-        setTimeout(() => setError(null), 5000);
+  const searchForDuplicate = useCallback(
+    (geoCodingResult) => {
+      const fetchedStreet =
+        geoCodingResult.address_components[1].types[0] === 'route' &&
+        geoCodingResult.address_components[1].long_name;
+      const fetchedNumber =
+        geoCodingResult.address_components[0].types[0] === 'street_number' &&
+        geoCodingResult.address_components[0].long_name;
+      return locations.some(
+        ({ address: { street, number } }) => street === fetchedStreet && number === +fetchedNumber
+      );
+    },
+    [locations]
+  );
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    dispatch(appActions.setIsLoading(true));
+
+    try {
+      const uri = encodeURI(searchText);
+      const response = await fetch(`${GOOGLE_API_URL}${uri}${GOOGLE_API_URL_CONFIG}`);
+      const {
+        results: [geoCodingResult],
+      } = await response.json();
+
+      const isDuplicate = searchForDuplicate(geoCodingResult);
+
+      if (isDuplicate) {
+        dispatch(appActions.setError('Adresse gibt es schon'));
+        setTimeout(() => dispatch(appActions.resetError()), 5000);
       }
-    };
 
-    const duplicate = locations.find(
-      (loc) =>
-        loc.address.street === result.address.street && loc.address.number === result.address.number
-    );
-    if (duplicate) {
-      setResult(null);
-      setError('Adresse gibt es schon');
-      setTimeout(() => setError(null), 5000);
-    } else {
-      fetchData();
-      setCheckMsgNewLoc('Bestätige noch die Daten - klicke auf das grüne Icon');
-    }
-
-    setSearchAutocomplete('');
-    setLoading(false);
-    setAutocompleteModal(false);
-  };
-
-  const onPlaceChanged = () => {
-    if (autocomplete !== null) {
-      const data = autocomplete.getPlace();
-      let address = {};
-      data.address_components &&
-        data.address_components.forEach((e) =>
-          e.types.forEach((type) => Object.assign(address, { [type]: e.long_name }))
+      if (!isDuplicate) {
+        dispatch(
+          locationsActions.setNewLocation({
+            name: locationName,
+            address_components: geoCodingResult.address_components,
+            geo: geoCodingResult.geometry.location,
+            location_url: locationWebsite,
+            place_id: geoCodingResult.place_id,
+          })
         );
-      setFormattedAddress(data.formatted_address);
-      setResult({
-        name: data.name ? data.name : '',
-        address: {
-          street: address.route ? address.route : '',
-          number: address.street_number ? parseInt(address.street_number) : '',
-          zipcode: address.postal_code ? address.postal_code : '',
-          city: address.locality ? address.locality : '',
-          country: address.country ? address.country : '',
-          geo: {
-            lat: null,
-            lng: null,
-          },
-        },
-        location_url: data.website ? data.website : '',
-        place_id: data.place_id ? data.place_id : '',
-      });
-    } else {
-      setError('Autocomplete kann gerade nicht geladen werden');
-      setTimeout(() => setError(null), 5000);
+
+        if (geoCodingResult.geometry.location) {
+          dispatch(
+            mapActions.setCenter({
+              lat: geoCodingResult.geometry.location.lat,
+              lng: geoCodingResult.geometry.location.lng,
+            })
+          );
+          dispatch(mapActions.setZoom(15));
+        }
+
+        dispatch(
+          appActions.setCheckMsgNewLocation('Bestätige noch die Daten - klicke auf das grüne Icon')
+        );
+      }
+    } catch (error) {
+      dispatch(
+        appActions.setError(
+          'Ups, schief gelaufen. Versuche es nochmal. Du kannst nur Orte in D, AUT, CH und LIE eintragen.'
+        )
+      );
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
+
+    dispatch(appActions.setIsLoading(false));
+    dispatch(showActions.setShowAddNewLocationModal(false));
   };
 
-  const onAutocompleteLoad = (autocomplete) => {
-    setAutocomplete(autocomplete);
+  const handleSelectPlace = () => {
+    if (googleAutocomplete === null) return;
+    const data = googleAutocomplete.getPlace();
+
+    setSearchText(data.formatted_address);
+    // unique received data from google autocomplete: name, website
+    setLocationName(data.name || '');
+    setLocationWebsite(data.website || '');
   };
+
+  const handleAutocompleteLoad = (autocomplete) => setGoogleAutocomplete(autocomplete);
 
   return (
     <IonModal
       cssClass='newLocModal'
-      isOpen={autocompleteModal}
+      isOpen={showAddNewLocationModal}
       swipeToClose={true}
       backdropDismiss={true}
       onDidDismiss={() => setNewLocModal(false)}
-      enterAnimation={enterAnimation}
-      leaveAnimation={leaveAnimation}
+      enterAnimation={enterAnimationFromBottom}
+      leaveAnimation={leaveAnimationToBottom}
     >
       <IonItem lines='full'>
         <IonLabel>Eisladen eintragen</IonLabel>
         <IonButton
           fill='clear'
           onClick={() => {
-            setAutocompleteModal(false);
-            setNewLocation(null);
+            dispatch(locationsActions.resetNewLocation());
+            dispatch(showActions.setShowAddNewLocationModal(false));
           }}
         >
           <IonIcon icon={closeCircleOutline} />
@@ -194,24 +156,22 @@ const AutocompleteForm = () => {
             </div>
           </IonItem>
           <IonItem className='addLocForm' lines='none'>
-            {/* Restricts autocomplete to countries DE, AT, CH, LI*/}
             <Autocomplete
               className='container-autocomplete'
-              onLoad={onAutocompleteLoad}
-              onPlaceChanged={onPlaceChanged}
-              restrictions={{ country: ['de', 'at', 'ch', 'li'] }}
+              onLoad={handleAutocompleteLoad}
+              onPlaceChanged={handleSelectPlace}
+              restrictions={{ country: ['de', 'at', 'ch', 'li'] }} // Restricts autocomplete to countries DE, AT, CH, LI
               fields={['name', 'address_components', 'formatted_address', 'place_id', 'website']}
             >
               <input
                 type='text'
                 placeholder='Name, Adresse eintippen ...'
                 className='search-autocomplete'
-                // value={searchText}
-                onChange={(e) => setSearchAutocomplete(e.target.value)}
+                onChange={({ target: { value } }) => setSearchText(value)}
               />
             </Autocomplete>
           </IonItem>
-          <IonButton fill='solid' className='check-btn my-3' type='submit'>
+          <IonButton fill='clear' className='button--check my-3' type='submit'>
             <IonIcon className='me-1' icon={checkbox} />
             Checke deine Eingabe
           </IonButton>

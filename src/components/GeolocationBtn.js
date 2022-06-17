@@ -1,62 +1,73 @@
-import { useContext, useState, useEffect } from 'react';
-import { Context } from '../context/Context';
+import { useState, useEffect } from 'react';
+// Redux Store
+import { useAppDispatch } from '../store/hooks';
+import { mapActions } from '../store/mapSlice';
+import { appActions } from '../store/appSlice';
 import { IonButton, IonIcon } from '@ionic/react';
 import { close, navigateCircle, navigateCircleOutline } from 'ionicons/icons';
 import LoadingError from './LoadingError';
 
-const GeolocationBtn = () => {
-  const { setError, setLoading, position, setPosition, setCenter } = useContext(Context);
+const GeolocationBtn = ({ currentUserPosition, setCurrentUserPosition }) => {
+  const dispatch = useAppDispatch();
 
-  const [watchID, setWatchID] = useState(undefined);
+  const [watchID, setWatchID] = useState(null);
   const [centerCoord, setCenterCoord] = useState([]);
 
   useEffect(() => {
     // setCenter to user position after first click on btn
-    if (centerCoord.length) setCenter(centerCoord[0]);
-  }, [centerCoord, setCenter]);
+    if (centerCoord.length) dispatch(mapActions.setCenter(centerCoord[0]));
+  }, [centerCoord, dispatch]);
 
-  const getPosition = async () => {
-    setLoading(true);
+  const getPosition = () => {
+    dispatch(appActions.setIsLoading(true));
     try {
-      // define as var to have access below to clearWatch
-      const id = await navigator.geolocation.watchPosition(
-        (pos) => {
-          setPosition({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+      const id = navigator.geolocation.watchPosition(
+        (position) => {
+          setCurrentUserPosition({ lat: position.coords.latitude, lng: position.coords.longitude });
           // .some() tests whether at least one element in array is object and not null (because typeof item === 'object' returns also true when null)
           // first call setCenterCoord to currect position, after that, array is no longer changed
           setCenterCoord((prev) =>
             prev.some((item) => typeof item === 'object' && item !== null)
               ? prev
-              : [{ lat: pos.coords.latitude, lng: pos.coords.longitude }]
+              : [{ lat: position.coords.latitude, lng: position.coords.longitude }]
           );
         },
-        (err) => setError(err),
+        (_) => {
+          dispatch(
+            appActions.setError(
+              'Du hast keine Erlaubnis erteilt. Starte die App neu, um deine Eingabe neu zu setzen.'
+            )
+          );
+          setTimeout(() => dispatch(appActions.resetError()), 5000);
+        },
         { useSignificantChanges: true }
       );
       setWatchID(id);
     } catch (err) {
       console.log(err);
-      setError('Position kann nicht ermittelt werden. Berechtigung prüfen');
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError('Position kann nicht ermittelt werden. Berechtigung prüfen'));
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   const removeWatch = () => {
-    setPosition(undefined);
+    setCurrentUserPosition(null);
     setCenterCoord([]);
     navigator.geolocation.clearWatch(watchID);
   };
+
+  const handlePositionSearch = () => (currentUserPosition ? removeWatch() : getPosition());
 
   return (
     <>
       <IonButton
         className='where-control'
-        onClick={!position ? getPosition : removeWatch}
-        title={!position ? 'Eigenen Standort verfolgen' : 'Standortanzeige aus'}
+        onClick={handlePositionSearch}
+        title={!currentUserPosition ? 'Eigenen Standort verfolgen' : 'Standortanzeige aus'}
       >
-        <IonIcon icon={!position ? navigateCircleOutline : navigateCircle} />
-        {position && <IonIcon className='close-center-btn' size='small' icon={close} />}
+        <IonIcon icon={!currentUserPosition ? navigateCircleOutline : navigateCircle} />
+        {currentUserPosition && <IonIcon className='close-center-btn' size='small' icon={close} />}
       </IonButton>
 
       <LoadingError />

@@ -1,5 +1,8 @@
-import { useContext, useState } from 'react';
-import { Context } from '../../context/Context';
+import { useState } from 'react';
+// Redux Store
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { appActions } from '../../store/appSlice';
+// Context
 import { useThemeContext } from '../../context/ThemeContext';
 import { useParams } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
@@ -14,13 +17,15 @@ import {
   IonIcon,
   IonCard,
 } from '@ionic/react';
-import showError from '../showError';
+import Error from '../Error';
 import { logIn } from 'ionicons/icons';
 import LoadingError from '../LoadingError';
 import InfoTextRegister from './InfoTextRegister';
 
 const SetNewPassword = () => {
-  const { setLoading, error, setError } = useContext(Context);
+  const dispatch = useAppDispatch();
+  const { error } = useAppSelector((state) => state.app);
+
   const { isDarkTheme } = useThemeContext();
 
   const {
@@ -31,8 +36,8 @@ const SetNewPassword = () => {
   const { id } = useParams();
   const [endReset, setEndReset] = useState(false);
 
-  const onSubmit = async ({ email, password, repeatPassword }) => {
-    setLoading(true);
+  const onSubmit = async ({ email, password, repeatedPassword }) => {
+    dispatch(appActions.setIsLoading(true));
     try {
       const options = {
         method: 'PUT',
@@ -43,7 +48,7 @@ const SetNewPassword = () => {
           resetToken: id,
           email,
           password,
-          repeatPassword,
+          repeatedPassword,
         }),
         credentials: 'include',
       };
@@ -51,10 +56,10 @@ const SetNewPassword = () => {
       const { message } = await res.json();
       if (message) setEndReset(true);
     } catch (error) {
-      setError(error);
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError(error.message));
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   return (
@@ -70,7 +75,7 @@ const SetNewPassword = () => {
       </IonHeader>
       <IonContent>
         {!endReset ? (
-          <div className='container mt-5'>
+          <div className='container-content mt-5'>
             <form onSubmit={handleSubmit(onSubmit)}>
               <IonItem lines='none' className='mb-1'>
                 <IonLabel position='floating' htmlFor='email'>
@@ -90,7 +95,7 @@ const SetNewPassword = () => {
                   rules={{ required: true }}
                 />
               </IonItem>
-              {showError('email', errors)}
+              {Error('email', errors)}
 
               <IonItem lines='none' className='mb-1'>
                 <IonLabel position='floating' htmlFor='password'>
@@ -118,10 +123,10 @@ const SetNewPassword = () => {
                   }}
                 />
               </IonItem>
-              {showError('password', errors)}
+              {Error('password', errors)}
 
               <IonItem lines='none' className='mb-1'>
-                <IonLabel position='floating' htmlFor='repeatPassword'>
+                <IonLabel position='floating' htmlFor='repeatedPassword'>
                   Passwort wiederholen
                 </IonLabel>
                 <Controller
@@ -130,13 +135,13 @@ const SetNewPassword = () => {
                   render={({ field: { onChange, value } }) => (
                     <IonInput
                       type='password'
-                      id='repeatPassword'
+                      id='repeatedPassword'
                       inputmode='text'
                       value={value}
                       onIonChange={(e) => onChange(e.detail.value)}
                     />
                   )}
-                  name='repeatPassword'
+                  name='repeatedPassword'
                   rules={{
                     required: true,
                     pattern: {
@@ -147,7 +152,7 @@ const SetNewPassword = () => {
                   }}
                 />
               </IonItem>
-              {showError('repeatPassword', errors)}
+              {Error('repeatedPassword', errors)}
               {error && <div className='alertMsg'>{error}</div>}
 
               <IonButton className='my-3 confirm-btn' type='submit' expand='block'>
@@ -159,7 +164,7 @@ const SetNewPassword = () => {
             <InfoTextRegister />
           </div>
         ) : (
-          <div className='container text-center'>
+          <div className='container-content--center'>
             <IonCard>
               <IonItem lines='full'>
                 <IonLabel className='text-center ion-text-wrap' color='primary'>

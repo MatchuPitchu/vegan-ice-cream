@@ -2,34 +2,67 @@
   position: relative;
   border: none;
   margin: 0.4rem auto 0.4rem 0.4rem;
-  height: 27px;
-  width: 55px;
-  border-radius: var(--border-radius);
-  background-image: linear-gradient(aqua, skyblue);
+  height: 28px;
+  width: 53px;
+  border-radius: var(--ion-border-radius);
+  border: 1px solid var(--ion-border-color);
+  background-image: linear-gradient(var(--ion-background-color), var(--ion-background-color));
   cursor: pointer;
   box-shadow: var(--box-shadow);
+  overflow: hidden;
 }
 
 .switch.night {
-  background-image: linear-gradient(midnightblue, rebeccapurple);
+  background-image: linear-gradient(var(--ion-background-color), var(--ion-background-color));
 }
 
-.moon {
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  background: #fde833;
+.switch > .moon {
+  height: 12px;
+  width: 12px;
+  border-radius: var(--ion-border-radius-circle);
+  background: var(--ion-color-tertiary);
   position: absolute;
-  top: 3px;
-  left: 3px;
-  box-shadow: 0 0 10px #fde833;
+  top: 7px;
+  left: 5px;
+  box-shadow: 0px 0px 7px 5px var(--ion-color-primary);
   z-index: 10;
   transition: all 0.3s ease;
+  animation: moveInSun 1s ease-out;
+}
+
+@keyframes moveInSun {
+  0% {
+    opacity: 0;
+    transform: translate(-3rem, 3rem);
+  }
+}
+
+.switch.night > .moon {
+  height: 20px;
+  width: 20px;
+  border-radius: var(--ion-border-radius-circle);
+  position: absolute;
+  top: 3px;
+  left: 2px;
+  box-shadow: 0 0 10px var(--ion-color-tertiary);
+  z-index: 10;
+  transition: all 0.3s ease;
+  animation: moveInMoon 1s ease-out;
+}
+
+@keyframes moveInMoon {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    top: 3rem;
+    left: 3rem;
+  }
 }
 
 .moon > .crater {
   background: burlywood;
-  border-radius: 50%;
+  border-radius: var(--ion-border-radius-circle);
   position: absolute;
   opacity: 0;
   box-shadow: 0 5px 5px rgb(0, 0, 0, 0.4) inset;
@@ -64,7 +97,7 @@
 .shape {
   position: absolute;
   background: whitesmoke;
-  border-radius: 50%;
+  border-radius: var(--ion-border-radius-circle);
 }
 
 .shape.sm {

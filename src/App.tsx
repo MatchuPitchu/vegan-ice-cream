@@ -1,6 +1,9 @@
-import { useContext } from 'react';
-import { Context } from './context/Context';
 import { Redirect, Route } from 'react-router-dom';
+// Redux Store
+import { useAppSelector } from './store/hooks';
+import { useGetAdditionalInfosFromUserQuery } from './store/api/user-api-slice';
+import { useGetAllCitiesWithLocationsQuery } from './store/api/locations-api-slice';
+import { skipToken } from '@reduxjs/toolkit/dist/query';
 import {
   IonApp,
   IonIcon,
@@ -17,7 +20,6 @@ import HeaderApp from './components/HeaderApp';
 import Home from './pages/Home';
 import Entdecken from './pages/Entdecken';
 import Bewerten from './pages/Bewerten';
-import Preis from './pages/Preis';
 import Favoriten from './pages/Favoriten';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
@@ -27,6 +29,7 @@ import IosDescription from './components/IosDescription';
 import ResetPassword from './components/Auth/ResetPassword';
 import SetNewPassword from './components/Auth/SetNewPassword';
 import Datenschutz from './pages/Datenschutz';
+import NotFound from './pages/NotFound';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -50,7 +53,17 @@ import './theme/variables.css';
 import './App.css';
 
 const App: React.FC = () => {
-  const { user } = useContext(Context);
+  const { user } = useAppSelector((state) => state.user);
+
+  // GET Request: additional user informationen
+  const {
+    data: additionUserData,
+    error: errorRTKQuery1,
+    isLoading: isLoading1,
+  } = useGetAdditionalInfosFromUserQuery(user?._id ?? skipToken); // when `id` is nullish (null/undefined), query is skipped: https://redux-toolkit.js.org/rtk-query/usage-with-typescript#skipping-queries-with-typescript-using-skiptoken
+
+  // GET Request: all cities with locations
+  const { error: errorRTKQuery2, isLoading: isLoading2 } = useGetAllCitiesWithLocationsQuery();
 
   // to display notification if update available (see ServiceWorkerWrapper.js)
   // without reload of page
@@ -75,7 +88,6 @@ const App: React.FC = () => {
             <Route path='/home' component={Home} exact />
             <Route path='/entdecken' component={Entdecken} exact />
             <Route path='/bewerten' component={Bewerten} exact />
-            <Route path='/preis' component={Preis} exact />
             <Route path='/favoriten' component={Favoriten} exact />
             <Route path='/login' component={Login} exact />
             <Route path='/register' component={Register} exact />
@@ -85,6 +97,7 @@ const App: React.FC = () => {
             <Route path='/auth/reset-password/user/:id' component={SetNewPassword} exact />
             <Route path='/datenschutz' component={Datenschutz} exact />
             <Route path='/ios' component={IosDescription} exact />
+            <Route component={NotFound} />
           </IonRouterOutlet>
           <IonTabBar slot='bottom'>
             <IonTabButton tab='home' href='/home'>

@@ -1,30 +1,27 @@
-import { useContext } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Context } from '../context/Context';
+// Redux Store
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { userActions } from '../store/userSlice';
+import { showActions } from '../store/showSlice';
+import { appActions } from '../store/appSlice';
+// Context
 import { IonInput, IonItem, IonLabel, IonButton, IonIcon } from '@ionic/react';
-import showError from './showError';
+import Error from './Error';
 import { refreshCircle } from 'ionicons/icons';
 import LoadingError from './LoadingError';
+import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables-and-functions';
 
 const ProfilUpdate = () => {
-  const {
-    error,
-    setError,
-    setLoading,
-    user,
-    setUser,
-    setShowProfil,
-    setShowUpdateProfil,
-    setSuccessMsg,
-    logout,
-  } = useContext(Context);
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.user);
+  const { error } = useAppSelector((state) => state.app);
 
   const defaultValues = {
     name: '',
     email: '',
     city: '',
     newPassword: '',
-    repeatPassword: '',
+    repeatedPassword: '',
     password: '',
   };
 
@@ -36,82 +33,91 @@ const ProfilUpdate = () => {
     defaultValues,
   });
 
-  const onSubmit = async (data) => {
-    if (data.newPassword && data.newPassword !== data.repeatPassword) {
-      setError('Neues Password stimmt nicht mit Wiederholung überein.');
-      return setTimeout(() => setError(''), 5000);
+  const fetchCity = async (city) => {
+    try {
+      const uri = encodeURI(city);
+      const response = await fetch(`${GOOGLE_API_URL}${uri}${GOOGLE_API_URL_CONFIG}`);
+      const { results } = await response.json();
+      return [results?.[0]?.geometry?.location?.lat, results?.[0]?.geometry?.location?.lng];
+    } catch (err) {
+      dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal.'));
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
+    }
+  };
+
+  const onSubmit = async ({ name, email, city, newPassword, repeatedPassword, password }) => {
+    if (!password) return;
+    if (newPassword && newPassword !== repeatedPassword) {
+      dispatch(appActions.setError('Neues Password stimmt nicht mit Wiederholung überein.'));
+      return setTimeout(() => dispatch(appActions.setError('')), 5000);
     }
 
-    setLoading(true);
+    dispatch(appActions.setIsLoading(true));
 
     try {
-      const token = localStorage.getItem('token');
-      let body = {};
-      if (!data.password) return setLoading(false);
-      else body.password = data.password;
-      if (data.name && data.name !== user.name) body.name = data.name;
-      if (data.email && data.email !== user.email) body.email = data.email;
-      if (data.city && data.city !== user.home_city.city) {
-        try {
-          const city = await fetch(
-            `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(
-              data.city
-            )}&region=de&components=country:DE&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
-          );
-          const { results } = await city.json();
-          if (data.city !== undefined)
-            body.home_city = {
-              city: data.city,
-              geo: {
-                lat: results[0].geometry.location ? results[0].geometry.location.lat : null,
-                lng: results[0].geometry.location ? results[0].geometry.location.lng : null,
-              },
-            };
-        } catch (error) {
-          console.log(error);
-          setError('Da ist etwas schief gelaufen. Versuche es später nochmal.');
-          return setTimeout(() => setError(null), 5000);
-        }
+      let body = {
+        password,
+      };
+      if (name && name !== user.name) body.name = name;
+      if (email && email !== user.email) body.email = email;
+      if (city === '') {
+        body.home_city = {
+          city: '',
+          geo: {
+            lat: 52.524,
+            lng: 13.41,
+          },
+        };
       }
-      if (data.newPassword) body.newPassword = data.newPassword;
-      if (data.repeatPassword) body.repeatPassword = data.repeatPassword;
+      if (city && city !== user.home_city.city) {
+        const [lat, lng] = await fetchCity(city);
+        body.home_city = {
+          city,
+          geo: {
+            lat: lat || null,
+            lng: lng || null,
+          },
+        };
+      }
+      if (newPassword) body.newPassword = newPassword;
+      if (repeatedPassword) body.repeatedPassword = repeatedPassword;
 
       const options = {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          token,
+          token: localStorage.getItem('token'),
         },
-        // converts JS data into JSON string.
         body: JSON.stringify(body),
         credentials: 'include',
       };
       const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}`, options);
       const { success } = await res.json();
       if (success) {
-        setUser({
-          ...user,
-          name: body.name || user.name,
-          email: body.email || user.email,
-          home_city: body.home_city || user.home_city,
-        });
-        setSuccessMsg('Update erfolgreich');
-        setTimeout(() => setSuccessMsg(''), 10000);
-        setShowUpdateProfil(false);
-        if (data.email) {
-          setShowProfil(false);
-          logout();
+        dispatch(
+          userActions.updateUser({
+            name: body.name || user.name,
+            email: body.email || user.email,
+            home_city: body.home_city || user.home_city,
+          })
+        );
+        dispatch(appActions.setSuccessMsg('Update erfolgreich'));
+        setTimeout(() => dispatch(appActions.setSuccessMsg('')), 10000);
+        dispatch(showActions.setShowUpdateProfil(false));
+        if (email) {
+          dispatch(showActions.setShowProfil(false));
+          dispatch(userActions.logout());
         }
       } else {
-        setError('Du hast ein falsches Passwort eingetragen');
-        setTimeout(() => setError(null), 5000);
+        dispatch(appActions.setError('Du hast ein falsches Passwort eingetragen'));
+        setTimeout(() => dispatch(appActions.resetError()), 5000);
       }
     } catch (err) {
       console.log(err);
-      setError('Da ist etwas schief gelaufen. Versuche es später nochmal.');
-      setTimeout(() => setError(null), 5000);
+      dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal.'));
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
-    setLoading(false);
+    dispatch(appActions.setIsLoading(false));
   };
 
   return (
@@ -140,7 +146,7 @@ const ProfilUpdate = () => {
             name='name'
           />
         </IonItem>
-        {showError('name', errors)}
+        {Error('name', errors)}
 
         <IonItem lines='full'>
           <IonLabel position='stacked' htmlFor='email'>
@@ -159,7 +165,7 @@ const ProfilUpdate = () => {
             name='email'
           />
         </IonItem>
-        {showError('email', errors)}
+        {Error('email', errors)}
 
         <IonItem lines='full'>
           <IonLabel position='stacked' htmlFor='city'>
@@ -203,10 +209,10 @@ const ProfilUpdate = () => {
             }}
           />
         </IonItem>
-        {showError('newPassword', errors)}
+        {Error('newPassword', errors)}
 
         <IonItem lines='full'>
-          <IonLabel position='stacked' htmlFor='repeatPassword'>
+          <IonLabel position='stacked' htmlFor='repeatedPassword'>
             Passwort wiederholen
           </IonLabel>
           <Controller
@@ -214,13 +220,13 @@ const ProfilUpdate = () => {
             render={({ field: { onChange, value } }) => (
               <IonInput
                 type='password'
-                id='repeatPassword'
+                id='repeatedPassword'
                 inputmode='text'
                 value={value}
                 onIonChange={(e) => onChange(e.detail.value)}
               />
             )}
-            name='repeatPassword'
+            name='repeatedPassword'
             rules={{
               pattern: {
                 value: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,32}$/,
@@ -229,7 +235,7 @@ const ProfilUpdate = () => {
             }}
           />
         </IonItem>
-        {showError('repeatPassword', errors)}
+        {Error('repeatedPassword', errors)}
 
         <IonItem lines='none'>
           <IonLabel position='stacked' htmlFor='password'>
@@ -249,7 +255,7 @@ const ProfilUpdate = () => {
             rules={{ required: true }}
           />
         </IonItem>
-        {showError('password', errors)}
+        {Error('password', errors)}
         {error && <div className='alertMsg'>{error}</div>}
 
         <IonItem lines='none'>

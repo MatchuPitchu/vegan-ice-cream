@@ -1,6 +1,10 @@
-import { useContext } from 'react';
-import { Context } from '../context/Context';
+// Redux Store
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { userActions } from '../store/userSlice';
+import { showActions } from '../store/showSlice';
+// Context
 import { useThemeContext } from '../context/ThemeContext';
+import { useAnimation } from '../hooks/useAnimation';
 import { menuController } from '@ionic/core';
 import {
   IonContent,
@@ -29,20 +33,15 @@ import About from './About';
 import Profil from './Profil';
 
 const Menu: React.FC = () => {
-  const {
-    isAuth,
-    logout,
-    enterAnimationLft,
-    leaveAnimationLft,
-    showProfil,
-    setShowProfil,
-    showFeedback,
-    setShowFeedback,
-    showAbout,
-    setShowAbout,
-    successMsg,
-  } = useContext(Context);
+  const dispatch = useAppDispatch();
+  const { isAuth } = useAppSelector((state) => state.user);
+  const { showProfil, showFeedback, showAbout } = useAppSelector((state) => state.show);
+  const { successMsg } = useAppSelector((state) => state.app);
+
   const { isDarkTheme } = useThemeContext();
+  const { enterAnimationFromLeft, leaveAnimationToLeft } = useAnimation();
+
+  const handleLogout = () => dispatch(userActions.logout());
 
   return (
     <IonPage>
@@ -95,9 +94,7 @@ const Menu: React.FC = () => {
             <IonItem
               className='labelMenu'
               button
-              onClick={() => {
-                setShowProfil(true);
-              }}
+              onClick={() => dispatch(showActions.setShowProfil(true))}
               lines='full'
               detail={false}
             >
@@ -111,9 +108,9 @@ const Menu: React.FC = () => {
               isOpen={showProfil}
               swipeToClose={true}
               backdropDismiss={true}
-              onDidDismiss={() => setShowProfil(false)}
-              enterAnimation={enterAnimationLft}
-              leaveAnimation={leaveAnimationLft}
+              onDidDismiss={() => dispatch(showActions.setShowProfil(false))}
+              enterAnimation={enterAnimationFromLeft}
+              leaveAnimation={leaveAnimationToLeft}
             >
               <Profil />
             </IonModal>
@@ -122,9 +119,7 @@ const Menu: React.FC = () => {
           <IonItem
             className='labelMenu'
             button
-            onClick={() => {
-              setShowFeedback(true);
-            }}
+            onClick={() => dispatch(showActions.setShowFeedback(true))}
             lines='none'
             detail={false}
           >
@@ -137,9 +132,9 @@ const Menu: React.FC = () => {
               isOpen={showFeedback}
               swipeToClose={true}
               backdropDismiss={true}
-              onDidDismiss={() => setShowFeedback(false)}
-              enterAnimation={enterAnimationLft}
-              leaveAnimation={leaveAnimationLft}
+              onDidDismiss={() => dispatch(showActions.setShowFeedback(false))}
+              enterAnimation={enterAnimationFromLeft}
+              leaveAnimation={leaveAnimationToLeft}
             >
               <Feedback />
             </IonModal>
@@ -148,9 +143,7 @@ const Menu: React.FC = () => {
           <IonItem
             className='labelMenu'
             button
-            onClick={() => {
-              setShowAbout(true);
-            }}
+            onClick={() => dispatch(showActions.setShowAbout(true))}
             lines='none'
             detail={false}
           >
@@ -163,9 +156,9 @@ const Menu: React.FC = () => {
               isOpen={showAbout}
               swipeToClose={true}
               backdropDismiss={true}
-              onDidDismiss={() => setShowAbout(false)}
-              enterAnimation={enterAnimationLft}
-              leaveAnimation={leaveAnimationLft}
+              onDidDismiss={() => dispatch(showActions.setShowAbout(false))}
+              enterAnimation={enterAnimationFromLeft}
+              leaveAnimation={leaveAnimationToLeft}
             >
               <About />
             </IonModal>
@@ -186,7 +179,7 @@ const Menu: React.FC = () => {
           {isAuth && (
             <IonItem
               button
-              onClick={logout}
+              onClick={handleLogout}
               className='labelMenu mt-3 pe-2'
               routerLink='/logout'
               lines='none'

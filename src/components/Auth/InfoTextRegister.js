@@ -10,18 +10,18 @@ const InfoTextRegister = () => (
         </IonLabel>
       </IonItem>
       <div className='text-center px-2 my-2'>
-        <div className='itemTextSmall'>mindestens eine Ziffer [0-9]</div>
-        <div className='itemTextSmall'>mindestens einen kleinen Buchstaben [a-z]</div>
-        <div className='itemTextSmall'>mindestens einen großen Buchstaben [A-Z]</div>
-        <div className='itemTextSmall'>mindestens 6 Stellen lang, maximal 32</div>
-        <div className='itemTextSmallWarning mt-3 ion-text-wrap'>
+        <div className='item-text--small'>mindestens eine Ziffer [0-9]</div>
+        <div className='item-text--small'>mindestens einen kleinen Buchstaben [a-z]</div>
+        <div className='item-text--small'>mindestens einen großen Buchstaben [A-Z]</div>
+        <div className='item-text--small'>mindestens 6 Stellen lang, maximal 32</div>
+        <div className='item-text--smallWarning mt-3 ion-text-wrap'>
           Dein Passwort wird verschlüsselt in der Datenbank gespeichert und ist für niemanden
           einzusehen
         </div>
       </div>
     </IonCard>
     <IonCard>
-      <p className='text-center itemTextSmall ion-text-wrap px-2 my-2 '>
+      <p className='text-center item-text--small ion-text-wrap px-2 my-2 '>
         Hier findest du die Datenschutzhinweise, denen du mit der Registrierung zustimmst
       </p>
       <p className='text-center'>
