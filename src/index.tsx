@@ -7,12 +7,6 @@ import AppStateProvider from './context/Context';
 import App from './App';
 import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
 import { IonReactRouter } from '@ionic/react-router';
-import { authApi } from './store/api/auth-api-slice';
-import { locationsApi } from './store/api/locations-api-slice';
-
-// trigger verifyUserSession and getLocations when App is started
-store.dispatch(authApi.endpoints.verifyUserSession.initiate());
-store.dispatch(locationsApi.endpoints.getLocations.initiate());
 
 ReactDOM.render(
   <React.StrictMode>

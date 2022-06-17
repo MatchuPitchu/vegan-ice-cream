@@ -74,7 +74,7 @@ const Favoriten = () => {
     dispatch(appActions.setIsLoading(false));
   };
 
-  if (!user && !isAuth)
+  if (!user || !isAuth || (user.favorite_locations.length > 0 && !user.favorite_locations[0].name))
     return (
       <IonPage>
         <Spinner />
@@ -117,7 +117,7 @@ const Favoriten = () => {
         </IonCard>
 
         <IonReorderGroup disabled={reorderDeactivated} onIonItemReorder={doReorder}>
-          {user?.favorite_locations?.map((location, index) => (
+          {user.favorite_locations.map((location, index) => (
             <IonCard key={location._id} className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
               <IonButton className='favOrderNum'>{index + 1}.</IonButton>
 
