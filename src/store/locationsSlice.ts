@@ -12,7 +12,7 @@ export enum SortType {
 
 type SortDirection = 'asc' | 'desc';
 
-interface GeoCoordinates {
+export interface GeoCoordinates {
   lat: number | null;
   lng: number | null;
 }

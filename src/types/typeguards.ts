@@ -1,4 +1,4 @@
-import type { Comment, User } from './types';
+import type { Comment, IceCreamLocation, User } from './types';
 
 export const isComment = (comment: string | Comment): comment is Comment => {
   return (comment as Comment)._id !== undefined;
@@ -20,4 +20,10 @@ export const hasNameProperty = (
   objectOrString: ObjectWithIdAndNameProperty | string
 ): objectOrString is ObjectWithIdAndNameProperty => {
   return (objectOrString as ObjectWithIdAndNameProperty).name !== undefined;
+};
+
+export const isIceCreamLocations = (
+  list: IceCreamLocation[] | string[]
+): list is IceCreamLocation[] => {
+  return (list as IceCreamLocation[])[0].name !== undefined;
 };

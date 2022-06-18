@@ -1,8 +1,12 @@
-import { useContext, useState, useEffect, useCallback } from 'react';
+import { useContext, useState, useEffect, useCallback, VFC } from 'react';
+import type { PopoverState } from '../types/types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { appActions } from '../store/appSlice';
+import { appActions, EntdeckenSegment } from '../store/appSlice';
 import { mapActions } from '../store/mapSlice';
+import { getSelectedLocation, locationsActions } from '../store/locationsSlice';
+import { searchActions } from '../store/searchSlice';
+import { showActions } from '../store/showSlice';
 // Context
 import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
@@ -34,12 +38,14 @@ import ListMap from '../components/ListMap';
 import Spinner from '../components/Spinner';
 import LoadingError from '../components/LoadingError';
 import AutocompleteForm from '../components/AutocompleteForm';
-import GeolocationBtn from '../components/GeolocationBtn';
-import { getSelectedLocation, locationsActions } from '../store/locationsSlice';
-import { searchActions } from '../store/searchSlice';
-import { showActions } from '../store/showSlice';
+import GeolocationButton from '../components/GeolocationButton';
 
-const Entdecken = () => {
+interface GeoCoordinates {
+  lat: number;
+  lng: number;
+}
+
+const Entdecken: VFC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { center, zoom } = useAppSelector((state) => state.map);
@@ -50,10 +56,12 @@ const Entdecken = () => {
   const { mapStyles } = useThemeContext();
   const { setMap, setNewLocModal } = useContext(Context);
 
-  const [currentUserPosition, setCurrentUserPosition] = useState(null);
+  const [currentUserPosition, setCurrentUserPosition] = useState<GeoCoordinates | null>(null);
 
-  const [libraries] = useState(['places']);
-  const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
+  const [showPopover, setShowPopover] = useState<PopoverState>({
+    showPopover: false,
+    event: undefined,
+  });
 
   useEffect(() => {
     // if user exists with indicated home city than first center + zoom
@@ -67,7 +75,7 @@ const Entdecken = () => {
   }, [user, dispatch]);
 
   useEffect(() => {
-    if (selectedLocation) {
+    if (selectedLocation?.address.geo.lat && selectedLocation?.address.geo.lng) {
       // zoom + center when user chooses item in prediction list
       dispatch(
         mapActions.setCenter({
@@ -108,11 +116,13 @@ const Entdecken = () => {
   const onUnmount = useCallback(() => setMap(null), [setMap]);
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries,
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY ?? '',
+    libraries: ['places'],
   });
 
   const handleOpenLocationInfoModal = () => dispatch(showActions.setShowLocationInfoModal(true));
+
+  const handleSetCurrentPosition = (value: GeoCoordinates | null) => setCurrentUserPosition(value);
 
   const handleCenterMap = () => {
     // if no user position take users home city or general lat lng values + default zoom; otherwise recenter on users position
@@ -129,12 +139,29 @@ const Entdecken = () => {
     dispatch(mapActions.setZoom(12));
   };
 
-  return isLoaded ? (
+  if (!isLoaded || !locations)
+    return (
+      <IonPage>
+        <Spinner />
+      </IonPage>
+    );
+
+  const handleShowCurrentUserPosition = () => {
+    dispatch(
+      mapActions.setCenter({
+        lat: currentUserPosition!.lat,
+        lng: currentUserPosition!.lng,
+      })
+    );
+    dispatch(mapActions.zoomIn());
+  };
+
+  return (
     <IonPage>
       <div>
         <IonSegment
           onIonChange={({ detail: { value } }) => {
-            dispatch(appActions.setEntdeckenSegment(value));
+            dispatch(appActions.setEntdeckenSegment(value as EntdeckenSegment));
             dispatch(searchActions.setSearchText('')); // if segment is changed, then reset searchbar
           }}
           value={entdeckenSegment}
@@ -161,15 +188,14 @@ const Entdecken = () => {
               <IonButton
                 className='zoomIcons'
                 fill='clear'
-                // Add customs zoom control https://developers.google.com/maps/documentation/javascript/examples/control-replacement#maps_control_replacement-javascript
-                onclick={() => dispatch(mapActions.incrementZoom())}
+                onClick={() => dispatch(mapActions.incrementZoom())}
               >
                 <IonIcon icon={addCircleOutline} />
               </IonButton>
               <IonButton
                 className='zoom-control-out zoomIcons'
                 fill='clear'
-                onclick={() => dispatch(mapActions.decreaseZoom())}
+                onClick={() => dispatch(mapActions.decreaseZoom())}
               >
                 <IonIcon icon={removeCircleOutline} />
               </IonButton>
@@ -184,7 +210,7 @@ const Entdecken = () => {
                     dispatch(showActions.setShowAddNewLocationModal(true));
                   } else {
                     event.persist();
-                    setPopoverShow({ show: true, event });
+                    setShowPopover({ showPopover: true, event });
                   }
                 }}
                 title='Neue Adresse hinzufügen'
@@ -193,11 +219,10 @@ const Entdecken = () => {
                 <IonIcon slot='start' icon={add} />
               </IonButton>
               <IonPopover
-                color='primary'
                 cssClass='info-popover'
-                event={popoverShow.event}
-                isOpen={popoverShow.show}
-                onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
+                event={showPopover.event}
+                isOpen={showPopover.showPopover}
+                onDidDismiss={() => setShowPopover({ showPopover: false, event: undefined })}
               >
                 <div className='my-2'>
                   <div>Nur für eingeloggte User</div>
@@ -214,9 +239,9 @@ const Entdecken = () => {
 
               <AutocompleteForm />
 
-              <GeolocationBtn
+              <GeolocationButton
                 currentUserPosition={currentUserPosition}
-                setCurrentUserPosition={setCurrentUserPosition}
+                handleSetCurrentPosition={handleSetCurrentPosition}
               />
 
               <IonButton
@@ -231,54 +256,59 @@ const Entdecken = () => {
             <GoogleMap
               mapContainerClassName='map'
               zoom={zoom}
-              center={center}
+              center={
+                center ?? {
+                  lat: 52.524,
+                  lng: 13.41,
+                }
+              }
               options={options}
               onLoad={onMapLoad}
               onUnmount={onUnmount}
             >
               <MarkerClusterer options={clusterOptions} imageExtension='png' averageCenter>
                 {(clusterer) =>
-                  locations?.map((location) =>
+                  locations?.map((location) => {
                     // if selectedLocation exists, than normal marker at this position is null
-                    selectedLocation &&
-                    selectedLocation.address.geo.lat === location.address.geo.lat &&
-                    selectedLocation.address.geo.lng === location.address.geo.lng ? null : (
-                      <Marker
-                        key={location._id}
-                        position={{ lat: location.address.geo.lat, lng: location.address.geo.lng }}
-                        clusterer={clusterer}
-                        icon={{
-                          url: './assets/icons/ice-cream-icon-dark.svg',
-                          scaledSize:
-                            selectedLocation &&
-                            selectedLocation.address.geo.lat === location.address.geo.lat &&
-                            selectedLocation.address.geo.lng === location.address.geo.lng
-                              ? new window.google.maps.Size(0, 0)
-                              : new window.google.maps.Size(30, 30),
-                          origin: new window.google.maps.Point(0, 0),
-                          anchor: new window.google.maps.Point(15, 15),
-                        }}
-                        shape={{
-                          coords: [1, 1, 1, 28, 26, 28, 26, 1],
-                          type: 'poly',
-                        }}
-                        optimized={false}
-                        title={`${location.name}, ${location.address.street} ${location.address.number}`}
-                        cursor='pointer'
-                        onClick={() => {
-                          dispatch(locationsActions.setSelectedLocation(location._id));
-                          handleOpenLocationInfoModal();
-                          dispatch(
-                            mapActions.setCenter({
-                              lat: location.address.geo.lat,
-                              lng: location.address.geo.lng,
-                            })
-                          );
-                        }}
-                        zIndex={1}
-                      />
-                    )
-                  )
+                    if (
+                      selectedLocation &&
+                      selectedLocation.address.geo.lat === location.address.geo.lat
+                    ) {
+                      return null;
+                    } else {
+                      return (
+                        <Marker
+                          key={location._id}
+                          position={{
+                            lat: location.address.geo.lat as number,
+                            lng: location.address.geo.lng as number,
+                          }}
+                          clusterer={clusterer}
+                          icon={{
+                            url: './assets/icons/ice-cream-icon-dark.svg',
+                            scaledSize:
+                              selectedLocation &&
+                              selectedLocation.address.geo.lat === location.address.geo.lat
+                                ? new window.google.maps.Size(0, 0)
+                                : new window.google.maps.Size(30, 30),
+                            origin: new window.google.maps.Point(0, 0),
+                            anchor: new window.google.maps.Point(15, 15),
+                          }}
+                          shape={{
+                            coords: [1, 1, 1, 28, 26, 28, 26, 1],
+                            type: 'poly',
+                          }}
+                          title={`${location.name}, ${location.address.street} ${location.address.number}`}
+                          cursor='pointer'
+                          onClick={() => {
+                            dispatch(locationsActions.setSelectedLocation(location._id));
+                            handleOpenLocationInfoModal();
+                          }}
+                          zIndex={1}
+                        />
+                      );
+                    }
+                  })
                 }
               </MarkerClusterer>
 
@@ -286,8 +316,8 @@ const Entdecken = () => {
                 // Marker of ice cream location selected in searchbar
                 <Marker
                   position={{
-                    lat: selectedLocation.address.geo.lat,
-                    lng: selectedLocation.address.geo.lng,
+                    lat: selectedLocation.address.geo.lat as number,
+                    lng: selectedLocation.address.geo.lng as number,
                   }}
                   icon={{
                     url: './assets/icons/selected-ice-location.svg',
@@ -295,30 +325,24 @@ const Entdecken = () => {
                     origin: new window.google.maps.Point(0, 0),
                     anchor: new window.google.maps.Point(15, 15),
                   }}
-                  optimized={false}
                   title={`${selectedLocation.address.street} ${selectedLocation.address.number} ${selectedLocation.address.zipcode} ${selectedLocation.address.city}`}
                   onClick={handleOpenLocationInfoModal}
                   zIndex={2}
                 />
               ) : null}
 
-              {currentUserPosition && (
+              {currentUserPosition?.lat && currentUserPosition?.lng && (
                 // Current position marker of user
                 <Marker
-                  position={{ lat: currentUserPosition.lat, lng: currentUserPosition.lng }}
+                  position={{
+                    lat: currentUserPosition.lat,
+                    lng: currentUserPosition.lng,
+                  }}
                   icon={{
                     url: './assets/icons/current-position-marker.svg',
                     scaledSize: new window.google.maps.Size(50, 50),
                   }}
-                  onClick={() => {
-                    dispatch(
-                      mapActions.setCenter({
-                        lat: currentUserPosition.lat,
-                        lng: currentUserPosition.lng,
-                      })
-                    );
-                    dispatch(mapActions.zoomIn());
-                  }}
+                  onClick={handleShowCurrentUserPosition}
                   zIndex={1}
                 />
               )}
@@ -328,8 +352,8 @@ const Entdecken = () => {
                 <>
                   <Marker
                     position={{
-                      lat: newLocation.address.geo.lat,
-                      lng: newLocation.address.geo.lng,
+                      lat: newLocation.address.geo.lat as number,
+                      lng: newLocation.address.geo.lng as number,
                     }}
                     icon={{
                       url: './assets/icons/newLocation-marker.svg',
@@ -337,7 +361,6 @@ const Entdecken = () => {
                       origin: new window.google.maps.Point(0, 0),
                       anchor: new window.google.maps.Point(15, 15),
                     }}
-                    optimized={false}
                     title={`${newLocation.address.street} ${newLocation.address.number} ${newLocation.address.zipcode} ${newLocation.address.city}`}
                     cursor='pointer'
                     onClick={() => {
@@ -361,10 +384,6 @@ const Entdecken = () => {
       {entdeckenSegment === 'list' && <ListMap />}
 
       <LoadingError />
-    </IonPage>
-  ) : (
-    <IonPage>
-      <Spinner />
     </IonPage>
   );
 };
