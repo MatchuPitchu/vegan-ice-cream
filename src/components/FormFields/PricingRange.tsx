@@ -25,8 +25,9 @@ const PricingRange = <TFieldValues extends FieldValues>({
     rules,
   });
 
+  // TODO: Error message component styling
   return (
-    <IonItem className={`${className} item--card-background mb-1`} lines='none'>
+    <IonItem className={`${className} mb-1`} lines='none'>
       <IonLabel position='stacked' className='pb-1'>
         Preis Eiskugel
       </IonLabel>
@@ -53,7 +54,6 @@ const PricingRange = <TFieldValues extends FieldValues>({
         <IonIcon slot='start' size='small' icon={logoEuro} />
         <IonIcon slot='end' size='large' icon={logoEuro} />
       </IonRange>
-      {/* TODO: Error message component styling */}
       {error && <span>{error.message}</span>}
     </IonItem>
   );

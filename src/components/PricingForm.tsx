@@ -19,10 +19,6 @@ interface PricingFormValues {
   pricing: number;
 }
 
-const defaultPricingValues = {
-  pricing: 0,
-};
-
 const PricingForm: VFC<Props> = ({ onFinishUpdatePricing }) => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
@@ -33,7 +29,7 @@ const PricingForm: VFC<Props> = ({ onFinishUpdatePricing }) => {
   const [triggerUpdatePricing, result] = useUpdatePricingMutation();
 
   const { control, handleSubmit } = useForm<PricingFormValues>({
-    defaultValues: defaultPricingValues,
+    defaultValues: { pricing: 0 },
   });
 
   const onSubmit: SubmitHandler<PricingFormValues> = async ({ pricing }) => {

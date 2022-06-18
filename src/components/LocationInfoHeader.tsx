@@ -8,7 +8,7 @@ interface Props {
   location: IceCreamLocation;
 }
 
-const LocInfoHeader: VFC<Props> = ({ location }) => {
+const LocationInfoHeader: VFC<Props> = ({ location }) => {
   const { user } = useContext(Context);
 
   if (!location) return null;
@@ -43,4 +43,4 @@ const LocInfoHeader: VFC<Props> = ({ location }) => {
   );
 };
 
-export default LocInfoHeader;
+export default LocationInfoHeader;

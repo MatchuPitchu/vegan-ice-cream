@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, VFC } from 'react';
 // Redux Store
 import { useAppDispatch } from '../store/hooks';
 import { mapActions } from '../store/mapSlice';
@@ -7,15 +7,24 @@ import { IonButton, IonIcon } from '@ionic/react';
 import { close, navigateCircle, navigateCircleOutline } from 'ionicons/icons';
 import LoadingError from './LoadingError';
 
-const GeolocationBtn = ({ currentUserPosition, setCurrentUserPosition }) => {
+interface GeoCoordinates {
+  lat: number;
+  lng: number;
+}
+
+interface Props {
+  currentUserPosition: GeoCoordinates | null;
+  handleSetCurrentPosition: (value: GeoCoordinates | null) => void;
+}
+
+const GeolocationButton: VFC<Props> = ({ currentUserPosition, handleSetCurrentPosition }) => {
   const dispatch = useAppDispatch();
 
-  const [watchID, setWatchID] = useState(null);
-  const [centerCoord, setCenterCoord] = useState([]);
+  const [watchId, setWatchId] = useState<number | null>(null);
+  const [centerCoord, setCenterCoord] = useState<GeoCoordinates[]>([]);
 
   useEffect(() => {
-    // setCenter to user position after first click on btn
-    if (centerCoord.length) dispatch(mapActions.setCenter(centerCoord[0]));
+    if (centerCoord.length > 0) dispatch(mapActions.setCenter(centerCoord[0])); // center map to user position after click on button
   }, [centerCoord, dispatch]);
 
   const getPosition = () => {
@@ -23,9 +32,13 @@ const GeolocationBtn = ({ currentUserPosition, setCurrentUserPosition }) => {
     try {
       const id = navigator.geolocation.watchPosition(
         (position) => {
-          setCurrentUserPosition({ lat: position.coords.latitude, lng: position.coords.longitude });
+          handleSetCurrentPosition({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+
           // .some() tests whether at least one element in array is object and not null (because typeof item === 'object' returns also true when null)
-          // first call setCenterCoord to currect position, after that, array is no longer changed
+          // first call setCenterCoord to current position, then array is no longer changed
           setCenterCoord((prev) =>
             prev.some((item) => typeof item === 'object' && item !== null)
               ? prev
@@ -39,10 +52,9 @@ const GeolocationBtn = ({ currentUserPosition, setCurrentUserPosition }) => {
             )
           );
           setTimeout(() => dispatch(appActions.resetError()), 5000);
-        },
-        { useSignificantChanges: true }
+        }
       );
-      setWatchID(id);
+      setWatchId(id);
     } catch (err) {
       console.log(err);
       dispatch(appActions.setError('Position kann nicht ermittelt werden. Berechtigung prüfen'));
@@ -52,9 +64,9 @@ const GeolocationBtn = ({ currentUserPosition, setCurrentUserPosition }) => {
   };
 
   const removeWatch = () => {
-    setCurrentUserPosition(null);
+    handleSetCurrentPosition(null);
     setCenterCoord([]);
-    navigator.geolocation.clearWatch(watchID);
+    watchId && navigator.geolocation.clearWatch(watchId);
   };
 
   const handlePositionSearch = () => (currentUserPosition ? removeWatch() : getPosition());
@@ -75,4 +87,4 @@ const GeolocationBtn = ({ currentUserPosition, setCurrentUserPosition }) => {
   );
 };
 
-export default GeolocationBtn;
+export default GeolocationButton;

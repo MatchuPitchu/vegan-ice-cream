@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useThemeContext } from '../context/ThemeContext';
+import type { IceCreamLocation } from '../types/types';
+import { isIceCreamLocations } from '../types/typeguards';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
@@ -22,8 +24,8 @@ import Spinner from '../components/Spinner';
 import LoadingError from '../components/LoadingError';
 import Ratings from '../components/Ratings';
 import LocationInfoModal from '../components/LocationInfoModal';
-import BtnInfoRating from '../components/Comments/BtnInfoRating';
-import LocInfoHeader from '../components/LocInfoHeader';
+import ButtonInfoRating from '../components/Comments/ButtonInfoRating';
+import LocationInfoHeader from '../components/LocationInfoHeader';
 
 const Favoriten = () => {
   const dispatch = useAppDispatch();
@@ -35,13 +37,13 @@ const Favoriten = () => {
   const [reorderDeactivated, setReorderDeactivated] = useState(true);
   const [rearranged, setRearranged] = useState(false);
 
-  const doReorder = (e) => {
-    const newOrder = e.detail.complete(user.favorite_locations);
-    dispatch(userActions.updateUser({ favorite_locations: newOrder }));
-    // setUser({
-    //   ...user,
-    //   favorite_locations: newOrder,
-    // });
+  const handleRearrange = ({
+    detail: { complete },
+  }: {
+    detail: { complete: (data?: boolean | any[]) => any };
+  }) => {
+    const rearrangedLocations = complete(user?.favorite_locations);
+    dispatch(userActions.updateUser({ favorite_locations: rearrangedLocations }));
     setRearranged(true);
   };
 
@@ -50,20 +52,20 @@ const Favoriten = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const options = {
+      if (!token) return;
+      const options: RequestInit = {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           token,
         },
-        // converts JS data into JSON string.
         body: JSON.stringify({
           // extract only IDs of locations from array and save them in new array thanks to .map()
-          updated_fav_list: user.favorite_locations.map(({ _id }) => _id),
+          updated_fav_list: (user!.favorite_locations as IceCreamLocation[]).map(({ _id }) => _id),
         }),
         credentials: 'include',
       };
-      await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}/update-fav-list`, options);
+      await fetch(`${process.env.REACT_APP_API_URL}/users/${user!._id}/update-fav-list`, options);
     } catch (err) {
       console.log(err);
       dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal.'));
@@ -74,12 +76,17 @@ const Favoriten = () => {
     dispatch(appActions.setIsLoading(false));
   };
 
-  if (!user || !isAuth || (user.favorite_locations.length > 0 && !user.favorite_locations[0].name))
+  if (
+    !user ||
+    !isAuth ||
+    (user.favorite_locations.length > 0 && !isIceCreamLocations(user.favorite_locations))
+  ) {
     return (
       <IonPage>
         <Spinner />
       </IonPage>
     );
+  }
 
   return (
     <IonPage>
@@ -104,8 +111,7 @@ const Favoriten = () => {
             className={`ms-auto ${reorderDeactivated ? 'favReorderOff' : 'favReorderOn'}`}
             onClick={() => {
               setReorderDeactivated((prev) => !prev);
-              // if user rearranged fav list
-              rearranged && onSubmit();
+              rearranged && onSubmit(); // if user rearranged favorites list
             }}
           >
             <IonIcon
@@ -116,8 +122,8 @@ const Favoriten = () => {
           </IonButton>
         </IonCard>
 
-        <IonReorderGroup disabled={reorderDeactivated} onIonItemReorder={doReorder}>
-          {user.favorite_locations.map((location, index) => (
+        <IonReorderGroup disabled={reorderDeactivated} onIonItemReorder={handleRearrange}>
+          {(user.favorite_locations as IceCreamLocation[]).map((location, index) => (
             <IonCard key={location._id} className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
               <IonButton className='favOrderNum'>{index + 1}.</IonButton>
 
@@ -129,17 +135,17 @@ const Favoriten = () => {
                 </IonItem>
               )}
 
-              <LocInfoHeader location={location} />
+              <LocationInfoHeader location={location} />
 
               <div className='px-3 py-2'>
                 {location.location_rating_quality ? (
                   <>
                     <Ratings
-                      rating_vegan_offer={location.location_rating_vegan_offer}
+                      rating_vegan_offer={location.location_rating_vegan_offer as number}
                       rating_quality={location.location_rating_quality}
                       showNum={true}
                     />
-                    <BtnInfoRating location={location} />
+                    <ButtonInfoRating location={location} />
                   </>
                 ) : (
                   <IonButton

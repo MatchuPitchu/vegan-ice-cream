@@ -55,6 +55,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './theme/variables.css';
 import './App.css';
 
+// TODO: Update Ionic (auch wegen häufigem Fehler: "ChunkLoadError: Loading chunk 16 failed."")
+
 const App: React.FC = () => {
   const { user } = useAppSelector((state) => state.user);
 
