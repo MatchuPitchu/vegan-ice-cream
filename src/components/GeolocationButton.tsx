@@ -13,7 +13,7 @@ interface GeoCoordinates {
 }
 
 interface Props {
-  currentUserPosition: GeoCoordinates;
+  currentUserPosition: GeoCoordinates | null;
   handleSetCurrentPosition: (value: GeoCoordinates | null) => void;
 }
 
