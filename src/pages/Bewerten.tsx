@@ -353,7 +353,12 @@ const Bewerten = () => {
             <Search />
 
             <form className='mt-1' onSubmit={handleSubmit(onSubmit)}>
-              <PricingRange name='pricing' control={control} />
+              <PricingRange
+                className='item--card-background'
+                name='pricing'
+                control={control}
+                rules={{ min: { value: 0.1, message: 'Wähle einen Preis aus' } }}
+              />
 
               <SearchFlavors />
 

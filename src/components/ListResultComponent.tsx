@@ -6,8 +6,8 @@ import { locationsActions } from '../store/locationsSlice';
 import { IonButton, IonCard, IonIcon, isPlatform } from '@ionic/react';
 import { add } from 'ionicons/icons';
 import Ratings from './Ratings';
-import BtnInfoRating from './Comments/BtnInfoRating';
-import LocInfoHeader from './LocInfoHeader';
+import ButtonInfoRating from './Comments/ButtonInfoRating';
+import LocationInfoHeader from './LocationInfoHeader';
 
 interface Props {
   location: IceCreamLocation;
@@ -18,7 +18,7 @@ const ListResultComponent: VFC<Props> = ({ location }) => {
 
   return (
     <IonCard className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
-      <LocInfoHeader location={location} />
+      <LocationInfoHeader location={location} />
 
       <div className='px-3 py-2'>
         {location.location_rating_quality ? (
@@ -28,7 +28,7 @@ const ListResultComponent: VFC<Props> = ({ location }) => {
               rating_quality={location.location_rating_quality as number}
               showNum={true}
             />
-            <BtnInfoRating location={location} />
+            <ButtonInfoRating location={location} />
           </>
         ) : (
           <IonButton

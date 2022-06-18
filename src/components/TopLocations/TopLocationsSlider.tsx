@@ -14,7 +14,7 @@ import {
 } from '@ionic/react';
 import LocationInfoModal from '../LocationInfoModal';
 import Ratings from '../Ratings';
-import BtnInfoRating from '../Comments/BtnInfoRating';
+import ButtonInfoRating from '../Comments/ButtonInfoRating';
 import Pricing from '../Pricing';
 
 interface Props {
@@ -79,7 +79,7 @@ const TopLocationsSlider: VFC<Props> = ({ topLocationsInCity, hideTopLocations }
                       rating_quality={location.location_rating_quality as number}
                       showNum={true}
                     />
-                    <BtnInfoRating location={location} />
+                    <ButtonInfoRating location={location} />
                   </>
                 )}
               </div>

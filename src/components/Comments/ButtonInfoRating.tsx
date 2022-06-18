@@ -3,7 +3,6 @@ import type { IceCreamLocation } from '../../types/types';
 // Redux Store
 import { useAppDispatch } from '../../store/hooks';
 import { locationsActions } from '../../store/locationsSlice';
-import { appActions } from '../../store/appSlice';
 import { IonButton, IonIcon } from '@ionic/react';
 import { add, open } from 'ionicons/icons';
 import { showActions } from '../../store/showSlice';
@@ -12,7 +11,7 @@ interface Props {
   location: IceCreamLocation;
 }
 
-const BtnInfoRating: VFC<Props> = ({ location }) => {
+const ButtonInfoRating: VFC<Props> = ({ location }) => {
   const dispatch = useAppDispatch();
 
   const selectLocation = () => {
@@ -47,4 +46,4 @@ const BtnInfoRating: VFC<Props> = ({ location }) => {
   );
 };
 
-export default BtnInfoRating;
+export default ButtonInfoRating;

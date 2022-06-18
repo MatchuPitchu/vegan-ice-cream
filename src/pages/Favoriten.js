@@ -22,8 +22,8 @@ import Spinner from '../components/Spinner';
 import LoadingError from '../components/LoadingError';
 import Ratings from '../components/Ratings';
 import LocationInfoModal from '../components/LocationInfoModal';
-import BtnInfoRating from '../components/Comments/BtnInfoRating';
-import LocInfoHeader from '../components/LocInfoHeader';
+import ButtonInfoRating from '../components/Comments/ButtonInfoRating';
+import LocationInfoHeader from '../components/LocationInfoHeader';
 
 const Favoriten = () => {
   const dispatch = useAppDispatch();
@@ -129,7 +129,7 @@ const Favoriten = () => {
                 </IonItem>
               )}
 
-              <LocInfoHeader location={location} />
+              <LocationInfoHeader location={location} />
 
               <div className='px-3 py-2'>
                 {location.location_rating_quality ? (
@@ -139,7 +139,7 @@ const Favoriten = () => {
                       rating_quality={location.location_rating_quality}
                       showNum={true}
                     />
-                    <BtnInfoRating location={location} />
+                    <ButtonInfoRating location={location} />
                   </>
                 ) : (
                   <IonButton
