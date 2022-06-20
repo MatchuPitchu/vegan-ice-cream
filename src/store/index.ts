@@ -34,7 +34,12 @@ const store = configureStore({
   reducer: reducers,
   // Adding api middleware enables caching, invalidation, polling and other useful features of RTK Query
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(authApi.middleware);
+    return getDefaultMiddleware()
+      .concat(authApi.middleware)
+      .concat(userApi.middleware)
+      .concat(locationsApi.middleware)
+      .concat(commentApi.middleware)
+      .concat(flavorApi.middleware);
   },
 });
 

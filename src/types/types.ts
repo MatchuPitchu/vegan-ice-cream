@@ -1,3 +1,10 @@
+// Type for EmailJS
+declare global {
+  interface Window {
+    emailjs?: any;
+  }
+}
+
 interface Address {
   city: string;
   country: string;
