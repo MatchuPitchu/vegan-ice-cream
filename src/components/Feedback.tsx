@@ -13,8 +13,8 @@ import {
   IonPage,
 } from '@ionic/react';
 import { closeCircleOutline, mailUnread } from 'ionicons/icons';
-import Input from './FormFields/Input';
 import TextareaInput from './FormFields/TextareaInput';
+import Input from './FormFields/Input';
 import Select from './FormFields/Select';
 
 interface FeedbackForm {

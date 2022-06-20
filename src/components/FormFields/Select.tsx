@@ -32,6 +32,7 @@ const Select = <TFieldValues extends FieldValues>({
         {label}
       </IonLabel>
       <IonSelect
+        ref={ref}
         cancelText='Abbrechen'
         placeholder='Auswahl'
         value={value}
