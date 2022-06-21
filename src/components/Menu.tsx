@@ -36,7 +36,7 @@ const Menu: React.FC = () => {
   const dispatch = useAppDispatch();
   const { isAuth } = useAppSelector((state) => state.user);
   const { showProfil, showFeedback, showAbout } = useAppSelector((state) => state.show);
-  const { successMsg } = useAppSelector((state) => state.app);
+  const { successMessage: successMsg } = useAppSelector((state) => state.app);
 
   const { isDarkTheme } = useThemeContext();
   const { enterAnimationFromLeft, leaveAnimationToLeft } = useAnimation();

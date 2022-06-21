@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { IonContent, IonPage } from '@ionic/react';
 import Spinner from '../Spinner';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { appActions } from '../../store/appSlice';
 
 const ActivateUser = () => {
-  const [activateMessage, setActivateMessage] = useState('Waiting');
+  const dispatch = useAppDispatch();
+  const { activateMessage } = useAppSelector((state) => state.app);
+
   const { id } = useParams();
 
   useEffect(() => {
@@ -22,14 +26,14 @@ const ActivateUser = () => {
           options
         );
         const { message } = await res.json();
-        setActivateMessage(message);
+        dispatch(appActions.setActivateAccountMessage(message));
       } catch (error) {
         console.log(error);
       }
     };
 
     if (activateMessage === 'Waiting') activateUser();
-  }, [id, activateMessage]);
+  }, [id, activateMessage, dispatch]);
 
   return (
     <IonPage>

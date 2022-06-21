@@ -1,9 +1,6 @@
 import { Redirect, Route } from 'react-router-dom';
 // Redux Store
 import { useAppSelector } from './store/hooks';
-import { useGetAdditionalInfosFromUserQuery } from './store/api/user-api-slice';
-import { useGetAllCitiesWithLocationsQuery } from './store/api/locations-api-slice';
-import { skipToken } from '@reduxjs/toolkit/dist/query';
 import {
   IonApp,
   IonIcon,
@@ -52,20 +49,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './theme/variables.css';
 import './App.css';
 
-// TODO: Update Ionic (auch wegen häufigem Fehler: "ChunkLoadError: Loading chunk 16 failed."")
+// RTK Query
+// How to use RTK hooks: https://redux-toolkit.js.org/tutorials/rtk-query#create-an-api-service
+// NOTICE: RTK Query ensures that any component that subscribes to the same query will always use the same data.
+// TODO: überall error messages und loading state catchen und in state speichern für Anzeige Loading Spinner
 
 const App: React.FC = () => {
   const { user } = useAppSelector((state) => state.user);
-
-  // GET Request: additional user informationen
-  const {
-    data: additionUserData,
-    error: errorRTKQuery1,
-    isLoading: isLoading1,
-  } = useGetAdditionalInfosFromUserQuery(user?._id ?? skipToken); // when `id` is nullish (null/undefined), query is skipped: https://redux-toolkit.js.org/rtk-query/usage-with-typescript#skipping-queries-with-typescript-using-skiptoken
-
-  // GET Request: all cities with locations
-  const { error: errorRTKQuery2, isLoading: isLoading2 } = useGetAllCitiesWithLocationsQuery();
 
   // to display notification if update available (see ServiceWorkerWrapper.js)
   // without reload of page

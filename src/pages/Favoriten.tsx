@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useThemeContext } from '../context/ThemeContext';
 import type { IceCreamLocation } from '../types/types';
-import { isIceCreamLocations } from '../types/typeguards';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
@@ -61,7 +60,7 @@ const Favoriten = () => {
         },
         body: JSON.stringify({
           // extract only IDs of locations from array and save them in new array thanks to .map()
-          updated_fav_list: (user!.favorite_locations as IceCreamLocation[]).map(({ _id }) => _id),
+          updated_fav_list: user!.favorite_locations.map(({ _id }) => _id),
         }),
         credentials: 'include',
       };
@@ -76,11 +75,7 @@ const Favoriten = () => {
     dispatch(appActions.setIsLoading(false));
   };
 
-  if (
-    !user ||
-    !isAuth ||
-    (user.favorite_locations.length > 0 && !isIceCreamLocations(user.favorite_locations))
-  ) {
+  if (!user || !isAuth) {
     return (
       <IonPage>
         <Spinner />
@@ -123,7 +118,7 @@ const Favoriten = () => {
         </IonCard>
 
         <IonReorderGroup disabled={reorderDeactivated} onIonItemReorder={handleRearrange}>
-          {(user.favorite_locations as IceCreamLocation[]).map((location, index) => (
+          {user.favorite_locations.map((location, index) => (
             <IonCard key={location._id} className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
               <IonButton className='favOrderNum'>{index + 1}.</IonButton>
 

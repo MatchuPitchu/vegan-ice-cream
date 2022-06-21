@@ -102,7 +102,7 @@ const Home: VFC = () => {
             onClick={(event) => {
               if (user) {
                 dispatch(locationsActions.resetNewLocation());
-                dispatch(showActions.setShowAddNewLocationModal(true));
+                dispatch(showActions.setShowSearchNewLocationModal(true));
               } else {
                 event.persist();
                 setPopoverShow({ showPopover: true, event });

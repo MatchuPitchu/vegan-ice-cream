@@ -68,10 +68,6 @@ const updateFavoritesStateReducer = (
   }
 };
 
-const isLocation = (locations: IceCreamLocation[] | string[]): locations is IceCreamLocation[] => {
-  return (locations as IceCreamLocation[])[0].name !== undefined;
-};
-
 const ButtonFavoriteLocation: VFC<Props> = ({ location }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
@@ -104,7 +100,6 @@ const ButtonFavoriteLocation: VFC<Props> = ({ location }) => {
       // const favorite_locations = await res.json();
       const newFavLoc = [...user!.favorite_locations, updateFavoritesState.location];
       dispatch(userActions.updateUser({ favorite_locations: newFavLoc as IceCreamLocation[] }));
-      // setUser((prev) => ({ ...prev, favorite_locations: newFavLoc }));
       dispatchUpdateFavoritesState({
         type: Actions.FINISHED_ADD,
         payload: { willAdd: false },
@@ -141,7 +136,6 @@ const ButtonFavoriteLocation: VFC<Props> = ({ location }) => {
       );
       const favorite_locations = await res.json();
       dispatch(userActions.updateUser({ favorite_locations }));
-      // setUser((prev) => ({ ...prev, favorite_locations }));
       dispatchUpdateFavoritesState({
         type: Actions.FINISHED_REMOVE,
         payload: { willRemove: false },
@@ -156,11 +150,9 @@ const ButtonFavoriteLocation: VFC<Props> = ({ location }) => {
 
   if (!user) return null;
 
-  const findLocation =
-    isLocation(user.favorite_locations) &&
-    user.favorite_locations.find(
-      (favoriteLocation: IceCreamLocation) => favoriteLocation._id === location._id
-    );
+  const findLocation = user.favorite_locations.find(
+    (favoriteLocation: IceCreamLocation) => favoriteLocation._id === location._id
+  );
 
   return (
     <>

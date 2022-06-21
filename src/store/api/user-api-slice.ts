@@ -1,11 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Comment, Flavor, IceCreamLocation } from '../../types/types';
-
-interface ReturnTypeAdditionalInfosFromUser {
-  comments_list: Comment[];
-  favorite_locations: IceCreamLocation[];
-  favorite_flavors: Flavor[];
-}
 
 // Define a service using a base URL and expected endpoints
 export const userApi = createApi({
@@ -25,13 +18,6 @@ export const userApi = createApi({
   tagTypes: ['User'], // define tag(s) which can trigger an action
   endpoints: (builder) => {
     return {
-      getAdditionalInfosFromUser: builder.query<ReturnTypeAdditionalInfosFromUser, string>({
-        query: (user_id) => ({
-          url: `/${user_id}/infos`,
-          method: 'GET',
-          credentials: 'include',
-        }),
-      }),
       updateNumberOfNewLocations: builder.mutation<
         void,
         { user_id: string; numberOfLocations: number }
@@ -49,5 +35,4 @@ export const userApi = createApi({
   },
 });
 
-export const { useGetAdditionalInfosFromUserQuery, useUpdateNumberOfNewLocationsMutation } =
-  userApi; // automatically generated query hook
+export const { useUpdateNumberOfNewLocationsMutation } = userApi; // automatically generated query hook

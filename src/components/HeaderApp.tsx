@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import type { PopoverState } from '../types/types';
 // Redux Store
-import { useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { useUpdateNumberOfNewLocationsMutation } from '../store/api/user-api-slice';
+import { userActions } from '../store/userSlice';
 // Context
 import { useThemeContext } from '../context/ThemeContext';
 import { menuController } from '@ionic/core';
@@ -19,11 +22,33 @@ import Menu from './Menu';
 import SwitchTheme from './SwitchTheme';
 
 const HeaderApp = () => {
+  const dispatch = useAppDispatch();
   const { user, numberOfNewLocations } = useAppSelector((state) => state.user);
+  const numberOfLocations = useAppSelector((state) => state.locations.locations.length);
 
   const { isDarkTheme } = useThemeContext();
 
-  const [popoverShow, setPopoverShow] = useState({ show: false, event: undefined });
+  const [showPopover, setShowPopover] = useState<PopoverState>({
+    showPopover: false,
+    event: undefined,
+  });
+
+  const [triggerUpdateNumberOfNewLocations] = useUpdateNumberOfNewLocationsMutation();
+
+  useEffect(() => {
+    if (numberOfLocations && user) {
+      dispatch(userActions.setNumberOfNewLocations(numberOfLocations - user.num_loc_last_visit!));
+      const timer = setTimeout(
+        async () =>
+          await triggerUpdateNumberOfNewLocations({
+            user_id: user._id,
+            numberOfLocations,
+          }),
+        25000
+      );
+      return () => clearTimeout(timer);
+    }
+  }, [numberOfLocations, user, triggerUpdateNumberOfNewLocations, dispatch]);
 
   return (
     <>
@@ -37,10 +62,9 @@ const HeaderApp = () => {
             <>
               <IonIcon
                 color={`${isDarkTheme ? 'primary' : 'dark'}`}
-                button
-                onClick={(e) => {
-                  e.persist();
-                  setPopoverShow({ show: true, event: e });
+                onClick={(event) => {
+                  event.persist();
+                  setShowPopover({ showPopover: true, event });
                 }}
                 icon={storefront}
                 title='Neue Eisläden seit letztem Besuch'
@@ -50,11 +74,10 @@ const HeaderApp = () => {
               </IonBadge>
 
               <IonPopover
-                color='primary'
                 cssClass='info-popover'
-                event={popoverShow.event}
-                isOpen={popoverShow.show}
-                onDidDismiss={() => setPopoverShow({ show: false, event: undefined })}
+                event={showPopover.event}
+                isOpen={showPopover.showPopover}
+                onDidDismiss={() => setShowPopover({ showPopover: false, event: undefined })}
               >
                 Neue Eisläden seit letztem Besuch
               </IonPopover>

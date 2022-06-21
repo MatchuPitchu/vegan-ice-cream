@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, useCallback, VFC } from 'react';
+import { useState, useEffect, useCallback, VFC } from 'react';
 import type { PopoverState } from '../types/types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -8,7 +8,6 @@ import { getSelectedLocation, locationsActions } from '../store/locationsSlice';
 import { searchActions } from '../store/searchSlice';
 import { showActions } from '../store/showSlice';
 // Context
-import { Context } from '../context/Context';
 import { useThemeContext } from '../context/ThemeContext';
 import {
   IonPopover,
@@ -50,11 +49,12 @@ const Entdecken: VFC = () => {
   const { user } = useAppSelector((state) => state.user);
   const { center, zoom } = useAppSelector((state) => state.map);
   const selectedLocation = useAppSelector(getSelectedLocation);
-  const { checkMsgNewLocation, entdeckenSegment } = useAppSelector((state) => state.app);
+  const { checkMessageNewLocation: checkMsgNewLocation, entdeckenSegment } = useAppSelector(
+    (state) => state.app
+  );
   const { locations, newLocation } = useAppSelector((state) => state.locations);
 
   const { mapStyles } = useThemeContext();
-  const { setMap, setNewLocModal } = useContext(Context);
 
   const [currentUserPosition, setCurrentUserPosition] = useState<GeoCoordinates | null>(null);
 
@@ -108,12 +108,6 @@ const Entdecken: VFC = () => {
       },
     },
   };
-
-  // use useCallback with empty dependencies to avoid that setMap is re-executed on every rerendering
-  // so the hook returns (memoizes) the function instance between renderings;
-  // the map has a fixed reference in the memory (notice: read more about it)
-  const onMapLoad = useCallback((map) => setMap(map), [setMap]);
-  const onUnmount = useCallback(() => setMap(null), [setMap]);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY ?? '',
@@ -207,7 +201,7 @@ const Entdecken: VFC = () => {
                   if (user) {
                     dispatch(locationsActions.resetNewLocation());
                     dispatch(appActions.setCheckMsgNewLocation('')); // remove message in case that user adds new location but never clicks on it
-                    dispatch(showActions.setShowAddNewLocationModal(true));
+                    dispatch(showActions.setShowSearchNewLocationModal(true));
                   } else {
                     event.persist();
                     setShowPopover({ showPopover: true, event });
@@ -263,8 +257,6 @@ const Entdecken: VFC = () => {
                 }
               }
               options={options}
-              onLoad={onMapLoad}
-              onUnmount={onUnmount}
             >
               <MarkerClusterer options={clusterOptions} imageExtension='png' averageCenter>
                 {(clusterer) =>
@@ -365,7 +357,7 @@ const Entdecken: VFC = () => {
                     cursor='pointer'
                     onClick={() => {
                       dispatch(appActions.setCheckMsgNewLocation(''));
-                      setNewLocModal(true);
+                      dispatch(showActions.setShowAddNewLocationForm(true));
                     }}
                     zIndex={3}
                   />

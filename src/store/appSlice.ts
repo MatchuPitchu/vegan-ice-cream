@@ -2,20 +2,24 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type EntdeckenSegment = 'map' | 'list';
 
+export type ActivateAccount = 'Waiting' | 'Aktivierung des Mail-Accounts erfolgreich';
+
 interface AppStateSlice {
   // TODO: instead of isLoading, error etc. einfach enum nutzen mit Union Types: status: 'isLoading' | 'isError' etc.
   isLoading: boolean;
   error: string;
-  successMsg: string;
-  checkMsgNewLocation: string;
+  successMessage: string;
+  activateAccountMessage: ActivateAccount;
+  checkMessageNewLocation: string;
   entdeckenSegment: EntdeckenSegment;
 }
 
 const initialAppState: AppStateSlice = {
   isLoading: false,
   error: '',
-  successMsg: '',
-  checkMsgNewLocation: '',
+  successMessage: '',
+  activateAccountMessage: 'Waiting',
+  checkMessageNewLocation: '',
   entdeckenSegment: 'map',
 };
 
@@ -33,10 +37,13 @@ const appSlice = createSlice({
       state.error = initialAppState.error;
     },
     setSuccessMsg: (state, { payload }: PayloadAction<string>) => {
-      state.successMsg = payload;
+      state.successMessage = payload;
+    },
+    setActivateAccountMessage: (state, { payload }: PayloadAction<ActivateAccount>) => {
+      state.activateAccountMessage = payload;
     },
     setCheckMsgNewLocation: (state, { payload }: PayloadAction<string>) => {
-      state.checkMsgNewLocation = payload;
+      state.checkMessageNewLocation = payload;
     },
     setEntdeckenSegment: (state, { payload }: PayloadAction<EntdeckenSegment>) => {
       state.entdeckenSegment = payload;

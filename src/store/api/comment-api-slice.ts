@@ -55,7 +55,7 @@ export const commentApi = createApi({
             vegan: newCommentData.vegan,
             lactose_free: newCommentData.lactose_free,
             not_specified: newCommentData.not_specified,
-            date: newCommentData.date,
+            date: newCommentData.date || new Date().toISOString(),
           },
           credentials: 'include',
         }),

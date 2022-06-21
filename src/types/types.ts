@@ -62,9 +62,9 @@ export interface User {
   email: string;
   confirmed: boolean;
   home_city: Pick<Address, 'city' | 'geo'>;
-  comments_list: Comment[] | string[];
-  favorite_locations: IceCreamLocation[] | string[];
-  favorite_flavors: Flavor[] | string[];
+  comments_list: Comment[];
+  favorite_locations: IceCreamLocation[];
+  favorite_flavors: Flavor[];
   needs_reset: boolean;
   num_loc_last_visit: number | null;
   resetToken: string;

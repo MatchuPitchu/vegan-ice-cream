@@ -1,11 +1,7 @@
-import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 // Redux Store
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { appActions } from '../../store/appSlice';
-import { skipToken } from '@reduxjs/toolkit/dist/query';
+import { useAppSelector } from '../../store/hooks';
 import { useLoginUserMutation } from '../../store/api/auth-api-slice';
-import { useGetAdditionalInfosFromUserQuery } from '../../store/api/user-api-slice';
 // Context
 import { useThemeContext } from '../../context/ThemeContext';
 import {
@@ -23,9 +19,7 @@ import Error from '../Error';
 import { lockClosed, logIn, refreshCircle } from 'ionicons/icons';
 
 const Login = () => {
-  const dispatch = useAppDispatch();
-  const { isAuth, user } = useAppSelector((state) => state.user);
-  const { error } = useAppSelector((state) => state.app);
+  const { isAuth } = useAppSelector((state) => state.user);
 
   const { isDarkTheme } = useThemeContext();
 
@@ -36,30 +30,7 @@ const Login = () => {
   } = useForm();
 
   // https://redux-toolkit.js.org/rtk-query/usage/mutations
-  const [triggerLogin] = useLoginUserMutation();
-  const {
-    data: additionUserData,
-    error: errorRTKQuery,
-    isFetching,
-    isLoading,
-    isSuccess,
-    isError,
-  } = useGetAdditionalInfosFromUserQuery(user?._id ?? skipToken);
-
-  useEffect(() => {
-    let timeoutId;
-    if (isError) {
-      dispatch(
-        appActions.setError(
-          'Prüfe, ob du das richtige Passwort eingetippt hast oder ob du deine Mailadresse bestätigt hast.'
-        )
-      );
-      timeoutId = setTimeout(() => dispatch(appActions.resetError()), 5000);
-    }
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [isError, dispatch]);
+  const [triggerLogin, { error: fetchError }] = useLoginUserMutation();
 
   const onSubmit = async (loginData) => await triggerLogin(loginData);
 
@@ -118,7 +89,12 @@ const Login = () => {
               />
             </IonItem>
             {Error('password', errors)}
-            {error && <div className='alertMsg'>{error}</div>}
+            {fetchError && (
+              <div className='alertMsg'>
+                Prüfe, ob du das richtige Passwort eingetippt hast oder ob du deine Mailadresse
+                bestätigt hast.
+              </div>
+            )}
 
             <IonButton className='my-3 confirm-btn' type='submit' fill='solid' expand='block'>
               <IonIcon className='pe-1' icon={logIn} />
