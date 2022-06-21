@@ -39,7 +39,9 @@ const Select = <TFieldValues extends FieldValues>({
         onIonChange={({ detail: { value } }) => onChange(value)}
       >
         {options.map((option) => (
-          <IonSelectOption value={option.value}>{option.label}</IonSelectOption>
+          <IonSelectOption key={option.value} value={option.value}>
+            {option.label}
+          </IonSelectOption>
         ))}
       </IonSelect>
       {/* TODO: Error component styling */}

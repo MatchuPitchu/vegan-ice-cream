@@ -101,7 +101,14 @@ const ProfilUpdate = () => {
             home_city: body.home_city || user.home_city,
           })
         );
-        dispatch(appActions.setSuccessMsg('Update erfolgreich'));
+        dispatch(
+          appActions.setSuccessMsg(
+            `Update erfolgreich. ${
+              email &&
+              'Da du deine E-Mail wechselst, klicke bitte noch auf den Bestätigungs-Link in deinem Postfach. Kontrolliere auch den Spam-Ordner.'
+            }`
+          )
+        );
         setTimeout(() => dispatch(appActions.setSuccessMsg('')), 10000);
         dispatch(showActions.setShowUpdateProfil(false));
         if (email) {

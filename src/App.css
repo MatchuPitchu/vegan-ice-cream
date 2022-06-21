@@ -184,17 +184,17 @@ ion-tab-bar {
   font-size: 0.9rem;
 }
 
-.menuModal .modal-wrapper {
+.menu-modal .modal-wrapper {
   height: 100%;
   width: 100%;
 }
 
-.menuModalDesktop {
+.menu-modal--desktop {
   display: flex;
   justify-content: flex-start;
 }
 
-.menuModalDesktop .modal-wrapper {
+.menu-modal--desktop .modal-wrapper {
   height: 100%;
   width: 400px;
 }

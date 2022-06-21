@@ -39,7 +39,7 @@ const Menu: React.FC = () => {
   const { successMessage: successMsg } = useAppSelector((state) => state.app);
 
   const { isDarkTheme } = useThemeContext();
-  const { enterAnimationFromLeft, leaveAnimationToLeft } = useAnimation();
+  const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
 
   const handleLogout = () => dispatch(userActions.logout());
 
@@ -102,19 +102,18 @@ const Menu: React.FC = () => {
               <IonIcon slot='end' icon={personCircle} />
             </IonItem>
           )}
-          {showProfil && (
-            <IonModal
-              cssClass={`${isPlatform('desktop') ? 'menuModalDesktop' : 'menuModal'}`}
-              isOpen={showProfil}
-              swipeToClose={true}
-              backdropDismiss={true}
-              onDidDismiss={() => dispatch(showActions.setShowProfil(false))}
-              enterAnimation={enterAnimationFromLeft}
-              leaveAnimation={leaveAnimationToLeft}
-            >
-              <Profil />
-            </IonModal>
-          )}
+
+          <IonModal
+            cssClass={`${isPlatform('desktop') ? 'menu-modal--desktop' : 'menu-modal'}`}
+            isOpen={showProfil}
+            swipeToClose={true}
+            backdropDismiss={true}
+            onDidDismiss={() => dispatch(showActions.setShowProfil(false))}
+            enterAnimation={enterAnimationFromBottom}
+            leaveAnimation={leaveAnimationToBottom}
+          >
+            <Profil />
+          </IonModal>
 
           <IonItem
             className='labelMenu'
@@ -126,19 +125,17 @@ const Menu: React.FC = () => {
             <IonLabel>Feedback</IonLabel>
             <IonIcon slot='end' icon={pencil} />
           </IonItem>
-          {showFeedback && (
-            <IonModal
-              cssClass={`${isPlatform('desktop') ? 'menuModalDesktop' : 'menuModal'}`}
-              isOpen={showFeedback}
-              swipeToClose={true}
-              backdropDismiss={true}
-              onDidDismiss={() => dispatch(showActions.setShowFeedback(false))}
-              enterAnimation={enterAnimationFromLeft}
-              leaveAnimation={leaveAnimationToLeft}
-            >
-              <Feedback />
-            </IonModal>
-          )}
+          <IonModal
+            cssClass={`${isPlatform('desktop') ? 'menu-modal--desktop' : 'menu-modal'}`}
+            isOpen={showFeedback}
+            swipeToClose={true}
+            backdropDismiss={true}
+            onDidDismiss={() => dispatch(showActions.setShowFeedback(false))}
+            enterAnimation={enterAnimationFromBottom}
+            leaveAnimation={leaveAnimationToBottom}
+          >
+            <Feedback />
+          </IonModal>
 
           <IonItem
             className='labelMenu'
@@ -150,19 +147,18 @@ const Menu: React.FC = () => {
             <IonLabel>About</IonLabel>
             <IonIcon slot='end' icon={informationCircle} />
           </IonItem>
-          {showAbout && (
-            <IonModal
-              cssClass={`${isPlatform('desktop') ? 'menuModalDesktop' : 'menuModal'}`}
-              isOpen={showAbout}
-              swipeToClose={true}
-              backdropDismiss={true}
-              onDidDismiss={() => dispatch(showActions.setShowAbout(false))}
-              enterAnimation={enterAnimationFromLeft}
-              leaveAnimation={leaveAnimationToLeft}
-            >
-              <About />
-            </IonModal>
-          )}
+
+          <IonModal
+            cssClass={`${isPlatform('desktop') ? 'menu-modal--desktop' : 'menu-modal'}`}
+            isOpen={showAbout}
+            swipeToClose={true}
+            backdropDismiss={true}
+            onDidDismiss={() => dispatch(showActions.setShowAbout(false))}
+            enterAnimation={enterAnimationFromBottom}
+            leaveAnimation={leaveAnimationToBottom}
+          >
+            <About />
+          </IonModal>
 
           <IonItem
             className='labelMenu'
@@ -189,15 +185,7 @@ const Menu: React.FC = () => {
               <IonLabel>Logout</IonLabel>
             </IonItem>
           )}
-          {successMsg && (
-            <div className='successMsg text-center ion-padding'>
-              <div>{successMsg}</div>
-              <div>
-                Du wurdest ausgeloggt, da du deine E-Mail wechselst. Klicke auf den
-                Bestätigungs-Link in deinem Postfach. Kontrolliere auch den Spam-Ordner.
-              </div>
-            </div>
-          )}
+          {successMsg && <div className='successMsg text-center ion-padding'>{successMsg}</div>}
         </IonList>
       </IonContent>
     </IonPage>

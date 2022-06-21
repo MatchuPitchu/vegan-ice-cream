@@ -111,7 +111,7 @@ const About: VFC = () => {
 
           <IonList>
             {usedTechStack.map((item) => (
-              <IonItem>
+              <IonItem key={item.tech}>
                 <IonLabel color='primary' className='ion-text-wrap'>
                   {item.tech}
                 </IonLabel>
