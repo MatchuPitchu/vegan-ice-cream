@@ -1,13 +1,10 @@
-import { useContext, useState } from 'react';
-import type { IceCreamLocation, PopoverState } from '../types/types';
+import type { IceCreamLocation } from '../types/types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { mapActions } from '../store/mapSlice';
 import { appActions } from '../store/appSlice';
 import { locationsActions } from '../store/locationsSlice';
 import { searchActions } from '../store/searchSlice';
-// Context
-import { Context } from '../context/Context';
 import Highlighter from 'react-highlight-words';
 import { IonItem, IonList, IonSearchbar } from '@ionic/react';
 import { searchCircleOutline, trash } from 'ionicons/icons';
@@ -19,8 +16,6 @@ const Search = () => {
   const { locations } = useAppSelector((state) => state.locations);
   const { searchText } = useAppSelector((state) => state.search);
   const { entdeckenSegment } = useAppSelector((state) => state.app);
-
-  const { searchViewport } = useContext(Context);
 
   const { handleSearchTextChange, predictions, setPredictions, searchWords } =
     useAutocomplete<IceCreamLocation>(locations);
@@ -56,7 +51,6 @@ const Search = () => {
       setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
 
-    searchViewport();
     setPredictions([]);
     dispatch(locationsActions.resetLocationsSearchResults());
     dispatch(appActions.setIsLoading(false));

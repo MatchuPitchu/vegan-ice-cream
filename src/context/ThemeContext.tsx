@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext, FC } from 'react';
 import { mapDark, mapLight } from '../utils/mapStyles';
 
 interface ThemeContextInterface {
@@ -16,7 +16,7 @@ export const useThemeContext = () => {
   return context;
 };
 
-const ThemeContextProvider: React.FC = ({ children }) => {
+const ThemeContextProvider: FC = ({ children }) => {
   const [isDarkTheme, setIsDarkTheme] = useState<boolean>(false);
   const [mapStyles, setMapStyles] = useState<typeof mapDark | typeof mapLight>(mapLight);
 

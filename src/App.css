@@ -863,14 +863,14 @@ mark {
 }
 
 .map-modal,
-.newLocModal {
+.new-location-modal {
   display: flex;
   justify-content: center;
   align-items: flex-end;
 }
 
 .map-modal .modal-wrapper,
-.newLocModal .modal-wrapper {
+.new-location-modal .modal-wrapper {
   height: 100%;
   width: 100%;
 }
@@ -971,7 +971,7 @@ mark {
 .button--check::before {
   content: '';
   width: 0;
-  height: 400%;
+  height: 500%;
   position: absolute;
   top: 50%;
   left: 50%;

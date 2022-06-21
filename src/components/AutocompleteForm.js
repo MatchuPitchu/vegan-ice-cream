@@ -1,11 +1,9 @@
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useState } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { mapActions } from '../store/mapSlice';
 import { appActions } from '../store/appSlice';
 import { locationsActions } from '../store/locationsSlice';
-// Context
-import { Context } from '../context/Context';
 import { useAnimation } from '../hooks/useAnimation';
 import { Autocomplete } from '@react-google-maps/api';
 import {
@@ -25,7 +23,7 @@ import { showActions } from '../store/showSlice';
 const AutocompleteForm = () => {
   const dispatch = useAppDispatch();
   const { locations } = useAppSelector((state) => state.locations);
-  const { showAddNewLocationModal } = useAppSelector((state) => state.show);
+  const { showSearchNewLocationModal } = useAppSelector((state) => state.show);
 
   const [googleAutocomplete, setGoogleAutocomplete] = useState(null);
   const [searchText, setSearchText] = useState('');
@@ -33,8 +31,6 @@ const AutocompleteForm = () => {
   const [locationWebsite, setLocationWebsite] = useState('');
 
   const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
-
-  const { setNewLocModal } = useContext(Context);
 
   const searchForDuplicate = useCallback(
     (geoCodingResult) => {
@@ -104,7 +100,7 @@ const AutocompleteForm = () => {
     }
 
     dispatch(appActions.setIsLoading(false));
-    dispatch(showActions.setShowAddNewLocationModal(false));
+    dispatch(showActions.setShowSearchNewLocationModal(false));
   };
 
   const handleSelectPlace = () => {
@@ -121,11 +117,11 @@ const AutocompleteForm = () => {
 
   return (
     <IonModal
-      cssClass='newLocModal'
-      isOpen={showAddNewLocationModal}
+      cssClass='new-location-modal'
+      isOpen={showSearchNewLocationModal}
       swipeToClose={true}
       backdropDismiss={true}
-      onDidDismiss={() => setNewLocModal(false)}
+      onDidDismiss={() => dispatch(showActions.setShowSearchNewLocationModal(false))}
       enterAnimation={enterAnimationFromBottom}
       leaveAnimation={leaveAnimationToBottom}
     >
@@ -135,7 +131,7 @@ const AutocompleteForm = () => {
           fill='clear'
           onClick={() => {
             dispatch(locationsActions.resetNewLocation());
-            dispatch(showActions.setShowAddNewLocationModal(false));
+            dispatch(showActions.setShowSearchNewLocationModal(false));
           }}
         >
           <IonIcon icon={closeCircleOutline} />

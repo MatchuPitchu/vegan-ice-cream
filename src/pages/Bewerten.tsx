@@ -11,7 +11,6 @@ import { skipToken } from '@reduxjs/toolkit/dist/query';
 import { useGetOneLocationQuery, useUpdatePricingMutation } from '../store/api/locations-api-slice';
 import { useAddCommentMutation } from '../store/api/comment-api-slice';
 import { useAddFlavorMutation } from '../store/api/flavor-api-slice';
-import { useGetAdditionalInfosFromUserQuery } from '../store/api/user-api-slice';
 // Context
 import { useThemeContext } from '../context/ThemeContext';
 import {
@@ -48,6 +47,8 @@ import PricingRange from '../components/FormFields/PricingRange';
 import ColorPicker from '../components/FormFields/ColorPicker';
 import DatePicker from '../components/FormFields/DatePicker';
 import TextareaInput from '../components/FormFields/TextareaInput';
+import { useVerifyUserSessionQuery } from '../store/api/auth-api-slice';
+import { userActions } from '../store/userSlice';
 
 interface BewertenFormValues {
   location: string;
@@ -84,9 +85,7 @@ const Bewerten = () => {
   });
 
   const [success, setSuccess] = useState(false);
-
   const [refetchLocationId, setRefetchLocationId] = useState<string | null>(null);
-  const [refetchUserId, setRefetchUserId] = useState<string | null>(null);
 
   const [triggerUpdatePricing, result1] = useUpdatePricingMutation();
   const [triggerAddComment, result2] = useAddCommentMutation();
@@ -99,24 +98,12 @@ const Bewerten = () => {
     isSuccess: isSuccessFetchUpdatedLocation,
   } = useGetOneLocationQuery(refetchLocationId ?? skipToken);
 
-  const {
-    error: error2,
-    isLoading: isLoading2,
-    isSuccess: isSuccessFetchAddtionalUserInfo,
-  } = useGetAdditionalInfosFromUserQuery(refetchUserId ?? skipToken);
-
   useEffect(() => {
     if (isSuccessFetchUpdatedLocation && updatedLocation) {
       dispatch(locationsActions.updateSingleLocation(updatedLocation));
       setRefetchLocationId(null);
     }
   }, [isSuccessFetchUpdatedLocation, updatedLocation, dispatch]);
-
-  useEffect(() => {
-    if (isSuccessFetchAddtionalUserInfo) {
-      setRefetchUserId(null);
-    }
-  }, [isSuccessFetchAddtionalUserInfo]);
 
   const flavorRef = useRef<HTMLIonLabelElement>(null);
 
@@ -208,22 +195,19 @@ const Bewerten = () => {
         },
       };
 
-      const result = await triggerAddFlavor({
+      await triggerAddFlavor({
         comment_id: createdComment._id,
         location_id: selectedLocation._id,
         user_id: user._id,
         flavorData,
       }).unwrap();
 
-      console.log(result);
+      dispatch(
+        userActions.addFlavorToUserFavoriteFlavors({ ...flavorData, _id: String(Date.now()) })
+      );
 
       // replace data of updated loc in locations array
       setRefetchLocationId(selectedLocation._id);
-
-      // TODO: IF NEW COMMENT POST REQUEST + FLAVOR POST REQUEST FULLFILLED, THAN TRIGGER REFETCH USER DATA
-      // OLD: look at context useEffect -> if newComment is set than user data is refetched in Context
-      // dispatch(commentActions.setNewComment(createdComment));
-      setRefetchUserId(user._id);
 
       // clean values that are needed for form searchbars
       dispatch(searchActions.setSearchText(''));

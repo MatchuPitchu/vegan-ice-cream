@@ -1,8 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../types/types';
-import { authApi } from './api/auth-api-slice';
-import { userApi } from './api/user-api-slice';
+import type { Flavor, User } from '../types/types';
 import type { Comment } from '../types/types';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { authApi } from './api/auth-api-slice';
+import { commentApi } from './api/comment-api-slice';
 
 interface UserStateSlice {
   isAuth: boolean;
@@ -34,16 +34,19 @@ const userSlice = createSlice({
         ...payload,
       } as User;
     },
+    addFlavorToUserFavoriteFlavors: (state, { payload }: PayloadAction<Flavor>) => {
+      state.user!.favorite_flavors = [...state.user!.favorite_flavors, payload];
+    },
     deleteCommentFromUser: (state, { payload: commentId }: PayloadAction<string>) => {
       if (state.user) {
-        const commentsList = [...state.user.comments_list] as Comment[];
+        const commentsList = [...state.user.comments_list];
         const newUserCommentsList = commentsList.filter((item) => item._id !== commentId);
         state.user.comments_list = newUserCommentsList;
       }
     },
     updateCommentsListFromUser: (state, { payload: updatedComment }: PayloadAction<Comment>) => {
       if (!state.user) return;
-      const newCommentsList = [...state.user.comments_list] as Comment[];
+      const newCommentsList = [...state.user.comments_list];
       const updatedCommentIndex = newCommentsList.findIndex(
         (comment) => comment._id === updatedComment._id
       );
@@ -74,12 +77,9 @@ const userSlice = createSlice({
       } as User;
     });
     builder.addMatcher(
-      userApi.endpoints.getAdditionalInfosFromUser.matchFulfilled,
-      (state, { payload }) => {
-        state.user = {
-          ...state.user,
-          ...payload,
-        } as User;
+      commentApi.endpoints.addComment.matchFulfilled,
+      (state, { payload: newComment }) => {
+        state.user!.comments_list = [...state.user!.comments_list, newComment];
       }
     );
   },

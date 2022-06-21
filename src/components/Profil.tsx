@@ -32,19 +32,22 @@ import ProfilUpdate from './ProfilUpdate';
 import Spinner from './Spinner';
 import CommentsBlock from './Comments/CommentsBlock';
 import FlavorsList from './Comments/FlavorsList';
-import { hasNameProperty, isCommentsList, isString } from '../types/typeguards';
+import { hasNameProperty, isString } from '../types/typeguards';
+
+// TODO: Popover Styling
 
 const Profil: VFC = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
   const { showUpdateProfil } = useAppSelector((state) => state.show);
-  const { successMsg } = useAppSelector((state) => state.app);
+  const { successMessage: successMsg } = useAppSelector((state) => state.app);
   const { locations } = useAppSelector((state) => state.locations);
 
   const { isDarkTheme } = useThemeContext();
 
   const [showUserComments, setShowUserComments] = useState(false);
   const [showFlavors, setShowFlavors] = useState(false);
+
   const [popoverShow, setPopoverShow] = useState<PopoverState>({
     showPopover: false,
     event: undefined,
@@ -150,7 +153,6 @@ const Profil: VFC = () => {
                 </IonItem>
 
                 {showUserComments &&
-                  isCommentsList(user.comments_list) &&
                   user.comments_list.map((comment) => {
                     return (
                       <Fragment key={comment._id}>
@@ -198,9 +200,9 @@ const Profil: VFC = () => {
                   </IonPopover>
                 </IonItem>
 
-                {showFlavors && user.favorite_flavors.length ? (
+                {showFlavors && user.favorite_flavors.length > 0 && (
                   <FlavorsList flavorsList={user.favorite_flavors} />
-                ) : null}
+                )}
               </IonItemGroup>
             </IonCard>
           </div>

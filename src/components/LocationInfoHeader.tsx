@@ -1,5 +1,5 @@
-import { useContext, VFC } from 'react';
-import { Context } from '../context/Context';
+import { VFC } from 'react';
+import { useAppSelector } from '../store/hooks';
 import type { IceCreamLocation } from '../types/types';
 import { IonAvatar, IonItem, IonLabel } from '@ionic/react';
 import ButtonFavoriteLocation from './Comments/ButtonFavoriteLocation';
@@ -9,7 +9,7 @@ interface Props {
 }
 
 const LocationInfoHeader: VFC<Props> = ({ location }) => {
-  const { user } = useContext(Context);
+  const { user } = useAppSelector((state) => state.user);
 
   if (!location) return null;
 

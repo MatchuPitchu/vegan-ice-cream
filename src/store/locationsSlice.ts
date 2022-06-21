@@ -355,12 +355,6 @@ const locationsSlice = createSlice({
       }
     );
     builder.addMatcher(
-      locationsApi.endpoints.updateLocationsInViewport.matchFulfilled,
-      (state, { payload }) => {
-        state.locationsVisibleOnMap = payload;
-      }
-    );
-    builder.addMatcher(
       locationsApi.endpoints.getAllCitiesWithLocations.matchFulfilled,
       (state, { payload }) => {
         state.citiesWithLocations = payload;

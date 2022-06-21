@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IceCreamLocation } from '../../types/types';
 import type { CityName } from '../locationsSlice';
-import { ViewportType } from '../mapSlice';
 
 // Define a service using a base URL and expected endpoints
 export const locationsApi = createApi({
@@ -31,25 +30,6 @@ export const locationsApi = createApi({
           method: 'GET',
         }),
       }),
-      updateLocationsInViewport: builder.mutation<
-        IceCreamLocation[],
-        { limit: number; viewport: ViewportType }
-      >({
-        query: ({ limit, viewport }) => ({
-          url: `/viewport?limit=${limit}`,
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: {
-            southLat: viewport.southLat,
-            westLng: viewport.westLng,
-            northLat: viewport.northLat,
-            eastLng: viewport.eastLng,
-          },
-          credentials: 'include',
-        }),
-      }),
       updatePricing: builder.mutation<IceCreamLocation, { location_id: string; pricing: number }>({
         query: ({ location_id, pricing }) => {
           return {
@@ -74,6 +54,5 @@ export const {
   useGetLocationsQuery,
   useGetOneLocationQuery,
   useGetAllCitiesWithLocationsQuery,
-  useUpdateLocationsInViewportMutation,
   useUpdatePricingMutation,
 } = locationsApi; // automatically generated query hook

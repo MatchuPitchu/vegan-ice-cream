@@ -1,8 +1,6 @@
-import { useContext } from 'react';
+import { VFC } from 'react';
 // Redux Store
 import { useAppSelector } from '../store/hooks';
-// Context
-import { Context } from '../context/Context';
 // import spinner
 import { css } from '@emotion/core';
 import { RingLoader } from 'react-spinners';
@@ -17,17 +15,17 @@ const override = css`
   opacity: 0.8;
 `;
 
-const Spinner = () => {
+const Spinner: VFC = () => {
   const { isAuth } = useAppSelector((state) => state.user);
 
-  const { activateMsg } = useContext(Context);
+  const { activateAccountMessage } = useAppSelector((state) => state.app);
 
-  if (activateMsg === 'Aktivierung des Mail-Accounts erfolgreich')
+  if (activateAccountMessage === 'Aktivierung des Mail-Accounts erfolgreich')
     return (
       <div className='d-flex flex-column align-items-center'>
         <RingLoader color='var(--ion-color-primary)' css={override} size={50} />
         <h3 style={{ fontSize: '1.2em' }} className='display-3'>
-          {activateMsg}
+          {activateAccountMessage}
         </h3>
         <IonButton routerLink='/login' fill='solid' className='disabled-btn my-3'>
           <IonLabel>Login</IonLabel>
@@ -42,7 +40,7 @@ const Spinner = () => {
       <h3 style={{ fontSize: '1.2em' }} className='display-3'>
         {isAuth ? 'isLoading ...' : 'Nur für eingeloggte User sichtbar'}
       </h3>
-      {!isAuth ? (
+      {!isAuth && (
         <>
           <div>
             <IonButton routerLink='/login' fill='solid' className='click-btn my-3'>
@@ -54,12 +52,12 @@ const Spinner = () => {
               <IonIcon className='pe-1' icon={create} />
             </IonButton>
           </div>
-          <div className='mx-3' style={{ fontWeight: '300' }}>
+          <div className='mx-3' style={{ fontWeight: 300 }}>
             Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten
             hinzufügen.
           </div>
         </>
-      ) : null}
+      )}
     </div>
   );
 };

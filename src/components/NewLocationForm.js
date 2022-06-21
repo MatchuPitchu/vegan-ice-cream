@@ -3,8 +3,6 @@ import { appActions } from '../store/appSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { locationsActions } from '../store/locationsSlice';
 // Context
-import { useContext } from 'react';
-import { Context } from '../context/Context';
 import { useAnimation } from '../hooks/useAnimation';
 import { Controller, useForm } from 'react-hook-form';
 import {
@@ -19,14 +17,14 @@ import {
 import { add, closeCircleOutline } from 'ionicons/icons';
 import Error from './Error';
 import LoadingError from './LoadingError';
+import { showActions } from '../store/showSlice';
 
 const NewLocationForm = () => {
   const dispatch = useAppDispatch();
   const { newLocation } = useAppSelector((state) => state.locations);
+  const { showAddNewLocationForm } = useAppSelector((state) => state.show);
 
   const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
-
-  const { newLocModal, setNewLocModal, searchViewport } = useContext(Context);
 
   const defaultValues = {
     name: newLocation?.name || '',
@@ -84,17 +82,16 @@ const NewLocationForm = () => {
       setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
     dispatch(locationsActions.resetNewLocation());
-    searchViewport();
     dispatch(appActions.setIsLoading(false));
   };
 
   return (
     <IonModal
-      cssClass='newLocModal'
-      isOpen={newLocModal}
+      cssClass='new-location-modal'
+      isOpen={showAddNewLocationForm}
       swipeToClose={true}
       backdropDismiss={true}
-      onDidDismiss={() => setNewLocModal(false)}
+      onDidDismiss={() => dispatch(showActions.setShowAddNewLocationForm(false))}
       enterAnimation={enterAnimationFromBottom}
       leaveAnimation={leaveAnimationToBottom}
     >
@@ -103,7 +100,7 @@ const NewLocationForm = () => {
         <IonButton
           fill='clear'
           onClick={() => {
-            setNewLocModal(false);
+            dispatch(showActions.setShowAddNewLocationForm(false));
             dispatch(locationsActions.resetNewLocation());
           }}
         >
