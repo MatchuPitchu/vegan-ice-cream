@@ -697,10 +697,19 @@ mark {
     linear-gradient(to top, var(--ion-color-primary), var(--ion-color-secondary));
 }
 
-.predict-city {
+.predict-cities {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 3px;
+  margin: 0 8px;
+}
+
+.predict-cities__item {
+  display: flex;
+  background-color: var(--ion-item-background);
+  padding: 0.3rem 0.5rem;
   box-shadow: var(--ion-box-shadow);
   border-radius: var(--ion-border-radius);
-  margin: 3px;
   cursor: pointer;
 }
 

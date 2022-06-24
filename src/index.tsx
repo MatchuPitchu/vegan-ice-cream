@@ -13,6 +13,7 @@ import { locationsApi } from './store/api/locations-api-slice';
 // trigger verifyUserSession and getLocations when App is started
 store.dispatch(authApi.endpoints.verifyUserSession.initiate());
 store.dispatch(locationsApi.endpoints.getLocations.initiate());
+store.dispatch(locationsApi.endpoints.getAllCitiesWithLocations.initiate());
 
 ReactDOM.render(
   <React.StrictMode>
