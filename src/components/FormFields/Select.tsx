@@ -3,6 +3,7 @@ import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
 
 type SelectProps = {
   label: string;
+  labelPosition?: 'stacked' | 'floating';
   options: { value: string; label: string }[];
 };
 
@@ -12,6 +13,7 @@ type ReactHookFormSelectProps<TFieldValues extends FieldValues> = SelectProps &
 
 const Select = <TFieldValues extends FieldValues>({
   label,
+  labelPosition = 'stacked',
   control,
   name,
   rules,
@@ -28,13 +30,14 @@ const Select = <TFieldValues extends FieldValues>({
 
   return (
     <>
-      <IonLabel position='stacked' className='ion-text-wrap mb-2'>
+      <IonLabel position={labelPosition} className='ion-text-wrap mb-2'>
         {label}
       </IonLabel>
       <IonSelect
         ref={ref}
         cancelText='Abbrechen'
         placeholder='Auswahl'
+        mode='ios'
         value={value}
         onIonChange={({ detail: { value } }) => onChange(value)}
       >
