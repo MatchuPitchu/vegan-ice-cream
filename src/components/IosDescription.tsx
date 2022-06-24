@@ -1,3 +1,4 @@
+import { VFC } from 'react';
 import {
   IonCard,
   IonCardContent,
@@ -11,7 +12,7 @@ import {
 } from '@ionic/react';
 import { logoApple, shareOutline } from 'ionicons/icons';
 
-const IosDescription = () => {
+const IosDescription: VFC = () => {
   return (
     <IonPage>
       <IonContent>

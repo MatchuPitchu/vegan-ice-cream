@@ -367,6 +367,7 @@ export const getSelectedLocation = createSelector(
   (state: RootState) => state.locations.locations,
   (state: RootState) => state.locations.selectedLocationId,
   (locations, selectedLocationId) => {
+    if (!selectedLocationId) return null;
     const selectedLocationIndex = locations.findIndex(
       (location) => location._id === selectedLocationId
     );

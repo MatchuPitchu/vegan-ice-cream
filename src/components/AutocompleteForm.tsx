@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { FormEvent, useCallback, useState, VFC } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { mapActions } from '../store/mapSlice';
@@ -20,12 +20,14 @@ import LoadingError from './LoadingError';
 import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables-and-functions';
 import { showActions } from '../store/showSlice';
 
-const AutocompleteForm = () => {
+type AutocompleteGoogle = google.maps.places.Autocomplete;
+
+const AutocompleteForm: VFC = () => {
   const dispatch = useAppDispatch();
   const { locations } = useAppSelector((state) => state.locations);
   const { showSearchNewLocationModal } = useAppSelector((state) => state.show);
 
-  const [googleAutocomplete, setGoogleAutocomplete] = useState(null);
+  const [googleAutocomplete, setGoogleAutocomplete] = useState<AutocompleteGoogle>();
   const [searchText, setSearchText] = useState('');
   const [locationName, setLocationName] = useState('');
   const [locationWebsite, setLocationWebsite] = useState('');
@@ -47,7 +49,7 @@ const AutocompleteForm = () => {
     [locations]
   );
 
-  const onSubmit = async (event) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch(appActions.setIsLoading(true));
 
@@ -104,16 +106,19 @@ const AutocompleteForm = () => {
   };
 
   const handleSelectPlace = () => {
-    if (googleAutocomplete === null) return;
+    if (!googleAutocomplete) return;
     const data = googleAutocomplete.getPlace();
 
-    setSearchText(data.formatted_address);
+    console.log(data);
+
+    // setSearchText(data.formatted_address);
     // unique received data from google autocomplete: name, website
-    setLocationName(data.name || '');
-    setLocationWebsite(data.website || '');
+    // setLocationName(data.name || '');
+    // setLocationWebsite(data.website || '');
   };
 
-  const handleAutocompleteLoad = (autocomplete) => setGoogleAutocomplete(autocomplete);
+  const handleAutocompleteLoad = (autocomplete: AutocompleteGoogle) =>
+    setGoogleAutocomplete(autocomplete);
 
   return (
     <IonModal
@@ -140,7 +145,7 @@ const AutocompleteForm = () => {
       <IonContent>
         <form className='d-flex flex-column' onSubmit={onSubmit}>
           <IonItem className='mt-3 px-2 addLocForm' lines='none'>
-            <div className='ion-text-wrap' position='stacked'>
+            <div className='ion-text-wrap'>
               <IonCardSubtitle color='primary' className='mb-1'>
                 Welchen Eisladen hast du entdeckt?
               </IonCardSubtitle>
@@ -156,8 +161,16 @@ const AutocompleteForm = () => {
               className='container-autocomplete'
               onLoad={handleAutocompleteLoad}
               onPlaceChanged={handleSelectPlace}
-              restrictions={{ country: ['de', 'at', 'ch', 'li'] }} // Restricts autocomplete to countries DE, AT, CH, LI
-              fields={['name', 'address_components', 'formatted_address', 'place_id', 'website']}
+              restrictions={{ country: ['de', 'at', 'ch', 'li'] }}
+              fields={[
+                'name',
+                'adr_address',
+                'address_components',
+                'formatted_address',
+                'geometry',
+                'place_id',
+                'website',
+              ]}
             >
               <input
                 type='text'

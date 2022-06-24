@@ -38,7 +38,7 @@ const Spinner: VFC = () => {
     <div className='d-flex flex-column align-items-center text-center'>
       <RingLoader color='var(--ion-color-primary)' css={override} size={50} />
       <h3 style={{ fontSize: '1.2em' }} className='display-3'>
-        {isAuth ? 'isLoading ...' : 'Nur für eingeloggte User sichtbar'}
+        {isAuth ? 'lädt ...' : 'Nur für eingeloggte User sichtbar'}
       </h3>
       {!isAuth && (
         <>
