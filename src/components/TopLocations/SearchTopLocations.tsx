@@ -105,7 +105,7 @@ const SearchTopLocations: VFC<Props> = ({
         clearIcon={trash}
         searchIcon={searchCircleOutline}
         value={value}
-        debounce={500}
+        debounce={0}
         onIonChange={({ detail: { value } }) => {
           onChange(value);
           setCityName(value ?? '');
@@ -115,19 +115,9 @@ const SearchTopLocations: VFC<Props> = ({
       />
 
       {predictions.length !== 0 && (
-        <div
-          className={`py-0 d-flex flex-row flex-wrap container-content ${
-            isPlatform('desktop') ? '' : 'justify-content-center'
-          }`}
-        >
+        <div className={`predict-cities`}>
           {predictions.map((city) => (
-            <IonItem
-              key={city}
-              className='predict-city mx-1'
-              onClick={() => onSubmit({ city })}
-              lines='none'
-              color={`${isDarkTheme ? '' : 'secondary'}`}
-            >
+            <div key={city} className='predict-cities__item' onClick={() => onSubmit({ city })}>
               <Highlighter
                 className='hightlighter-wrapper'
                 activeIndex={-1}
@@ -136,7 +126,7 @@ const SearchTopLocations: VFC<Props> = ({
                 caseSensitive={false}
                 textToHighlight={city}
               />
-            </IonItem>
+            </div>
           ))}
         </div>
       )}

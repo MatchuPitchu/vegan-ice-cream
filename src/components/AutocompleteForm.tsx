@@ -109,12 +109,10 @@ const AutocompleteForm: VFC = () => {
     if (!googleAutocomplete) return;
     const data = googleAutocomplete.getPlace();
 
-    console.log(data);
-
-    // setSearchText(data.formatted_address);
-    // unique received data from google autocomplete: name, website
-    // setLocationName(data.name || '');
-    // setLocationWebsite(data.website || '');
+    setSearchText(data.formatted_address!);
+    // google autocomplete data that is not available with other Google Maps API: name, website
+    setLocationName(data.name || '');
+    setLocationWebsite(data.website || '');
   };
 
   const handleAutocompleteLoad = (autocomplete: AutocompleteGoogle) =>
@@ -162,15 +160,7 @@ const AutocompleteForm: VFC = () => {
               onLoad={handleAutocompleteLoad}
               onPlaceChanged={handleSelectPlace}
               restrictions={{ country: ['de', 'at', 'ch', 'li'] }}
-              fields={[
-                'name',
-                'adr_address',
-                'address_components',
-                'formatted_address',
-                'geometry',
-                'place_id',
-                'website',
-              ]}
+              fields={['name', 'address_components', 'formatted_address', 'place_id', 'website']}
             >
               <input
                 type='text'
