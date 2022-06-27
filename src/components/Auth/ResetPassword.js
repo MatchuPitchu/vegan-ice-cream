@@ -17,7 +17,6 @@ import {
 } from '@ionic/react';
 import Error from '../Error';
 import { refreshCircle } from 'ionicons/icons';
-import LoadingError from '../LoadingError';
 
 const ResetPassword = () => {
   const dispatch = useAppDispatch();
@@ -105,7 +104,6 @@ const ResetPassword = () => {
             </IonCard>
           )}
         </div>
-        <LoadingError />
       </IonContent>
     </IonPage>
   );

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useThemeContext } from '../context/ThemeContext';
-import type { IceCreamLocation } from '../types/types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
@@ -20,7 +19,6 @@ import {
 } from '@ionic/react';
 import { add, refreshCircle, reorderThreeOutline } from 'ionicons/icons';
 import Spinner from '../components/Spinner';
-import LoadingError from '../components/LoadingError';
 import Ratings from '../components/Ratings';
 import LocationInfoModal from '../components/LocationInfoModal';
 import ButtonInfoRating from '../components/Comments/ButtonInfoRating';
@@ -160,8 +158,6 @@ const Favoriten = () => {
         </IonReorderGroup>
 
         {selectedLocation && <LocationInfoModal selectedLocation={selectedLocation} />}
-
-        <LoadingError />
       </IonContent>
     </IonPage>
   );

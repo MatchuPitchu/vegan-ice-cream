@@ -30,7 +30,7 @@ const Select = <TFieldValues extends FieldValues>({
 
   return (
     <>
-      <IonLabel position={labelPosition} className='ion-text-wrap mb-2'>
+      <IonLabel position={labelPosition} className='ion-text-wrap mb-2' color={error && 'danger'}>
         {label}
       </IonLabel>
       <IonSelect
@@ -48,7 +48,7 @@ const Select = <TFieldValues extends FieldValues>({
         ))}
       </IonSelect>
       {/* TODO: Error component styling */}
-      {error && <p>{error.message}</p>}
+      {error && <p className='paragraph--error-small'>{error.message}</p>}
     </>
   );
 };

@@ -7,9 +7,8 @@ import { showActions } from '../../store/showSlice';
 import { appActions } from '../../store/appSlice';
 import { getSelectedLocation, locationsActions } from '../../store/locationsSlice';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { IonButton, IonIcon, IonItem, IonLabel } from '@ionic/react';
+import { IonButton, IonIcon, IonItem } from '@ionic/react';
 import { backspaceOutline, chatboxEllipses, checkboxOutline } from 'ionicons/icons';
-import LoadingError from '../LoadingError';
 import TextareaInput from '../FormFields/TextareaInput';
 import RatingInput from '../FormFields/RatingInput';
 import Checkbox from '../FormFields/Checkbox';
@@ -105,34 +104,39 @@ const UpdateComment: VFC<Props> = ({ comment }) => {
 
   return (
     <form key={comment._id} onSubmit={handleSubmit(onSubmit)}>
-      <div className='px-3 py-2 borderBottom'>
-        <div className='commentText'>
-          <IonIcon slot='start' className='me-2' color='text-color' icon={chatboxEllipses} />
-          Kommentar
-          <TextareaInput
-            name='text'
+      <div className='px-3 py-2 border-bottom'>
+        <TextareaInput
+          control={control}
+          name='text'
+          label='Text'
+          rules={{ required: 'Was möchtest du über den Eisladen teilen?' }}
+        />
+
+        <IonItem lines='none'>
+          <RatingInput
+            name='rating_quality'
+            label='Veganes Angebot'
             control={control}
-            rules={{ required: 'Was möchtest du über den Eisladen teilen?' }}
+            rules={{
+              required: 'Die Sterne fehlen',
+              min: { value: 0.5 * factorToConvertRatingScale, message: 'Die Sterne fehlen' },
+            }}
           />
-        </div>
-        <div className='d-flex align-items-center'>
-          <div className='rating'>
-            <div>Veganes Angebot</div>
-            <RatingInput
-              name='rating_quality'
-              control={control}
-              rules={{ required: 'Die Sterne fehlen', min: 0.5 * factorToConvertRatingScale }}
-            />
-            <div>Eis-Erlebnis</div>
-            <RatingInput
-              name='rating_vegan_offer'
-              control={control}
-              rules={{ required: 'Die Sterne fehlen', min: 0.5 * factorToConvertRatingScale }}
-            />
-          </div>
-        </div>
+        </IonItem>
+        <IonItem lines='none'>
+          <RatingInput
+            name='rating_vegan_offer'
+            label='Eis-Erlebnis'
+            control={control}
+            rules={{
+              required: 'Die Sterne fehlen',
+              min: { value: 0.5 * factorToConvertRatingScale, message: 'Die Sterne fehlen' },
+            }}
+          />
+        </IonItem>
+
         <div className='mt-3'>
-          <div className='commentText'>Mein Eis-Erlebnis war ...</div>
+          <div className='comment-text'>Mein Eis-Erlebnis war ...</div>
           <IonItem lines='inset'>
             <Checkbox
               name='bio'
@@ -183,8 +187,6 @@ const UpdateComment: VFC<Props> = ({ comment }) => {
           </IonButton>
         </div>
       </div>
-
-      <LoadingError />
     </form>
   );
 };

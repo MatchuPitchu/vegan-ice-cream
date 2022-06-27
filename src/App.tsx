@@ -12,7 +12,7 @@ import {
   IonContent,
   IonBadge,
 } from '@ionic/react';
-import { bookmarks, disc, home, iceCream } from 'ionicons/icons';
+import { flagOutline, homeOutline, mapOutline, starHalfOutline } from 'ionicons/icons';
 import HeaderApp from './components/HeaderApp';
 import Home from './pages/Home';
 import Entdecken from './pages/Entdecken';
@@ -52,7 +52,7 @@ import './App.css';
 // RTK Query
 // How to use RTK hooks: https://redux-toolkit.js.org/tutorials/rtk-query#create-an-api-service
 // NOTICE: RTK Query ensures that any component that subscribes to the same query will always use the same data.
-// TODO: überall error messages und loading state catchen und in state speichern für Anzeige Loading Spinner
+// TODO: überall error messages und loading state catchen und in state speichern für Anzeige Loading Spinner + Notification Toast durch NotificationProvider
 
 const App: React.FC = () => {
   const { user } = useAppSelector((state) => state.user);
@@ -93,19 +93,19 @@ const App: React.FC = () => {
           </IonRouterOutlet>
           <IonTabBar slot='bottom'>
             <IonTabButton tab='home' href='/home'>
-              <IonIcon icon={home} />
+              <IonIcon icon={homeOutline} />
               <IonLabel className='labelTabs'>Home</IonLabel>
             </IonTabButton>
             <IonTabButton tab='entdecken' href='/entdecken'>
-              <IonIcon icon={disc} />
+              <IonIcon icon={mapOutline} />
               <IonLabel className='labelTabs'>Entdecken</IonLabel>
             </IonTabButton>
             <IonTabButton tab='bewerten' href='/bewerten'>
-              <IonIcon icon={iceCream} />
+              <IonIcon icon={starHalfOutline} />
               <IonLabel className='labelTabs'>Bewerten</IonLabel>
             </IonTabButton>
             <IonTabButton tab='favoriten' href='/favoriten'>
-              <IonIcon icon={bookmarks} />
+              <IonIcon icon={flagOutline} />
               <IonLabel className='labelTabs'>Favoriten</IonLabel>
               {user && <IonBadge color='secondary'>{user.favorite_locations.length || 0}</IonBadge>}
             </IonTabButton>

@@ -105,11 +105,11 @@ const Profil: VFC = () => {
                 </IonItem>
               )}
 
-              <IonItem color='background-color' className='borderBottom' lines='none'>
+              <IonItem color='background-color' className='border-bottom' lines='none'>
                 <IonIcon icon={mail} slot='start' />
                 <IonLabel>{user.email}</IonLabel>
               </IonItem>
-              <IonItem color='background-color' className='borderBottom' lines='none'>
+              <IonItem color='background-color' className='border-bottom' lines='none'>
                 <IonIcon icon={trailSign} slot='start' />
                 <IonLabel>
                   {user?.home_city?.city ? user.home_city.city : 'keinen Ort angegeben'}
@@ -137,7 +137,7 @@ const Profil: VFC = () => {
               <IonItemGroup>
                 <IonItem
                   color='background-color'
-                  className={`${!showUserComments && 'borderBottom'}`}
+                  className={`${!showUserComments && 'border-bottom'}`}
                   lines='none'
                 >
                   <IonIcon
@@ -172,7 +172,7 @@ const Profil: VFC = () => {
 
                 <IonItem color='background-color' lines='none'>
                   <IonIcon
-                    className={showFlavors ? 'rotateIcon90Forward' : 'rotateIcon90Back'}
+                    className={showFlavors ? 'icon--rotate90Forward' : 'icon--rotate90Back'}
                     slot='start'
                     color='primary'
                     icon={iceCream}

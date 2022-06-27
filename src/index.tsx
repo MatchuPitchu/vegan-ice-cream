@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ThemeContextProvider from './context/ThemeContext';
+import { NotificationProvider } from './context/ToastContext';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './store';
-import ThemeContextProvider from './context/ThemeContext';
-import App from './App';
-import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
 import { IonReactRouter } from '@ionic/react-router';
+import ServiceWorkerWrapper from './components/ServiceWorkerWrapper';
+import App from './App';
 
 import { authApi } from './store/api/auth-api-slice';
 import { locationsApi } from './store/api/locations-api-slice';
@@ -19,10 +20,12 @@ ReactDOM.render(
   <React.StrictMode>
     <ReduxProvider store={store}>
       <ThemeContextProvider>
-        <IonReactRouter>
-          <App />
-          {/* <ServiceWorkerWrapper /> */}
-        </IonReactRouter>
+        <NotificationProvider>
+          <IonReactRouter>
+            <App />
+            {/* <ServiceWorkerWrapper /> */}
+          </IonReactRouter>
+        </NotificationProvider>
       </ThemeContextProvider>
     </ReduxProvider>
   </React.StrictMode>,

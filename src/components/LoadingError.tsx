@@ -10,7 +10,7 @@ const LoadingError: VFC = () => {
     <>
       <IonLoading isOpen={isLoading} message={'Einen Moment bitte ...'} />
       <IonToast
-        cssClass='errorToast'
+        cssClass='toast--error'
         isOpen={!!error} // convert error string to boolean
         message={error}
       />

@@ -16,7 +16,6 @@ import {
   IonSearchbar,
 } from '@ionic/react';
 import { informationCircle, pencil, trash } from 'ionicons/icons';
-import LoadingError from './LoadingError';
 
 // TODO: Predictions mit Keyboard durchgehen
 const SearchFlavors: VFC = () => {
@@ -148,8 +147,6 @@ const SearchFlavors: VFC = () => {
           Wähle aus den bereits verfügbaren Eissorten oder tippe einen neuen Namen ein.
         </IonContent>
       </IonPopover>
-
-      <LoadingError />
     </>
   );
 };

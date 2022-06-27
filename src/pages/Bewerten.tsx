@@ -5,6 +5,7 @@ import type { PopoverState } from '../types/types';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { flavorActions } from '../store/flavorSlice';
 import { appActions } from '../store/appSlice';
+import { userActions } from '../store/userSlice';
 import { getSelectedLocation, locationsActions } from '../store/locationsSlice';
 import { searchActions } from '../store/searchSlice';
 import { skipToken } from '@reduxjs/toolkit/dist/query';
@@ -39,7 +40,6 @@ import {
 } from '../utils/variables-and-functions';
 import Search from '../components/Search';
 import SearchFlavors from '../components/SearchFlavors';
-import LoadingError from '../components/LoadingError';
 import Spinner from '../components/Spinner';
 import RatingInput from '../components/FormFields/RatingInput';
 import Checkbox from '../components/FormFields/Checkbox';
@@ -47,8 +47,6 @@ import PricingRange from '../components/FormFields/PricingRange';
 import ColorPicker from '../components/FormFields/ColorPicker';
 import DatePicker from '../components/FormFields/DatePicker';
 import TextareaInput from '../components/FormFields/TextareaInput';
-import { useVerifyUserSessionQuery } from '../store/api/auth-api-slice';
-import { userActions } from '../store/userSlice';
 
 interface BewertenFormValues {
   location: string;
@@ -363,7 +361,12 @@ const Bewerten = () => {
                 />
               </IonItem>
               <IonItem lines='none' className='item--small item--card-background'>
-                <IonLabel ref={flavorRef} className='mb-1' position='stacked'>
+                <IonLabel
+                  ref={flavorRef}
+                  className='mb-1'
+                  position='stacked'
+                  color={(errors.colors?.[0] || errors.colors?.[1]) && 'danger'}
+                >
                   Farbe(n) Eis (1 oder 2)
                 </IonLabel>
                 <IonIcon
@@ -378,7 +381,7 @@ const Bewerten = () => {
                   }}
                 />
               </IonItem>
-              <div className='mb-1'>
+              <div className={errors.colors?.[0] || errors.colors?.[1] ? '' : 'mb-1'}>
                 {fields.map((field, index) => (
                   <ColorPicker
                     key={field.id}
@@ -393,35 +396,43 @@ const Bewerten = () => {
                     disabled={isFlavorSelectedFromDatabase}
                   />
                 ))}
-                {(errors.colors?.[0] || errors.colors?.[1]) && (
-                  <div className='pb-2'>{errors.colors?.[0].value?.message}</div>
-                )}
               </div>
 
+              {(errors.colors?.[0] || errors.colors?.[1]) && (
+                <IonItem lines='none' className='item--small item--card-background mb-1'>
+                  <p className='paragraph--error-small'>{errors.colors?.[0].value?.message}</p>
+                </IonItem>
+              )}
+
               <IonItem lines='none' className='item--card-background mb-1'>
-                <IonLabel position='stacked'>Kommentar</IonLabel>
-                <div className='ion-text-wrap text--small-light'>
-                  ... Geschmack, Konsistenz, Waffel, Preis-Leistung, Zusatzleistungen wie vegane
-                  Sahne, Waffeln oder Soßen, Freundlichkeit ...
-                </div>
                 <TextareaInput
-                  name='text'
                   control={control}
+                  name='text'
+                  label='Kommentar'
                   rules={{ required: 'Was möchtest du über den Eisladen teilen?' }}
-                />
+                >
+                  <div className='ion-text-wrap text--small-light'>
+                    ... Geschmack, Konsistenz, Waffel, Preis-Leistung, Zusatzleistungen wie vegane
+                    Sahne, Waffeln oder Soßen, Freundlichkeit ...
+                  </div>
+                </TextareaInput>
               </IonItem>
 
               <IonItem lines='none' className='rating--bewerten-page item--card-background mb-1'>
-                <IonLabel position='stacked'>Eis-Erlebnis</IonLabel>
-                <div className='ion-text-wrap text--small-light'>
-                  ... gewählte Eiskugel, Waffel, dein Eindruck vom Eisladen ...
-                </div>
                 <RatingInput
                   name='rating_quality'
+                  label='Eis-Erlebnis'
                   control={control}
-                  rules={{ required: 'Die Sterne fehlen', min: 0.5 * factorToConvertRatingScale }}
+                  rules={{
+                    required: 'Die Sterne fehlen',
+                    min: { value: 0.5 * factorToConvertRatingScale, message: 'Die Sterne fehlen' },
+                  }}
                   className='react-stars--bewerten-page'
-                />
+                >
+                  <div className='ion-text-wrap text--small-light'>
+                    ... gewählte Eiskugel, Waffel, dein Eindruck vom Eisladen ...
+                  </div>
+                </RatingInput>
               </IonItem>
 
               {/* NEU CHECKEN MIT ERROR HANDLUNG UND BACKEND -> SOLL ALS ERGÄNZUNG ZU COMMENT GESPEICHERT WERDEN, NICHT IN FLAVOR */}
@@ -464,16 +475,20 @@ const Bewerten = () => {
               </IonItem>
 
               <IonItem lines='none' className='rating--bewerten-page item--card-background mb-1'>
-                <IonLabel position='stacked'>Veganes Angebot Eisladen</IonLabel>
-                <div className='ion-text-wrap text--small-light'>
-                  ... viele vegane Sorten, vegane Waffeln, vegane Sahne, vegane Sauce ...
-                </div>
                 <RatingInput
                   name='rating_vegan_offer'
+                  label='Veganes Angebot Eisladen'
                   control={control}
-                  rules={{ required: 'Die Sterne fehlen', min: 0.5 * factorToConvertRatingScale }}
+                  rules={{
+                    required: 'Die Sterne fehlen',
+                    min: { value: 0.5 * factorToConvertRatingScale, message: 'Die Sterne fehlen' },
+                  }}
                   className='react-stars--bewerten-page'
-                />
+                >
+                  <div className='ion-text-wrap text--small-light'>
+                    ... viele vegane Sorten, vegane Waffeln, vegane Sahne, vegane Sauce ...
+                  </div>
+                </RatingInput>
               </IonItem>
 
               <IonItem lines='none' className='item--card-background mb-1'>
@@ -488,8 +503,6 @@ const Bewerten = () => {
             </form>
           </section>
         )}
-
-        <LoadingError />
       </IonContent>
     </IonPage>
   );

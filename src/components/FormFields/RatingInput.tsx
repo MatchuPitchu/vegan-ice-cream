@@ -1,3 +1,5 @@
+import { IonLabel } from '@ionic/react';
+import { ReactNode } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 import { Rating } from 'react-simple-star-rating';
 
@@ -28,6 +30,8 @@ export const fillColorArray = [
 ];
 
 type FormRatingProps = {
+  label?: string;
+  labelPosition?: 'stacked' | 'floating';
   className?: string;
   readonly?: boolean;
   initialValue?: number;
@@ -35,15 +39,18 @@ type FormRatingProps = {
 
 // Types React Hook Form useController in child component: https://dev.to/texmeijin/component-design-idea-using-react-hook-form-v7-ie0
 type ReactHookFormRatingProps<TFieldValues extends FieldValues> = FormRatingProps &
-  UseControllerProps<TFieldValues>;
+  UseControllerProps<TFieldValues> & { children?: ReactNode };
 
 const RatingInput = <TFieldValues extends FieldValues>({
+  label,
+  labelPosition = 'stacked',
   control,
   name,
   rules,
   className,
   readonly = false,
   initialValue,
+  children,
 }: ReactHookFormRatingProps<TFieldValues>) => {
   const {
     field: { onChange, value },
@@ -55,28 +62,34 @@ const RatingInput = <TFieldValues extends FieldValues>({
   });
 
   return (
-    <div className={`react-star ${className && className}`}>
-      {/* TODO: Validation does NOT work */}
-      <Rating
-        ratingValue={value}
-        initialValue={initialValue}
-        onClick={(rate: number) => onChange(rate)}
-        iconsCount={5}
-        size={15}
-        allowHalfIcon={true}
-        allowHover={true}
-        transition={true}
-        readonly={readonly}
-        showTooltip={true}
-        tooltipClassName='react-stars__tooltip'
-        tooltipDefaultText='Bewertung'
-        tooltipArray={tooltipArray}
-        fillColorArray={fillColorArray}
-        emptyColor='#cccccc90'
-        fillColor='var(--ion-color-primary)'
-      />
-      {error && <p>{error.message}</p>}
-    </div>
+    <>
+      <IonLabel position={labelPosition} color={error && 'danger'}>
+        {label}
+      </IonLabel>
+      {children}
+      <div className={className}>
+        {/* TODO: Validation does NOT work */}
+        <Rating
+          ratingValue={value}
+          initialValue={initialValue}
+          onClick={(rate: number) => onChange(rate)}
+          iconsCount={5}
+          size={15}
+          allowHalfIcon={true}
+          allowHover={true}
+          transition={true}
+          readonly={readonly}
+          showTooltip={true}
+          tooltipClassName='react-stars__tooltip'
+          tooltipDefaultText='Bewertung'
+          tooltipArray={tooltipArray}
+          fillColorArray={fillColorArray}
+          emptyColor='#cccccc90'
+          fillColor='var(--ion-color-primary)'
+        />
+      </div>
+      {error && <p className='paragraph--error-small'>{error.message}</p>}
+    </>
   );
 };
 

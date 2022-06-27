@@ -19,7 +19,6 @@ import {
 import Error from '../Error';
 import { logIn } from 'ionicons/icons';
 import { citiesInGermany } from '../../utils/citiesInGermany';
-import LoadingError from '../LoadingError';
 import InfoTextRegister from './InfoTextRegister';
 import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../../utils/variables-and-functions';
 
@@ -317,8 +316,6 @@ const Register = () => {
             </IonCard>
           </div>
         )}
-
-        <LoadingError />
       </IonContent>
     </IonPage>
   );

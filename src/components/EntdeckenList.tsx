@@ -15,9 +15,9 @@ const ListMap = () => {
 
   const [endIndexInLocationsList, setEndIndexInLocationsList] = useState(4);
 
-  const loadMore = ({ target }) => {
+  const loadMore = ({ target }: CustomEvent<void>) => {
     setEndIndexInLocationsList((prev) => prev + 4);
-    target.complete();
+    (target as HTMLIonInfiniteScrollElement).complete();
   };
 
   return (

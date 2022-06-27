@@ -8,7 +8,6 @@ import { getSelectedLocation } from '../store/locationsSlice';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { IonButton, IonIcon, IonLabel } from '@ionic/react';
 import { checkmarkCircleOutline } from 'ionicons/icons';
-import LoadingError from './LoadingError';
 import PricingRange from './FormFields/PricingRange';
 
 type Props = {
@@ -63,8 +62,6 @@ const PricingForm: VFC<Props> = ({ onFinishUpdatePricing }) => {
         <IonIcon slot='end' icon={checkmarkCircleOutline} />
         Senden
       </IonButton>
-
-      <LoadingError />
     </form>
   );
 };

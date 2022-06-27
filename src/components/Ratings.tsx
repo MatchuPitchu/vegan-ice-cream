@@ -10,7 +10,7 @@ type Props = {
 
 const Ratings: VFC<Props> = ({ rating_vegan_offer, rating_quality, showNum }) => {
   return (
-    <div className='d-flex align-items-center py-1 item-text--small'>
+    <div className='rating-container'>
       <div className='rating rating--only-show'>
         <div>Veganes Angebot</div>
         <RatingReadonly initialValue={rating_vegan_offer} />
@@ -19,7 +19,7 @@ const Ratings: VFC<Props> = ({ rating_vegan_offer, rating_quality, showNum }) =>
             {rating_vegan_offer}
           </IonButton>
         ) : (
-          <span></span>
+          <span />
         )}
         <div>Eis-Erlebnis</div>
         <RatingReadonly initialValue={rating_quality} />
@@ -28,7 +28,7 @@ const Ratings: VFC<Props> = ({ rating_vegan_offer, rating_quality, showNum }) =>
             {rating_quality}
           </IonButton>
         ) : (
-          <span></span>
+          <span />
         )}
       </div>
     </div>

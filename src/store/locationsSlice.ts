@@ -1,6 +1,6 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '.';
-import { Comment, IceCreamLocation } from '../types/types';
+import { Address, Comment, GeoCoordinates, IceCreamLocation } from '../types/types';
 import { locationsApi } from './api/locations-api-slice';
 
 export enum SortType {
@@ -11,20 +11,6 @@ export enum SortType {
 }
 
 type SortDirection = 'asc' | 'desc';
-
-export interface GeoCoordinates {
-  lat: number | null;
-  lng: number | null;
-}
-
-interface Address {
-  street: string;
-  number: number | null;
-  zipcode: string;
-  city: string;
-  country: string;
-  geo: GeoCoordinates;
-}
 
 interface NewLocation {
   name: string;

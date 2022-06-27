@@ -1,10 +1,11 @@
 import { IonInput, IonLabel } from '@ionic/react';
+import { ReactNode, useEffect, useRef } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 
 type InputProps = {
-  label?: string;
+  label?: string | ReactNode;
   labelPosition?: 'stacked' | 'floating';
-  type?: 'text' | 'number';
+  type?: 'text' | 'number' | 'password';
   inputmode?: 'text' | 'numeric' | 'url';
   maxlength?: number;
   placeholder?: string;
@@ -14,7 +15,7 @@ type InputProps = {
 type ReactHookFormProps<TFieldValues extends FieldValues> = InputProps &
   UseControllerProps<TFieldValues>;
 
-const Input = <TFieldValues extends FieldValues>({
+export const CustomInput = <TFieldValues extends FieldValues>({
   label,
   labelPosition = 'stacked',
   control,
@@ -26,7 +27,7 @@ const Input = <TFieldValues extends FieldValues>({
   placeholder,
 }: ReactHookFormProps<TFieldValues>) => {
   const {
-    field: { onChange, value, ref },
+    field: { onChange, value },
     fieldState: { error },
   } = useController<TFieldValues>({
     control,
@@ -34,11 +35,21 @@ const Input = <TFieldValues extends FieldValues>({
     rules,
   });
 
+  const inputRef = useRef<HTMLIonInputElement>(null);
+
+  useEffect(() => {
+    if (error) {
+      inputRef.current!.setFocus();
+    }
+  }, [error, name]);
+
   return (
     <>
-      <IonLabel position={labelPosition}>{label}</IonLabel>
+      <IonLabel position={labelPosition} color={error && 'danger'}>
+        {label}
+      </IonLabel>
       <IonInput
-        ref={ref}
+        ref={inputRef}
         name={name}
         value={value}
         type={type}
@@ -47,9 +58,7 @@ const Input = <TFieldValues extends FieldValues>({
         onIonChange={({ detail: { value } }) => onChange(value)}
         placeholder={placeholder}
       />
-      {error && <p>{error.message}</p>}
+      {error && <p className='paragraph--error-small'>{error.message}</p>}
     </>
   );
 };
-
-export default Input;

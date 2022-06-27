@@ -7,7 +7,6 @@ import { IonIcon, IonLabel, IonPage, IonSegment, IonSegmentButton } from '@ionic
 import { listCircle, map as mapIcon } from 'ionicons/icons';
 import Search from '../components/Search';
 import EntdeckenList from '../components/EntdeckenList';
-import LoadingError from '../components/LoadingError';
 import EntdeckenMap from '../components/EntdeckenMap';
 
 const Entdecken: VFC = () => {
