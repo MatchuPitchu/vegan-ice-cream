@@ -178,8 +178,6 @@ const SetNewPassword = () => {
             </IonCard>
           </div>
         )}
-
-        <LoadingError />
       </IonContent>
     </IonPage>
   );

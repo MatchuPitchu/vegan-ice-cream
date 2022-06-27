@@ -130,8 +130,6 @@ const SearchTopLocations: VFC<Props> = ({
           ))}
         </div>
       )}
-
-      <LoadingError />
     </form>
   );
 };

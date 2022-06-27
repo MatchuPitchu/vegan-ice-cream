@@ -8,7 +8,6 @@ import { userActions } from '../store/userSlice';
 import { useThemeContext } from '../context/ThemeContext';
 import { menuController } from '@ionic/core';
 import {
-  IonBadge,
   IonButton,
   IonButtons,
   IonIcon,
@@ -17,7 +16,7 @@ import {
   IonPopover,
   IonToolbar,
 } from '@ionic/react';
-import { cog, storefront } from 'ionicons/icons';
+import { analytics, cog, pin } from 'ionicons/icons';
 import Menu from './Menu';
 import SwitchTheme from './SwitchTheme';
 
@@ -29,6 +28,10 @@ const HeaderApp = () => {
   const { isDarkTheme } = useThemeContext();
 
   const [showPopover, setShowPopover] = useState<PopoverState>({
+    showPopover: false,
+    event: undefined,
+  });
+  const [showPopoverNumberOfLocations, setShowPopoverNumberOfLocations] = useState<PopoverState>({
     showPopover: false,
     event: undefined,
   });
@@ -58,20 +61,46 @@ const HeaderApp = () => {
         </IonButtons>
 
         <IonButtons slot='end'>
+          <div
+            className='info-number-locations'
+            onClick={(event) => {
+              event.persist();
+              setShowPopoverNumberOfLocations({ showPopover: true, event });
+            }}
+          >
+            <IonIcon
+              color={`${isDarkTheme ? 'primary' : 'dark'}`}
+              icon={pin}
+              title='Neue Eisläden seit letztem Besuch'
+            />
+            <div className='info-number-locations__number'>{numberOfLocations}</div>
+            <IonPopover
+              cssClass='info-popover'
+              event={showPopoverNumberOfLocations.event}
+              isOpen={showPopoverNumberOfLocations.showPopover}
+              onDidDismiss={() =>
+                setShowPopoverNumberOfLocations({ showPopover: false, event: undefined })
+              }
+            >
+              Eingetragene Eisläden in der App
+            </IonPopover>
+          </div>
           {user && (
             <>
-              <IonIcon
-                color={`${isDarkTheme ? 'primary' : 'dark'}`}
+              <div
+                className='info-number-locations'
                 onClick={(event) => {
                   event.persist();
                   setShowPopover({ showPopover: true, event });
                 }}
-                icon={storefront}
-                title='Neue Eisläden seit letztem Besuch'
-              />
-              <IonBadge slot='end' color='secondary'>
-                {numberOfNewLocations || 0}
-              </IonBadge>
+              >
+                <IonIcon
+                  color={`${isDarkTheme ? 'primary' : 'dark'}`}
+                  icon={analytics}
+                  title='Neue Eisläden seit letztem Besuch'
+                />
+                <div className='info-number-locations__number'>{numberOfNewLocations || 0}</div>
+              </div>
 
               <IonPopover
                 cssClass='info-popover'
@@ -83,14 +112,13 @@ const HeaderApp = () => {
               </IonPopover>
             </>
           )}
-          <IonButton
+
+          <IonIcon
+            className='icon--button icon--rotate'
             color={`${isDarkTheme ? 'primary' : 'dark'}`}
-            className='rotateIcon ms-3'
-            fill='clear'
             onClick={async () => await menuController.toggle()}
-          >
-            <IonIcon icon={cog} />
-          </IonButton>
+            icon={cog}
+          />
         </IonButtons>
       </IonToolbar>
 

@@ -21,7 +21,6 @@ import {
 import NewLocationForm from '../components/NewLocationForm';
 import LocationInfoModal from '../components/LocationInfoModal';
 import Spinner from '../components/Spinner';
-import LoadingError from '../components/LoadingError';
 import AutocompleteForm from '../components/AutocompleteForm';
 import GeolocationButton from '../components/GeolocationButton';
 
@@ -335,7 +334,6 @@ const EntdeckenMap: VFC<Props> = (props) => {
           <div className='message-new-location'>{checkMessageNewLocation}</div>
         )}
       </div>
-      <LoadingError />
     </IonContent>
   );
 };

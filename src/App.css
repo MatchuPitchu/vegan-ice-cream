@@ -45,7 +45,7 @@ a:hover {
   color: var(--ion-color-primary-shade);
 }
 
-.errorToast {
+.toast--error {
   --background: var(--ion-color-danger);
   color: #fff;
   font-size: 0.8rem;
@@ -91,12 +91,10 @@ li {
   margin: 0 auto;
 }
 
-.confirm-btn-block {
+.button--confirm-block {
   height: 37px;
   text-transform: none;
   align-self: center;
-  opacity: 1;
-  margin: 0 auto;
   width: 100%;
 }
 
@@ -139,12 +137,35 @@ li {
   --button-color: var(--ion-color-text);
 }
 
+.label--error {
+  color: var(--ion-color-danger);
+}
+
+.paragraph--error-small {
+  font-size: 0.8rem;
+  color: var(--ion-color-danger);
+}
+
 /************ Header general ************/
 .headerToolbar {
   --min-height: 40px;
   --padding-top: 0;
   --padding-bottom: 0;
   z-index: 1;
+}
+
+.info-number-locations {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.2rem;
+  cursor: pointer;
+  margin-right: 0.9rem;
+  box-shadow: inset 0px -10px 0px var(--ion-color-primary-transparent);
+}
+
+.info-number-locations__number {
+  /* border-bottom: 4px solid var(--ion-color-primary); */
 }
 
 .info-popover .popover-content {
@@ -156,12 +177,16 @@ li {
   box-shadow: var(--ion-box-shadow);
 }
 
-.rotateIcon {
+.icon--button {
+  cursor: pointer;
+}
+
+.icon--rotate {
   color: var(--ion-color-primary);
   transition: transform 4s;
 }
 
-.rotateIcon:hover {
+.icon--rotate:hover {
   transform: rotate(360deg);
   transition: transform 4s;
 }
@@ -199,12 +224,12 @@ ion-tab-bar {
   width: 400px;
 }
 
-.rotateIcon90Forward {
+.icon--rotate90Forward {
   transform: rotate(90deg);
   transition: transform 2s;
 }
 
-.rotateIcon90Back {
+.icon--rotate90Back {
   transform: rotate(0deg);
   transition: transform 2s;
 }
@@ -1047,6 +1072,12 @@ mark {
 }
 
 /*********** Modal Selected Location *************/
+
+.rating-container {
+  padding: 0.5rem 0;
+  width: 100%;
+}
+
 .rating {
   display: grid;
   grid-template-columns: max-content 1fr;
@@ -1068,11 +1099,10 @@ mark {
 .react-stars {
   display: flex;
   align-items: center;
-  height: 30px;
 }
 
 .react-stars--bewerten-page {
-  height: 32px;
+  padding-bottom: 15px;
 }
 
 .react-stars--only-show {
@@ -1163,7 +1193,7 @@ mark {
   z-index: 0;
 }
 
-.commentText {
+.comment-text {
   color: var(--ion-text-color);
   font-size: 0.8rem;
   line-height: 1rem;
@@ -1207,7 +1237,7 @@ mark {
   background: var(--ion-card-background);
 }
 
-.borderBottom {
+.border-bottom {
   border-bottom: 1px solid var(--ion-toolbar-background);
 }
 

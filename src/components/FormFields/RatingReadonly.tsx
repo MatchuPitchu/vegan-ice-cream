@@ -12,7 +12,7 @@ const RatingReadonly: VFC<FormRatingProps> = ({ initialValue, className }) => {
   const [value, setValue] = useState(initialValue * factorToConvertRatingScale);
 
   return (
-    <div className={`react-star react-stars--only-show ${className && className}`}>
+    <div className={`react-stars react-stars--only-show ${className && className}`}>
       <Rating
         ratingValue={value}
         onClick={(rate: number) => setValue(rate)}

@@ -5,13 +5,15 @@ declare global {
   }
 }
 
-interface Address {
+export interface GeoCoordinates {
+  lat: number | null;
+  lng: number | null;
+}
+
+export interface Address {
   city: string;
   country: string;
-  geo: {
-    lat: number | null;
-    lng: number | null;
-  };
+  geo: GeoCoordinates;
   number: number | null;
   street: string;
   zipcode: string;

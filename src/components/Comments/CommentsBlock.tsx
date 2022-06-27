@@ -23,8 +23,8 @@ const CommentsBlock: VFC<Props> = ({ comment, authorIdOfComment }) => {
 
   return (
     user && (
-      <div className='px-3 py-2 borderBottom'>
-        <div className='commentText'>
+      <div className='px-3 py-2 border-bottom'>
+        <div className='comment-text'>
           <IonIcon slot='start' className='me-2' color='text-color' icon={chatboxEllipses} />
           {comment.text}
         </div>

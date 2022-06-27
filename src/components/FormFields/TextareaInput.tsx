@@ -1,14 +1,24 @@
-import { IonTextarea } from '@ionic/react';
+import { IonLabel, IonTextarea } from '@ionic/react';
+import { ReactNode } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 
+type TextAreaProps = {
+  label?: string;
+  labelPosition?: 'stacked' | 'floating';
+  placeholder?: string;
+};
+
 // Types React Hook Form useController in child component: https://dev.to/texmeijin/component-design-idea-using-react-hook-form-v7-ie0
-type ReactHookFormTextAreaProps<TFieldValues extends FieldValues> =
-  UseControllerProps<TFieldValues>;
+type ReactHookFormTextAreaProps<TFieldValues extends FieldValues> = TextAreaProps &
+  UseControllerProps<TFieldValues> & { children?: ReactNode };
 
 const TextareaInput = <TFieldValues extends FieldValues>({
+  label,
+  labelPosition = 'stacked',
   control,
   name,
   rules,
+  children,
 }: ReactHookFormTextAreaProps<TFieldValues>) => {
   const {
     field: { onChange, value, ref },
@@ -21,7 +31,12 @@ const TextareaInput = <TFieldValues extends FieldValues>({
 
   return (
     <>
+      <IonLabel position={labelPosition} color={error && 'danger'}>
+        {label}
+      </IonLabel>
+      {children}
       <IonTextarea
+        color={error && 'danger'}
         className='pb-2'
         name={name}
         ref={ref}
@@ -30,8 +45,7 @@ const TextareaInput = <TFieldValues extends FieldValues>({
         rows={1}
         onIonChange={({ detail }) => onChange(detail.value)}
       />
-      {/* TODO: Error component styling */}
-      {error && <p>{error.message}</p>}
+      {error && <p className='paragraph--error-small'>{error.message}</p>}
     </>
   );
 };

@@ -1,52 +1,87 @@
-import { Controller, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import type { GeoCoordinates } from '../types/types';
+import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables-and-functions';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
 import { showActions } from '../store/showSlice';
 import { appActions } from '../store/appSlice';
-// Context
-import { IonInput, IonItem, IonLabel, IonButton, IonIcon } from '@ionic/react';
-import Error from './Error';
+import { IonItem, IonLabel, IonButton, IonIcon } from '@ionic/react';
 import { refreshCircle } from 'ionicons/icons';
-import LoadingError from './LoadingError';
-import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables-and-functions';
+import { CustomInput } from './FormFields/CustomInput';
+import { useEffect } from 'react';
+
+interface ProfilUpdateForm {
+  name: string;
+  email: string;
+  city: string;
+  newPassword: string;
+  repeatedPassword: string;
+  password: string;
+}
+
+const defaultFormValues: ProfilUpdateForm = {
+  name: '',
+  email: '',
+  city: '',
+  newPassword: '',
+  repeatedPassword: '',
+  password: '',
+};
+
+const defaultHomeCity = {
+  city: '',
+  geo: {
+    lat: 52.524,
+    lng: 13.41,
+  },
+};
+
+interface SubmitBody {
+  password: string;
+  name?: string;
+  email?: string;
+  home_city?: {
+    city: string;
+    geo: GeoCoordinates;
+  };
+  newPassword?: string;
+  repeatedPassword?: string;
+}
 
 const ProfilUpdate = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { error } = useAppSelector((state) => state.app);
 
-  const defaultValues = {
-    name: '',
-    email: '',
-    city: '',
-    newPassword: '',
-    repeatedPassword: '',
-    password: '',
-  };
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues,
+  const { control, handleSubmit } = useForm({
+    defaultValues: defaultFormValues,
   });
 
-  const fetchCity = async (city) => {
+  const fetchCity = async (city: string): Promise<Record<string, number> | undefined> => {
     try {
       const uri = encodeURI(city);
       const response = await fetch(`${GOOGLE_API_URL}${uri}${GOOGLE_API_URL_CONFIG}`);
       const { results } = await response.json();
-      return [results?.[0]?.geometry?.location?.lat, results?.[0]?.geometry?.location?.lng];
+      return {
+        lat: results?.[0]?.geometry?.location?.lat,
+        lng: results?.[0]?.geometry?.location?.lng,
+      };
     } catch (err) {
       dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal.'));
       setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
   };
 
-  const onSubmit = async ({ name, email, city, newPassword, repeatedPassword, password }) => {
-    if (!password) return;
+  const onSubmit: SubmitHandler<ProfilUpdateForm> = async ({
+    name,
+    email,
+    city,
+    newPassword,
+    repeatedPassword,
+    password,
+  }) => {
+    if (!password || !user) return;
     if (newPassword && newPassword !== repeatedPassword) {
       dispatch(appActions.setError('Neues Password stimmt nicht mit Wiederholung überein.'));
       return setTimeout(() => dispatch(appActions.setError('')), 5000);
@@ -55,38 +90,36 @@ const ProfilUpdate = () => {
     dispatch(appActions.setIsLoading(true));
 
     try {
-      let body = {
+      const body: SubmitBody = {
         password,
       };
+
       if (name && name !== user.name) body.name = name;
       if (email && email !== user.email) body.email = email;
-      if (city === '') {
-        body.home_city = {
-          city: '',
-          geo: {
-            lat: 52.524,
-            lng: 13.41,
-          },
-        };
-      }
+      if (city === '') body.home_city = defaultHomeCity;
       if (city && city !== user.home_city.city) {
-        const [lat, lng] = await fetchCity(city);
-        body.home_city = {
-          city,
-          geo: {
-            lat: lat || null,
-            lng: lng || null,
-          },
-        };
+        const data = await fetchCity(city);
+        if (data) {
+          body.home_city = {
+            city,
+            geo: {
+              lat: data.lat,
+              lng: data.lng,
+            },
+          };
+        }
       }
       if (newPassword) body.newPassword = newPassword;
       if (repeatedPassword) body.repeatedPassword = repeatedPassword;
 
-      const options = {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const options: RequestInit = {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          token: localStorage.getItem('token'),
+          token,
         },
         body: JSON.stringify(body),
         credentials: 'include',
@@ -120,7 +153,6 @@ const ProfilUpdate = () => {
         setTimeout(() => dispatch(appActions.resetError()), 5000);
       }
     } catch (err) {
-      console.log(err);
       dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal.'));
       setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
@@ -136,78 +168,33 @@ const ProfilUpdate = () => {
       </IonItem>
       <form onSubmit={handleSubmit(onSubmit)}>
         <IonItem lines='full'>
-          <IonLabel position='stacked' htmlFor='name'>
-            Name
-          </IonLabel>
-          <Controller
-            control={control}
-            defaultValue=''
-            render={({ field: { onChange, value } }) => (
-              <IonInput
-                type='text'
-                inputmode='text'
-                value={value}
-                onIonChange={(e) => onChange(e.detail.value)}
-              />
-            )}
-            name='name'
-          />
+          <CustomInput control={control} name='name' label='Name' labelPosition='stacked' />
         </IonItem>
-        {Error('name', errors)}
 
         <IonItem lines='full'>
-          <IonLabel position='stacked' htmlFor='email'>
-            E-Mail
-          </IonLabel>
-          <Controller
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <IonInput
-                type='email'
-                inputmode='email'
-                value={value}
-                onIonChange={(e) => onChange(e.detail.value)}
-              />
-            )}
-            name='email'
-          />
+          <CustomInput control={control} name='email' label='E-Mail' labelPosition='stacked' />
         </IonItem>
-        {Error('email', errors)}
 
         <IonItem lines='full'>
-          <IonLabel position='stacked' htmlFor='city'>
-            Stadt <span className='span-small'>(für Startpunkt Karte)</span>
-          </IonLabel>
-          <Controller
+          <CustomInput
             control={control}
-            defaultValue=''
-            render={({ field: { onChange, value } }) => (
-              <IonInput
-                type='text'
-                inputmode='text'
-                value={value}
-                onIonChange={(e) => onChange(e.detail.value)}
-              />
-            )}
             name='city'
+            label={
+              <>
+                Stadt <span className='span-small'>(für Startpunkt Karte)</span>
+              </>
+            }
+            labelPosition='stacked'
           />
         </IonItem>
 
         <IonItem lines='full'>
-          <IonLabel position='stacked' htmlFor='newPassword'>
-            Neues Passwort
-          </IonLabel>
-          <Controller
+          <CustomInput
             control={control}
-            render={({ field: { onChange, value } }) => (
-              <IonInput
-                type='password'
-                inputmode='text'
-                value={value}
-                onIonChange={(e) => onChange(e.detail.value)}
-              />
-            )}
             name='newPassword'
+            label='Neues Passwort'
+            labelPosition='stacked'
+            type='password'
             rules={{
               pattern: {
                 value: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,32}$/,
@@ -216,24 +203,14 @@ const ProfilUpdate = () => {
             }}
           />
         </IonItem>
-        {Error('newPassword', errors)}
 
         <IonItem lines='full'>
-          <IonLabel position='stacked' htmlFor='repeatedPassword'>
-            Passwort wiederholen
-          </IonLabel>
-          <Controller
+          <CustomInput
             control={control}
-            render={({ field: { onChange, value } }) => (
-              <IonInput
-                type='password'
-                id='repeatedPassword'
-                inputmode='text'
-                value={value}
-                onIonChange={(e) => onChange(e.detail.value)}
-              />
-            )}
             name='repeatedPassword'
+            label='Passwort wiederholen'
+            labelPosition='stacked'
+            type='password'
             rules={{
               pattern: {
                 value: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,32}$/,
@@ -242,32 +219,19 @@ const ProfilUpdate = () => {
             }}
           />
         </IonItem>
-        {Error('repeatedPassword', errors)}
 
-        <IonItem lines='none'>
-          <IonLabel position='stacked' htmlFor='password'>
-            Aktuelles Passwort
-          </IonLabel>
-          <Controller
+        <IonItem lines='full'>
+          <CustomInput
             control={control}
-            render={({ field: { onChange, value } }) => (
-              <IonInput
-                type='password'
-                inputmode='text'
-                value={value}
-                onIonChange={(e) => onChange(e.detail.value)}
-              />
-            )}
             name='password'
-            rules={{ required: true }}
+            label='Eingabe mit aktuellem Passwort bestätigen'
+            labelPosition='stacked'
+            type='password'
+            rules={{ required: 'Bitte bestätige die Eingabe mit deinem Passwort.' }}
           />
-        </IonItem>
-        {Error('password', errors)}
-        {error && <div className='alertMsg'>{error}</div>}
-
-        <IonItem lines='none'>
           <IonButton
-            className='my-3 confirm-btn-block'
+            className='my-3 button--confirm-block'
+            fill='outline'
             type='submit'
             routerLink='/login'
             expand='block'
@@ -276,8 +240,10 @@ const ProfilUpdate = () => {
             Profil updaten
           </IonButton>
         </IonItem>
+
+        {/* TODO: Brauch ich nicht mehr?! */}
+        {error && <div className='alertMsg'>{error}</div>}
       </form>
-      <LoadingError />
     </div>
   );
 };

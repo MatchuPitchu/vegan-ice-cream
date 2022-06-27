@@ -14,7 +14,7 @@ import {
 } from '@ionic/react';
 import { closeCircleOutline, mailUnread } from 'ionicons/icons';
 import TextareaInput from './FormFields/TextareaInput';
-import Input from './FormFields/Input';
+import { CustomInput } from './FormFields/CustomInput';
 import Select from './FormFields/Select';
 
 interface FeedbackForm {
@@ -96,7 +96,7 @@ const Feedback: VFC = () => {
       <IonContent className='ion-padding'>
         <form onSubmit={handleSubmit(onSubmit)}>
           <IonItem lines='none' className='mb-1'>
-            <Input
+            <CustomInput
               control={control}
               name='name'
               label='Name'
@@ -105,7 +105,7 @@ const Feedback: VFC = () => {
           </IonItem>
 
           <IonItem lines='none' className='mb-1'>
-            <Input
+            <CustomInput
               control={control}
               name='email'
               label='E-Mail'
@@ -114,10 +114,10 @@ const Feedback: VFC = () => {
           </IonItem>
 
           <IonItem lines='none' className='mb-1'>
-            <IonLabel position='stacked'>Nachricht</IonLabel>
             <TextareaInput
               control={control}
               name='message'
+              label='Nachricht'
               rules={{ required: 'Bitte ergänze deine Nachricht' }}
             />
           </IonItem>

@@ -8,9 +8,8 @@ import { showActions } from '../store/showSlice';
 import { useAnimation } from '../hooks/useAnimation';
 import { IonButton, IonContent, IonIcon, IonItem, IonLabel, IonModal } from '@ionic/react';
 import { add, closeCircleOutline } from 'ionicons/icons';
-import Input from './FormFields/Input';
+import { CustomInput } from './FormFields/CustomInput';
 import Select from './FormFields/Select';
-import LoadingError from './LoadingError';
 
 interface NewLocationFormValues {
   name: string;
@@ -118,7 +117,7 @@ const NewLocationForm: VFC = () => {
         {newLocation ? (
           <form onSubmit={handleSubmit(onSubmit)}>
             <IonItem lines='none' className='mb-1'>
-              <Input
+              <CustomInput
                 control={control}
                 name='name'
                 label='Name'
@@ -127,7 +126,7 @@ const NewLocationForm: VFC = () => {
               />
             </IonItem>
             <IonItem lines='none' className='mb-1'>
-              <Input
+              <CustomInput
                 control={control}
                 name='street'
                 label='Straße'
@@ -136,7 +135,7 @@ const NewLocationForm: VFC = () => {
               />
             </IonItem>
             <IonItem lines='none' className='mb-1'>
-              <Input
+              <CustomInput
                 control={control}
                 name='number'
                 label='Nummer'
@@ -151,7 +150,7 @@ const NewLocationForm: VFC = () => {
               />
             </IonItem>
             <IonItem lines='none' className='mb-1'>
-              <Input
+              <CustomInput
                 control={control}
                 name='zipcode'
                 label='PLZ'
@@ -167,7 +166,7 @@ const NewLocationForm: VFC = () => {
               />
             </IonItem>
             <IonItem lines='none' className='mb-1'>
-              <Input
+              <CustomInput
                 control={control}
                 name='city'
                 label='Stadt'
@@ -191,7 +190,7 @@ const NewLocationForm: VFC = () => {
               />
             </IonItem>
             <IonItem lines='none' className='mb-1'>
-              <Input
+              <CustomInput
                 control={control}
                 name='location_url'
                 label='Website Eisladen'
@@ -211,8 +210,6 @@ const NewLocationForm: VFC = () => {
           <>Vielen Dank!</>
         )}
       </IonContent>
-
-      <LoadingError />
     </IonModal>
   );
 };

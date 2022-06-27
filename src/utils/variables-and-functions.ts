@@ -27,8 +27,8 @@ export const handleChangeFlavorTypeToggleGroup = (
     case 'vegan':
       if (value) {
         setValue('not_specified', false);
+        setValue('lactose_free', value);
       }
-      setValue('lactose_free', value);
       break;
     case 'lactose_free':
       if (value) {

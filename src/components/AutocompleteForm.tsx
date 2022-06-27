@@ -176,8 +176,6 @@ const AutocompleteForm: VFC = () => {
           </IonButton>
         </form>
       </IonContent>
-
-      <LoadingError />
     </IonModal>
   );
 };

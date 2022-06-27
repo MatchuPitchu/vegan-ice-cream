@@ -81,8 +81,6 @@ const GeolocationButton: VFC<Props> = ({ currentUserPosition, handleSetCurrentPo
         <IonIcon icon={!currentUserPosition ? navigateCircleOutline : navigateCircle} />
         {currentUserPosition && <IonIcon className='close-center-btn' size='small' icon={close} />}
       </IonButton>
-
-      <LoadingError />
     </>
   );
 };
