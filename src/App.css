@@ -158,14 +158,18 @@ li {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.2rem;
+  gap: 8px;
   cursor: pointer;
-  margin-right: 0.9rem;
-  box-shadow: inset 0px -10px 0px var(--ion-color-primary-transparent);
+  margin-right: 1.2rem;
+  /* background-color: var(--ion-color-primary-transparent); */
+}
+
+.info-number-locations__icon--rotated {
+  transform: translateX(7px) rotate(10deg);
 }
 
 .info-number-locations__number {
-  /* border-bottom: 4px solid var(--ion-color-primary); */
+  border-bottom: 3px solid var(--ion-color-primary);
 }
 
 .info-popover .popover-content {

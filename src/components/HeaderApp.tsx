@@ -70,6 +70,7 @@ const HeaderApp = () => {
           >
             <IonIcon
               color={`${isDarkTheme ? 'primary' : 'dark'}`}
+              className='info-number-locations__icon--rotated'
               icon={pin}
               title='Neue Eisläden seit letztem Besuch'
             />
