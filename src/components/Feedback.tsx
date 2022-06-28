@@ -12,7 +12,7 @@ import {
   IonLabel,
   IonPage,
 } from '@ionic/react';
-import { closeCircleOutline, mailUnread } from 'ionicons/icons';
+import { closeCircleOutline, paperPlaneOutline } from 'ionicons/icons';
 import TextareaInput from './FormFields/TextareaInput';
 import { CustomInput } from './FormFields/CustomInput';
 import Select from './FormFields/Select';
@@ -152,8 +152,13 @@ const Feedback: VFC = () => {
             />
           </IonItem>
 
-          <IonButton className='mt-3' type='submit' expand='block'>
-            <IonIcon className='pe-1' icon={mailUnread} />
+          <IonButton
+            fill='clear'
+            className='button--check button--check-large my-3'
+            type='submit'
+            expand='block'
+          >
+            <IonIcon className='pe-1' icon={paperPlaneOutline} />
             Absenden
           </IonButton>
         </form>
