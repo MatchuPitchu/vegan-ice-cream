@@ -67,7 +67,7 @@ const About: VFC = () => {
           alt=''
         />
       </IonHeader>
-      <IonContent className='ion-padding'>
+      <IonContent>
         <IonCard>
           <IonCardHeader>
             <IonCardTitle>Über die App</IonCardTitle>

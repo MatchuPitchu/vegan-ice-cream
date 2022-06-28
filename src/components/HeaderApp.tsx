@@ -61,48 +61,47 @@ const HeaderApp = () => {
         </IonButtons>
 
         <IonButtons slot='end'>
-          <div
-            className='info-number-locations'
-            onClick={(event) => {
-              event.persist();
-              setShowPopoverNumberOfLocations({ showPopover: true, event });
-            }}
-          >
-            <IonIcon
-              color={`${isDarkTheme ? 'primary' : 'dark'}`}
-              className='info-number-locations__icon--rotated'
-              icon={pin}
-              title='Neue Eisläden seit letztem Besuch'
-            />
-            <div className='info-number-locations__number'>{numberOfLocations}</div>
-            <IonPopover
-              cssClass='info-popover'
-              event={showPopoverNumberOfLocations.event}
-              isOpen={showPopoverNumberOfLocations.showPopover}
-              onDidDismiss={() =>
-                setShowPopoverNumberOfLocations({ showPopover: false, event: undefined })
-              }
+          {numberOfLocations && (
+            <div
+              className='info-number-locations'
+              onClick={(event) => {
+                event.persist();
+                setShowPopoverNumberOfLocations({ showPopover: true, event });
+              }}
             >
-              Eingetragene Eisläden in der App
-            </IonPopover>
-          </div>
-          {user && (
-            <>
-              <div
-                className='info-number-locations'
-                onClick={(event) => {
-                  event.persist();
-                  setShowPopover({ showPopover: true, event });
-                }}
+              <IonIcon
+                color={`${isDarkTheme ? 'primary' : 'dark'}`}
+                className='info-number-locations__icon--rotated'
+                icon={pin}
+                title='Neue Eisläden seit letztem Besuch'
+              />
+              <div className='info-number-locations__number'>{numberOfLocations}</div>
+              <IonPopover
+                cssClass='info-popover'
+                event={showPopoverNumberOfLocations.event}
+                isOpen={showPopoverNumberOfLocations.showPopover}
+                onDidDismiss={() =>
+                  setShowPopoverNumberOfLocations({ showPopover: false, event: undefined })
+                }
               >
-                <IonIcon
-                  color={`${isDarkTheme ? 'primary' : 'dark'}`}
-                  icon={analytics}
-                  title='Neue Eisläden seit letztem Besuch'
-                />
-                <div className='info-number-locations__number'>{numberOfNewLocations || 0}</div>
-              </div>
-
+                Eingetragene Eisläden in der App
+              </IonPopover>
+            </div>
+          )}
+          {user && (
+            <div
+              className='info-number-locations'
+              onClick={(event) => {
+                event.persist();
+                setShowPopover({ showPopover: true, event });
+              }}
+            >
+              <IonIcon
+                color={`${isDarkTheme ? 'primary' : 'dark'}`}
+                icon={analytics}
+                title='Neue Eisläden seit letztem Besuch'
+              />
+              <div className='info-number-locations__number'>{numberOfNewLocations || 0}</div>
               <IonPopover
                 cssClass='info-popover'
                 event={showPopover.event}
@@ -111,7 +110,7 @@ const HeaderApp = () => {
               >
                 Neue Eisläden seit letztem Besuch
               </IonPopover>
-            </>
+            </div>
           )}
 
           <IonIcon
