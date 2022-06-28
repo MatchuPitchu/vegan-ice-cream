@@ -496,8 +496,13 @@ const Bewerten = () => {
                 <DatePicker name='date' control={control} />
               </IonItem>
 
-              <IonButton fill='clear' className='button--check my-3' type='submit'>
-                <IonIcon slot='end' icon={starHalfOutline} />
+              <IonButton
+                fill='clear'
+                className='button--check button--check-large my-3'
+                type='submit'
+                expand='block'
+              >
+                <IonIcon className='pe-1' icon={starHalfOutline} />
                 Bewertung abgeben
               </IonButton>
             </form>

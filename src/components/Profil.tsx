@@ -25,7 +25,10 @@ import {
   iceCream,
   informationCircle,
   mail,
+  mailOutline,
+  navigateOutline,
   refreshCircle,
+  refreshCircleOutline,
   trailSign,
 } from 'ionicons/icons';
 import ProfilUpdate from './ProfilUpdate';
@@ -86,13 +89,14 @@ const Profil: VFC = () => {
         <IonContent>
           <div className='mt-3'>
             <IonCard>
-              <IonItem className='d-flex align-items-center' lines='full'>
+              <IonItem color='tertiary' lines='none'>
                 <IonCardTitle className='me-2 my-3 ion-text-wrap'>{user.name}</IonCardTitle>
                 <IonButton
-                  className='update-btn ms-auto'
+                  fill='clear'
+                  className='button--update ms-auto'
                   onClick={() => dispatch(showActions.toggleShowUpdateProfil())}
                 >
-                  <IonIcon className='me-1' icon={refreshCircle} />
+                  <IonIcon className='pe-1' icon={refreshCircleOutline} />
                   Update
                 </IonButton>
               </IonItem>
@@ -105,12 +109,12 @@ const Profil: VFC = () => {
                 </IonItem>
               )}
 
-              <IonItem color='background-color' className='border-bottom' lines='none'>
-                <IonIcon icon={mail} slot='start' />
+              <IonItem className='item--item-background' lines='full'>
+                <IonIcon icon={mailOutline} slot='start' />
                 <IonLabel>{user.email}</IonLabel>
               </IonItem>
-              <IonItem color='background-color' className='border-bottom' lines='none'>
-                <IonIcon icon={trailSign} slot='start' />
+              <IonItem className='item--item-background' lines='full'>
+                <IonIcon icon={navigateOutline} slot='start' />
                 <IonLabel>
                   {user?.home_city?.city ? user.home_city.city : 'keinen Ort angegeben'}
                 </IonLabel>
@@ -136,9 +140,8 @@ const Profil: VFC = () => {
               </IonItem>
               <IonItemGroup>
                 <IonItem
-                  color='background-color'
-                  className={`${!showUserComments && 'border-bottom'}`}
-                  lines='none'
+                  className='item--item-background'
+                  lines={!showUserComments ? 'full' : 'none'}
                 >
                   <IonIcon
                     slot='start'
@@ -170,7 +173,7 @@ const Profil: VFC = () => {
                     );
                   })}
 
-                <IonItem color='background-color' lines='none'>
+                <IonItem className='item--item-background' lines='none'>
                   <IonIcon
                     className={showFlavors ? 'icon--rotate90Forward' : 'icon--rotate90Back'}
                     slot='start'

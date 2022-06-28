@@ -862,8 +862,7 @@ mark {
 }
 
 .all-control,
-.viewport-control,
-.update-btn {
+.viewport-control {
   --background: var(--ion-item-background);
   color: var(--ion-text-color);
   font-size: 0.7rem;
@@ -875,8 +874,7 @@ mark {
 
 .add-control,
 .where-control,
-.center-control,
-.update-btn {
+.center-control {
   --background: var(--ion-item-background);
   font-size: 0.7rem;
   text-transform: none;
@@ -885,8 +883,7 @@ mark {
 }
 
 .add-control,
-.where-control,
-.update-btn {
+.where-control {
   color: var(--ion-color-primary);
 }
 
@@ -1026,6 +1023,24 @@ mark {
 
 .button--check:hover {
   color: var(--ion-text-color--button);
+}
+
+.button--check-large::before {
+  height: 900%;
+}
+
+.button--update {
+  color: var(--ion-text-color);
+  font-size: 0.7rem;
+  text-transform: none;
+  letter-spacing: 0;
+  height: 33px;
+  border: 1px solid transparent;
+  border-radius: var(--ion-border-radius);
+}
+
+.button--update:hover {
+  border: 1px solid var(--ion-text-color);
 }
 
 .pricing-form__button--check {
