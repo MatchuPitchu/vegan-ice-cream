@@ -1,12 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Flavor } from '../types/types';
+import type { Flavor } from '../types/types';
+import { flavorApi } from './api/flavor-api-slice';
 
 interface FlavorStateSlice {
+  flavors: Flavor[];
   flavor: Flavor | null;
   searchTermFlavor: string;
 }
 
 const initialFlavorState: FlavorStateSlice = {
+  flavors: [],
   flavor: null,
   searchTermFlavor: '',
 };
@@ -24,6 +27,11 @@ const flavorSlice = createSlice({
     setSearchTermFlavor: (state, { payload }: PayloadAction<string>) => {
       state.searchTermFlavor = payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(flavorApi.endpoints.getFlavors.matchFulfilled, (state, { payload }) => {
+      state.flavors = payload;
+    });
   },
 });
 

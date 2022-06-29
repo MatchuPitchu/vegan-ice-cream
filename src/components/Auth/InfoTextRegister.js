@@ -1,5 +1,5 @@
 import { IonButton, IonCard, IonIcon, IonItem, IonLabel } from '@ionic/react';
-import { lockClosed } from 'ionicons/icons';
+import { keyOutline } from 'ionicons/icons';
 
 const InfoTextRegister = () => (
   <>
@@ -25,9 +25,14 @@ const InfoTextRegister = () => (
         Hier findest du die Datenschutzhinweise, denen du mit der Registrierung zustimmst
       </p>
       <p className='text-center'>
-        <IonButton className='add-control' button routerLink='/datenschutz' lines='none'>
+        <IonButton
+          fill='clear'
+          className='button--check button--check-large my-3 mx-5'
+          routerLink='/datenschutz'
+          expand='block'
+        >
           <IonLabel>Datenschutz</IonLabel>
-          <IonIcon slot='end' icon={lockClosed} />
+          <IonIcon slot='end' icon={keyOutline} />
         </IonButton>
       </p>
     </IonCard>

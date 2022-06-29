@@ -83,14 +83,6 @@ li {
   text-align: center;
 }
 
-.confirm-btn {
-  height: 37px;
-  text-transform: none;
-  align-self: center;
-  opacity: 1;
-  margin: 0 auto;
-}
-
 .button--confirm-block {
   height: 37px;
   text-transform: none;
@@ -1023,6 +1015,10 @@ mark {
 
 .button--check:hover {
   color: var(--ion-text-color--button);
+}
+
+.button--check-light {
+  background-color: var(--ion-item-background);
 }
 
 .button--check-large::before {

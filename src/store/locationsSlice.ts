@@ -168,9 +168,6 @@ const locationsSlice = createSlice({
     setLocations: (state, { payload }: PayloadAction<IceCreamLocation[]>) => {
       state.locations = payload;
     },
-    addToLocations: (state, { payload }: PayloadAction<IceCreamLocation>) => {
-      state.locations = [...state.locations, payload];
-    },
     updateSingleLocation: (state, { payload }: PayloadAction<IceCreamLocation>) => {
       const updatedLocationIndex = state.locations.findIndex(
         (location) => location._id === payload._id
@@ -231,16 +228,6 @@ const locationsSlice = createSlice({
         comments_list: newCommentsList,
         location_rating_quality,
         location_rating_vegan_offer,
-      };
-    },
-    updateSelectedLocation: (state, { payload }: PayloadAction<Partial<IceCreamLocation>>) => {
-      const updatedLocationIndex = state.locations.findIndex(
-        (location) => location._id === state.selectedLocationId
-      );
-
-      state.locations[updatedLocationIndex] = {
-        ...state.locations[updatedLocationIndex],
-        ...payload,
       };
     },
     resetSelectedLocation: (state) => {
@@ -346,6 +333,24 @@ const locationsSlice = createSlice({
         state.citiesWithLocations = payload;
       }
     );
+    // Update selected location
+    builder.addMatcher(
+      locationsApi.endpoints.getCommentsAndFlavorsOfSelectedLocation.matchFulfilled,
+      (state, { payload }) => {
+        const updatedLocationIndex = state.locations.findIndex(
+          (location) => location._id === state.selectedLocationId
+        );
+
+        state.locations[updatedLocationIndex] = {
+          ...state.locations[updatedLocationIndex],
+          ...payload,
+        };
+      }
+    );
+    // add new location
+    builder.addMatcher(locationsApi.endpoints.addLocation.matchFulfilled, (state, { payload }) => {
+      state.locations = [...state.locations, payload];
+    });
   },
 });
 

@@ -236,7 +236,8 @@ const Bewerten = () => {
           <IonCardTitle>Danke für deine Bewertung</IonCardTitle>
           <IonButton
             fill='clear'
-            className='button--check my-3'
+            className='button--check button--check-large my-3 mx-5'
+            expand='block'
             onClick={() => {
               setSuccess(false);
               reset(); // Reset React Hook Form
@@ -498,7 +499,7 @@ const Bewerten = () => {
 
               <IonButton
                 fill='clear'
-                className='button--check button--check-large my-3'
+                className='button--check button--check-large my-3 mx-5'
                 type='submit'
                 expand='block'
               >

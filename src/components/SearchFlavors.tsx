@@ -1,9 +1,9 @@
-import { useState, useEffect, VFC } from 'react';
+import { useState, VFC } from 'react';
 import type { Flavor, PopoverState } from '../types/types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { flavorActions } from '../store/flavorSlice';
-import { appActions } from '../store/appSlice';
+import { useGetFlavorsQuery } from '../store/api/flavor-api-slice';
 import { useAutocomplete } from '../hooks/useAutocomplete';
 import Highlighter from 'react-highlight-words';
 import {
@@ -26,25 +26,11 @@ const SearchFlavors: VFC = () => {
     showPopover: false,
     event: undefined,
   });
-  const [flavors, setFlavors] = useState([]);
+
+  const { data: flavors, error, isLoading, isSuccess } = useGetFlavorsQuery();
 
   const { handleSearchTextChange, predictions, setPredictions, searchWords } =
-    useAutocomplete<Flavor>(flavors);
-
-  useEffect(() => {
-    dispatch(appActions.setIsLoading(true));
-    const fetchFlavors = async () => {
-      try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/flavors`);
-        const data = await res.json();
-        setFlavors(data);
-      } catch (error: any) {
-        console.log(error.message);
-      }
-    };
-    fetchFlavors();
-    dispatch(appActions.setIsLoading(false));
-  }, [dispatch]);
+    useAutocomplete<Flavor>(flavors ?? []);
 
   const onSearchTextChanged = (searchText: string) => handleSearchTextChange(searchText, 8);
 

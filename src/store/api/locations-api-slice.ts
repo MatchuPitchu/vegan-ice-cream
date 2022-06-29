@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IceCreamLocation } from '../../types/types';
+import { Comment, Flavor, IceCreamLocation } from '../../types/types';
 import type { CityName } from '../locationsSlice';
 
 // Define a service using a base URL and expected endpoints
@@ -14,7 +14,7 @@ export const locationsApi = createApi({
     return {
       getLocations: builder.query<IceCreamLocation[], void>({
         query: () => ({
-          url: `/`,
+          url: '/',
           method: 'GET',
         }),
       }),
@@ -24,10 +24,34 @@ export const locationsApi = createApi({
           method: 'GET',
         }),
       }),
+      getCommentsAndFlavorsOfSelectedLocation: builder.query<
+        { comments_list: Comment[]; flavors_listed: Flavor[] },
+        string
+      >({
+        query: (location_id) => ({
+          url: `/${location_id}/all-comments-flavors`,
+          method: 'GET',
+        }),
+      }),
       getAllCitiesWithLocations: builder.query<CityName[], void>({
         query: () => ({
-          url: `/cities-with-locations`,
+          url: '/cities-with-locations',
           method: 'GET',
+        }),
+      }),
+      addLocation: builder.mutation<
+        IceCreamLocation,
+        Pick<IceCreamLocation, 'name' | 'address' | 'location_url'>
+      >({
+        query: (data) => ({
+          url: '/',
+          method: 'POST',
+          header: {
+            'Content-Type': 'application/json',
+            token: localStorage.getItem('token') ?? '',
+          },
+          body: data,
+          credentials: 'include',
         }),
       }),
       updatePricing: builder.mutation<IceCreamLocation, { location_id: string; pricing: number }>({
@@ -53,6 +77,8 @@ export const locationsApi = createApi({
 export const {
   useGetLocationsQuery,
   useGetOneLocationQuery,
+  useGetCommentsAndFlavorsOfSelectedLocationQuery,
   useGetAllCitiesWithLocationsQuery,
+  useAddLocationMutation,
   useUpdatePricingMutation,
 } = locationsApi; // automatically generated query hook

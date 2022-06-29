@@ -155,7 +155,12 @@ const SetNewPassword = () => {
               {Error('repeatedPassword', errors)}
               {error && <div className='alertMsg'>{error}</div>}
 
-              <IonButton className='my-3 confirm-btn' type='submit' expand='block'>
+              <IonButton
+                fill='clear'
+                className='button--check button--check-large my-3 mx-5'
+                expand='block'
+                type='submit'
+              >
                 <IonIcon className='pe-1' icon={logIn} />
                 Passwort erneuern
               </IonButton>
@@ -171,7 +176,12 @@ const SetNewPassword = () => {
                   Passwort erfolgreich erneuert
                 </IonLabel>
               </IonItem>
-              <IonButton className='my-3 confirm-btn' routerLink='/login' fill='solid'>
+              <IonButton
+                fill='clear'
+                className='button--check button--check-large my-3 mx-5'
+                expand='block'
+                routerLink='/login'
+              >
                 <IonIcon className='pe-1' icon={logIn} />
                 Login
               </IonButton>

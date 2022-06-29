@@ -16,7 +16,7 @@ import {
 } from '@ionic/react';
 import { Redirect } from 'react-router-dom';
 import Error from '../Error';
-import { lockClosed, logIn, refreshCircle } from 'ionicons/icons';
+import { keyOutline, logInOutline } from 'ionicons/icons';
 
 const Login = () => {
   const { isAuth } = useAppSelector((state) => state.user);
@@ -96,12 +96,22 @@ const Login = () => {
               </div>
             )}
 
-            <IonButton className='my-3 confirm-btn' type='submit' fill='solid' expand='block'>
-              <IonIcon className='pe-1' icon={logIn} />
+            <IonButton
+              fill='clear'
+              className='button--check button--check-large my-3 mx-5'
+              expand='block'
+              type='submit'
+            >
+              <IonIcon className='pe-1' icon={logInOutline} />
               Login
             </IonButton>
-            <IonButton routerLink='/auth/reset-password' size='small' fill='clear' expand='block'>
-              <IonIcon slot='end' icon={refreshCircle} />
+            <IonButton
+              fill='clear'
+              className='button--check button--check-light button--check-large my-3 mx-5'
+              routerLink='/auth/reset-password'
+              expand='block'
+            >
+              <IonIcon />
               Passwort vergessen?
             </IonButton>
           </form>
@@ -113,9 +123,15 @@ const Login = () => {
             Hier findest du die Datenschutzhinweise, denen du mit dem Login zustimmst
           </p>
           <p className='text-center'>
-            <IonButton className='add-control' button routerLink='/datenschutz' lines='none'>
+            <IonButton
+              fill='clear'
+              className='button--check button--check-large my-3 mx-5'
+              routerLink='/datenschutz'
+              lines='none'
+              expand='block'
+            >
+              <IonIcon slot='end' icon={keyOutline} />
               <IonLabel>Datenschutz</IonLabel>
-              <IonIcon slot='end' icon={lockClosed} />
             </IonButton>
           </p>
         </div>
