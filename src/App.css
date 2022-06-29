@@ -944,6 +944,10 @@ mark {
   align-items: center;
 }
 
+.item-transparent--large {
+  --min-height: 90px;
+}
+
 .websiteLink,
 .item-text--small,
 .item-text--smallWarning,

@@ -110,7 +110,7 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
           style={isDarkTheme ? { backgroundColor: '#23303399' } : { backgroundColor: '#ffffff99' }}
         >
           <IonItemGroup>
-            <IonItem className='item-transparent' lines='full'>
+            <IonItem className='item-transparent item-transparent--large' lines='full'>
               <IonLabel className='ion-text-wrap'>
                 {selectedLocation.address.street} {selectedLocation.address.number}
                 <br />
