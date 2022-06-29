@@ -89,7 +89,12 @@ const ResetPassword = () => {
                 </IonItem>
                 {Error('email', errors)}
 
-                <IonButton className='my-3 mx-3 confirm-btn' type='submit'>
+                <IonButton
+                  fill='clear'
+                  className='button--check button--check-large my-3 mx-5'
+                  expand='block'
+                  type='submit'
+                >
                   <IonIcon slot='end' className='pe-1' icon={refreshCircle} />
                   Passwort zurücksetzen
                 </IonButton>

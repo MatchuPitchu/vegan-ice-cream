@@ -1,4 +1,4 @@
-import { useEffect, useState, VFC } from 'react';
+import { useState, VFC } from 'react';
 import type { IceCreamLocation } from '../types/types';
 import { isComment, isCommentsList, isString } from '../types/typeguards';
 import { useThemeContext } from '../context/ThemeContext';
@@ -6,7 +6,6 @@ import { useAnimation } from '../hooks/useAnimation';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { locationsActions } from '../store/locationsSlice';
-import { appActions } from '../store/appSlice';
 import { showActions } from '../store/showSlice';
 import {
   IonButton,
@@ -33,9 +32,10 @@ import CommentsBlock from './Comments/CommentsBlock';
 import ButtonFavoriteLocation from './Comments/ButtonFavoriteLocation';
 import FlavorsList from './Comments/FlavorsList';
 import Ratings from './Ratings';
-import LoadingError from './LoadingError';
 import Pricing from './Pricing';
 import PricingForm from './PricingForm';
+import { useGetCommentsAndFlavorsOfSelectedLocationQuery } from '../store/api/locations-api-slice';
+import { skipToken } from '@reduxjs/toolkit/dist/query';
 
 type Props = {
   selectedLocation: IceCreamLocation;
@@ -52,32 +52,15 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
 
   const { isDarkTheme } = useThemeContext();
 
-  useEffect(() => {
-    if (selectedLocation.comments_list.length === 0) return; // no comments available
-    if (isComment(selectedLocation.comments_list[0])) return; // comment already fetched
+  // if no comments available OR comments already fetched, set locationId to null to skip fetching
+  const locationId =
+    selectedLocation.comments_list.length === 0 || isComment(selectedLocation.comments_list[0])
+      ? null
+      : selectedLocation._id;
 
-    dispatch(appActions.setIsLoading(true));
-    const fetchData = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.REACT_APP_API_URL}/locations/${selectedLocation._id}/all-comments-flavors`
-        );
-        const { comments_list, flavors_listed } = await res.json();
-        dispatch(
-          locationsActions.updateSelectedLocation({
-            comments_list,
-            flavors_listed,
-          })
-        );
-      } catch (err) {
-        console.log(err);
-        dispatch(appActions.setError('Ups, schief gelaufen. Versuche es später nochmal.'));
-        setTimeout(() => dispatch(appActions.resetError()), 5000);
-      }
-    };
-    fetchData();
-    dispatch(appActions.setIsLoading(false));
-  }, [selectedLocation, dispatch]);
+  const { isLoading, error, isSuccess } = useGetCommentsAndFlavorsOfSelectedLocationQuery(
+    locationId ?? skipToken
+  );
 
   const handleResetAllOnCloseModal = () => {
     dispatch(showActions.closeCommentsAndLocationInfoModal());

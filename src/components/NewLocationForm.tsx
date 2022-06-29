@@ -5,6 +5,7 @@ import { appActions } from '../store/appSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { locationsActions } from '../store/locationsSlice';
 import { showActions } from '../store/showSlice';
+import { useAddLocationMutation } from '../store/api/locations-api-slice';
 import { useAnimation } from '../hooks/useAnimation';
 import { IonButton, IonContent, IonIcon, IonItem, IonLabel, IonModal } from '@ionic/react';
 import { add, closeCircleOutline } from 'ionicons/icons';
@@ -28,6 +29,9 @@ const NewLocationForm: VFC = () => {
 
   const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
 
+  // TODO: how to catch and set error during POST request with RTK Query?
+  const [triggerAddLocation, result] = useAddLocationMutation();
+
   const defaultNewLocationFormValues: NewLocationFormValues = {
     name: newLocation?.name || '',
     street: newLocation?.address.street || '',
@@ -49,46 +53,23 @@ const NewLocationForm: VFC = () => {
     country,
     location_url,
   }) => {
-    dispatch(appActions.setIsLoading(true));
-    try {
-      const body = {
-        name,
-        address: {
-          street,
-          number: +number, // has to be converted before Sending to Backend
-          zipcode,
-          city,
-          country,
-          geo: {
-            lat: newLocation!.address.geo.lat,
-            lng: newLocation!.address.geo.lng,
-          },
+    await triggerAddLocation({
+      name,
+      address: {
+        street,
+        number: +number, // has to be converted before Sending to Backend
+        zipcode,
+        city,
+        country,
+        geo: {
+          lat: newLocation!.address.geo.lat,
+          lng: newLocation!.address.geo.lng,
         },
-        location_url,
-      };
+      },
+      location_url,
+    });
 
-      const options: RequestInit = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-        credentials: 'include',
-      };
-
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/locations`, options);
-      const newLocationObj = await res.json();
-      dispatch(locationsActions.addToLocations(newLocationObj));
-      if (!newLocationObj) {
-        dispatch(appActions.setError('Fehler beim Eintragen. Bitte versuch es später nochmal.'));
-        setTimeout(() => dispatch(appActions.resetError()), 5000);
-      }
-    } catch (err: any) {
-      dispatch(appActions.setError(err.message));
-      setTimeout(() => dispatch(appActions.resetError()), 5000);
-    }
     dispatch(locationsActions.resetNewLocation());
-    dispatch(appActions.setIsLoading(false));
   };
 
   return (
@@ -201,7 +182,12 @@ const NewLocationForm: VFC = () => {
               />
             </IonItem>
 
-            <IonButton className='my-3 confirm-btn' type='submit' expand='block'>
+            <IonButton
+              fill='clear'
+              className='button--check button--check-large my-3 mx-5'
+              expand='block'
+              type='submit'
+            >
               <IonIcon className='pe-1' icon={add} />
               Eintragen
             </IonButton>

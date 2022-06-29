@@ -280,7 +280,12 @@ const Register = () => {
               </IonItem>
               {Error('city', errors)}
 
-              <IonButton className='my-3 confirm-btn' type='submit' fill='solid' expand='block'>
+              <IonButton
+                className='button--check button--check-large my-3 mx-5'
+                type='submit'
+                fill='clear'
+                expand='block'
+              >
                 <IonIcon className='pe-1' icon={logIn} />
                 Registrieren
               </IonButton>
@@ -306,10 +311,10 @@ const Register = () => {
                 Spam-Ordner.
               </p>
               <IonButton
-                className='my-3 button--check'
+                className='button--check button--check-large my-3 mx-5'
                 routerLink='/home'
                 fill='clear'
-                color='primary'
+                expand='block'
               >
                 Zurück zur Startseite
               </IonButton>

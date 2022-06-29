@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Flavor } from '../../types/types';
+import type { Flavor } from '../../types/types';
 
 type NewFlavor = Pick<Flavor, 'name' | 'color' | 'type_cream' | 'type_fruit'>;
 
@@ -19,6 +19,12 @@ export const flavorApi = createApi({
   tagTypes: ['Flavor'], // define tag(s) which can trigger an action
   endpoints: (builder) => {
     return {
+      getFlavors: builder.query<Flavor[], void>({
+        query: () => ({
+          url: '/',
+          method: 'GET',
+        }),
+      }),
       addFlavor: builder.mutation<
         void,
         {
@@ -46,4 +52,4 @@ export const flavorApi = createApi({
   },
 });
 
-export const { useAddFlavorMutation } = flavorApi;
+export const { useGetFlavorsQuery, useAddFlavorMutation } = flavorApi;

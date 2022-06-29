@@ -61,7 +61,7 @@ const HeaderApp = () => {
         </IonButtons>
 
         <IonButtons slot='end'>
-          {numberOfLocations && (
+          {!!numberOfLocations && (
             <div
               className='info-number-locations'
               onClick={(event) => {
