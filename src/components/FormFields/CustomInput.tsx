@@ -1,4 +1,4 @@
-import { IonInput, IonLabel } from '@ionic/react';
+import { IonInput, IonLabel, useIonViewDidEnter } from '@ionic/react';
 import { ReactNode, useEffect, useRef } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 
@@ -9,6 +9,7 @@ type InputProps = {
   inputmode?: 'text' | 'numeric' | 'url';
   maxlength?: number;
   placeholder?: string;
+  isFocusedOnMount?: boolean;
 };
 
 // Types React Hook Form useController in child component: https://dev.to/texmeijin/component-design-idea-using-react-hook-form-v7-ie0
@@ -25,6 +26,7 @@ export const CustomInput = <TFieldValues extends FieldValues>({
   inputmode = 'text',
   maxlength,
   placeholder,
+  isFocusedOnMount = false,
 }: ReactHookFormProps<TFieldValues>) => {
   const {
     field: { onChange, value },
@@ -36,6 +38,13 @@ export const CustomInput = <TFieldValues extends FieldValues>({
   });
 
   const inputRef = useRef<HTMLIonInputElement>(null);
+
+  // not working inside of IonModal, only on pages
+  useIonViewDidEnter(() => {
+    if (isFocusedOnMount) {
+      inputRef.current!.setFocus();
+    }
+  });
 
   useEffect(() => {
     if (error) {

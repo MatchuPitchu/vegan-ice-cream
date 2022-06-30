@@ -2,36 +2,30 @@ import { useState } from 'react';
 // Redux Store
 import { useAppDispatch } from '../../store/hooks';
 import { appActions } from '../../store/appSlice';
-import { Controller, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { useThemeContext } from '../../context/ThemeContext';
-import {
-  IonContent,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonButton,
-  IonPage,
-  IonHeader,
-  IonIcon,
-  IonCard,
-} from '@ionic/react';
-import Error from '../Error';
-import { refreshCircle } from 'ionicons/icons';
+import { IonContent, IonItem, IonButton, IonPage, IonHeader, IonIcon, IonCard } from '@ionic/react';
+import { refreshCircleOutline } from 'ionicons/icons';
+import { CustomInput } from '../FormFields/CustomInput';
+
+interface ResetForm {
+  email: string;
+}
+
+const defaultResetValues: ResetForm = {
+  email: '',
+};
 
 const ResetPassword = () => {
   const dispatch = useAppDispatch();
   const { isDarkTheme } = useThemeContext();
 
   const [success, setSuccess] = useState(false);
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { control, handleSubmit } = useForm({ defaultValues: defaultResetValues });
 
-  const onSubmit = async (data) => {
+  const onSubmit: SubmitHandler<ResetForm> = async (data) => {
     try {
-      const options = {
+      const options: RequestInit = {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -70,24 +64,14 @@ const ResetPassword = () => {
             <IonCard className='text-center'>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <IonItem lines='none'>
-                  <IonLabel position='floating' htmlFor='email'>
-                    E-Mail
-                  </IonLabel>
-                  <Controller
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <IonInput
-                        type='email'
-                        inputmode='email'
-                        value={value}
-                        onIonChange={(e) => onChange(e.detail.value)}
-                      />
-                    )}
+                  <CustomInput
                     name='email'
-                    rules={{ required: true }}
+                    label='E-Mail'
+                    control={control}
+                    rules={{ required: 'Deine Mail-Adresse fehlt.' }}
+                    isFocusedOnMount={true}
                   />
                 </IonItem>
-                {Error('email', errors)}
 
                 <IonButton
                   fill='clear'
@@ -95,7 +79,7 @@ const ResetPassword = () => {
                   expand='block'
                   type='submit'
                 >
-                  <IonIcon slot='end' className='pe-1' icon={refreshCircle} />
+                  <IonIcon slot='end' className='pe-1' icon={refreshCircleOutline} />
                   Passwort zurücksetzen
                 </IonButton>
               </form>

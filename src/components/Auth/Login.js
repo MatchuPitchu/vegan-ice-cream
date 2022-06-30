@@ -125,7 +125,7 @@ const Login = () => {
           <p className='text-center'>
             <IonButton
               fill='clear'
-              className='button--check button--check-large my-3 mx-5'
+              className='button--check button--check-light button--check-large my-3 mx-5'
               routerLink='/datenschutz'
               lines='none'
               expand='block'
