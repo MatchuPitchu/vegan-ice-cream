@@ -101,6 +101,7 @@ const Feedback: VFC = () => {
               name='name'
               label='Name'
               rules={{ required: 'Bitte ergänze deinen Namen' }}
+              isFocusedOnMount={true}
             />
           </IonItem>
 
