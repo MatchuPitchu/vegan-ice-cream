@@ -110,6 +110,7 @@ const Feedback: VFC = () => {
               control={control}
               name='email'
               label='E-Mail'
+              inputmode='email'
               rules={{ required: 'Bitte ergänze deine E-Mail' }}
             />
           </IonItem>

@@ -7,7 +7,7 @@ import { FieldErrors } from 'react-hook-form';
 const Error = (_fieldName: string, errors: FieldErrors) => {
   if (errors[_fieldName]) {
     return (
-      <div className='alertMsg'>
+      <div className='message--alert'>
         {_fieldName === 'name' && 'Bitte trage einen Namen ein'}
         {_fieldName === 'email' && 'Deine Mail-Adresse fehlt'}
         {_fieldName === 'message' && 'Ops, das Textfeld ist noch leer'}

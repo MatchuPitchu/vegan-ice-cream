@@ -231,7 +231,7 @@ ion-tab-bar {
 }
 
 /************ Feedback Form ************/
-.alertMsg {
+.message--alert {
   color: var(--ion-color-danger-tint);
   padding-bottom: 10px;
   font-size: 0.7rem;
@@ -358,30 +358,38 @@ mark {
 }
 
 /* Autocomplete Component User Input City */
-.suggestions {
-  border-top-width: 0;
+.autocomplete-list {
   list-style: none;
   font-size: 0.8rem;
-  margin-top: 0;
-  max-height: 143px;
-  overflow-y: auto;
-  padding-left: 0;
   width: 100%;
+  background-color: var(--ion-item-background);
+  max-height: 145px;
+  margin-top: 0;
+  padding: 0;
+  overflow-y: auto;
 }
 
-.suggestions li {
-  padding: 4px;
+.autocomplete-list__item {
+  padding: 0.2rem 0 0.2rem 1rem;
 }
 
-.suggestion-active,
-.suggestions li:hover {
+.autocomplete-list__item:hover {
+  background-color: var(--ion-card-background);
+  cursor: pointer;
+}
+
+.autocomplete-list__item:not(:last-of-type) {
+  border-bottom: 1px solid var(--ion-toolbar-background);
+}
+
+.autocomplete-list__item--active {
   background-color: var(--ion-card-background);
   color: var(--ion-color-primary);
   cursor: pointer;
 }
 
-.suggestions li:not(:last-of-type) {
-  border-bottom: 1px solid var(--ion-toolbar-background);
+.autocomplete-list__item--match {
+  color: var(--ion-color-primary);
 }
 
 /* Searchbar Autocomplete Google */

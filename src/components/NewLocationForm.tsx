@@ -1,7 +1,6 @@
 import { VFC } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 // Redux Store
-import { appActions } from '../store/appSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { locationsActions } from '../store/locationsSlice';
 import { showActions } from '../store/showSlice';

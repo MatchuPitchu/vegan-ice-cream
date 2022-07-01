@@ -168,11 +168,11 @@ const ProfilUpdate = () => {
       </IonItem>
       <form onSubmit={handleSubmit(onSubmit)}>
         <IonItem lines='full'>
-          <CustomInput control={control} name='name' label='Name' labelPosition='stacked' />
+          <CustomInput control={control} name='name' label='Name' />
         </IonItem>
 
         <IonItem lines='full'>
-          <CustomInput control={control} name='email' label='E-Mail' labelPosition='stacked' />
+          <CustomInput control={control} name='email' label='E-Mail' inputmode='email' />
         </IonItem>
 
         <IonItem lines='full'>
@@ -184,7 +184,6 @@ const ProfilUpdate = () => {
                 Stadt <span className='span-small'>(für Startpunkt Karte)</span>
               </>
             }
-            labelPosition='stacked'
           />
         </IonItem>
 
@@ -193,7 +192,6 @@ const ProfilUpdate = () => {
             control={control}
             name='newPassword'
             label='Neues Passwort'
-            labelPosition='stacked'
             type='password'
             rules={{
               pattern: {
@@ -209,7 +207,6 @@ const ProfilUpdate = () => {
             control={control}
             name='repeatedPassword'
             label='Passwort wiederholen'
-            labelPosition='stacked'
             type='password'
             rules={{
               pattern: {
@@ -225,7 +222,6 @@ const ProfilUpdate = () => {
             control={control}
             name='password'
             label='Eingabe mit aktuellem Passwort bestätigen'
-            labelPosition='stacked'
             type='password'
             rules={{ required: 'Bitte bestätige die Eingabe mit deinem Passwort.' }}
           />
@@ -242,7 +238,7 @@ const ProfilUpdate = () => {
         </IonItem>
 
         {/* TODO: Brauch ich nicht mehr?! */}
-        {error && <div className='alertMsg'>{error}</div>}
+        {error && <div className='message--alert'>{error}</div>}
       </form>
     </div>
   );
