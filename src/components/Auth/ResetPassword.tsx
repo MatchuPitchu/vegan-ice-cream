@@ -5,7 +5,7 @@ import { appActions } from '../../store/appSlice';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useThemeContext } from '../../context/ThemeContext';
 import { IonContent, IonItem, IonButton, IonPage, IonHeader, IonIcon, IonCard } from '@ionic/react';
-import { refreshCircleOutline } from 'ionicons/icons';
+import { arrowBackCircleOutline, refreshCircleOutline } from 'ionicons/icons';
 import { CustomInput } from '../FormFields/CustomInput';
 
 interface ResetForm {
@@ -65,9 +65,10 @@ const ResetPassword = () => {
               <form onSubmit={handleSubmit(onSubmit)}>
                 <IonItem lines='none'>
                   <CustomInput
+                    control={control}
                     name='email'
                     label='E-Mail'
-                    control={control}
+                    inputmode='email'
                     rules={{ required: 'Deine Mail-Adresse fehlt.' }}
                     isFocusedOnMount={true}
                   />
@@ -79,8 +80,18 @@ const ResetPassword = () => {
                   expand='block'
                   type='submit'
                 >
-                  <IonIcon slot='end' className='pe-1' icon={refreshCircleOutline} />
+                  <IonIcon className='pe-1' icon={refreshCircleOutline} />
                   Passwort zurücksetzen
+                </IonButton>
+
+                <IonButton
+                  fill='clear'
+                  className='button--check button--check-light button--check-large my-3 mx-5'
+                  routerLink='/login'
+                  expand='block'
+                >
+                  <IonIcon className='pe-1' icon={arrowBackCircleOutline} />
+                  zurück zum Login
                 </IonButton>
               </form>
             </IonCard>

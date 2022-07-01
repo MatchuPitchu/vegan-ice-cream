@@ -1,15 +1,18 @@
 import { IonInput, IonLabel, useIonViewDidEnter } from '@ionic/react';
-import { ReactNode, useEffect, useRef } from 'react';
+import { KeyboardEvent, ReactNode, useEffect, useRef } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 
 type InputProps = {
   label?: string | ReactNode;
   labelPosition?: 'stacked' | 'floating';
   type?: 'text' | 'number' | 'password';
-  inputmode?: 'text' | 'numeric' | 'url';
+  inputmode?: 'text' | 'numeric' | 'url' | 'email';
   maxlength?: number;
   placeholder?: string;
   isFocusedOnMount?: boolean;
+  onKeyDown?: (event: KeyboardEvent<HTMLIonInputElement>) => void;
+  onInputChange?: (value: string) => void;
+  externalValue?: string;
 };
 
 // Types React Hook Form useController in child component: https://dev.to/texmeijin/component-design-idea-using-react-hook-form-v7-ie0
@@ -27,6 +30,9 @@ export const CustomInput = <TFieldValues extends FieldValues>({
   maxlength,
   placeholder,
   isFocusedOnMount = false,
+  onKeyDown,
+  onInputChange,
+  externalValue,
 }: ReactHookFormProps<TFieldValues>) => {
   const {
     field: { onChange, value },
@@ -41,14 +47,14 @@ export const CustomInput = <TFieldValues extends FieldValues>({
 
   // not working inside of IonModal, only on pages
   useIonViewDidEnter(() => {
-    if (isFocusedOnMount) {
-      inputRef.current!.setFocus();
+    if (isFocusedOnMount && inputRef?.current) {
+      inputRef.current.setFocus();
     }
   });
 
   useEffect(() => {
-    if (error) {
-      inputRef.current!.setFocus();
+    if (error && inputRef?.current) {
+      inputRef.current.setFocus();
     }
   }, [error, name]);
 
@@ -60,11 +66,16 @@ export const CustomInput = <TFieldValues extends FieldValues>({
       <IonInput
         ref={inputRef}
         name={name}
-        value={value}
+        value={externalValue ?? value}
         type={type}
         inputmode={inputmode}
         maxlength={maxlength}
-        onIonChange={({ detail: { value } }) => onChange(value)}
+        onIonChange={({ detail: { value } }) => {
+          if (externalValue === value) return;
+          onChange(value);
+          onInputChange && onInputChange(value as string);
+        }}
+        onKeyDown={onKeyDown}
         placeholder={placeholder}
       />
       {error && <p className='paragraph--error-small'>{error.message}</p>}

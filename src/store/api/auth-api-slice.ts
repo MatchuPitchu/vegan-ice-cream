@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { User } from '../../types/types';
+import type { User } from '../../types/types';
 
 interface ReturnTypeVerifySession {
   success: string;
@@ -14,6 +14,18 @@ interface ReturnTypeLoginRequest {
 interface LoginData {
   email: string;
   password: string;
+}
+
+type ReturnTypeRegisterRequest = {
+  success: 'User created';
+};
+
+interface RegisterData {
+  name: string;
+  email: string;
+  password: string;
+  repeatPassword: string;
+  home_city: User['home_city'];
 }
 
 // Define a service using a base URL and expected endpoints
@@ -55,8 +67,22 @@ export const authApi = createApi({
           credentials: 'include',
         }),
       }),
+      registerUser: builder.mutation<ReturnTypeRegisterRequest, RegisterData>({
+        query: (newUser) => {
+          console.log(newUser);
+          return {
+            url: '/register',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: newUser,
+            credentials: 'include',
+          };
+        },
+      }),
     };
   },
 });
 
-export const { useVerifyUserSessionQuery, useLoginUserMutation } = authApi; // automatically generated query hook
+export const { useVerifyUserSessionQuery, useLoginUserMutation, useRegisterUserMutation } = authApi; // automatically generated query hook

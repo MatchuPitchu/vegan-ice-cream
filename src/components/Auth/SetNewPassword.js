@@ -153,7 +153,7 @@ const SetNewPassword = () => {
                 />
               </IonItem>
               {Error('repeatedPassword', errors)}
-              {error && <div className='alertMsg'>{error}</div>}
+              {error && <div className='message--alert'>{error}</div>}
 
               <IonButton
                 fill='clear'
