@@ -7,16 +7,16 @@ import { userActions } from '../store/userSlice';
 import { showActions } from '../store/showSlice';
 import { appActions } from '../store/appSlice';
 import { IonItem, IonLabel, IonButton, IonIcon } from '@ionic/react';
-import { refreshCircle } from 'ionicons/icons';
+import { refreshCircleOutline } from 'ionicons/icons';
 import { CustomInput } from './FormFields/CustomInput';
-import { useEffect } from 'react';
+import { useUpdateUserMutation } from '../store/api/user-api-slice';
 
 interface ProfilUpdateForm {
   name: string;
   email: string;
   city: string;
   newPassword: string;
-  repeatedPassword: string;
+  repeatPassword: string;
   password: string;
 }
 
@@ -25,7 +25,7 @@ const defaultFormValues: ProfilUpdateForm = {
   email: '',
   city: '',
   newPassword: '',
-  repeatedPassword: '',
+  repeatPassword: '',
   password: '',
 };
 
@@ -37,7 +37,7 @@ const defaultHomeCity = {
   },
 };
 
-interface SubmitBody {
+export type UserUpdateData = {
   password: string;
   name?: string;
   email?: string;
@@ -46,8 +46,8 @@ interface SubmitBody {
     geo: GeoCoordinates;
   };
   newPassword?: string;
-  repeatedPassword?: string;
-}
+  repeatPassword?: string;
+};
 
 const ProfilUpdate = () => {
   const dispatch = useAppDispatch();
@@ -57,6 +57,8 @@ const ProfilUpdate = () => {
   const { control, handleSubmit } = useForm({
     defaultValues: defaultFormValues,
   });
+
+  const [triggerUpdateUser, result] = useUpdateUserMutation();
 
   const fetchCity = async (city: string): Promise<Record<string, number> | undefined> => {
     try {
@@ -78,85 +80,67 @@ const ProfilUpdate = () => {
     email,
     city,
     newPassword,
-    repeatedPassword,
+    repeatPassword,
     password,
   }) => {
     if (!password || !user) return;
-    if (newPassword && newPassword !== repeatedPassword) {
+    if (newPassword && newPassword !== repeatPassword) {
       dispatch(appActions.setError('Neues Password stimmt nicht mit Wiederholung überein.'));
       return setTimeout(() => dispatch(appActions.setError('')), 5000);
     }
 
-    dispatch(appActions.setIsLoading(true));
+    const body: UserUpdateData = {
+      password,
+    };
 
-    try {
-      const body: SubmitBody = {
-        password,
-      };
-
-      if (name && name !== user.name) body.name = name;
-      if (email && email !== user.email) body.email = email;
-      if (city === '') body.home_city = defaultHomeCity;
-      if (city && city !== user.home_city.city) {
-        const data = await fetchCity(city);
-        if (data) {
-          body.home_city = {
-            city,
-            geo: {
-              lat: data.lat,
-              lng: data.lng,
-            },
-          };
-        }
+    if (name && name !== user.name) body.name = name;
+    if (email && email !== user.email) body.email = email;
+    if (city === '') body.home_city = defaultHomeCity;
+    if (city && city !== user.home_city.city) {
+      const data = await fetchCity(city);
+      if (data) {
+        body.home_city = {
+          city,
+          geo: {
+            lat: data.lat,
+            lng: data.lng,
+          },
+        };
       }
-      if (newPassword) body.newPassword = newPassword;
-      if (repeatedPassword) body.repeatedPassword = repeatedPassword;
+    }
+    if (newPassword) body.newPassword = newPassword;
+    if (repeatPassword) body.repeatPassword = repeatPassword;
 
-      const token = localStorage.getItem('token');
-      if (!token) return;
+    const requestAnswer = await triggerUpdateUser({ body, userId: user._id });
 
-      const options: RequestInit = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          token,
-        },
-        body: JSON.stringify(body),
-        credentials: 'include',
-      };
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${user._id}`, options);
-      const { success } = await res.json();
-      if (success) {
-        dispatch(
-          userActions.updateUser({
-            name: body.name || user.name,
-            email: body.email || user.email,
-            home_city: body.home_city || user.home_city,
-          })
-        );
-        dispatch(
-          appActions.setSuccessMsg(
-            `Update erfolgreich. ${
-              email &&
-              'Da du deine E-Mail wechselst, klicke bitte noch auf den Bestätigungs-Link in deinem Postfach. Kontrolliere auch den Spam-Ordner.'
-            }`
-          )
-        );
-        setTimeout(() => dispatch(appActions.setSuccessMsg('')), 10000);
-        dispatch(showActions.setShowUpdateProfil(false));
-        if (email) {
-          dispatch(showActions.setShowProfil(false));
-          dispatch(userActions.logout());
-        }
-      } else {
-        dispatch(appActions.setError('Du hast ein falsches Passwort eingetragen'));
-        setTimeout(() => dispatch(appActions.resetError()), 5000);
+    if (requestAnswer.hasOwnProperty('data')) {
+      dispatch(
+        userActions.updateUser({
+          name: body.name || user.name,
+          email: body.email || user.email,
+          home_city: body.home_city || user.home_city,
+        })
+      );
+
+      const successMessage = `Update erfolgreich. ${
+        email &&
+        email !== user.email &&
+        'Da du deine E-Mail wechselst, bestätige das bitte mit einem Klick auf den Link in deinem Postfach. Schaue auch im Spam-Ordner.'
+      }`;
+
+      dispatch(appActions.setSuccessMessage(successMessage));
+      setTimeout(() => dispatch(appActions.setSuccessMessage('')), 10000);
+
+      dispatch(showActions.setShowUpdateProfil(false));
+
+      if ((email && email !== user.email) || newPassword === repeatPassword) {
+        dispatch(showActions.setShowProfil(false));
+        dispatch(userActions.logout());
       }
-    } catch (err) {
-      dispatch(appActions.setError('Da ist etwas schief gelaufen. Versuche es später nochmal.'));
+    } else {
+      dispatch(appActions.setError('Du hast ein falsches Passwort eingetragen'));
       setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
-    dispatch(appActions.setIsLoading(false));
   };
 
   return (
@@ -205,7 +189,7 @@ const ProfilUpdate = () => {
         <IonItem lines='full'>
           <CustomInput
             control={control}
-            name='repeatedPassword'
+            name='repeatPassword'
             label='Passwort wiederholen'
             type='password'
             rules={{
@@ -226,13 +210,13 @@ const ProfilUpdate = () => {
             rules={{ required: 'Bitte bestätige die Eingabe mit deinem Passwort.' }}
           />
           <IonButton
-            className='my-3 button--confirm-block'
-            fill='outline'
+            className='button--check my-3'
+            fill='clear'
             type='submit'
             routerLink='/login'
             expand='block'
           >
-            <IonIcon slot='end' className='pe-1' icon={refreshCircle} />
+            <IonIcon slot='end' className='pe-1' icon={refreshCircleOutline} />
             Profil updaten
           </IonButton>
         </IonItem>

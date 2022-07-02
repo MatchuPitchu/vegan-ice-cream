@@ -187,7 +187,7 @@ const Menu: React.FC = () => {
             <IonLabel>Logout</IonLabel>
           </IonItem>
         )}
-        {successMsg && <div className='successMsg text-center ion-padding'>{successMsg}</div>}
+        {successMsg && <div className='text--success text-center ion-padding'>{successMsg}</div>}
       </IonContent>
     </IonPage>
   );

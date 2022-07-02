@@ -1,7 +1,8 @@
+import { VFC } from 'react';
 import { useThemeContext } from '../../context/ThemeContext';
 import { IonContent, IonPage, IonHeader, IonItem, IonCard, IonLabel } from '@ionic/react';
 
-const Login = () => {
+const Login: VFC = () => {
   const { isDarkTheme } = useThemeContext();
 
   return (
@@ -18,12 +19,10 @@ const Login = () => {
       <IonContent>
         <div className='container-content--center'>
           <IonCard>
-            <IonItem lines='full'>
-              <IonLabel className='text-center ion-text-wrap' color='primary'>
-                Logout erfolgreich
-              </IonLabel>
+            <IonItem lines='full' className='item--item-background'>
+              <IonLabel className='text-center ion-text-wrap'>Logout erfolgreich</IonLabel>
             </IonItem>
-            <p className='text-center item-text--small ion-text-wrap px-2 my-2 '>
+            <p className='text-center text--small-light px-2 my-2 '>
               Melde dich wieder an, wenn du neue Eisläden eintragen, bewerten und zu deinen
               Favoriten hinzufügen möchtest.
             </p>

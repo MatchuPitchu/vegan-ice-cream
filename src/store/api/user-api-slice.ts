@@ -1,4 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { UserUpdateData } from '../../components/ProfilUpdate';
+
+type ReturnTypeUpateUserRequest = {
+  message: 'User profile updated' | 'Please check whether you have entered the same password twice';
+};
+
+type UpdateUserInput = { body: UserUpdateData } & { userId: string };
 
 // Define a service using a base URL and expected endpoints
 export const userApi = createApi({
@@ -31,8 +38,19 @@ export const userApi = createApi({
           body: { current_num_loc: numberOfLocations },
         }),
       }),
+      updateUser: builder.mutation<ReturnTypeUpateUserRequest, UpdateUserInput>({
+        query: ({ body, userId }) => ({
+          url: `/${userId}`,
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body,
+          credentials: 'include',
+        }),
+      }),
     };
   },
 });
 
-export const { useUpdateNumberOfNewLocationsMutation } = userApi; // automatically generated query hook
+export const { useUpdateNumberOfNewLocationsMutation, useUpdateUserMutation } = userApi; // automatically generated query hook

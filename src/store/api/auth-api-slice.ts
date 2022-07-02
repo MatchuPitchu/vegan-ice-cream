@@ -28,6 +28,31 @@ interface RegisterData {
   home_city: User['home_city'];
 }
 
+type ReturnTypeActivateUserRequest = {
+  message: 'Aktivierung des Mail-Accounts erfolgreich';
+};
+
+type ActivateUserData = string;
+
+type ReturnTypePasswordResetRequest = {
+  message: 'Reset-Mail erfolgreich verschickt';
+};
+
+interface ResetPasswordData {
+  email: string;
+}
+
+type ReturnTypeSetNewPasswordRequest = {
+  message: 'Passwort erfolgreich erneuert';
+};
+
+interface NewPasswordData {
+  resetToken: string;
+  email: string;
+  password: string;
+  repeatPassword: string;
+}
+
 // Define a service using a base URL and expected endpoints
 export const authApi = createApi({
   reducerPath: 'authApi',
@@ -69,7 +94,6 @@ export const authApi = createApi({
       }),
       registerUser: builder.mutation<ReturnTypeRegisterRequest, RegisterData>({
         query: (newUser) => {
-          console.log(newUser);
           return {
             url: '/register',
             method: 'POST',
@@ -81,8 +105,49 @@ export const authApi = createApi({
           };
         },
       }),
+      activateUser: builder.mutation<ReturnTypeActivateUserRequest, ActivateUserData>({
+        query: (userId) => {
+          return {
+            url: `/activate/user/${userId}`,
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+          };
+        },
+      }),
+      resetPassword: builder.mutation<ReturnTypePasswordResetRequest, ResetPasswordData>({
+        query: (resetPasswordData) => ({
+          url: '/reset-password',
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: resetPasswordData,
+          credentials: 'include',
+        }),
+      }),
+      setNewPassword: builder.mutation<ReturnTypeSetNewPasswordRequest, NewPasswordData>({
+        query: (newPasswordData) => ({
+          url: '/new-password',
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: newPasswordData,
+          credentials: 'include',
+        }),
+      }),
     };
   },
 });
 
-export const { useVerifyUserSessionQuery, useLoginUserMutation, useRegisterUserMutation } = authApi; // automatically generated query hook
+export const {
+  useVerifyUserSessionQuery,
+  useLoginUserMutation,
+  useRegisterUserMutation,
+  useActivateUserMutation,
+  useResetPasswordMutation,
+  useSetNewPasswordMutation,
+} = authApi; // automatically generated query hook

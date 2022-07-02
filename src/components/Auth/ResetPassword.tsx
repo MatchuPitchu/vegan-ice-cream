@@ -2,6 +2,7 @@ import { useState } from 'react';
 // Redux Store
 import { useAppDispatch } from '../../store/hooks';
 import { appActions } from '../../store/appSlice';
+import { useResetPasswordMutation } from '../../store/api/auth-api-slice';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useThemeContext } from '../../context/ThemeContext';
 import { IonContent, IonItem, IonButton, IonPage, IonHeader, IonIcon, IonCard } from '@ionic/react';
@@ -23,27 +24,15 @@ const ResetPassword = () => {
   const [success, setSuccess] = useState(false);
   const { control, handleSubmit } = useForm({ defaultValues: defaultResetValues });
 
+  const [triggerResetPassword, result] = useResetPasswordMutation();
+
   const onSubmit: SubmitHandler<ResetForm> = async (data) => {
-    try {
-      const options: RequestInit = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // converts JS data into JSON string.
-        body: JSON.stringify(data),
-        credentials: 'include',
-      };
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/reset-password`, options);
-      const { message } = await res.json();
-      if (!message) {
-        dispatch(appActions.setError('Prüfe, ob du deine richtige Mailadresse eingetippt hast.'));
-        setTimeout(() => dispatch(appActions.resetError()), 5000);
-      } else {
-        setSuccess(true);
-      }
-    } catch (error) {
-      console.log(error);
+    const requestAnswer = await triggerResetPassword(data);
+    if (requestAnswer.hasOwnProperty('data')) {
+      setSuccess(true);
+    } else {
+      dispatch(appActions.setError('Prüfe, ob du deine richtige Mailadresse eingetippt hast.'));
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
   };
 
@@ -60,7 +49,7 @@ const ResetPassword = () => {
       </IonHeader>
       <IonContent>
         <div className='container-content mt-3'>
-          {!success ? (
+          {!success && (
             <IonCard className='text-center'>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <IonItem lines='none'>
@@ -95,12 +84,14 @@ const ResetPassword = () => {
                 </IonButton>
               </form>
             </IonCard>
-          ) : (
-            <IonCard className='text-center successMsg'>
-              <div className='my-3 mx-3'>
+          )}
+
+          {success && (
+            <IonCard className='text-center text--success'>
+              <p className='my-3 mx-3'>
                 Schau in dein Mailpostfach. Du hast einen Link zum Zurücksetzen deines Passworts
                 erhalten. Kontrolliere auch deinen Spam-Ordner.
-              </div>
+              </p>
             </IonCard>
           )}
         </div>

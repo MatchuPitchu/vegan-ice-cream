@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { authApi } from './api/auth-api-slice';
 
 export type EntdeckenSegment = 'map' | 'list';
 
-export type ActivateAccount = 'Waiting' | 'Aktivierung des Mail-Accounts erfolgreich';
+export type ActivateAccount = 'init' | 'pending' | 'Aktivierung des Mail-Accounts erfolgreich';
 
 interface AppStateSlice {
   // TODO: instead of isLoading, error etc. einfach enum nutzen mit Union Types: status: 'isLoading' | 'isError' etc.
@@ -10,7 +11,7 @@ interface AppStateSlice {
   error: string;
   successMessage: string;
   activateAccountMessage: ActivateAccount;
-  checkMessageNewLocation: string;
+  confirmMessageNewLocation: string;
   entdeckenSegment: EntdeckenSegment;
 }
 
@@ -18,8 +19,8 @@ const initialAppState: AppStateSlice = {
   isLoading: false,
   error: '',
   successMessage: '',
-  activateAccountMessage: 'Waiting',
-  checkMessageNewLocation: '',
+  activateAccountMessage: 'init',
+  confirmMessageNewLocation: '',
   entdeckenSegment: 'map',
 };
 
@@ -36,18 +37,24 @@ const appSlice = createSlice({
     resetError: (state) => {
       state.error = initialAppState.error;
     },
-    setSuccessMsg: (state, { payload }: PayloadAction<string>) => {
+    setSuccessMessage: (state, { payload }: PayloadAction<string>) => {
       state.successMessage = payload;
     },
-    setActivateAccountMessage: (state, { payload }: PayloadAction<ActivateAccount>) => {
-      state.activateAccountMessage = payload;
-    },
-    setCheckMsgNewLocation: (state, { payload }: PayloadAction<string>) => {
-      state.checkMessageNewLocation = payload;
+    setConfirmMessageNewLocation: (state, { payload }: PayloadAction<string>) => {
+      state.confirmMessageNewLocation = payload;
     },
     setEntdeckenSegment: (state, { payload }: PayloadAction<EntdeckenSegment>) => {
       state.entdeckenSegment = payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(authApi.endpoints.activateUser.matchPending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addMatcher(authApi.endpoints.activateUser.matchFulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.activateAccountMessage = payload.message;
+    });
   },
 });
 

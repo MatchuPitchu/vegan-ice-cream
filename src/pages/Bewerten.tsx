@@ -412,10 +412,10 @@ const Bewerten = () => {
                   label='Kommentar'
                   rules={{ required: 'Was möchtest du über den Eisladen teilen?' }}
                 >
-                  <div className='ion-text-wrap text--small-light'>
+                  <p className='text--small-light'>
                     ... Geschmack, Konsistenz, Waffel, Preis-Leistung, Zusatzleistungen wie vegane
                     Sahne, Waffeln oder Soßen, Freundlichkeit ...
-                  </div>
+                  </p>
                 </TextareaInput>
               </IonItem>
 
@@ -430,9 +430,9 @@ const Bewerten = () => {
                   }}
                   className='react-stars--bewerten-page'
                 >
-                  <div className='ion-text-wrap text--small-light'>
+                  <p className='text--small-light'>
                     ... gewählte Eiskugel, Waffel, dein Eindruck vom Eisladen ...
-                  </div>
+                  </p>
                 </RatingInput>
               </IonItem>
 
@@ -486,9 +486,9 @@ const Bewerten = () => {
                   }}
                   className='react-stars--bewerten-page'
                 >
-                  <div className='ion-text-wrap text--small-light'>
+                  <p className='text--small-light'>
                     ... viele vegane Sorten, vegane Waffeln, vegane Sahne, vegane Sauce ...
-                  </div>
+                  </p>
                 </RatingInput>
               </IonItem>
 
