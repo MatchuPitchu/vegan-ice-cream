@@ -209,17 +209,18 @@ const ProfilUpdate = () => {
             type='password'
             rules={{ required: 'Bitte bestätige die Eingabe mit deinem Passwort.' }}
           />
-          <IonButton
-            className='button--check my-3'
-            fill='clear'
-            type='submit'
-            routerLink='/login'
-            expand='block'
-          >
-            <IonIcon slot='end' className='pe-1' icon={refreshCircleOutline} />
-            Profil updaten
-          </IonButton>
         </IonItem>
+
+        <IonButton
+          className='button--check button--check-large my-3 mx-5'
+          fill='clear'
+          type='submit'
+          routerLink='/login'
+          expand='block'
+        >
+          <IonIcon slot='end' className='pe-1' icon={refreshCircleOutline} />
+          Profil updaten
+        </IonButton>
 
         {/* TODO: Brauch ich nicht mehr?! */}
         {error && <div className='message--alert'>{error}</div>}
