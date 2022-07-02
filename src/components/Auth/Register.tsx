@@ -221,11 +221,6 @@ const Register: VFC = () => {
               </IonButton>
             </form>
 
-            <p className='text-center item-text--small ion-text-wrap px-2 my-2'>
-              Nach der Registrierung kannst du neue Eisläden eintragen, bewerten und zu deinen
-              Favoriten hinzufügen.
-            </p>
-
             <InfoTextRegister passwordErrors={errors.password} />
           </div>
         )}
@@ -233,20 +228,18 @@ const Register: VFC = () => {
         {finishRegistration && (
           <div className='container-content--center'>
             <IonCard>
-              <IonItem lines='full'>
-                <IonLabel className='text-center ion-text-wrap' color='primary'>
-                  Registrierung erfolgreich
-                </IonLabel>
+              <IonItem lines='full' className='item--item-background'>
+                <IonLabel className='text-center ion-text-wrap'>Registrierung erfolgreich</IonLabel>
               </IonItem>
-              <p className='text-center item-text--small ion-text-wrap px-2 my-2 '>
+              <p className='text-center ion-text-wrap px-2 my-2'>
                 Du hast eine Mail erhalten. Klicke auf den Bestätigungs-Link. Kontrolliere auch den
                 Spam-Ordner.
               </p>
               <IonButton
-                className='button--check button--check-large my-3 mx-5'
-                routerLink='/home'
                 fill='clear'
+                className='button--check button--check-large my-3 mx-5'
                 expand='block'
+                routerLink='/home'
               >
                 Zurück zur Startseite
               </IonButton>

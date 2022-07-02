@@ -89,7 +89,7 @@ const Profil: VFC = () => {
         <IonContent>
           <div className='mt-3'>
             <IonCard>
-              <IonItem color='tertiary' lines='none'>
+              <IonItem className='item--card-header-background' lines='none'>
                 <IonCardTitle className='me-2 my-3 ion-text-wrap'>{user.name}</IonCardTitle>
                 <IonButton
                   fill='clear'
@@ -104,16 +104,16 @@ const Profil: VFC = () => {
               {showUpdateProfil && <ProfilUpdate />}
 
               {successMsg && (
-                <IonItem className='successMsg text-center' lines='full'>
+                <IonItem className='text--success text-center' lines='full'>
                   {successMsg}
                 </IonItem>
               )}
 
-              <IonItem className='item--item-background' lines='full'>
+              <IonItem className='item--card-background' lines='full'>
                 <IonIcon icon={mailOutline} slot='start' />
                 <IonLabel>{user.email}</IonLabel>
               </IonItem>
-              <IonItem className='item--item-background' lines='full'>
+              <IonItem className='item--card-background' lines='full'>
                 <IonIcon icon={navigateOutline} slot='start' />
                 <IonLabel>
                   {user?.home_city?.city ? user.home_city.city : 'keinen Ort angegeben'}
@@ -140,7 +140,7 @@ const Profil: VFC = () => {
               </IonItem>
               <IonItemGroup>
                 <IonItem
-                  className='item--item-background'
+                  className='item--card-background'
                   lines={!showUserComments ? 'full' : 'none'}
                 >
                   <IonIcon
@@ -173,7 +173,7 @@ const Profil: VFC = () => {
                     );
                   })}
 
-                <IonItem className='item--item-background' lines='none'>
+                <IonItem className='item--card-background' lines='none'>
                   <IonIcon
                     className={showFlavors ? 'icon--rotate90Forward' : 'icon--rotate90Back'}
                     slot='start'

@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import { IonButton, IonCard, IonIcon, IonItem, IonLabel } from '@ionic/react';
+import { IonButton, IonIcon, IonItem, IonLabel } from '@ionic/react';
 import { checkmarkCircleOutline, closeCircleOutline, keyOutline } from 'ionicons/icons';
 import { FieldError } from 'react-hook-form';
 
@@ -47,12 +47,13 @@ const InfoTextRegister: VFC<Props> = ({ passwordErrors }) => {
       </IonItem>
       <IonItem
         lines='none'
-        className='item--card-background item-text--small text-center ion-text-wrap mb-3'
+        className='item--card-background text--small-grey text-center py-2 mb-3'
       >
         Dein Passwort wird verschlüsselt in der Datenbank gespeichert und ist für niemanden
-        einzusehen
+        einzusehen. Nach der Registrierung kannst du neue Eisläden eintragen, bewerten und zu deinen
+        Favoriten hinzufügen.
       </IonItem>
-      <p className='item-text--small text-center ion-text-wrap'>
+      <p className='text--small-light text-center'>
         Hier findest du die Datenschutzhinweise, denen du mit der Registrierung zustimmst
       </p>
       <IonButton

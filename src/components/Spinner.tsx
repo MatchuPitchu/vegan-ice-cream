@@ -4,8 +4,8 @@ import { useAppSelector } from '../store/hooks';
 // import spinner
 import { css } from '@emotion/core';
 import { RingLoader } from 'react-spinners';
-import { IonButton, IonIcon, IonLabel } from '@ionic/react';
-import { create, logIn } from 'ionicons/icons';
+import { IonButton, IonContent, IonIcon, IonLabel } from '@ionic/react';
+import { logInOutline, magnetOutline } from 'ionicons/icons';
 
 // Can be a string as well. Need to ensure each key-value pair ends with ;
 const override = css`
@@ -22,43 +22,62 @@ const Spinner: VFC = () => {
 
   if (activateAccountMessage === 'Aktivierung des Mail-Accounts erfolgreich')
     return (
-      <div className='d-flex flex-column align-items-center'>
-        <RingLoader color='var(--ion-color-primary)' css={override} size={50} />
-        <h3 style={{ fontSize: '1.2em' }} className='display-3'>
-          {activateAccountMessage}
-        </h3>
-        <IonButton routerLink='/login' fill='solid' className='disabled-btn my-3'>
-          <IonLabel>Login</IonLabel>
-          <IonIcon className='pe-1' icon={logIn} />
-        </IonButton>
-      </div>
+      <IonContent>
+        <div className='container-content--center'>
+          <RingLoader color='var(--ion-color-primary)' css={override} size={50} />
+          <h3 style={{ fontSize: '1rem' }} className='display-3'>
+            {activateAccountMessage}
+          </h3>
+          <IonButton
+            routerLink='/login'
+            className='button--check button--check-large my-3 mx-5'
+            fill='clear'
+            expand='block'
+          >
+            <IonLabel>Login</IonLabel>
+            <IonIcon slot='end' icon={logInOutline} />
+          </IonButton>
+        </div>
+      </IonContent>
     );
 
   return (
-    <div className='d-flex flex-column align-items-center text-center'>
-      <RingLoader color='var(--ion-color-primary)' css={override} size={50} />
-      <h3 style={{ fontSize: '1.2em' }} className='display-3'>
-        {isAuth ? 'lädt ...' : 'Nur für eingeloggte User sichtbar'}
-      </h3>
-      {!isAuth && (
-        <>
-          <div>
-            <IonButton routerLink='/login' fill='solid' className='click-btn my-3'>
+    <IonContent>
+      <div className='container-content--center'>
+        <RingLoader color='var(--ion-color-primary)' css={override} size={50} />
+        <h3 style={{ fontSize: '1.2em' }} className='display-3'>
+          {isAuth ? 'lädt ...' : 'Nur für eingeloggte User sichtbar'}
+        </h3>
+        {!isAuth && (
+          <>
+            <IonButton
+              routerLink='/login'
+              fill='clear'
+              className='button--check button--check-large my-3 mx-5'
+              expand='block'
+            >
               <IonLabel>Login</IonLabel>
-              <IonIcon className='pe-1' icon={logIn} />
+              <IonIcon slot='end' icon={logInOutline} />
             </IonButton>
-            <IonButton routerLink='/register' fill='solid' className='click-btn my-3'>
+
+            <IonButton
+              routerLink='/register'
+              fill='clear'
+              className='button--check button--check-large my-3 mx-5'
+              expand='block'
+            >
               <IonLabel>Registrieren</IonLabel>
-              <IonIcon className='pe-1' icon={create} />
+              <IonIcon slot='end' icon={magnetOutline} />
             </IonButton>
-          </div>
-          <div className='mx-3' style={{ fontWeight: 300 }}>
-            Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten
-            hinzufügen.
-          </div>
-        </>
-      )}
-    </div>
+
+            <p className='text-center text--small-light ion-text-wrap px-2 my-2'>
+              Nach dem Einloggen kannst du neue Eisläden eintragen, bewerten und zu deinen Favoriten
+              hinzufügen.
+            </p>
+          </>
+        )}
+      </div>
+    </IonContent>
   );
 };
 

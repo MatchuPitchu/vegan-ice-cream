@@ -92,7 +92,9 @@ const AutocompleteForm: VFC = () => {
         }
 
         dispatch(
-          appActions.setCheckMsgNewLocation('Bestätige noch die Daten - klicke auf das grüne Icon')
+          appActions.setConfirmMessageNewLocation(
+            'Bestätige noch die Daten - klicke auf das grüne Icon'
+          )
         );
       }
     } catch (error) {

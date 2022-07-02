@@ -43,7 +43,7 @@ const EntdeckenMap: VFC<Props> = (props) => {
   const { center, zoom } = useAppSelector((state) => state.map);
   const selectedLocation = useAppSelector(getSelectedLocation);
 
-  const { checkMessageNewLocation } = useAppSelector((state) => state.app);
+  const { confirmMessageNewLocation } = useAppSelector((state) => state.app);
   const { locations, newLocation } = useAppSelector((state) => state.locations);
 
   const { mapStyles } = useThemeContext();
@@ -179,7 +179,7 @@ const EntdeckenMap: VFC<Props> = (props) => {
             onClick={(event) => {
               if (user) {
                 dispatch(locationsActions.resetNewLocation());
-                dispatch(appActions.setCheckMsgNewLocation('')); // remove message in case that user adds new location but never clicks on it
+                dispatch(appActions.setConfirmMessageNewLocation('')); // remove message in case that user adds new location but never clicks on it
                 dispatch(showActions.setShowSearchNewLocationModal(true));
               } else {
                 event.persist();
@@ -318,7 +318,7 @@ const EntdeckenMap: VFC<Props> = (props) => {
                 title={`${newLocation.address.street} ${newLocation.address.number} ${newLocation.address.zipcode} ${newLocation.address.city}`}
                 cursor='pointer'
                 onClick={() => {
-                  dispatch(appActions.setCheckMsgNewLocation(''));
+                  dispatch(appActions.setConfirmMessageNewLocation(''));
                   dispatch(showActions.setShowAddNewLocationForm(true));
                 }}
                 zIndex={3}
@@ -330,8 +330,8 @@ const EntdeckenMap: VFC<Props> = (props) => {
           {selectedLocation && <LocationInfoModal selectedLocation={selectedLocation} />}
         </GoogleMap>
 
-        {checkMessageNewLocation && (
-          <div className='message-new-location'>{checkMessageNewLocation}</div>
+        {confirmMessageNewLocation && (
+          <div className='message-new-location'>{confirmMessageNewLocation}</div>
         )}
       </div>
     </IonContent>

@@ -3,6 +3,7 @@ import type { Comment } from '../types/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { authApi } from './api/auth-api-slice';
 import { commentApi } from './api/comment-api-slice';
+import { userApi } from './api/user-api-slice';
 
 interface UserStateSlice {
   isAuth: boolean;

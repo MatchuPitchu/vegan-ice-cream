@@ -274,7 +274,7 @@ ion-tab-bar {
   color: var(--ion-color-primary-shade);
 }
 
-.successMsg {
+.text--success {
   color: var(--ion-color-success);
   font-size: 0.7rem;
 }
@@ -926,6 +926,11 @@ mark {
   background: #233033;
 }
 
+.item--card-header-background {
+  --background: var(--ion-card-header-background);
+  background: var(--ion-card-header-background);
+}
+
 .item--card-background {
   --background: var(--ion-card-background);
   background: var(--ion-card-background);
@@ -957,18 +962,12 @@ mark {
 }
 
 .websiteLink,
-.item-text--small,
-.item-text--smallWarning,
-.text--small-light {
+.item-text--small {
   font-size: 0.8rem;
   color: var(--ion-color-primary-shade);
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-}
-
-.item-text--smallWarning {
-  color: var(--ion-color-warning);
 }
 
 .websiteLink:hover {
@@ -1050,6 +1049,23 @@ mark {
 
 .button--update:hover {
   border: 1px solid var(--ion-text-color);
+}
+
+.button--reorder {
+  height: 35px;
+  font-size: 0.7rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.button--reorder--off {
+  color: var(--ion-color-primary);
+  --background: var(--ion-item-background);
+}
+
+.button--reorder--on {
+  color: var(--ion-text-color);
+  --background: var(--ion-color-tertiary);
 }
 
 .pricing-form__button--check {
@@ -1299,6 +1315,7 @@ ion-range::part(knob) {
 }
 
 .text--small-light {
+  font-size: 0.8rem;
   color: var(--ion-text-over-background);
   opacity: 0.7;
   line-height: 1.5;
@@ -1380,28 +1397,6 @@ ion-range::part(knob) {
 }
 
 /*********** Tab Favoriten ************/
-.backgroundTransparent {
-  background-color: transparent;
-  box-shadow: none;
-}
-
-.favReorderOff {
-  color: var(--ion-color-primary);
-  --background: var(--ion-background-color);
-  height: 35px;
-  font-size: 0.7rem;
-  text-transform: none;
-  letter-spacing: 0;
-}
-
-.favReorderOn {
-  color: var(--ion-background-color);
-  --background: var(--ion-color-primary);
-  height: 35px;
-  font-size: 0.7rem;
-  text-transform: none;
-  letter-spacing: 0;
-}
 
 .reorderItem {
   height: 29px;
