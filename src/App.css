@@ -400,20 +400,16 @@ mark {
 }
 
 .search-autocomplete {
-  background: var(--ion-item-background);
-  background-position: left 8px center;
   font-size: 0.8rem;
-  font-weight: 400;
-  height: auto;
-  line-height: 30px;
-  padding: 6px 10px;
-  border-radius: var(--ion-border-radius);
+  background: var(--ion-item-background);
   width: 100%;
+  height: auto;
+  padding: 0.5rem 10px;
+  border-radius: var(--ion-border-radius);
   border: 0;
   outline: none;
   box-sizing: border-box;
-  box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
-    0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: var(--ion-box-shadow);
   appearance: none;
   outline-offset: -2px;
 }
@@ -1034,7 +1030,7 @@ mark {
 }
 
 .button--check-large::before {
-  height: 900%;
+  height: 1200%;
 }
 
 .button--update {
@@ -1103,10 +1099,6 @@ mark {
 
 .coneIcon {
   transform: rotate(10deg);
-}
-
-.addLocForm {
-  --background: var(--ion-background-color);
 }
 
 /*********** Filter *************/

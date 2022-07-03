@@ -7,6 +7,8 @@ import { useAnimation } from '../hooks/useAnimation';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { locationsActions } from '../store/locationsSlice';
 import { showActions } from '../store/showSlice';
+import { skipToken } from '@reduxjs/toolkit/dist/query';
+import { useGetCommentsAndFlavorsOfSelectedLocationQuery } from '../store/api/locations-api-slice';
 import {
   IonButton,
   IonCard,
@@ -34,8 +36,6 @@ import FlavorsList from './Comments/FlavorsList';
 import Ratings from './Ratings';
 import Pricing from './Pricing';
 import PricingForm from './PricingForm';
-import { useGetCommentsAndFlavorsOfSelectedLocationQuery } from '../store/api/locations-api-slice';
-import { skipToken } from '@reduxjs/toolkit/dist/query';
 
 type Props = {
   selectedLocation: IceCreamLocation;
@@ -55,12 +55,11 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
   // if no comments available OR comments already fetched, set locationId to null to skip fetching
   const locationId =
     selectedLocation.comments_list.length === 0 || isComment(selectedLocation.comments_list[0])
-      ? null
+      ? skipToken // skipToken skips the fetching
       : selectedLocation._id;
 
-  const { isLoading, error, isSuccess } = useGetCommentsAndFlavorsOfSelectedLocationQuery(
-    locationId ?? skipToken
-  );
+  const { isLoading, error, isSuccess } =
+    useGetCommentsAndFlavorsOfSelectedLocationQuery(locationId);
 
   const handleResetAllOnCloseModal = () => {
     dispatch(showActions.closeCommentsAndLocationInfoModal());

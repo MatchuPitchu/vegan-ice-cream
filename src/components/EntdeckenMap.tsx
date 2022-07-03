@@ -21,7 +21,7 @@ import {
 import NewLocationForm from '../components/NewLocationForm';
 import LocationInfoModal from '../components/LocationInfoModal';
 import Spinner from '../components/Spinner';
-import AutocompleteForm from '../components/AutocompleteForm';
+import NewLocationSearchForm from './NewLocationSearchForm';
 import GeolocationButton from '../components/GeolocationButton';
 
 const defaultCenterPosition = {
@@ -34,9 +34,11 @@ interface GeoCoordinates {
   lng: number;
 }
 
-interface Props {}
+type GoogleApiLibraries = ('places' | 'geometry' | 'drawing' | 'localContext' | 'visualization')[];
 
-const EntdeckenMap: VFC<Props> = (props) => {
+const libraries: GoogleApiLibraries = ['places'];
+
+const EntdeckenMap: VFC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
 
@@ -103,7 +105,7 @@ const EntdeckenMap: VFC<Props> = (props) => {
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY ?? '',
-    libraries: ['places'],
+    libraries,
   });
 
   const handleOpenLocationInfoModal = () => dispatch(showActions.setShowLocationInfoModal(true));
@@ -210,7 +212,7 @@ const EntdeckenMap: VFC<Props> = (props) => {
             </div>
           </IonPopover>
 
-          <AutocompleteForm />
+          <NewLocationSearchForm />
 
           <GeolocationButton
             currentUserPosition={currentUserPosition}
