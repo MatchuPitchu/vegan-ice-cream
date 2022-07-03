@@ -16,7 +16,7 @@ import { helpCircle } from 'ionicons/icons';
 const Datenschutz: VFC = () => (
   <IonPage>
     <IonContent>
-      <IonCard className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
+      <IonCard className={`${isPlatform('desktop') ? 'card--ionic' : ''}`}>
         <IonCardHeader>
           <IonCardTitle style={{ fontSize: '1.2rem' }}>Datenschutzerklärung</IonCardTitle>
         </IonCardHeader>

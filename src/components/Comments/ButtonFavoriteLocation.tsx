@@ -158,6 +158,7 @@ const ButtonFavoriteLocation: VFC<Props> = ({ location }) => {
     <>
       {findLocation && (
         <IonButton
+          className='button--favorite'
           fill='clear'
           onClick={() =>
             dispatchUpdateFavoritesState({
@@ -171,6 +172,7 @@ const ButtonFavoriteLocation: VFC<Props> = ({ location }) => {
       )}
       {!findLocation && (
         <IonButton
+          className='button--favorite'
           fill='clear'
           onClick={() =>
             dispatchUpdateFavoritesState({

@@ -16,7 +16,7 @@ const IosDescription: VFC = () => {
   return (
     <IonPage>
       <IonContent>
-        <IonCard className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
+        <IonCard className={`${isPlatform('desktop') ? 'card--ionic' : ''}`}>
           <IonItem lines='none'>
             <IonIcon icon={logoApple} slot='start' />
             <IonLabel className='ion-text-wrap'>Installation der App auf iOS-Geräten</IonLabel>

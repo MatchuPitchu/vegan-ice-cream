@@ -13,9 +13,8 @@ import {
   IonButton,
 } from '@ionic/react';
 import LocationInfoModal from '../LocationInfoModal';
-import Ratings from '../Ratings';
-import ButtonInfoRating from '../Comments/ButtonInfoRating';
 import Pricing from '../Pricing';
+import CardRatingsAndButtons from '../Card/CardRatingsAndButtons';
 
 interface Props {
   topLocationsInCity: IceCreamLocation[];
@@ -55,7 +54,7 @@ const TopLocationsSlider: VFC<Props> = ({ topLocationsInCity, hideTopLocations }
                   {location.location_url && (
                     <p>
                       <a
-                        className='websiteLink'
+                        className='link--website'
                         href={
                           location.location_url.includes('http')
                             ? location.location_url
@@ -71,18 +70,12 @@ const TopLocationsSlider: VFC<Props> = ({ topLocationsInCity, hideTopLocations }
                 </IonLabel>
                 {location.pricing.length > 0 && <Pricing pricing={location.pricing} />}
               </IonItem>
-              <div className='px-3 py-2'>
-                {location.location_rating_quality && (
-                  <>
-                    <Ratings
-                      rating_vegan_offer={location.location_rating_vegan_offer as number}
-                      rating_quality={location.location_rating_quality as number}
-                      showNum={true}
-                    />
-                    <ButtonInfoRating location={location} />
-                  </>
-                )}
-              </div>
+
+              <CardRatingsAndButtons
+                ratingVegan={location.location_rating_vegan_offer}
+                ratingQuality={location.location_rating_quality}
+                locationId={location._id}
+              />
             </IonCard>
           </div>
 

@@ -57,9 +57,9 @@ ion-badge {
   border: 1px solid var(--ion-text-color);
 }
 
-.cardIonic {
+.card--ionic {
   max-width: 450px;
-  margin: 15px auto;
+  margin: 30px 10px;
 }
 
 ul,
@@ -957,17 +957,12 @@ mark {
   --min-height: 90px;
 }
 
-.websiteLink,
 .item-text--small {
   font-size: 0.8rem;
   color: var(--ion-color-primary-shade);
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-}
-
-.websiteLink:hover {
-  color: var(--ion-color-primary-tint);
 }
 
 .message-new-location {
@@ -984,6 +979,15 @@ mark {
 /* important to move modal-shadow to allow backdropDismiss on iOS  */
 .modal-shadow.sc-ion-modal-ios {
   top: 100%;
+}
+
+.button-group {
+  display: flex;
+  width: 100%;
+}
+
+.button-group > * {
+  flex: 1;
 }
 
 .button--check {
@@ -1064,6 +1068,10 @@ mark {
   --background: var(--ion-color-tertiary);
 }
 
+.button--favorite {
+  margin: 0;
+}
+
 .pricing-form__button--check {
   align-self: center;
   font-size: 0.7rem;
@@ -1132,6 +1140,19 @@ mark {
   grid-template-columns: max-content max-content 1fr;
 }
 
+.rating__category {
+  text-align: right;
+}
+
+.rating__number {
+  justify-self: end;
+  border-radius: var(--ion-border-radius);
+  background-color: var(--ion-card-header-background);
+  color: var(--ion-color-primary-contrast);
+  font-size: 0.7rem;
+  padding: 2px 8px;
+}
+
 .react-stars {
   display: flex;
   align-items: center;
@@ -1153,17 +1174,6 @@ mark {
   margin-top: 2px;
   border: 1px solid var(--ion-border-color);
   border-radius: var(--ion-border-radius) !important;
-}
-
-.rating__number {
-  justify-self: end;
-  border-radius: var(--ion-border-radius);
-  background-color: var(--ion-color-step-900);
-  color: var(--ion-color-primary-contrast);
-  opacity: 1;
-  font-size: 0.7rem;
-  height: 18px;
-  width: 25px;
 }
 
 .commentNum {
@@ -1390,19 +1400,50 @@ ion-range::part(knob) {
 
 /*********** Tab Favoriten ************/
 
-.reorderItem {
+.card {
+  overflow: visible;
+}
+
+.card__reorder-item {
   height: 29px;
 }
 
-.favOrderNum {
+.card__icon-avatar {
+  margin-right: 0.5rem;
+}
+
+.card_favorite-list-number {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: -12px;
+  left: -12px;
   font-size: 0.8rem;
   font-weight: bold;
-  margin: 0 auto;
-  height: 27px;
-  width: 34px;
-  --border-radius: 0 0 30% 0;
+  padding: 4px 10px;
+  border-radius: var(--ion-border-radius-circle);
+  background: var(--ion-card-header-background);
   z-index: 2;
+}
+
+.card-content__title {
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.card-content__address {
+  font-size: 0.8rem;
+  line-height: 1.2;
+  font-weight: 300;
+}
+
+.link--website {
+  font-size: 0.8rem;
+  color: var(--ion-color-primary-shade);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.link--website:hover {
+  color: var(--ion-color-primary-tint);
 }
