@@ -4,7 +4,7 @@ import { useThemeContext } from '../context/ThemeContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
 import { appActions } from '../store/appSlice';
-import { getSelectedLocation, locationsActions } from '../store/locationsSlice';
+import { getSelectedLocation } from '../store/locationsSlice';
 import {
   IonContent,
   IonPage,
@@ -17,12 +17,11 @@ import {
   IonReorder,
   IonItem,
 } from '@ionic/react';
-import { add, refreshCircle, refreshCircleOutline, reorderThreeOutline } from 'ionicons/icons';
+import { refreshCircleOutline, reorderThreeOutline } from 'ionicons/icons';
 import Spinner from '../components/Spinner';
-import Ratings from '../components/Ratings';
 import LocationInfoModal from '../components/LocationInfoModal';
-import ButtonInfoRating from '../components/Comments/ButtonInfoRating';
-import LocationInfoHeader from '../components/LocationInfoHeader';
+import CardContent from '../components/Card/CardContent';
+import CardRatingsAndButtons from '../components/Card/CardRatingsAndButtons';
 
 const Favoriten = () => {
   const dispatch = useAppDispatch();
@@ -111,42 +110,27 @@ const Favoriten = () => {
 
           <IonReorderGroup disabled={reorderDeactivated} onIonItemReorder={handleRearrange}>
             {user.favorite_locations.map((location, index) => (
-              <IonCard key={location._id} className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
-                <IonButton className='favOrderNum'>{index + 1}.</IonButton>
+              <IonCard
+                key={location._id}
+                className={`card ${isPlatform('desktop') ? 'card--ionic' : ''}`}
+              >
+                <div className='card_favorite-list-number'>{index + 1}</div>
 
                 {!reorderDeactivated && (
-                  <IonItem className='reorderItem' lines='none'>
+                  <IonItem className='card__reorder-item' lines='none'>
                     <IonReorder slot='end'>
                       <IonIcon icon={reorderThreeOutline} />
                     </IonReorder>
                   </IonItem>
                 )}
 
-                <LocationInfoHeader location={location} />
+                <CardContent location={location} />
 
-                <div className='px-3 py-2'>
-                  {location.location_rating_quality ? (
-                    <>
-                      <Ratings
-                        rating_vegan_offer={location.location_rating_vegan_offer as number}
-                        rating_quality={location.location_rating_quality}
-                        showNum={true}
-                      />
-                      <ButtonInfoRating location={location} />
-                    </>
-                  ) : (
-                    <IonButton
-                      className='more-infos mt-1'
-                      fill='solid'
-                      onClick={() => dispatch(locationsActions.setSelectedLocation(location._id))}
-                      routerLink='/bewerten'
-                      routerDirection='forward'
-                    >
-                      <IonIcon icon={add} />
-                      Erste Bewertung schreiben
-                    </IonButton>
-                  )}
-                </div>
+                <CardRatingsAndButtons
+                  ratingVegan={location.location_rating_vegan_offer}
+                  ratingQuality={location.location_rating_quality}
+                  locationId={location._id}
+                />
               </IonCard>
             ))}
           </IonReorderGroup>

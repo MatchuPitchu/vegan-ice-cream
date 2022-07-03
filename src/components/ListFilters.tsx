@@ -42,7 +42,7 @@ const ListFilters = () => {
   };
 
   return (
-    <IonCard className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
+    <IonCard className={`${isPlatform('desktop') ? 'card--ionic' : ''}`}>
       <IonItem
         className='item-text--small'
         lines={!showFilter ? 'none' : 'full'}

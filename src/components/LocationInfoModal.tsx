@@ -116,7 +116,7 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
                 {selectedLocation.address.zipcode} {selectedLocation.address.city}
                 <br />
                 <a
-                  className='websiteLink'
+                  className='link--website'
                   href={
                     selectedLocation.location_url.includes('http')
                       ? selectedLocation.location_url
@@ -176,7 +176,7 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
           </IonItemGroup>
         </div>
 
-        <IonCard className={`${isPlatform('desktop') ? 'cardIonic' : ''}`}>
+        <IonCard className={`${isPlatform('desktop') ? 'card--ionic' : ''}`}>
           <div style={{ backgroundColor: 'var(--ion-item-background)' }}>
             {selectedLocation.comments_list.length > 0 ? (
               <IonItemGroup>
