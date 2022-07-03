@@ -83,7 +83,7 @@ const Bewerten = () => {
   });
 
   const [success, setSuccess] = useState(false);
-  const [refetchLocationId, setRefetchLocationId] = useState<string | null>(null);
+  const [refetchLocationId, setRefetchLocationId] = useState<string | typeof skipToken>(skipToken);
 
   const [triggerUpdatePricing, result1] = useUpdatePricingMutation();
   const [triggerAddComment, result2] = useAddCommentMutation();
@@ -94,12 +94,12 @@ const Bewerten = () => {
     error: errorFetchUpdatedLocation,
     isLoading: isLoadingFetchUpdatedLocation,
     isSuccess: isSuccessFetchUpdatedLocation,
-  } = useGetOneLocationQuery(refetchLocationId ?? skipToken);
+  } = useGetOneLocationQuery(refetchLocationId);
 
   useEffect(() => {
     if (isSuccessFetchUpdatedLocation && updatedLocation) {
       dispatch(locationsActions.updateSingleLocation(updatedLocation));
-      setRefetchLocationId(null);
+      setRefetchLocationId(skipToken);
     }
   }, [isSuccessFetchUpdatedLocation, updatedLocation, dispatch]);
 

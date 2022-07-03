@@ -54,6 +54,8 @@ import './App.css';
 // NOTICE: RTK Query ensures that any component that subscribes to the same query will always use the same data.
 // TODO: überall error messages und loading state catchen und in state speichern für Anzeige Loading Spinner + Notification Toast durch NotificationProvider
 
+// TODO: Readme with Information about project and Deploy in Google Playstore
+
 const App: React.FC = () => {
   const { user } = useAppSelector((state) => state.user);
 

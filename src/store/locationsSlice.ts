@@ -19,7 +19,7 @@ interface NewLocation {
   place_id: string;
 }
 
-interface GoogleGeocodingResult {
+export interface GoogleGeocodingResult {
   long_name: string;
   short_name: string;
   types: string[];

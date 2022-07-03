@@ -6,10 +6,10 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
 import { showActions } from '../store/showSlice';
 import { appActions } from '../store/appSlice';
+import { useUpdateUserMutation } from '../store/api/user-api-slice';
 import { IonItem, IonLabel, IonButton, IonIcon } from '@ionic/react';
 import { refreshCircleOutline } from 'ionicons/icons';
 import { CustomInput } from './FormFields/CustomInput';
-import { useUpdateUserMutation } from '../store/api/user-api-slice';
 
 interface ProfilUpdateForm {
   name: string;
@@ -60,7 +60,7 @@ const ProfilUpdate = () => {
 
   const [triggerUpdateUser, result] = useUpdateUserMutation();
 
-  const fetchCity = async (city: string): Promise<Record<string, number> | undefined> => {
+  const fetchCity = async (city: string): Promise<{ lat: number; lng: number } | undefined> => {
     try {
       const uri = encodeURI(city);
       const response = await fetch(`${GOOGLE_API_URL}${uri}${GOOGLE_API_URL_CONFIG}`);
@@ -97,14 +97,11 @@ const ProfilUpdate = () => {
     if (email && email !== user.email) body.email = email;
     if (city === '') body.home_city = defaultHomeCity;
     if (city && city !== user.home_city.city) {
-      const data = await fetchCity(city);
-      if (data) {
+      const geo = await fetchCity(city);
+      if (geo) {
         body.home_city = {
           city,
-          geo: {
-            lat: data.lat,
-            lng: data.lng,
-          },
+          geo,
         };
       }
     }

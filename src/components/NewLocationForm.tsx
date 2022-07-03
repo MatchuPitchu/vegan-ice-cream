@@ -34,7 +34,7 @@ const NewLocationForm: VFC = () => {
   const defaultNewLocationFormValues: NewLocationFormValues = {
     name: newLocation?.name || '',
     street: newLocation?.address.street || '',
-    number: String(newLocation?.address.number) || '',
+    number: String(newLocation?.address.number ?? ''),
     zipcode: newLocation?.address.zipcode || '',
     city: newLocation?.address.city || '',
     country: newLocation?.address.country || '',
@@ -101,7 +101,6 @@ const NewLocationForm: VFC = () => {
                 control={control}
                 name='name'
                 label='Name'
-                labelPosition='floating'
                 rules={{ required: 'Bitte ergänze den Namen' }}
               />
             </IonItem>
@@ -110,7 +109,6 @@ const NewLocationForm: VFC = () => {
                 control={control}
                 name='street'
                 label='Straße'
-                labelPosition='floating'
                 rules={{ required: 'Bitte ergänze die Straße' }}
               />
             </IonItem>
@@ -119,7 +117,6 @@ const NewLocationForm: VFC = () => {
                 control={control}
                 name='number'
                 label='Nummer'
-                labelPosition='floating'
                 rules={{
                   required: 'Bitte ergänze die Nummer',
                   maxLength: 3,
@@ -134,7 +131,6 @@ const NewLocationForm: VFC = () => {
                 control={control}
                 name='zipcode'
                 label='PLZ'
-                labelPosition='floating'
                 rules={{
                   required: 'Bitte ergänze die PLZ',
                   maxLength: 5,
@@ -150,7 +146,6 @@ const NewLocationForm: VFC = () => {
                 control={control}
                 name='city'
                 label='Stadt'
-                labelPosition='floating'
                 rules={{ required: 'Bitte ergänze die Straße' }}
               />
             </IonItem>
@@ -159,7 +154,6 @@ const NewLocationForm: VFC = () => {
                 control={control}
                 name='country'
                 label='Land'
-                labelPosition='floating'
                 rules={{ required: 'Bitte wähle ein Land' }}
                 options={[
                   { value: 'Deutschland', label: 'Deutschland' },

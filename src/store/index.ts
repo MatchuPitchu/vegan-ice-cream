@@ -12,6 +12,7 @@ import { userApi } from './api/user-api-slice';
 import { locationsApi } from './api/locations-api-slice';
 import { commentApi } from './api/comment-api-slice';
 import { flavorApi } from './api/flavor-api-slice';
+import { googleApi } from './api/google-api-slice';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
 
 const reducers = combineReducers({
@@ -28,6 +29,7 @@ const reducers = combineReducers({
   [locationsApi.reducerPath]: locationsApi.reducer,
   [commentApi.reducerPath]: commentApi.reducer,
   [flavorApi.reducerPath]: flavorApi.reducer,
+  [googleApi.reducerPath]: googleApi.reducer,
 });
 
 const store = configureStore({
@@ -39,7 +41,8 @@ const store = configureStore({
       .concat(userApi.middleware)
       .concat(locationsApi.middleware)
       .concat(commentApi.middleware)
-      .concat(flavorApi.middleware);
+      .concat(flavorApi.middleware)
+      .concat(googleApi.middleware);
   },
 });
 
