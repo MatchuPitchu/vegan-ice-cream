@@ -59,7 +59,7 @@ ion-badge {
 
 .card--ionic {
   max-width: 450px;
-  margin: 30px 10px;
+  margin: 30px auto;
 }
 
 ul,
