@@ -49,7 +49,7 @@ const TopLocationsSlider: VFC<Props> = ({ topLocationsInCity, hideTopLocations }
                 />
               )}
 
-              <div className='card_favorite-list-number'>{index + 1}</div>
+              <div className='card__favorite-list-number'>{index + 1}</div>
 
               <CardContent showAvatar={false} location={location} />
 

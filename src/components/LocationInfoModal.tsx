@@ -200,9 +200,9 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
                     onClick={handleToggleShowComments}
                   />
                   <IonLabel>Bewertungen</IonLabel>
-                  <IonButton fill='solid' className='commentNum' onClick={handleToggleShowComments}>
+                  <div className='comment__number' onClick={handleToggleShowComments}>
                     {selectedLocation.comments_list.length}
-                  </IonButton>
+                  </div>
                 </IonItem>
 
                 {showComments &&
