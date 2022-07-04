@@ -1,4 +1,4 @@
-import { useReducer, VFC } from 'react';
+import { useMemo, useReducer, VFC } from 'react';
 import type { IceCreamLocation } from '../../types/types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -26,16 +26,15 @@ const initialState: UpdateFavorites = {
 
 enum Actions {
   REMOVE = 'REMOVE',
-  RESET_REMOVE = 'RESET_REMOVE',
   FINISHED_REMOVE = 'FINISHED_REMOVE',
   ADD = 'ADD',
-  RESET_ADD = 'RESET_ADD',
   FINISHED_ADD = 'FINISHED_ADD',
+  RESET = 'RESET',
 }
 
 interface UpdateFavoritesStateAction {
   type: Actions;
-  payload: Partial<UpdateFavorites>;
+  payload?: Partial<UpdateFavorites>;
 }
 
 const updateFavoritesStateReducer = (
@@ -46,23 +45,21 @@ const updateFavoritesStateReducer = (
     case Actions.REMOVE:
       return {
         ...prevState,
-        willRemove: payload.willRemove,
-        location: payload.location,
+        willRemove: payload!.willRemove,
+        location: payload!.location,
       } as UpdateFavorites;
-    case Actions.RESET_REMOVE:
-      return { ...prevState, willRemove: payload.willRemove } as UpdateFavorites;
     case Actions.FINISHED_REMOVE:
-      return { ...prevState, willRemove: payload.willRemove, location: null } as UpdateFavorites;
+      return { ...prevState, willRemove: payload!.willRemove, location: null } as UpdateFavorites;
     case Actions.ADD:
       return {
         ...prevState,
-        willAdd: payload.willAdd,
-        location: payload.location,
+        willAdd: payload!.willAdd,
+        location: payload!.location,
       } as UpdateFavorites;
-    case Actions.RESET_ADD:
-      return { ...prevState, willAdd: payload.willAdd } as UpdateFavorites;
     case Actions.FINISHED_ADD:
-      return { ...prevState, willAdd: payload.willAdd, location: null } as UpdateFavorites;
+      return { ...prevState, willAdd: payload!.willAdd, location: null } as UpdateFavorites;
+    case Actions.RESET:
+      return initialState;
     default:
       return initialState;
   }
@@ -124,7 +121,6 @@ const ButtonFavoriteLocation: VFC<Props> = ({ location }) => {
           'Content-Type': 'application/json',
           token,
         },
-        // converts JS data into JSON string.
         body: JSON.stringify({
           remove_location_id: updateFavoritesState?.location?._id,
         }),
@@ -148,70 +144,45 @@ const ButtonFavoriteLocation: VFC<Props> = ({ location }) => {
     dispatch(appActions.setIsLoading(false));
   };
 
-  if (!user) return null;
+  const findLocation = useMemo(() => {
+    return user?.favorite_locations.find(
+      (favoriteLocation: IceCreamLocation) => favoriteLocation._id === location._id
+    );
+  }, [location._id, user]);
 
-  const findLocation = user.favorite_locations.find(
-    (favoriteLocation: IceCreamLocation) => favoriteLocation._id === location._id
-  );
+  if (!user) return null;
 
   return (
     <>
-      {findLocation && (
-        <IonButton
-          className='button--favorite'
-          fill='clear'
-          onClick={() =>
-            dispatchUpdateFavoritesState({
-              type: Actions.REMOVE,
-              payload: { willRemove: true, location },
-            })
-          }
-        >
-          <IonIcon icon={heart} />
-        </IonButton>
-      )}
-      {!findLocation && (
-        <IonButton
-          className='button--favorite'
-          fill='clear'
-          onClick={() =>
-            dispatchUpdateFavoritesState({
-              type: Actions.ADD,
-              payload: { willAdd: true, location },
-            })
-          }
-        >
-          <IonIcon icon={heartOutline} />
-        </IonButton>
-      )}
-      <IonAlert
-        isOpen={updateFavoritesState.willAdd}
-        onDidDismiss={() =>
+      <IonButton
+        fill='clear'
+        onClick={() =>
           dispatchUpdateFavoritesState({
-            type: Actions.RESET_ADD,
-            payload: { willAdd: false },
+            type: findLocation ? Actions.REMOVE : Actions.ADD,
+            payload: findLocation ? { willRemove: true, location } : { willAdd: true, location },
           })
         }
-        header={'Favoriten hinzufügen'}
-        message={'Möchtest du den Eisladen deinen Favoriten hinzufügen?'}
-        buttons={[
-          { text: 'Abbrechen', role: 'cancel' },
-          { text: 'Bestätigen', handler: addFavLoc },
-        ]}
-      />
+      >
+        <IonIcon icon={findLocation ? heart : heartOutline} />
+      </IonButton>
+
       <IonAlert
-        isOpen={updateFavoritesState.willRemove}
+        isOpen={updateFavoritesState.willAdd || updateFavoritesState.willRemove}
+        mode='ios'
         onDidDismiss={() =>
           dispatchUpdateFavoritesState({
-            type: Actions.RESET_REMOVE,
-            payload: { willRemove: false },
+            type: Actions.RESET,
           })
         }
-        header={'Favoriten entfernen'}
-        message={'Möchtest du den Eisladen von deiner Liste entfernen?'}
+        header={`Favoriten ${updateFavoritesState.willAdd ? 'hinzufügen' : 'entfernen'}`}
+        message={`Möchtest du den Eisladen ${
+          updateFavoritesState.willAdd
+            ? 'deinen Favoriten hinzufügen?'
+            : 'von deiner Liste entfernen?'
+        }`}
         buttons={[
-          { text: 'Abbrechen', role: 'cancel' },
-          { text: 'Bestätigen', handler: removeFavLoc },
+          { text: 'Zurück', role: 'cancel' },
+          { text: 'Bestätigen', handler: updateFavoritesState.willAdd ? addFavLoc : removeFavLoc },
         ]}
       />
     </>

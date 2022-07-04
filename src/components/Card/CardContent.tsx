@@ -6,9 +6,10 @@ import ButtonFavoriteLocation from '../Comments/ButtonFavoriteLocation';
 
 interface Props {
   location: IceCreamLocation;
+  showAvatar?: boolean;
 }
 
-const CardContent: VFC<Props> = ({ location }) => {
+const CardContent: VFC<Props> = ({ location, showAvatar = true }) => {
   const { user } = useAppSelector((state) => state.user);
 
   if (!location) return null;
@@ -19,9 +20,11 @@ const CardContent: VFC<Props> = ({ location }) => {
 
   return (
     <IonItem lines='none'>
-      <IonAvatar slot='start' className='card__icon-avatar'>
-        <img src='./assets/icons/ice-cream-icon-dark.svg' alt='Logo Eis mit Stil' />
-      </IonAvatar>
+      {showAvatar && (
+        <IonAvatar slot='start' className='card__icon-avatar'>
+          <img src='./assets/icons/ice-cream-icon-dark.svg' alt='Logo Eis mit Stil' />
+        </IonAvatar>
+      )}
       <IonLabel className='ion-text-wrap'>
         <div className='card-content__title'>{location.name}</div>
         <div className='card-content__address'>
