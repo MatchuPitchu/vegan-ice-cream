@@ -15,6 +15,7 @@ import {
 import LocationInfoModal from '../LocationInfoModal';
 import Pricing from '../Pricing';
 import CardRatingsAndButtons from '../Card/CardRatingsAndButtons';
+import CardContent from '../Card/CardContent';
 
 interface Props {
   topLocationsInCity: IceCreamLocation[];
@@ -33,43 +34,24 @@ const TopLocationsSlider: VFC<Props> = ({ topLocationsInCity, hideTopLocations }
     <IonSlides
       hidden={hideTopLocations}
       key={topLocationsInCity[0]._id} // key important, otherwise IonSlides is breaking: https://github.com/ionic-team/ionic-framework/issues/18782
-      className={`${isPlatform('desktop') ? 'slideDesktop' : 'slideMobile'}`}
+      className={`${isPlatform('desktop') ? 'slider--desktop' : 'slider--mobile'}`}
       pager={true}
       options={slideOptions}
     >
       {topLocationsInCity.map((location: IceCreamLocation, index: number) => (
         <IonSlide key={location._id} className='text-start'>
-          <div className='slideCardContainer'>
-            <IonButton className='slideBtn'>{index + 1}.</IonButton>
-            <IonCard className='slideCard'>
-              <IonItem lines='full'>
-                <IonLabel className='ion-text-wrap'>
-                  {location.name}
-                  <p>
-                    {location.address.street} {location.address.number}
-                  </p>
-                  <p className='mb-1'>
-                    {location.address.zipcode} {location.address.city}
-                  </p>
-                  {location.location_url && (
-                    <p>
-                      <a
-                        className='link--website'
-                        href={
-                          location.location_url.includes('http')
-                            ? location.location_url
-                            : `//${location.location_url}`
-                        }
-                        target='_blank'
-                        rel='noopener noreferrer'
-                      >
-                        {location.location_url}
-                      </a>
-                    </p>
-                  )}
-                </IonLabel>
-                {location.pricing.length > 0 && <Pricing pricing={location.pricing} />}
-              </IonItem>
+          <div className='slider_card-container'>
+            <IonCard className={`card ${isPlatform('desktop') ? 'card--ionic' : ''}`}>
+              {location.pricing.length > 0 && (
+                <Pricing
+                  pricing={location.pricing}
+                  className='pricing-indication--position-relative'
+                />
+              )}
+
+              <div className='card_favorite-list-number'>{index + 1}</div>
+
+              <CardContent showAvatar={false} location={location} />
 
               <CardRatingsAndButtons
                 ratingVegan={location.location_rating_vegan_offer}

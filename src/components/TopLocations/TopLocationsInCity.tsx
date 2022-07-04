@@ -20,7 +20,9 @@ const TopLocationsInCity: VFC = () => {
         noTopLocation={noTopLocation}
         setCityName={setCityName}
       />
+
       {noTopLocation && <NoTopLocation cityName={cityName} />}
+
       {topLocationsInCity.length !== 0 && (
         <TopLocationsSlider
           topLocationsInCity={topLocationsInCity}
