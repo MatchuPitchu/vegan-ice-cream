@@ -1130,7 +1130,7 @@ mark {
 .rating__number {
   justify-self: end;
   border-radius: var(--ion-border-radius);
-  background-color: var(--ion-card-header-background);
+  background-color: var(--ion-color-tertiary-tint);
   color: var(--ion-color-primary-contrast);
   font-size: 0.7rem;
   padding: 2px 8px;
@@ -1159,11 +1159,14 @@ mark {
   border-radius: var(--ion-border-radius) !important;
 }
 
-.commentNum {
+.comment__number {
+  justify-self: end;
+  border-radius: var(--ion-border-radius);
+  background-color: var(--ion-color-tertiary-tint);
+  color: var(--ion-color-primary-contrast);
   font-size: 0.7rem;
-  height: 19px;
-  min-width: 25px;
-  margin-right: 7px;
+  padding: 2px 8px;
+  cursor: pointer;
 }
 
 .pricing-form {
@@ -1189,8 +1192,8 @@ mark {
   align-items: center;
   margin-right: 10px;
   border-radius: var(--ion-border-radius-circle);
-  border: 1px solid var(--ion-card-header-background);
-  background-color: var(--ion-card-header-background);
+  border: 1px solid var(--ion-color-tertiary-tint);
+  background-color: var(--ion-color-tertiary-tint);
   color: var(--ion-color-primary-contrast);
   font-size: 0.7rem;
   height: 60px;
@@ -1393,6 +1396,7 @@ ion-range::part(knob) {
 .card {
   overflow: visible;
   position: relative;
+  background-color: var(--ion-card-background);
 }
 
 .card__reorder-item {
@@ -1403,7 +1407,7 @@ ion-range::part(knob) {
   margin-right: 0.5rem;
 }
 
-.card_favorite-list-number {
+.card__favorite-list-number {
   position: absolute;
   top: -12px;
   left: -12px;
@@ -1411,7 +1415,8 @@ ion-range::part(knob) {
   font-weight: bold;
   padding: 4px 10px;
   border-radius: var(--ion-border-radius-circle);
-  background: var(--ion-card-header-background);
+  background: var(--ion-color-tertiary-tint);
+  color: var(--ion-color-dark);
   z-index: 2;
 }
 

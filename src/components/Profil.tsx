@@ -150,9 +150,9 @@ const Profil: VFC = () => {
                     onClick={toggleComments}
                   />
                   <IonLabel>Meine Bewertungen</IonLabel>
-                  <IonButton fill='solid' className='commentNum me-0' onClick={toggleComments}>
+                  <div className='comment__number' onClick={toggleComments}>
                     {user.comments_list.length || '0'}
-                  </IonButton>
+                  </div>
                 </IonItem>
 
                 {showUserComments &&

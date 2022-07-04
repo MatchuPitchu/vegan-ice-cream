@@ -114,7 +114,7 @@ const Favoriten = () => {
                 key={location._id}
                 className={`card ${isPlatform('desktop') ? 'card--ionic' : ''}`}
               >
-                <div className='card_favorite-list-number'>{index + 1}</div>
+                <div className='card__favorite-list-number'>{index + 1}</div>
 
                 {!reorderDeactivated && (
                   <IonItem className='card__reorder-item' lines='none'>
