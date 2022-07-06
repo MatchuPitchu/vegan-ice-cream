@@ -155,6 +155,7 @@ const ButtonFavoriteLocation: VFC<Props> = ({ location }) => {
   return (
     <>
       <IonButton
+        className='button--hover-transparent'
         fill='clear'
         onClick={() =>
           dispatchUpdateFavoritesState({

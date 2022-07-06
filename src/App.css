@@ -120,13 +120,13 @@ li {
   height: 20px;
 }
 
-.hoverTransparentBtn {
-  --background-hover: transparent;
-}
-
 .toastOpen {
   --background: var(--ion-color-primary);
   --button-color: var(--ion-color-text);
+}
+
+.label--bold {
+  font-weight: 700;
 }
 
 .label--error {
@@ -136,6 +136,10 @@ li {
 .paragraph--error-small {
   font-size: 0.8rem;
   color: var(--ion-color-danger);
+}
+
+.background-with-opacity {
+  background-color: var(--ion-background-color-with-opacity);
 }
 
 /************ Header general ************/
@@ -1055,6 +1059,10 @@ mark {
   --background: var(--ion-color-tertiary);
 }
 
+.button--hover-transparent {
+  --background-hover: transparent;
+}
+
 .pricing-form__button--check {
   align-self: center;
   font-size: 0.7rem;
@@ -1276,8 +1284,8 @@ mark {
   background: var(--ion-card-background);
 }
 
-.border-bottom {
-  border-bottom: 1px solid var(--ion-toolbar-background);
+.item-border-bottom {
+  border-bottom: 1px solid var(--ion-border-color) !important;
 }
 
 .more-infos {
@@ -1400,7 +1408,13 @@ ion-range::part(knob) {
 }
 
 .card__reorder-item {
-  height: 29px;
+  min-height: 0;
+  transition: all 0.3s;
+}
+
+.card__reorder-item--active {
+  background-color: var(--ion-card-background);
+  min-height: 20px;
 }
 
 .card__icon-avatar {
@@ -1426,7 +1440,7 @@ ion-range::part(knob) {
   margin-bottom: 4px;
 }
 
-.card-content__address {
+.address {
   font-size: 0.8rem;
   line-height: 1.2;
   font-weight: 300;

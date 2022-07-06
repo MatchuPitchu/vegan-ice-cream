@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
 import { appActions } from '../store/appSlice';
 import { getSelectedLocation } from '../store/locationsSlice';
+import { ItemReorderEventDetail } from '@ionic/core';
 import {
   IonContent,
   IonPage,
@@ -15,7 +16,6 @@ import {
   isPlatform,
   IonReorderGroup,
   IonReorder,
-  IonItem,
 } from '@ionic/react';
 import { refreshCircleOutline, reorderThreeOutline } from 'ionicons/icons';
 import Spinner from '../components/Spinner';
@@ -33,14 +33,14 @@ const Favoriten = () => {
   const [reorderDeactivated, setReorderDeactivated] = useState(true);
   const [rearranged, setRearranged] = useState(false);
 
-  const handleRearrange = ({
-    detail: { complete },
-  }: {
-    detail: { complete: (data?: boolean | any[]) => any };
-  }) => {
-    const rearrangedLocations = complete(user?.favorite_locations);
-    dispatch(userActions.updateUser({ favorite_locations: rearrangedLocations }));
-    setRearranged(true);
+  const handleReorder = (event: CustomEvent<ItemReorderEventDetail>) => {
+    if (user?.favorite_locations) {
+      const items = [...user.favorite_locations]; // first shallow copy to avoid readonly error that state is directly mutated
+      const rearrangedLocations = event.detail.complete(items);
+      console.log(rearrangedLocations);
+      dispatch(userActions.updateUser({ favorite_locations: rearrangedLocations }));
+      setRearranged(true);
+    }
   };
 
   const onSubmit = async () => {
@@ -108,7 +108,7 @@ const Favoriten = () => {
             {reorderDeactivated ? 'Liste per Drag & Drop ordnen' : 'Neue Sortierung bestätigen'}
           </IonButton>
 
-          <IonReorderGroup disabled={reorderDeactivated} onIonItemReorder={handleRearrange}>
+          <IonReorderGroup disabled={reorderDeactivated} onIonItemReorder={handleReorder}>
             {user.favorite_locations.map((location, index) => (
               <IonCard
                 key={location._id}
@@ -116,13 +116,15 @@ const Favoriten = () => {
               >
                 <div className='card__favorite-list-number'>{index + 1}</div>
 
-                {!reorderDeactivated && (
-                  <IonItem className='card__reorder-item' lines='none'>
-                    <IonReorder slot='end'>
-                      <IonIcon icon={reorderThreeOutline} />
-                    </IonReorder>
-                  </IonItem>
-                )}
+                <div
+                  className={`card__reorder-item ${
+                    !reorderDeactivated && 'card__reorder-item--active'
+                  }`}
+                >
+                  <IonReorder slot='end'>
+                    <IonIcon icon={reorderThreeOutline} />
+                  </IonReorder>
+                </div>
 
                 <CardContent location={location} />
 

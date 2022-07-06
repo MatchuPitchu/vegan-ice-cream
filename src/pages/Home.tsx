@@ -22,7 +22,7 @@ import {
   add,
   create,
   gift,
-  iceCream,
+  iceCreamOutline,
   logIn,
   logoApple,
   logoGooglePlaystore,
@@ -93,7 +93,7 @@ const Home: VFC = () => {
             </div>
           </h1>
           <div className={`${isDarkTheme ? 'overlay' : 'overlay-light'}`}>
-            <IonIcon className='startIceIcon' icon={iceCream} />
+            <IonIcon className='startIceIcon' icon={iceCreamOutline} />
           </div>
           <IonButton
             className='start-btn-wrapper'

@@ -8,7 +8,7 @@ import { appActions } from '../../store/appSlice';
 import { getSelectedLocation, locationsActions } from '../../store/locationsSlice';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { IonButton, IonIcon, IonItem } from '@ionic/react';
-import { backspaceOutline, chatboxEllipses, checkboxOutline } from 'ionicons/icons';
+import { backspaceOutline, chatbubbleOutline } from 'ionicons/icons';
 import TextareaInput from '../FormFields/TextareaInput';
 import RatingInput from '../FormFields/RatingInput';
 import Checkbox from '../FormFields/Checkbox';
@@ -104,11 +104,11 @@ const UpdateComment: VFC<Props> = ({ comment }) => {
 
   return (
     <form key={comment._id} onSubmit={handleSubmit(onSubmit)}>
-      <div className='px-3 py-2 border-bottom'>
+      <div className='px-3 pb-3 item-border-bottom'>
         <TextareaInput
           control={control}
           name='text'
-          label='Text'
+          label='Kommentar'
           rules={{ required: 'Was möchtest du über den Eisladen teilen?' }}
         />
 
@@ -172,7 +172,7 @@ const UpdateComment: VFC<Props> = ({ comment }) => {
         </div>
         <div className='d-flex justify-content-center mt-1'>
           <IonButton className='button--check' type='submit' fill='clear'>
-            <IonIcon className='pe-1' size='small' icon={checkboxOutline} />
+            <IonIcon className='pe-1' size='small' icon={chatbubbleOutline} />
             Updaten
           </IonButton>
           <IonButton

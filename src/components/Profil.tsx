@@ -22,14 +22,11 @@ import {
   caretDownCircle,
   caretForwardCircle,
   closeCircleOutline,
-  iceCream,
+  iceCreamOutline,
   informationCircle,
-  mail,
   mailOutline,
   navigateOutline,
-  refreshCircle,
   refreshCircleOutline,
-  trailSign,
 } from 'ionicons/icons';
 import ProfilUpdate from './ProfilUpdate';
 import Spinner from './Spinner';
@@ -178,7 +175,7 @@ const Profil: VFC = () => {
                     className={showFlavors ? 'icon--rotate90Forward' : 'icon--rotate90Back'}
                     slot='start'
                     color='primary'
-                    icon={iceCream}
+                    icon={iceCreamOutline}
                     onClick={() => setShowFlavors((prev) => !prev)}
                   />
                   <IonLabel>Meine Eissorten</IonLabel>
