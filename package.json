@@ -7,6 +7,7 @@
     "@capacitor/android": "^3.4.3",
     "@capacitor/core": "^3.4.3",
     "@capacitor/ios": "^3.4.3",
+    "@emailjs/browser": "^3.6.2",
     "@ionic-native/core": "^5.32.1",
     "@ionic/react": "^5.5.0",
     "@ionic/react-router": "^5.5.0",
