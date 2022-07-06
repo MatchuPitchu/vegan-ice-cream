@@ -1,4 +1,6 @@
 import { VFC } from 'react';
+// EmailJS https://www.emailjs.com/docs/examples/reactjs/
+import emailjs from '@emailjs/browser';
 // Redux Store
 import { useAppDispatch } from '../store/hooks';
 import { showActions } from '../store/showSlice';
@@ -16,6 +18,7 @@ import { closeCircleOutline, paperPlaneOutline } from 'ionicons/icons';
 import TextareaInput from './FormFields/TextareaInput';
 import { CustomInput } from './FormFields/CustomInput';
 import Select from './FormFields/Select';
+import { appActions } from '../store/appSlice';
 
 interface FeedbackForm {
   name: string;
@@ -33,13 +36,13 @@ const defaultFeedbackValues: FeedbackForm = {
   recommend: '',
 };
 
-interface SendFeedback {
+type SendFeedback = {
   name: string;
   reply_to: string;
   message: string;
   rating_App: string;
   recommend_App: string;
-}
+} & Record<string, string>;
 
 const templateID = 'contact-form';
 const serviceID = 'gmail_account';
@@ -51,9 +54,20 @@ const Feedback: VFC = () => {
 
   const sendFeedback = async (serviceID: string, templateId: string, variables: SendFeedback) => {
     try {
-      const response = await window.emailjs.send(serviceID, templateId, variables);
+      const response = await emailjs.send(
+        serviceID,
+        templateId,
+        variables as Record<string, string>,
+        process.env.REACT_APP_USER_ID_EMAILJS
+      );
       if (response) console.log('Email successfully sent!');
     } catch (error) {
+      dispatch(
+        appActions.setError(
+          'Ups, schief gelaufen. Schreibe bitte eine direkte Nachricht an die Mailadresse, die unter "About" angegeben ist.'
+        )
+      );
+      setTimeout(() => dispatch(appActions.resetError()), 5000);
       console.log(error);
     }
   };

@@ -1,10 +1,3 @@
-// Type for EmailJS
-declare global {
-  interface Window {
-    emailjs?: any;
-  }
-}
-
 export interface GeoCoordinates {
   lat: number | null;
   lng: number | null;
