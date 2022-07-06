@@ -2,7 +2,7 @@ import type { Comment } from '../../types/types';
 // Redux Store
 import { useAppSelector } from '../../store/hooks';
 import { IonIcon } from '@ionic/react';
-import { chatboxEllipses, iceCream } from 'ionicons/icons';
+import { chatbubbleOutline, iceCreamOutline } from 'ionicons/icons';
 import Ratings from '../Ratings';
 import ButtonsEditDelete from './ButtonsEditDelete';
 import UpdateComment from './UpdateComment';
@@ -21,51 +21,51 @@ const CommentsBlock: VFC<Props> = ({ comment, authorIdOfComment }) => {
     return <UpdateComment comment={comment} />;
   }
 
+  if (!user) return null;
+
   return (
-    user && (
-      <div className='px-3 py-2 border-bottom'>
-        <div className='comment-text'>
-          <IonIcon slot='start' className='me-2' color='text-color' icon={chatboxEllipses} />
-          {comment.text}
-        </div>
-        {(comment.bio || comment.vegan || comment.lactose_free) && (
-          <div className='d-flex mt-3'>
-            {comment.bio ? <div className='tag-comment'>bio</div> : null}
-            {comment.vegan ? <div className='tag-comment'>vegan</div> : null}
-            {comment.lactose_free ? <div className='tag-comment'>laktosefrei</div> : null}
-          </div>
-        )}
-        <div className='d-flex align-items-center'>
-          <Ratings
-            rating_vegan_offer={comment.rating_vegan_offer as number}
-            rating_quality={comment.rating_quality as number}
-            showNum={false}
-          />
-          {user && user._id === authorIdOfComment && <ButtonsEditDelete comment={comment} />}
-        </div>
-        {comment.flavors_referred.map((flavor) => {
-          return (
-            <div
-              key={flavor._id}
-              className='flavor-btn mt-2 d-flex align-items-center justify-content-center'
-            >
-              <IonIcon className='coneIcon pe-1' size='small' icon={iceCream} />
-              {flavor.name}
-            </div>
-          );
-        })}
-        <div className='text--small-grey mt-2'>
-          {`${
-            comment.user_id // if false, than user account is deleted
-              ? hasNameProperty(comment.user_id)
-                ? comment.user_id.name // Comments Block in App
-                : user.name // Profil Section
-              : 'User mit deaktiviertem Konto'
-          }`}{' '}
-          am {comment.date.replace('T', ' um ').slice(0, 19)} Uhr
-        </div>
+    <div className='px-3 py-3 item-border-bottom'>
+      <div className='comment-text'>
+        <IonIcon slot='end' size='small' className='me-2' icon={chatbubbleOutline} />
+        {comment.text}
       </div>
-    )
+      {(comment.bio || comment.vegan || comment.lactose_free) && (
+        <div className='d-flex mt-3'>
+          {comment.bio && <div className='tag-comment'>bio</div>}
+          {comment.vegan && <div className='tag-comment'>vegan</div>}
+          {comment.lactose_free && <div className='tag-comment'>laktosefrei</div>}
+        </div>
+      )}
+      <div className='d-flex align-items-center'>
+        <Ratings
+          rating_vegan_offer={comment.rating_vegan_offer as number}
+          rating_quality={comment.rating_quality as number}
+          showNum={false}
+        />
+        {user && user._id === authorIdOfComment && <ButtonsEditDelete comment={comment} />}
+      </div>
+      {comment.flavors_referred.map((flavor) => {
+        return (
+          <div
+            key={flavor._id}
+            className='flavor-btn mt-2 d-flex align-items-center justify-content-center'
+          >
+            <IonIcon className='coneIcon pe-1' size='small' icon={iceCreamOutline} />
+            {flavor.name}
+          </div>
+        );
+      })}
+      <div className='text--small-grey mt-2'>
+        {`${
+          comment.user_id // if false, than user account is deleted
+            ? hasNameProperty(comment.user_id)
+              ? comment.user_id.name // Comments Block in App
+              : user.name // Profil Section
+            : 'User mit deaktiviertem Konto'
+        }`}{' '}
+        am {comment.date.replace('T', ' um ').slice(0, 19)} Uhr
+      </div>
+    </div>
   );
 };
 

@@ -3,6 +3,8 @@ import { useAppSelector } from '../../store/hooks';
 import type { IceCreamLocation } from '../../types/types';
 import { IonAvatar, IonItem, IonLabel } from '@ionic/react';
 import ButtonFavoriteLocation from '../Comments/ButtonFavoriteLocation';
+import AddressBlock from './AddressBlock';
+import WebsiteBlock from './WebsiteBlock';
 
 interface Props {
   location: IceCreamLocation;
@@ -14,10 +16,6 @@ const CardContent: VFC<Props> = ({ location, showAvatar = true }) => {
 
   if (!location) return null;
 
-  const href = location?.location_url.includes('http')
-    ? location?.location_url
-    : `//${location?.location_url}`;
-
   return (
     <IonItem lines='none'>
       {showAvatar && (
@@ -27,17 +25,8 @@ const CardContent: VFC<Props> = ({ location, showAvatar = true }) => {
       )}
       <IonLabel className='ion-text-wrap'>
         <div className='card-content__title'>{location.name}</div>
-        <div className='card-content__address'>
-          {location?.address?.street} {location?.address?.number}
-        </div>
-        <div className='card-content__address'>
-          {location?.address?.zipcode} {location?.address?.city}
-        </div>
-        {location?.location_url && (
-          <a className='link--website' href={href} target='_blank' rel='noopener noreferrer'>
-            {location?.location_url}
-          </a>
-        )}
+        {location?.address && <AddressBlock address={location.address} />}
+        {location?.location_url && <WebsiteBlock url={location.location_url} />}
       </IonLabel>
       {user && <ButtonFavoriteLocation location={location} />}
     </IonItem>

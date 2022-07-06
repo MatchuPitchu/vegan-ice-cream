@@ -1,7 +1,6 @@
 import { useState, VFC } from 'react';
 import type { IceCreamLocation } from '../types/types';
 import { isComment, isCommentsList, isString } from '../types/typeguards';
-import { useThemeContext } from '../context/ThemeContext';
 import { useAnimation } from '../hooks/useAnimation';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -23,10 +22,10 @@ import {
 } from '@ionic/react';
 import {
   addCircleSharp,
-  caretDownCircle,
-  caretForwardCircle,
+  caretDownCircleOutline,
+  caretForwardCircleOutline,
   closeCircleOutline,
-  iceCream,
+  iceCreamOutline,
   removeCircleSharp,
   starHalfOutline,
 } from 'ionicons/icons';
@@ -36,6 +35,8 @@ import FlavorsList from './Comments/FlavorsList';
 import Ratings from './Ratings';
 import Pricing from './Pricing';
 import PricingForm from './PricingForm';
+import AddressBlock from './Card/AddressBlock';
+import WebsiteBlock from './Card/WebsiteBlock';
 
 type Props = {
   selectedLocation: IceCreamLocation;
@@ -49,8 +50,6 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
   const [isPricingFormOpen, setIsPricingFormOpen] = useState(false);
 
   const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
-
-  const { isDarkTheme } = useThemeContext();
 
   // if no comments available OR comments already fetched, set locationId to null to skip fetching
   const locationId =
@@ -87,10 +86,10 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
       leaveAnimation={leaveAnimationToBottom}
     >
       <IonItem lines='full'>
-        <IonLabel>{selectedLocation.name}</IonLabel>
+        <IonLabel className='label--bold'>{selectedLocation.name}</IonLabel>
         {user && <ButtonFavoriteLocation location={selectedLocation} />}
         <IonButton
-          className='hoverTransparentBtn'
+          className='button--hover-transparent'
           fill='clear'
           onClick={handleResetAllOnCloseModal}
         >
@@ -105,28 +104,14 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
           src='./assets/images/ice-cream-chocolate-sm-mae-mu-unsplash.jpg'
         />
 
-        <div
-          style={isDarkTheme ? { backgroundColor: '#23303399' } : { backgroundColor: '#ffffff99' }}
-        >
+        <div className='background-with-opacity'>
           <IonItemGroup>
             <IonItem className='item-transparent item-transparent--large' lines='full'>
               <IonLabel className='ion-text-wrap'>
-                {selectedLocation.address.street} {selectedLocation.address.number}
-                <br />
-                {selectedLocation.address.zipcode} {selectedLocation.address.city}
-                <br />
-                <a
-                  className='link--website'
-                  href={
-                    selectedLocation.location_url.includes('http')
-                      ? selectedLocation.location_url
-                      : `//${selectedLocation.location_url}`
-                  }
-                  target='_blank'
-                  rel='noopener noreferrer'
-                >
-                  {selectedLocation.location_url}
-                </a>
+                {selectedLocation?.address && <AddressBlock address={selectedLocation.address} />}
+                {selectedLocation?.location_url && (
+                  <WebsiteBlock url={selectedLocation.location_url} />
+                )}
               </IonLabel>
               {selectedLocation.pricing.length > 0 && (
                 <Pricing pricing={selectedLocation.pricing} />
@@ -180,7 +165,7 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
           <div style={{ backgroundColor: 'var(--ion-item-background)' }}>
             {selectedLocation.comments_list.length > 0 ? (
               <IonItemGroup>
-                <IonItem lines='full'>
+                <IonItem lines='inset'>
                   <Ratings
                     rating_vegan_offer={selectedLocation.location_rating_vegan_offer as number}
                     rating_quality={selectedLocation.location_rating_quality as number}
@@ -188,15 +173,11 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
                   />
                 </IonItem>
 
-                <IonItem
-                  color='background-color'
-                  className={`${!showComments && 'border-bottom'}`}
-                  lines='none'
-                >
+                <IonItem lines={`${!showComments ? 'inset' : 'none'}`}>
                   <IonIcon
                     className='me-2'
                     color='primary'
-                    icon={showComments ? caretDownCircle : caretForwardCircle}
+                    icon={showComments ? caretDownCircleOutline : caretForwardCircleOutline}
                     onClick={handleToggleShowComments}
                   />
                   <IonLabel>Bewertungen</IonLabel>
@@ -219,7 +200,7 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
                   ))}
 
                 <IonItem lines='none'>
-                  <IonIcon className='me-2' color='primary' icon={iceCream} />
+                  <IonIcon className='me-2' color='primary' icon={iceCreamOutline} />
                   <IonLabel>Bewertete Eissorten</IonLabel>
                 </IonItem>
 
