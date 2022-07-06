@@ -2,86 +2,86 @@
   "short_name": "Eis mit Stil",
   "name": "Eis mit Stil",
   "icons": [
-      {
-        "src": "/android-chrome-192x192.png",
-        "sizes": "192x192",
-        "type": "image/png"
-      },
-      {
-          "src": "/android-chrome-512x512.png",
-          "sizes": "512x512",
-          "type": "image/png"
-      },
-      {
-          "src": "/assets/icons/favicon.png",
-          "sizes": "64x64 32x32 24x24 16x16",
-          "type": "image/x-icon"
-      },
-      {
-          "src": "/assets/icons/maskable_icon_x48.png",
-          "type": "image/png",
-          "sizes": "48x48",
-          "purpose": "maskable"
-      },
-      {
-          "src": "/assets/icons/maskable_icon_x72.png",
-          "type": "image/png",
-          "sizes": "72x72",
-          "purpose": "maskable"
-      },
-      {
-          "src": "/assets/icons/maskable_icon_x96.png",
-          "type": "image/png",
-          "sizes": "96x96",
-          "purpose": "maskable"
-      },
-      {
-          "src": "/assets/icons/maskable_icon_x128.png",
-          "type": "image/png",
-          "sizes": "128x128",
-          "purpose": "maskable"
-      },
-      {
-          "src": "/assets/icons/maskable_icon_x192.png",
-          "type": "image/png",
-          "sizes": "192x192",
-          "purpose": "maskable"
-      },
-      {
-          "src": "/assets/icons/maskable_icon_x384.png",
-          "type": "image/png",
-          "sizes": "384x384",
-          "purpose": "maskable"
-      },
-      {
-          "src": "/assets/icons/maskable_icon_x512.png",
-          "type": "image/png",
-          "sizes": "512x512",
-          "purpose": "any maskable"
-      },
-      {
-          "src": "/assets/icons/maskable_icon.png",
-          "type": "image/png",
-          "sizes": "658x658",
-          "purpose": "maskable"
-      },
-      {
-          "src": "/assets/icons/icon.png",
-          "type": "image/png",
-          "sizes": "512x512",
-          "purpose": "maskable"
-      }
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icons/favicon.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/assets/icons/maskable_icon_x48.png",
+      "type": "image/png",
+      "sizes": "48x48",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/icons/maskable_icon_x72.png",
+      "type": "image/png",
+      "sizes": "72x72",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/icons/maskable_icon_x96.png",
+      "type": "image/png",
+      "sizes": "96x96",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/icons/maskable_icon_x128.png",
+      "type": "image/png",
+      "sizes": "128x128",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/icons/maskable_icon_x192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/icons/maskable_icon_x384.png",
+      "type": "image/png",
+      "sizes": "384x384",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/icons/maskable_icon_x512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icons/maskable_icon.png",
+      "type": "image/png",
+      "sizes": "658x658",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/icons/icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#f9ce64",
-  "background_color": "#f9ce64",
+  "theme_color": "#fce6b3",
+  "background_color": "#fce6b3",
   "url": "https://eis-mit-stil.netlify.app",
   "manifestUrl": "https://eis-mit-stil.netlify.app/manifest.json",
   "lang": "de",
   "description": "Eis mit Stil lässt dich Eisläden mit veganem Angebot entdecken, eintragen und bewerten. Genieße dein Eis und lasse andere an deinem Genuß teilhaben. Mit der Vegan Ice Cream App bleibt dir der Sommer das ganze Jahr über erhalten.",
   "orientation": "portrait",
-  "screenshots" : [
+  "screenshots": [
     {
       "src": "/assets/screenshots/eis-mit-stil-home-light.png",
       "sizes": "640x1136",
