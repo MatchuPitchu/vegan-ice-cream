@@ -21,8 +21,6 @@ const CommentsBlock: VFC<Props> = ({ comment, authorIdOfComment }) => {
     return <UpdateComment comment={comment} />;
   }
 
-  if (!user) return null;
-
   return (
     <div className='px-3 py-3 item-border-bottom'>
       <div className='comment-text'>
@@ -60,7 +58,7 @@ const CommentsBlock: VFC<Props> = ({ comment, authorIdOfComment }) => {
           comment.user_id // if false, than user account is deleted
             ? hasNameProperty(comment.user_id)
               ? comment.user_id.name // Comments Block in App
-              : user.name // Profil Section
+              : user?.name // Profil Section
             : 'User mit deaktiviertem Konto'
         }`}{' '}
         am {comment.date.replace('T', ' um ').slice(0, 19)} Uhr
