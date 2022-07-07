@@ -771,6 +771,10 @@ mark {
   transform: translateX(-50%);
 }
 
+.slider--mobile > .swiper-pagination.swiper-pagination-bullets {
+  bottom: 70px;
+}
+
 .swiper-pagination-bullet {
   background-color: var(--ion-background-color);
   width: 10px;
