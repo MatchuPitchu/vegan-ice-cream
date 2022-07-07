@@ -759,8 +759,16 @@ mark {
 
 .slider_card-container {
   position: relative;
-  width: 95%;
+  width: 90%;
   max-width: 450px;
+}
+
+.swiper-pagination.swiper-pagination-bullets {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  width: 90%;
+  transform: translateX(-50%);
 }
 
 .swiper-pagination-bullet {
