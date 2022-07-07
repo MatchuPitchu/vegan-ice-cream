@@ -37,6 +37,7 @@ const TopLocationsSlider: VFC<Props> = ({ topLocationsInCity, hideTopLocations }
       className={`${isPlatform('desktop') ? 'slider--desktop' : 'slider--mobile'}`}
       pager={true}
       options={slideOptions}
+      mode='ios'
     >
       {topLocationsInCity.map((location: IceCreamLocation, index: number) => (
         <IonSlide key={location._id} className='text-start'>
@@ -60,10 +61,9 @@ const TopLocationsSlider: VFC<Props> = ({ topLocationsInCity, hideTopLocations }
               />
             </IonCard>
           </div>
-
-          {selectedLocation && <LocationInfoModal selectedLocation={selectedLocation} />}
         </IonSlide>
       ))}
+      {selectedLocation && <LocationInfoModal selectedLocation={selectedLocation} />}
     </IonSlides>
   );
 };
