@@ -60,13 +60,12 @@ const Register: VFC = () => {
   const {
     value: inputValue,
     handleInputChange,
+    hasSuggestions,
     suggestions,
     handleSelect,
     handleKeyDown,
     currentFocus,
   } = useAutocompleteWithReducer();
-
-  const hasSuggestions = Array.isArray(suggestions) && suggestions.length > 0;
 
   const handleChange = (text: string) => handleInputChange(citiesInGermany, text);
 
