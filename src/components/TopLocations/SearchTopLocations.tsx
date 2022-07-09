@@ -4,12 +4,9 @@ import { useAutocomplete } from '../../hooks/useAutocomplete';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { appActions } from '../../store/appSlice';
 import { locationsActions } from '../../store/locationsSlice';
-// Context
-import { useThemeContext } from '../../context/ThemeContext';
 import { SubmitHandler, useController, useForm } from 'react-hook-form';
 import Highlighter from 'react-highlight-words';
-import { IonItem, IonSearchbar, isPlatform } from '@ionic/react';
-import LoadingError from '../LoadingError';
+import { IonSearchbar } from '@ionic/react';
 import { searchCircleOutline, trash } from 'ionicons/icons';
 
 interface SearchbarFormValues {
@@ -32,8 +29,6 @@ const SearchTopLocations: VFC<Props> = ({
   const dispatch = useAppDispatch();
   const { citiesWithLocations } = useAppSelector((state) => state.locations);
 
-  const { isDarkTheme } = useThemeContext();
-
   const { handleSearchTextChange, predictions, setPredictions, searchWords } =
     useAutocomplete<string>(citiesWithLocations);
 
@@ -42,7 +37,7 @@ const SearchTopLocations: VFC<Props> = ({
   });
 
   const {
-    field: { onChange, value, ref },
+    field: { onChange: onChangeReactHookForm, value, ref },
   } = useController({
     control,
     name: 'city',
@@ -83,12 +78,11 @@ const SearchTopLocations: VFC<Props> = ({
     dispatch(appActions.setIsLoading(false));
   };
 
-  const onSearchTextChanged = (searchText: string) => {
-    if (!searchText) {
-      setHideTopLocations(true);
-      // no return here since execution stops in handleSearchTextChange()
-    }
-
+  const handleInputChange = (searchText: string) => {
+    if (!searchText) setHideTopLocations(true); // no return here since execution stops in handleSearchTextChange()
+    if (noTopLocation) setNoTopLocation(false);
+    onChangeReactHookForm(searchText);
+    setCityName(searchText);
     handleSearchTextChange(searchText, 4);
   };
 
@@ -106,18 +100,17 @@ const SearchTopLocations: VFC<Props> = ({
         searchIcon={searchCircleOutline}
         value={value}
         debounce={0}
-        onIonChange={({ detail: { value } }) => {
-          onChange(value);
-          setCityName(value ?? '');
-          if (noTopLocation) setNoTopLocation(false);
-          onSearchTextChanged(value ?? '');
-        }}
+        onIonChange={({ detail: { value } }) => handleInputChange(value ?? '')}
       />
 
-      {predictions.length !== 0 && (
+      {predictions.length > 0 && (
         <div className={`predict-cities`}>
           {predictions.map((city) => (
-            <div key={city} className='predict-cities__item' onClick={() => onSubmit({ city })}>
+            <div
+              key={city}
+              className='predict-cities__item'
+              onClick={() => handleSubmit(onSubmit({ city }))}
+            >
               <Highlighter
                 className='hightlighter-wrapper'
                 activeIndex={-1}

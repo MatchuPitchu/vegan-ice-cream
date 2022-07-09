@@ -115,9 +115,12 @@ export const useAutocompleteWithReducer = () => {
     }
   };
 
+  const hasSuggestions = suggestions.length > 0;
+
   return {
     value,
     handleInputChange,
+    hasSuggestions,
     suggestions,
     handleSelect,
     handleKeyDown,
