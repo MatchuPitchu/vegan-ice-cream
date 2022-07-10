@@ -3,6 +3,7 @@ import type { PopoverState } from '../types/types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { locationsActions } from '../store/locationsSlice';
+import { showActions } from '../store/showSlice';
 // Context
 import { useThemeContext } from '../context/ThemeContext';
 import {
@@ -20,6 +21,8 @@ import {
 } from '@ionic/react';
 import {
   add,
+  addCircleOutline,
+  addOutline,
   create,
   gift,
   iceCreamOutline,
@@ -29,8 +32,7 @@ import {
   logoPaypal,
   phonePortraitOutline,
 } from 'ionicons/icons';
-import TopLocationsInCity from '../components/TopLocations/TopLocationsInCity';
-import { showActions } from '../store/showSlice';
+import SearchHome from '../components/SearchHome';
 
 const Home: VFC = () => {
   const { isDarkTheme } = useThemeContext();
@@ -47,8 +49,10 @@ const Home: VFC = () => {
   const contentRef = useRef<HTMLIonContentElement>(null);
 
   useEffect(() => {
-    const timerId = setTimeout(() => contentRef?.current?.scrollToBottom(500), 500);
-    return () => clearTimeout(timerId);
+    if (topLocationsInCity.length > 0) {
+      const timerId = setTimeout(() => contentRef?.current?.scrollToBottom(500), 500);
+      return () => clearTimeout(timerId);
+    }
   }, [topLocationsInCity]);
 
   return (
@@ -93,7 +97,7 @@ const Home: VFC = () => {
             </div>
           </h1>
           <div className={`${isDarkTheme ? 'overlay' : 'overlay-light'}`}>
-            <IonIcon className='startIceIcon' icon={iceCreamOutline} />
+            <IonIcon className='start-ice-cream-icon' icon={iceCreamOutline} />
           </div>
           <IonButton
             className='start-btn-wrapper'
@@ -109,18 +113,13 @@ const Home: VFC = () => {
               }
             }}
           >
-            <div className='start-btn-container'>
-              <div>
-                <span className='btn-ring'></span>
-                <span className='btn-border'></span>
-                <span className='btn-text'>
-                  <IonIcon icon={add} />
-                  <br />
-                  Eisladen
-                  <br />
-                  eintragen
-                </span>
-              </div>
+            <div className='start-btn'>
+              <span></span>
+              <span className='start-btn__text'>
+                <IonIcon size='small' icon={addCircleOutline} />
+                <span>Eisladen</span>
+              </span>
+              <span className='start-btn__ring'></span>
             </div>
           </IonButton>
           <IonPopover
@@ -143,7 +142,7 @@ const Home: VFC = () => {
           </IonPopover>
         </div>
 
-        <TopLocationsInCity />
+        <SearchHome />
       </IonContent>
 
       <IonFab className='me-2' vertical='bottom' horizontal='end' slot='fixed'>

@@ -105,44 +105,6 @@ const sortNumbersDesc = (type: SortType) => (a: IceCreamLocation, b: IceCreamLoc
   return 0;
 };
 
-const sortAtoZ = (type: SortType) => (a: IceCreamLocation, b: IceCreamLocation) => {
-  let nameA, nameB;
-  if (type === SortType.CITY) {
-    nameA = a.address.city.toUpperCase();
-    nameB = b.address.city.toUpperCase();
-  }
-
-  if (type === SortType.STORE) {
-    nameA = a.name.toUpperCase();
-    nameB = b.name.toUpperCase();
-  }
-
-  if (!nameA || !nameB) return 0;
-
-  if (nameA < nameB) return -1;
-  if (nameA > nameB) return 1;
-  return 0;
-};
-
-const sortZtoA = (type: SortType) => (a: IceCreamLocation, b: IceCreamLocation) => {
-  let nameA, nameB;
-  if (type === SortType.CITY) {
-    nameA = a.address.city.toUpperCase();
-    nameB = b.address.city.toUpperCase();
-  }
-
-  if (type === SortType.STORE) {
-    nameA = a.name.toUpperCase();
-    nameB = b.name.toUpperCase();
-  }
-
-  if (!nameA || !nameB) return 0;
-
-  if (nameA > nameB) return -1;
-  if (nameA < nameB) return 1;
-  return 0;
-};
-
 const calculateTotals = (commentsList: Comment[]) => {
   const total = commentsList.reduce(
     (acc: AccumulatorTotal, currentValue: Comment) => ({
@@ -245,18 +207,6 @@ const locationsSlice = createSlice({
         payload === 'asc'
           ? state.locations.sort(sortNumbersAsc(SortType.QUALITY))
           : state.locations.sort(sortNumbersDesc(SortType.QUALITY));
-    },
-    sortLocationsCity: (state, { payload }: { payload: SortDirection }) => {
-      state.locations =
-        payload === 'asc'
-          ? state.locations.sort(sortAtoZ(SortType.CITY))
-          : state.locations.sort(sortZtoA(SortType.CITY));
-    },
-    sortLocationsStore: (state, { payload }: { payload: SortDirection }) => {
-      state.locations =
-        payload === 'asc'
-          ? state.locations.sort(sortAtoZ(SortType.STORE))
-          : state.locations.sort(sortZtoA(SortType.STORE));
     },
     // LOCATIONS IN SEARCH RESULT LIST
     setLocationsSearchResults: (state, { payload }: PayloadAction<IceCreamLocation[]>) => {

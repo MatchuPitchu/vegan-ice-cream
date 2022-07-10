@@ -2,10 +2,9 @@ import { useState } from 'react';
 // Redux Store
 import { useAppSelector } from '../store/hooks';
 import { getSelectedLocation } from '../store/locationsSlice';
-import { IonCard, IonContent, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
+import { IonCard, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 import LocationInfoModal from './LocationInfoModal';
 import ListResultComponent from './ListResultComponent';
-import ListFilters from './ListFilters';
 
 const ListMap = () => {
   const { locations, locationsSearchResultsList } = useAppSelector((state) => state.locations);
@@ -21,13 +20,11 @@ const ListMap = () => {
   };
 
   return (
-    <IonContent>
-      <ListFilters />
-
+    <div className='list-result-item'>
       {/* if searchbar is used */}
-      {locationsSearchResultsList.length !== 0 &&
-        locationsSearchResultsList.map((location) => (
-          <ListResultComponent key={location._id} location={location} />
+      {locationsSearchResultsList.length > 0 &&
+        locationsSearchResultsList.map((location, index) => (
+          <ListResultComponent key={location._id} location={location} number={index + 1} />
         ))}
 
       {/* if searchbar empty and so no search results */}
@@ -35,7 +32,9 @@ const ListMap = () => {
         locationsSearchResultsList.length === 0 &&
         locations
           ?.slice(0, endIndexInLocationsList)
-          .map((location) => <ListResultComponent key={location._id} location={location} />)}
+          .map((location, index) => (
+            <ListResultComponent key={location._id} location={location} number={index + 1} />
+          ))}
 
       {/* if searchbar is used, but not results */}
       {searchText && locationsSearchResultsList.length === 0 && (
@@ -59,7 +58,7 @@ const ListMap = () => {
           <IonInfiniteScrollContent loadingSpinner='dots' />
         </IonInfiniteScroll>
       )}
-    </IonContent>
+    </div>
   );
 };
 

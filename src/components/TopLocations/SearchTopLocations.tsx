@@ -20,6 +20,7 @@ interface Props {
   setCityName: Dispatch<SetStateAction<string>>;
 }
 
+// TODO: entfernen oder neu konzipiert in App einbetten
 const SearchTopLocations: VFC<Props> = ({
   setHideTopLocations,
   setNoTopLocation,
@@ -29,7 +30,7 @@ const SearchTopLocations: VFC<Props> = ({
   const dispatch = useAppDispatch();
   const { citiesWithLocations } = useAppSelector((state) => state.locations);
 
-  const { handleSearchTextChange, predictions, setPredictions, searchWords } =
+  const { handleSearchTextChange, suggestions, setSuggestions, searchWords } =
     useAutocomplete<string>(citiesWithLocations);
 
   const { control, handleSubmit } = useForm<SearchbarFormValues>({
@@ -74,20 +75,24 @@ const SearchTopLocations: VFC<Props> = ({
       setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
 
-    setPredictions([]);
+    setSuggestions([]);
     dispatch(appActions.setIsLoading(false));
   };
 
   const handleInputChange = (searchText: string) => {
-    if (!searchText) setHideTopLocations(true); // no return here since execution stops in handleSearchTextChange()
     if (noTopLocation) setNoTopLocation(false);
     onChangeReactHookForm(searchText);
     setCityName(searchText);
+
+    if (!searchText) {
+      setHideTopLocations(true);
+      return;
+    }
     handleSearchTextChange(searchText, 4);
   };
 
   return (
-    <form className='container-content' onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <IonSearchbar
         className='searchbar--flavor'
         ref={ref}
@@ -103,9 +108,9 @@ const SearchTopLocations: VFC<Props> = ({
         onIonChange={({ detail: { value } }) => handleInputChange(value ?? '')}
       />
 
-      {predictions.length > 0 && (
+      {suggestions.length > 0 && (
         <div className={`predict-cities`}>
-          {predictions.map((city) => (
+          {suggestions.map((city) => (
             <div
               key={city}
               className='predict-cities__item'

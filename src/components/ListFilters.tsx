@@ -10,11 +10,12 @@ import {
   IonLabel,
   IonIcon,
   IonCard,
-  isPlatform,
   IonRadioGroup,
   IonRadio,
 } from '@ionic/react';
-import { caretDownCircle, caretForwardCircle } from 'ionicons/icons';
+import { caretDownCircleOutline, caretForwardCircleOutline } from 'ionicons/icons';
+
+// TODO: Filter CITY + STORE entfernen oder neu konzipieren
 
 const ListFilters = () => {
   const dispatch = useAppDispatch();
@@ -30,51 +31,38 @@ const ListFilters = () => {
       case SortType.QUALITY:
         dispatch(locationsActions.sortLocationsQuality('desc'));
         break;
-      case SortType.CITY:
-        dispatch(locationsActions.sortLocationsCity('asc'));
-        break;
-      case SortType.STORE:
-        dispatch(locationsActions.sortLocationsStore('asc'));
-        break;
       default:
         return;
     }
   };
 
   return (
-    <IonCard className={`${isPlatform('desktop') ? 'card--ionic' : ''}`}>
+    <IonCard className='filter'>
       <IonItem
-        className='item-text--small'
+        className='filter__title item--small'
         lines={!showFilter ? 'none' : 'full'}
         detail={false}
         button
         onClick={() => setShowFilter((prev) => !prev)}
       >
         <IonLabel>Sortieren</IonLabel>
-        <IonIcon size='small' icon={!showFilter ? caretForwardCircle : caretDownCircle} />
+        <IonIcon
+          size='small'
+          icon={!showFilter ? caretForwardCircleOutline : caretDownCircleOutline}
+        />
       </IonItem>
 
       {showFilter && (
-        <IonList className='filterContainer'>
+        <IonList className='filter__item'>
           <IonRadioGroup value={selected} onIonChange={handleSortLocationsList}>
-            <IonItem className='labelFilter' lines='none'>
+            <IonItem className='filter__label item--small' lines='inset'>
               <IonLabel>Veganes Angebot (★ &rarr; ☆)</IonLabel>
-              <IonRadio slot='end' value={SortType.VEGAN_OFFER} />
+              <IonRadio mode='ios' slot='end' value={SortType.VEGAN_OFFER} />
             </IonItem>
 
-            <IonItem className='labelFilter' lines='none'>
+            <IonItem className='filter__label item--small' lines='inset'>
               <IonLabel>Eis-Erlebnis (★ &rarr; ☆)</IonLabel>
-              <IonRadio slot='end' value={SortType.QUALITY} />
-            </IonItem>
-
-            <IonItem className='labelFilter' lines='none'>
-              <IonLabel>Stadt (A &rarr; Z)</IonLabel>
-              <IonRadio slot='end' value={SortType.CITY} />
-            </IonItem>
-
-            <IonItem className='labelFilter' lines='none'>
-              <IonLabel>Eisladen (A &rarr; Z)</IonLabel>
-              <IonRadio slot='end' value={SortType.STORE} />
+              <IonRadio mode='ios' slot='end' value={SortType.QUALITY} />
             </IonItem>
           </IonRadioGroup>
         </IonList>

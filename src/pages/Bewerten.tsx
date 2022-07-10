@@ -333,7 +333,9 @@ const Bewerten = () => {
               Nichts gefunden? Trage den Eisladen auf der Karte ein.
             </IonPopover>
 
-            <Search />
+            <IonItem lines='none' className='item--card-background pb-2'>
+              <Search cancelSubmit={true} />
+            </IonItem>
 
             <form className='mt-1' onSubmit={handleSubmit(onSubmit)}>
               <PricingRange
