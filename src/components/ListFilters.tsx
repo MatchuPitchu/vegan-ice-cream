@@ -60,7 +60,7 @@ const ListFilters = () => {
               <IonRadio mode='ios' slot='end' value={SortType.VEGAN_OFFER} />
             </IonItem>
 
-            <IonItem className='filter__label item--small' lines='inset'>
+            <IonItem className='filter__label item--small' lines='none'>
               <IonLabel>Eis-Erlebnis (★ &rarr; ☆)</IonLabel>
               <IonRadio mode='ios' slot='end' value={SortType.QUALITY} />
             </IonItem>
