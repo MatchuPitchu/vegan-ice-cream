@@ -1104,7 +1104,7 @@ mark {
 /*********** Filter *************/
 .filter {
   margin-left: auto;
-  margin-right: 8px;
+  margin-right: 13px;
   margin-top: -2px;
   border-radius: var(--ion-border-radius);
   background: transparent;
@@ -1237,7 +1237,7 @@ mark {
 .pricing-indication--position-relative {
   position: absolute;
   top: -35px;
-  right: -30px;
+  right: -20px;
   z-index: 3;
 }
 
@@ -1443,6 +1443,7 @@ ion-range::part(knob) {
 }
 
 .card--list-result {
+  max-width: 280px;
   margin: 50px auto;
 }
 
