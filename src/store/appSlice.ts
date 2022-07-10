@@ -1,8 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { authApi } from './api/auth-api-slice';
 
-export type EntdeckenSegment = 'map' | 'list';
-
 export type ActivateAccount = 'init' | 'pending' | 'Aktivierung des Mail-Accounts erfolgreich';
 
 interface AppStateSlice {
@@ -12,7 +10,6 @@ interface AppStateSlice {
   successMessage: string;
   activateAccountMessage: ActivateAccount;
   confirmMessageNewLocation: string;
-  entdeckenSegment: EntdeckenSegment;
 }
 
 const initialAppState: AppStateSlice = {
@@ -21,7 +18,6 @@ const initialAppState: AppStateSlice = {
   successMessage: '',
   activateAccountMessage: 'init',
   confirmMessageNewLocation: '',
-  entdeckenSegment: 'map',
 };
 
 const appSlice = createSlice({
@@ -42,9 +38,6 @@ const appSlice = createSlice({
     },
     setConfirmMessageNewLocation: (state, { payload }: PayloadAction<string>) => {
       state.confirmMessageNewLocation = payload;
-    },
-    setEntdeckenSegment: (state, { payload }: PayloadAction<EntdeckenSegment>) => {
-      state.entdeckenSegment = payload;
     },
   },
   extraReducers: (builder) => {

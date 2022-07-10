@@ -13,23 +13,22 @@ import { IonItem, IonList, IonSearchbar } from '@ionic/react';
 import { searchCircleOutline, trash } from 'ionicons/icons';
 
 type Props = {
+  cancelSubmit?: boolean;
   showSuggestions?: boolean;
 };
 
-// TODO: entdeckenSegment raus überall
-const Search: VFC<Props> = ({ showSuggestions = true }) => {
+const Search: VFC<Props> = ({ cancelSubmit = false, showSuggestions = true }) => {
   const dispatch = useAppDispatch();
   const { locations } = useAppSelector((state) => state.locations);
   const { searchText } = useAppSelector((state) => state.search);
-  const { entdeckenSegment } = useAppSelector((state) => state.app);
 
   const { handleSearchTextChange, suggestions, setSuggestions, searchWords } =
     useAutocomplete<IceCreamLocation>(locations);
 
   const onSubmit = async (event: any) => {
     event.preventDefault();
+    if (cancelSubmit) return;
     if (event.target.elements[0].value.length < 3) return;
-    if (entdeckenSegment === 'list') return;
 
     dispatch(appActions.setIsLoading(true));
 

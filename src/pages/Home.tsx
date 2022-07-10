@@ -143,11 +143,6 @@ const Home: VFC = () => {
         </div>
 
         <SearchHome />
-
-        {/* <TopLocationsInCity /> */}
-
-        {/* <Search />
-        <EntdeckenList /> */}
       </IonContent>
 
       <IonFab className='me-2' vertical='bottom' horizontal='end' slot='fixed'>

@@ -1,21 +1,8 @@
 import { useState } from 'react';
 import type { Flavor, IceCreamLocation } from '../types/types';
+import { isFlavor, isIceCreamLocation, isString } from '../types/typeguards';
 import { useAppDispatch } from '../store/hooks';
 import { locationsActions } from '../store/locationsSlice';
-
-const isIceCreamLocation = (
-  searchableItem: Flavor | IceCreamLocation | string
-): searchableItem is IceCreamLocation => {
-  return (searchableItem as IceCreamLocation).address !== undefined;
-};
-
-const isFlavor = (searchableItem: Flavor | IceCreamLocation | string): searchableItem is Flavor => {
-  return (searchableItem as Flavor).color !== undefined;
-};
-
-const isString = (searchableItem: Flavor | IceCreamLocation | string): searchableItem is string => {
-  return typeof (searchableItem as string) === 'string';
-};
 
 // TODO: add onKeyDown functionality + merge with useAutocompleteWithReducer
 export const useAutocomplete = <T extends Flavor | IceCreamLocation | string>(
@@ -56,7 +43,7 @@ export const useAutocomplete = <T extends Flavor | IceCreamLocation | string>(
 
     setfilteredSearchResult(filteredSearchableArray);
 
-    if (isIceCreamLocation(filteredSearchableArray[0])) {
+    if (filteredSearchableArray[0] && isIceCreamLocation(filteredSearchableArray[0])) {
       dispatch(
         locationsActions.setLocationsSearchResults(filteredSearchableArray as IceCreamLocation[])
       );

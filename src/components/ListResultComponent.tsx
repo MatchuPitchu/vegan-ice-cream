@@ -1,17 +1,25 @@
 import { VFC } from 'react';
 import type { IceCreamLocation } from '../types/types';
-import { IonCard, isPlatform } from '@ionic/react';
+import { IonCard } from '@ionic/react';
 import CardContent from './Card/CardContent';
 import CardRatingsAndButtons from './Card/CardRatingsAndButtons';
+import Pricing from './Pricing';
 
 interface Props {
   location: IceCreamLocation;
+  number: number;
 }
 
-const ListResultComponent: VFC<Props> = ({ location }) => {
+const ListResultComponent: VFC<Props> = ({ location, number }) => {
   return (
-    <IonCard className={`${isPlatform('desktop') ? 'card--ionic' : ''}`}>
+    <IonCard className='card card--list-result'>
+      {location.pricing.length > 0 && (
+        <Pricing pricing={location.pricing} className='pricing-indication--position-relative' />
+      )}
+
       <CardContent location={location} />
+
+      <div className='card__favorite-list-number'>{number}</div>
 
       <CardRatingsAndButtons
         ratingVegan={location.location_rating_vegan_offer}

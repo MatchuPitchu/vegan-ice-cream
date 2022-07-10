@@ -334,7 +334,7 @@ const Bewerten = () => {
             </IonPopover>
 
             <IonItem lines='none' className='item--card-background pb-2'>
-              <Search />
+              <Search cancelSubmit={true} />
             </IonItem>
 
             <form className='mt-1' onSubmit={handleSubmit(onSubmit)}>

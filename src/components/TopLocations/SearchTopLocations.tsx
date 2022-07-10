@@ -20,6 +20,7 @@ interface Props {
   setCityName: Dispatch<SetStateAction<string>>;
 }
 
+// TODO: entfernen oder neu konzipiert in App einbetten
 const SearchTopLocations: VFC<Props> = ({
   setHideTopLocations,
   setNoTopLocation,
