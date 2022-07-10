@@ -37,20 +37,14 @@ const ListFilters = () => {
   };
 
   return (
-    <IonCard className='filter'>
-      <IonItem
-        className='filter__title item--small'
-        lines={!showFilter ? 'none' : 'full'}
-        detail={false}
-        button
-        onClick={() => setShowFilter((prev) => !prev)}
-      >
-        <IonLabel>Sortieren</IonLabel>
+    <div className='filter'>
+      <div className='filter__title item--small' onClick={() => setShowFilter((prev) => !prev)}>
+        <div>Sortieren</div>
         <IonIcon
           size='small'
           icon={!showFilter ? caretForwardCircleOutline : caretDownCircleOutline}
         />
-      </IonItem>
+      </div>
 
       {showFilter && (
         <IonList className='filter__item'>
@@ -67,7 +61,7 @@ const ListFilters = () => {
           </IonRadioGroup>
         </IonList>
       )}
-    </IonCard>
+    </div>
   );
 };
 

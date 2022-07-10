@@ -150,6 +150,7 @@ http://ionicframework.com/docs/theming/ */
   --ion-background-color: #fce6b3;
   --ion-background-color-rgb: 255, 255, 255;
   --ion-background-color-with-opacity: #ffffff99;
+  --ion-background-color-with-opacity-dark: #23303399;
 
   --ion-text-color: #4a4a4a;
   --ion-text-color-rgb: 35, 48, 51;
@@ -244,6 +245,7 @@ body[color-theme='dark'] {
   --ion-color-light-tint: #cacaca;
 
   --ion-background-color-with-opacity: #23303399;
+  --ion-background-color-with-opacity-dark: #23303375;
 
   --ion-text-color: #ffffff;
   --ion-text-color-rgb: 255, 255, 255;
