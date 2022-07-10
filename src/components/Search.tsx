@@ -1,4 +1,7 @@
+import { VFC } from 'react';
 import type { IceCreamLocation } from '../types/types';
+import { useAutocomplete } from '../hooks/useAutocomplete';
+import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables-and-functions';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { mapActions } from '../store/mapSlice';
@@ -8,16 +11,19 @@ import { searchActions } from '../store/searchSlice';
 import Highlighter from 'react-highlight-words';
 import { IonItem, IonList, IonSearchbar } from '@ionic/react';
 import { searchCircleOutline, trash } from 'ionicons/icons';
-import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables-and-functions';
-import { useAutocomplete } from '../hooks/useAutocomplete';
 
-const Search = () => {
+type Props = {
+  showSuggestions?: boolean;
+};
+
+// TODO: entdeckenSegment raus überall
+const Search: VFC<Props> = ({ showSuggestions = true }) => {
   const dispatch = useAppDispatch();
   const { locations } = useAppSelector((state) => state.locations);
   const { searchText } = useAppSelector((state) => state.search);
   const { entdeckenSegment } = useAppSelector((state) => state.app);
 
-  const { handleSearchTextChange, predictions, setPredictions, searchWords } =
+  const { handleSearchTextChange, suggestions, setSuggestions, searchWords } =
     useAutocomplete<IceCreamLocation>(locations);
 
   const onSubmit = async (event: any) => {
@@ -51,7 +57,7 @@ const Search = () => {
       setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
 
-    setPredictions([]);
+    setSuggestions([]);
     dispatch(locationsActions.resetLocationsSearchResults());
     dispatch(appActions.setIsLoading(false));
 
@@ -62,15 +68,10 @@ const Search = () => {
     if (searchText.length < 3) {
       dispatch(locationsActions.resetLocationsSearchResults());
       dispatch(locationsActions.resetSelectedLocation());
-      // no return here since execution stops in handleSearchTextChange()
+      return;
     }
 
-    const filteredLocations = handleSearchTextChange(searchText, 4, entdeckenSegment);
-
-    // if user is on map list page and uses searchbar then filteredLocations is returned from handleSearchTextChange and resultsList is displayed
-    if (filteredLocations !== undefined) {
-      dispatch(locationsActions.setLocationsSearchResults(filteredLocations));
-    }
+    handleSearchTextChange(searchText, 4);
   };
 
   // TODO: 1) Styling wie searchbar flavor oder anders (nutze das auch bei Entdecken)
@@ -79,33 +80,28 @@ const Search = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      <IonItem
-        lines={predictions && entdeckenSegment === 'map' ? 'none' : 'full'}
-        className='item--card-background'
-      >
-        <IonSearchbar
-          className='searchbar--flavor'
-          type='search'
-          inputMode='search'
-          placeholder='Eisladen oder Stadt suchen'
-          showCancelButton='never'
-          showClearButton='always'
-          clearIcon={trash}
-          searchIcon={searchCircleOutline}
-          value={searchText}
-          debounce={500}
-          onIonChange={({ detail: { value } }) => {
-            dispatch(searchActions.setSearchText(value ?? ''));
-            onSearchTextChanged(value ?? '');
-          }}
-        />
-      </IonItem>
+      <IonSearchbar
+        className='searchbar--flavor'
+        type='search'
+        inputMode='search'
+        placeholder='Eisladen oder Stadt suchen'
+        showCancelButton='never'
+        showClearButton='always'
+        clearIcon={trash}
+        searchIcon={searchCircleOutline}
+        value={searchText}
+        debounce={500}
+        onIonChange={({ detail: { value } }) => {
+          dispatch(searchActions.setSearchText(value ?? ''));
+          onSearchTextChanged(value ?? '');
+        }}
+      />
 
-      {predictions && entdeckenSegment === 'map' && (
+      {suggestions && showSuggestions && (
         <IonList className='py-0'>
-          {predictions.map((location) => (
+          {suggestions.map((location) => (
             <IonItem
-              className='item--small'
+              className='item--small item--card-background'
               key={location._id}
               button
               onClick={() => {
@@ -115,7 +111,7 @@ const Search = () => {
                   )
                 );
                 dispatch(locationsActions.setSelectedLocation(location._id));
-                setPredictions([]);
+                setSuggestions([]);
               }}
               lines='full'
             >

@@ -2,7 +2,7 @@ import { useState } from 'react';
 // Redux Store
 import { useAppSelector } from '../store/hooks';
 import { getSelectedLocation } from '../store/locationsSlice';
-import { IonCard, IonContent, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
+import { IonCard, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 import LocationInfoModal from './LocationInfoModal';
 import ListResultComponent from './ListResultComponent';
 import ListFilters from './ListFilters';
@@ -21,11 +21,11 @@ const ListMap = () => {
   };
 
   return (
-    <IonContent>
+    <>
       <ListFilters />
 
       {/* if searchbar is used */}
-      {locationsSearchResultsList.length !== 0 &&
+      {locationsSearchResultsList.length > 0 &&
         locationsSearchResultsList.map((location) => (
           <ListResultComponent key={location._id} location={location} />
         ))}
@@ -59,7 +59,7 @@ const ListMap = () => {
           <IonInfiniteScrollContent loadingSpinner='dots' />
         </IonInfiniteScroll>
       )}
-    </IonContent>
+    </>
   );
 };
 

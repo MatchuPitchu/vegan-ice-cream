@@ -1,40 +1,38 @@
 import { useState } from 'react';
-import type { EntdeckenSegment } from '../store/appSlice';
-import { Flavor, IceCreamLocation } from '../types/types';
+import type { Flavor, IceCreamLocation } from '../types/types';
+import { useAppDispatch } from '../store/hooks';
+import { locationsActions } from '../store/locationsSlice';
+
+const isIceCreamLocation = (
+  searchableItem: Flavor | IceCreamLocation | string
+): searchableItem is IceCreamLocation => {
+  return (searchableItem as IceCreamLocation).address !== undefined;
+};
+
+const isFlavor = (searchableItem: Flavor | IceCreamLocation | string): searchableItem is Flavor => {
+  return (searchableItem as Flavor).color !== undefined;
+};
+
+const isString = (searchableItem: Flavor | IceCreamLocation | string): searchableItem is string => {
+  return typeof (searchableItem as string) === 'string';
+};
 
 // TODO: add onKeyDown functionality + merge with useAutocompleteWithReducer
 export const useAutocomplete = <T extends Flavor | IceCreamLocation | string>(
   searchableArray: T[]
 ) => {
-  const [predictions, setPredictions] = useState<T[]>([]);
-  const [searchWords, setSearchWords] = useState<string[]>([]);
+  const dispatch = useAppDispatch();
 
-  const handleSearchTextChange = (
-    value: string,
-    numberOfItemsInFilterResult: number,
-    entdeckenSegment?: EntdeckenSegment
-  ) => {
+  const [suggestions, setSuggestions] = useState<T[]>([]);
+  const [searchWords, setSearchWords] = useState<string[]>([]);
+  const [filteredSearchResult, setfilteredSearchResult] = useState<T[]>([]);
+
+  const handleSearchTextChange = (value: string, numberOfItemsInFilterResult: number) => {
     if (!searchableArray) return;
     if (value.length < 3) {
-      setPredictions([]);
+      setSuggestions([]);
       return;
     }
-
-    const isIceCreamLocation = (
-      searchableItem: Flavor | IceCreamLocation | string
-    ): searchableItem is IceCreamLocation => {
-      return (searchableItem as IceCreamLocation).address !== undefined;
-    };
-    const isFlavor = (
-      searchableItem: Flavor | IceCreamLocation | string
-    ): searchableItem is Flavor => {
-      return (searchableItem as Flavor).color !== undefined;
-    };
-    const isString = (
-      searchableItem: Flavor | IceCreamLocation | string
-    ): searchableItem is string => {
-      return typeof (searchableItem as string) === 'string';
-    };
 
     const searchTerms = value.split(/\s/).filter(Boolean); // create array of search terms, remove all whitespaces
     const filteredSearchableArray = searchableArray.filter((item) => {
@@ -42,9 +40,11 @@ export const useAutocomplete = <T extends Flavor | IceCreamLocation | string>(
       if (isIceCreamLocation(item)) {
         text = `${item.name} ${item.address.street} ${item.address.number} ${item.address.zipcode} ${item.address.city}`;
       }
+
       if (isFlavor(item)) {
         text = item.name;
       }
+
       if (isString(item)) {
         text = item;
       }
@@ -53,18 +53,24 @@ export const useAutocomplete = <T extends Flavor | IceCreamLocation | string>(
         text.toLowerCase().includes(searchTerm.toLowerCase())
       );
     });
-    // if user is on map list page and uses searchbar then resultsList is displayed
-    if (entdeckenSegment === 'list') {
-      return filteredSearchableArray;
+
+    setfilteredSearchResult(filteredSearchableArray);
+
+    if (isIceCreamLocation(filteredSearchableArray[0])) {
+      dispatch(
+        locationsActions.setLocationsSearchResults(filteredSearchableArray as IceCreamLocation[])
+      );
     }
-    setPredictions(filteredSearchableArray.slice(0, numberOfItemsInFilterResult));
+
+    setSuggestions(filteredSearchableArray.slice(0, numberOfItemsInFilterResult));
     setSearchWords(searchTerms);
   };
 
   return {
     handleSearchTextChange,
-    predictions,
-    setPredictions,
+    suggestions,
+    setSuggestions,
     searchWords,
+    filteredSearchResult,
   };
 };

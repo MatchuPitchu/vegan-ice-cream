@@ -15,7 +15,7 @@ const Entdecken: VFC = () => {
 
   return (
     <IonPage>
-      <div>
+      {/* <div>
         <IonSegment
           onIonChange={({ detail: { value } }) => {
             dispatch(appActions.setEntdeckenSegment(value as EntdeckenSegment));
@@ -34,13 +34,11 @@ const Entdecken: VFC = () => {
             <IonIcon icon={listCircle} />
           </IonSegmentButton>
         </IonSegment>
-      </div>
+      </div> */}
 
       <Search />
 
-      {entdeckenSegment === 'map' && <EntdeckenMap />}
-
-      {entdeckenSegment === 'list' && <EntdeckenList />}
+      <EntdeckenMap />
     </IonPage>
   );
 };

@@ -29,7 +29,7 @@ const SearchFlavors: VFC = () => {
 
   const { data: flavors, error, isLoading, isSuccess } = useGetFlavorsQuery();
 
-  const { handleSearchTextChange, predictions, setPredictions, searchWords } =
+  const { handleSearchTextChange, suggestions, setSuggestions, searchWords } =
     useAutocomplete<Flavor>(flavors ?? []);
 
   const onSearchTextChanged = (searchText: string) => handleSearchTextChange(searchText, 8);
@@ -54,7 +54,7 @@ const SearchFlavors: VFC = () => {
       </IonItem>
 
       <IonItem
-        lines={predictions.length > 0 && searchTermFlavor !== flavor?.name ? 'none' : 'full'}
+        lines={suggestions.length > 0 && searchTermFlavor !== flavor?.name ? 'none' : 'full'}
         className='item--card-background'
       >
         <IonSearchbar
@@ -76,16 +76,16 @@ const SearchFlavors: VFC = () => {
             onSearchTextChanged(value ?? '');
           }}
           onIonClear={() => dispatch(flavorActions.resetFlavor())}
-          onKeyUp={(e) => e.key === 'Enter' && setPredictions([])}
+          onKeyUp={(e) => e.key === 'Enter' && setSuggestions([])}
         />
       </IonItem>
 
-      {predictions.length > 0 && searchTermFlavor !== flavor?.name && (
+      {suggestions.length > 0 && searchTermFlavor !== flavor?.name && (
         <IonList className='item--card-background py-0'>
           <div className='info-text item--card-background'>
             ... von anderen Nutzer:innen eingetragen
           </div>
-          {predictions.map((flavor) => (
+          {suggestions.map((flavor) => (
             <IonItem
               key={flavor._id}
               className='item--card-background'
@@ -93,7 +93,7 @@ const SearchFlavors: VFC = () => {
               button
               onClick={() => {
                 dispatch(flavorActions.setFlavor(flavor));
-                setPredictions([]);
+                setSuggestions([]);
                 dispatch(flavorActions.setSearchTermFlavor(flavor.name));
               }}
             >
