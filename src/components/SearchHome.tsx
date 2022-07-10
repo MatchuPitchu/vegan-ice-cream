@@ -5,7 +5,7 @@ import ListFilters from './ListFilters';
 
 const SearchHome: VFC = () => {
   return (
-    <div className='container-content'>
+    <div className='container-content container-content--search-home'>
       <Search showSuggestions={false} />
       <ListFilters />
       <EntdeckenList />

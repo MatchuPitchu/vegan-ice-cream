@@ -20,11 +20,10 @@ import {
   isPlatform,
 } from '@ionic/react';
 import {
-  add,
-  addCircleOutline,
-  addOutline,
   create,
+  extensionPuzzleSharp,
   gift,
+  giftOutline,
   iceCreamOutline,
   logIn,
   logoApple,
@@ -82,21 +81,20 @@ const Home: VFC = () => {
         }}
       >
         <div className='run-text'>
-          <h1 className='title'>
-            veganes Eis
-            <br />
-            <div className='run-text-wrapper'>
-              <div className='run-text-words' aria-hidden='true'>
-                <strong className='run-text-word'>entdecken</strong>
-                <strong className='run-text-word'>genießen</strong>
-                <strong className='run-text-word'>eintragen</strong>
+          <h1>
+            <div className='run-text__title'>veganes Eis</div>
+            <div className='run-text__wrapper'>
+              <div className='run-text__words' aria-hidden='true'>
+                <strong className='run-text__word'>entdecken</strong>
+                <strong className='run-text__word'>genießen</strong>
+                <strong className='run-text__word'>eintragen</strong>
               </div>
-              <div className='run-text-final'>entdecken</div>
-              <div className='run-text-final'>genießen</div>
-              <div className='run-text-final'>eintragen</div>
+              <div className='run-text__final'>entdecken</div>
+              <div className='run-text__final'>genießen</div>
+              <div className='run-text__final'>eintragen</div>
             </div>
           </h1>
-          <div className={`${isDarkTheme ? 'overlay' : 'overlay-light'}`}>
+          <div className={`${isDarkTheme ? 'overlay--dark' : 'overlay--light'}`}>
             <IonIcon className='start-ice-cream-icon' icon={iceCreamOutline} />
           </div>
           <IonButton
@@ -116,7 +114,7 @@ const Home: VFC = () => {
             <div className='start-btn'>
               <span></span>
               <span className='start-btn__text'>
-                <IonIcon size='small' icon={addCircleOutline} />
+                <IonIcon icon={extensionPuzzleSharp} />
                 <span>Eisladen</span>
               </span>
               <span className='start-btn__ring'></span>
@@ -151,7 +149,7 @@ const Home: VFC = () => {
           onClick={() => setShow((prev) => !prev)}
           activated={show ? true : false}
         >
-          <IonIcon icon={gift} />
+          <IonIcon className='fab-icon' icon={giftOutline} />
         </IonFabButton>
         <IonFabList color='dark' side='start'>
           <IonFabButton
@@ -182,7 +180,7 @@ const Home: VFC = () => {
         (isPlatform('mobileweb') && (
           <IonFab vertical='bottom' horizontal='start' slot='fixed'>
             <IonFabButton size='small' color='primary' className='logo-btn'>
-              <IonIcon icon={phonePortraitOutline} />
+              <IonIcon className='fab-icon' icon={phonePortraitOutline} />
             </IonFabButton>
             <IonFabList side='top'>
               <IonFabButton

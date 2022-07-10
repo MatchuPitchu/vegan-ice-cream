@@ -20,7 +20,7 @@ const ListMap = () => {
   };
 
   return (
-    <div className='list-result-item'>
+    <>
       {/* if searchbar is used */}
       {locationsSearchResultsList.length > 0 &&
         locationsSearchResultsList.map((location, index) => (
@@ -58,7 +58,7 @@ const ListMap = () => {
           <IonInfiniteScrollContent loadingSpinner='dots' />
         </IonInfiniteScroll>
       )}
-    </div>
+    </>
   );
 };
 
