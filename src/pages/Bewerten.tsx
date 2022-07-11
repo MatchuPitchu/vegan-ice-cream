@@ -262,7 +262,7 @@ const Bewerten = () => {
     <IonPage>
       <IonHeader>
         <img
-          className='headerMap'
+          className='header-image--map'
           src={`${
             isDarkTheme ? './assets/header-bewerten-dark.svg' : './assets/header-bewerten-light.svg'
           }`}

@@ -4,20 +4,12 @@ import { useAppDispatch } from '../store/hooks';
 import { locationsActions } from '../store/locationsSlice';
 import { SortType } from '../store/locationsSlice';
 // Context
-import {
-  IonList,
-  IonItem,
-  IonLabel,
-  IonIcon,
-  IonCard,
-  IonRadioGroup,
-  IonRadio,
-} from '@ionic/react';
+import { IonList, IonItem, IonLabel, IonIcon, IonRadioGroup, IonRadio } from '@ionic/react';
 import { caretDownCircleOutline, caretForwardCircleOutline } from 'ionicons/icons';
 
 // TODO: Filter CITY + STORE entfernen oder neu konzipieren
 
-const ListFilters = () => {
+const ListFilter = () => {
   const dispatch = useAppDispatch();
   const [showFilter, setShowFilter] = useState(false);
   const [selected, setSelected] = useState<SortType>();
@@ -47,14 +39,24 @@ const ListFilters = () => {
       </div>
 
       {showFilter && (
-        <IonList className='filter__item'>
-          <IonRadioGroup value={selected} onIonChange={handleSortLocationsList}>
-            <IonItem className='filter__label item--small' lines='inset'>
+        <IonList className='filter__list filter--background-transparent'>
+          <IonRadioGroup
+            className='filter--background-transparent'
+            value={selected}
+            onIonChange={handleSortLocationsList}
+          >
+            <IonItem
+              className='filter__item item--small filter--background-transparent'
+              lines='inset'
+            >
               <IonLabel>Veganes Angebot (★ &rarr; ☆)</IonLabel>
               <IonRadio mode='ios' slot='end' value={SortType.VEGAN_OFFER} />
             </IonItem>
 
-            <IonItem className='filter__label item--small' lines='none'>
+            <IonItem
+              className='filter__item item--small filter--background-transparent'
+              lines='none'
+            >
               <IonLabel>Eis-Erlebnis (★ &rarr; ☆)</IonLabel>
               <IonRadio mode='ios' slot='end' value={SortType.QUALITY} />
             </IonItem>
@@ -65,4 +67,4 @@ const ListFilters = () => {
   );
 };
 
-export default ListFilters;
+export default ListFilter;

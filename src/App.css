@@ -67,15 +67,18 @@ li {
 }
 
 .container-content {
+  width: 100%;
   max-width: 400px;
   margin: 0 auto;
 }
 
 .container-content--search-home {
   margin-top: -20px;
+  width: 100%;
 }
 
 .container-content--center {
+  width: 100%;
   max-width: 450px;
   margin: 0 auto;
   text-align: center;
@@ -141,11 +144,20 @@ li {
 }
 
 /************ Header general ************/
-.headerToolbar {
-  --min-height: 40px;
-  --padding-top: 0;
-  --padding-bottom: 0;
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  max-height: 40px;
+  padding: 4px 5px;
+  background: var(--ion-background-color);
+  box-shadow: var(--ion-box-shadow);
   z-index: 1;
+}
+
+.toolbar__image {
+  height: 100%;
+  margin-right: auto;
 }
 
 .info-number-locations {
@@ -163,6 +175,7 @@ li {
 }
 
 .info-number-locations__number {
+  color: var(--ion-text-color);
   border-bottom: 3px solid var(--ion-color-primary);
 }
 
@@ -478,29 +491,35 @@ mark {
   z-index: 1;
 }
 
-/* Run animation and overlay effect */
-.run-text {
+.header-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.header-app__information {
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
 }
 
-.run-text__title {
+.header-app__title {
   color: var(--ion-color-tertiary);
 }
 
-.run-text__wrapper {
+.header-app__animated-text {
   display: inline-block;
   position: relative;
 }
 
-.run-text__words {
+.header-app__animated-words-mounting {
   display: inline;
   position: absolute;
 }
 
-.run-text__word {
+.header-app__animated-word-mounting {
   color: var(--ion-color-secondary);
   font-size: 1.1rem;
   font-weight: 400;
@@ -513,12 +532,12 @@ mark {
   animation: run 9s cubic-bezier(0.18, 0.89, 0.32, 1.28) 0s 1;
 }
 
-.run-text__word:nth-child(2) {
+.header-app__animated-word-mounting:nth-child(2) {
   color: var(--ion-color-tertiary);
   -webkit-animation-delay: 3s;
   animation-delay: 3s;
 }
-.run-text__word:nth-child(3) {
+.header-app__animated-word-mounting:nth-child(3) {
   color: var(--ion-color-warning);
   -webkit-animation-delay: 6s;
   animation-delay: 6s;
@@ -581,7 +600,7 @@ mark {
   }
 }
 
-.run-text__final {
+.header-app__animated-word-final {
   color: var(--ion-color-warning);
   font-size: 1.1rem;
   font-weight: 400;
@@ -589,11 +608,11 @@ mark {
   animation: show ease-in 12s forwards;
 }
 
-.run-text__final:nth-child(2) {
+.header-app__animated-word-final:nth-child(2) {
   color: var(--ion-color-secondary);
 }
 
-.run-text__final:nth-child(3) {
+.header-app__animated-word-final:nth-child(3) {
   color: var(--ion-color-tertiary);
 }
 
@@ -612,43 +631,32 @@ mark {
   }
 }
 
-.overlay--dark {
+.header-app__overlay {
   position: absolute;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
   width: 100%;
-  height: 190%;
+  height: 100%;
   opacity: 0.75;
-  background: var(--ion-background-color);
+  background: var(--ion-background-color-overlay-dark);
   z-index: -1;
 }
 
-.overlay--light {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  height: 190%;
-  opacity: 0.75;
-  background: #233033;
-  z-index: -1;
-}
-
-.start-ice-cream-icon {
-  align-self: center;
+.header-app__ice-cream-icon {
   font-size: 9rem;
   color: var(--ion-color-dark);
   opacity: 0.6;
   transform: rotate(30deg);
 }
 
-.start-btn-wrapper {
+.header-app__button {
   height: 140px;
   width: 140px;
   --background-hover: transparent;
 }
 
-.start-btn {
+.header-app__button-content {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -661,7 +669,7 @@ mark {
   border-radius: var(--ion-border-radius-circle);
 }
 
-.start-btn__text {
+.header-app__button-text {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -681,12 +689,12 @@ mark {
   z-index: 2;
 }
 
-.start-btn__text:hover {
+.header-app__button-text:hover {
   transform: rotate(0deg);
   transition: all 0.3s;
 }
 
-.start-btn__ring {
+.header-app__button-animated-ring {
   width: 100%;
   height: 100%;
   border-radius: var(--ion-border-radius-circle);
@@ -800,7 +808,7 @@ mark {
 }
 
 /********** Tab Entdecken & Map **********/
-.headerMap {
+.header-image--map {
   width: 100%;
   max-height: 120px;
 }
@@ -1114,9 +1122,13 @@ mark {
   background: transparent;
 }
 
-.filter__item {
+.filter--background-transparent {
+  background-color: transparent;
+  --background: transparent;
+}
+
+.filter__list {
   padding: 0;
-  background: transparent;
 }
 
 .filter__title {
@@ -1128,10 +1140,13 @@ mark {
   padding-bottom: 6px;
 }
 
-.filter__label {
+.filter__item {
   font-size: 0.8rem;
   color: var(--ion-color-secondary);
-  --background: var(--ion-background-color-with-opacity-dark);
+}
+
+.filter__item:hover {
+  --color: var(--ion-color-dark-contrast);
 }
 
 /*********** Modal Selected Location *************/

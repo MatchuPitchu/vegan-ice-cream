@@ -7,15 +7,7 @@ import { userActions } from '../store/userSlice';
 // Context
 import { useThemeContext } from '../context/ThemeContext';
 import { menuController } from '@ionic/core';
-import {
-  IonButton,
-  IonButtons,
-  IonIcon,
-  IonMenu,
-  IonPage,
-  IonPopover,
-  IonToolbar,
-} from '@ionic/react';
+import { IonButtons, IonIcon, IonMenu, IonPage, IonPopover } from '@ionic/react';
 import { analytics, cog, pin } from 'ionicons/icons';
 import Menu from './Menu';
 import SwitchTheme from './SwitchTheme';
@@ -55,12 +47,16 @@ const HeaderApp = () => {
 
   return (
     <>
-      <IonToolbar className='headerToolbar'>
-        <IonButtons slot='start'>
-          <SwitchTheme />
-        </IonButtons>
+      <div className='toolbar'>
+        <SwitchTheme />
 
-        <IonButtons slot='end'>
+        <img
+          className='toolbar__image'
+          src={`${isDarkTheme ? './assets/header-app-dark.svg' : './assets/header-app-light.svg'}`}
+          alt=''
+        />
+
+        <IonButtons>
           {!!numberOfLocations && (
             <div
               className='info-number-locations'
@@ -120,7 +116,7 @@ const HeaderApp = () => {
             icon={cog}
           />
         </IonButtons>
-      </IonToolbar>
+      </div>
 
       <IonMenu contentId='settings' type='overlay' swipeGesture={true}>
         <Menu />

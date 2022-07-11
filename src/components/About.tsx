@@ -60,7 +60,7 @@ const About: VFC = () => {
           </IonButton>
         </IonItem>
         <img
-          className='headerMap'
+          className='header-image--map'
           src={`${
             isDarkTheme ? './assets/header-about-dark.svg' : './assets/header-about-light.svg'
           }`}

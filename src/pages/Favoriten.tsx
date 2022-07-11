@@ -80,7 +80,7 @@ const Favoriten = () => {
     <IonPage>
       <IonHeader>
         <img
-          className='headerMap'
+          className='header-image--map'
           src={`${
             isDarkTheme
               ? './assets/header-favoriten-dark.svg'
