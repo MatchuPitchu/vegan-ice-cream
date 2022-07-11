@@ -64,7 +64,7 @@ const SetNewPassword: VFC = () => {
     <IonPage>
       <IonHeader>
         <img
-          className='headerMap'
+          className='header-image--map'
           src={`${
             isDarkTheme ? './assets/header-login-dark.svg' : './assets/header-login-light.svg'
           }`}

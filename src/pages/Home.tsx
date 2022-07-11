@@ -22,7 +22,6 @@ import {
 import {
   create,
   extensionPuzzleSharp,
-  gift,
   giftOutline,
   iceCreamOutline,
   logIn,
@@ -32,6 +31,7 @@ import {
   phonePortraitOutline,
 } from 'ionicons/icons';
 import SearchHome from '../components/SearchHome';
+import EntdeckenList from '../components/ListLocations';
 
 const Home: VFC = () => {
   const { isDarkTheme } = useThemeContext();
@@ -56,16 +56,6 @@ const Home: VFC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <img
-          className='headerMap'
-          src={`${
-            isDarkTheme ? './assets/header-home-dark.svg' : './assets/header-home-light.svg'
-          }`}
-          alt=''
-        />
-      </IonHeader>
-
       <div className={`${show && 'fabOpen'}`}></div>
 
       <IonContent
@@ -80,68 +70,74 @@ const Home: VFC = () => {
           })`,
         }}
       >
-        <div className='run-text'>
-          <h1>
-            <div className='run-text__title'>veganes Eis</div>
-            <div className='run-text__wrapper'>
-              <div className='run-text__words' aria-hidden='true'>
-                <strong className='run-text__word'>entdecken</strong>
-                <strong className='run-text__word'>genießen</strong>
-                <strong className='run-text__word'>eintragen</strong>
+        <div className='header-app'>
+          <div className='header-app__information'>
+            <h1>
+              <div className='header-app__title'>veganes Eis</div>
+              <div className='header-app__animated-text'>
+                <div className='header-app__animated-words-mounting' aria-hidden='true'>
+                  <strong className='header-app__animated-word-mounting'>entdecken</strong>
+                  <strong className='header-app__animated-word-mounting'>genießen</strong>
+                  <strong className='header-app__animated-word-mounting'>eintragen</strong>
+                </div>
+                <div className='header-app__animated-word-final'>entdecken</div>
+                <div className='header-app__animated-word-final'>genießen</div>
+                <div className='header-app__animated-word-final'>eintragen</div>
               </div>
-              <div className='run-text__final'>entdecken</div>
-              <div className='run-text__final'>genießen</div>
-              <div className='run-text__final'>eintragen</div>
-            </div>
-          </h1>
-          <div className={`${isDarkTheme ? 'overlay--dark' : 'overlay--light'}`}>
-            <IonIcon className='start-ice-cream-icon' icon={iceCreamOutline} />
+            </h1>
+
+            <IonButton
+              className='header-app__button'
+              routerLink={`${user ? '/entdecken' : ''}`}
+              fill='clear'
+              onClick={(event) => {
+                if (user) {
+                  dispatch(locationsActions.resetNewLocation());
+                  dispatch(showActions.setShowSearchNewLocationModal(true));
+                } else {
+                  event.persist();
+                  setPopoverShow({ showPopover: true, event });
+                }
+              }}
+            >
+              <div className='header-app__button-content'>
+                <span className='header-app__button-text'>
+                  <IonIcon icon={extensionPuzzleSharp} />
+                  <span>Eisladen</span>
+                </span>
+                <span className='header-app__button-animated-ring'></span>
+              </div>
+            </IonButton>
           </div>
-          <IonButton
-            className='start-btn-wrapper'
-            routerLink={`${user ? '/entdecken' : ''}`}
-            fill='clear'
-            onClick={(event) => {
-              if (user) {
-                dispatch(locationsActions.resetNewLocation());
-                dispatch(showActions.setShowSearchNewLocationModal(true));
-              } else {
-                event.persist();
-                setPopoverShow({ showPopover: true, event });
-              }
-            }}
-          >
-            <div className='start-btn'>
-              <span></span>
-              <span className='start-btn__text'>
-                <IonIcon icon={extensionPuzzleSharp} />
-                <span>Eisladen</span>
-              </span>
-              <span className='start-btn__ring'></span>
-            </div>
-          </IonButton>
-          <IonPopover
-            cssClass='info-popover'
-            event={popoverShow.event}
-            isOpen={popoverShow.showPopover}
-            onDidDismiss={() => setPopoverShow({ showPopover: false, event: undefined })}
-          >
-            <div className='my-2'>
-              <div>Nur für eingeloggte User</div>
-              <IonButton routerLink='/login' fill='solid' className='click-btn mt-2'>
-                <IonLabel>Login</IonLabel>
-                <IonIcon className='pe-1' icon={logIn} />
-              </IonButton>
-              <IonButton routerLink='/register' fill='solid' className='click-btn'>
-                <IonLabel>Registrieren</IonLabel>
-                <IonIcon className='pe-1' icon={create} />
-              </IonButton>
-            </div>
-          </IonPopover>
+
+          <SearchHome />
+
+          <div className='header-app__overlay'>
+            <IonIcon className='header-app__ice-cream-icon' icon={iceCreamOutline} />
+          </div>
         </div>
 
-        <SearchHome />
+        <EntdeckenList />
       </IonContent>
+
+      <IonPopover
+        cssClass='info-popover'
+        event={popoverShow.event}
+        isOpen={popoverShow.showPopover}
+        onDidDismiss={() => setPopoverShow({ showPopover: false, event: undefined })}
+      >
+        <div className='my-2'>
+          <div>Nur für eingeloggte User</div>
+          <IonButton routerLink='/login' fill='solid' className='click-btn mt-2'>
+            <IonLabel>Login</IonLabel>
+            <IonIcon className='pe-1' icon={logIn} />
+          </IonButton>
+          <IonButton routerLink='/register' fill='solid' className='click-btn'>
+            <IonLabel>Registrieren</IonLabel>
+            <IonIcon className='pe-1' icon={create} />
+          </IonButton>
+        </div>
+      </IonPopover>
 
       <IonFab className='me-2' vertical='bottom' horizontal='end' slot='fixed'>
         <IonFabButton

@@ -10,7 +10,7 @@ interface Props {
   number: number;
 }
 
-const ListResultComponent: VFC<Props> = ({ location, number }) => {
+const ListLocation: VFC<Props> = ({ location, number }) => {
   return (
     <IonCard className='card card--list-result'>
       {location.pricing.length > 0 && (
@@ -30,4 +30,4 @@ const ListResultComponent: VFC<Props> = ({ location, number }) => {
   );
 };
 
-export default ListResultComponent;
+export default ListLocation;

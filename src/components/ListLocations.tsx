@@ -4,9 +4,9 @@ import { useAppSelector } from '../store/hooks';
 import { getSelectedLocation } from '../store/locationsSlice';
 import { IonCard, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 import LocationInfoModal from './LocationInfoModal';
-import ListResultComponent from './ListResultComponent';
+import ListLocation from './ListLocation';
 
-const ListMap = () => {
+const ListLocations = () => {
   const { locations, locationsSearchResultsList } = useAppSelector((state) => state.locations);
   const selectedLocation = useAppSelector(getSelectedLocation);
 
@@ -24,7 +24,7 @@ const ListMap = () => {
       {/* if searchbar is used */}
       {locationsSearchResultsList.length > 0 &&
         locationsSearchResultsList.map((location, index) => (
-          <ListResultComponent key={location._id} location={location} number={index + 1} />
+          <ListLocation key={location._id} location={location} number={index + 1} />
         ))}
 
       {/* if searchbar empty and so no search results */}
@@ -33,7 +33,7 @@ const ListMap = () => {
         locations
           ?.slice(0, endIndexInLocationsList)
           .map((location, index) => (
-            <ListResultComponent key={location._id} location={location} number={index + 1} />
+            <ListLocation key={location._id} location={location} number={index + 1} />
           ))}
 
       {/* if searchbar is used, but not results */}
@@ -62,4 +62,4 @@ const ListMap = () => {
   );
 };
 
-export default ListMap;
+export default ListLocations;

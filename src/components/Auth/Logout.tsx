@@ -9,7 +9,7 @@ const Login: VFC = () => {
     <IonPage>
       <IonHeader>
         <img
-          className='headerMap'
+          className='header-image--map'
           src={`${
             isDarkTheme ? './assets/header-home-dark.svg' : './assets/header-home-light.svg'
           }`}

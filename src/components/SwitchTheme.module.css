@@ -1,7 +1,6 @@
 .switch {
   position: relative;
   border: none;
-  margin: 0.4rem auto 0.4rem 0.4rem;
   height: 28px;
   width: 53px;
   border-radius: var(--ion-border-radius);
