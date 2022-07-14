@@ -6,7 +6,7 @@ import { IonCard, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/rea
 import LocationInfoModal from './LocationInfoModal';
 import ListLocation from './ListLocation';
 
-const ListLocations = () => {
+export const ListLocations = () => {
   const { locations, locationsSearchResultsList } = useAppSelector((state) => state.locations);
   const selectedLocation = useAppSelector(getSelectedLocation);
 
@@ -61,5 +61,3 @@ const ListLocations = () => {
     </>
   );
 };
-
-export default ListLocations;

@@ -22,7 +22,7 @@ const Spinner: VFC = () => {
 
   if (activateAccountMessage === 'Aktivierung des Mail-Accounts erfolgreich')
     return (
-      <IonContent>
+      <>
         <div className='container-content--center'>
           <RingLoader color='var(--ion-color-primary)' css={override} size={50} />
           <h3 style={{ fontSize: '1rem' }} className='display-3'>
@@ -38,15 +38,15 @@ const Spinner: VFC = () => {
             <IonIcon slot='end' icon={logInOutline} />
           </IonButton>
         </div>
-      </IonContent>
+      </>
     );
 
   return (
-    <IonContent>
+    <>
       <div className='container-content--center'>
         <RingLoader color='var(--ion-color-primary)' css={override} size={50} />
         <h3 style={{ fontSize: '1.2em' }} className='display-3'>
-          {isAuth ? 'lädt ...' : 'Nur für eingeloggte User sichtbar'}
+          {isAuth ? 'lädt ...' : 'Nur mit Anmeldung sichtbar'}
         </h3>
         {!isAuth && (
           <>
@@ -77,7 +77,7 @@ const Spinner: VFC = () => {
           </>
         )}
       </div>
-    </IonContent>
+    </>
   );
 };
 

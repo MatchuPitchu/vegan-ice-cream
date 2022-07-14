@@ -154,9 +154,8 @@ const ButtonFavoriteLocation: VFC<Props> = ({ location }) => {
 
   return (
     <>
-      <IonButton
-        className='button--hover-transparent'
-        fill='clear'
+      <div
+        className='button--centered'
         onClick={() =>
           dispatchUpdateFavoritesState({
             type: findLocation ? Actions.REMOVE : Actions.ADD,
@@ -164,8 +163,8 @@ const ButtonFavoriteLocation: VFC<Props> = ({ location }) => {
           })
         }
       >
-        <IonIcon icon={findLocation ? heart : heartOutline} />
-      </IonButton>
+        <IonIcon className='icon--color-primary' icon={findLocation ? heart : heartOutline} />
+      </div>
 
       <IonAlert
         isOpen={updateFavoritesState.willAdd || updateFavoritesState.willRemove}

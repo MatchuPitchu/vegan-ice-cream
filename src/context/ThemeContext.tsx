@@ -7,9 +7,10 @@ interface ThemeContextInterface {
   mapStyles: typeof mapDark | typeof mapLight;
 }
 
+type Theme = 'dark' | 'light';
+
 export const ThemeContext = createContext({} as ThemeContextInterface);
 
-// custom hook to check whether you are inside a provider AND it returns context data object
 export const useThemeContext = () => {
   const context = useContext(ThemeContext);
   if (!context) throw new Error('useThemeContext must be used within ThemeContextProvider');
@@ -17,37 +18,35 @@ export const useThemeContext = () => {
 };
 
 const ThemeContextProvider: FC = ({ children }) => {
-  const [isDarkTheme, setIsDarkTheme] = useState<boolean>(false);
-  const [mapStyles, setMapStyles] = useState<typeof mapDark | typeof mapLight>(mapLight);
+  const [colorTheme, setColorTheme] = useState<Theme>('dark');
+  const [mapStyles, setMapStyles] = useState<typeof mapDark | typeof mapLight>(mapDark);
+
+  const updateTheme = (theme: Theme) => {
+    document.body.setAttribute('color-theme', theme);
+    setMapStyles(theme === 'dark' ? mapDark : mapLight);
+    setColorTheme(theme);
+  };
 
   // THEME INITIALIZATION
   useEffect(() => {
-    const darkSelected =
-      localStorage.getItem('themeSwitch') !== null &&
-      localStorage.getItem('themeSwitch') === 'dark';
-    if (darkSelected) {
-      document.body.setAttribute('color-theme', 'dark');
-      setMapStyles(mapDark);
-      setIsDarkTheme(true);
-    } else {
-      document.body.setAttribute('color-theme', 'light');
-      setMapStyles(mapLight);
-      setIsDarkTheme(false);
+    const theme = localStorage.getItem('color-theme');
+    if (theme === 'dark') {
+      updateTheme(theme);
+    } else if (theme === 'light') {
+      updateTheme(theme);
     }
   }, []);
 
   const handleTheme = () => {
-    setIsDarkTheme((prev) => !prev);
-    if (!isDarkTheme) {
-      document.body.setAttribute('color-theme', 'dark');
-      setMapStyles(mapDark);
-      localStorage.setItem('themeSwitch', 'dark');
-    } else {
-      document.body.setAttribute('color-theme', 'light');
-      setMapStyles(mapLight);
-      localStorage.removeItem('themeSwitch');
-    }
+    setColorTheme((prev) => {
+      const newTheme = prev === 'dark' ? 'light' : 'dark';
+      updateTheme(newTheme);
+      localStorage.setItem('color-theme', newTheme);
+      return newTheme;
+    });
   };
+
+  const isDarkTheme = colorTheme === 'dark';
 
   const themeContextValues = {
     isDarkTheme,

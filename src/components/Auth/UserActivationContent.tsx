@@ -2,10 +2,9 @@ import { useEffect, VFC } from 'react';
 import { Redirect, useParams } from 'react-router-dom';
 import { useAppSelector } from '../../store/hooks';
 import { useActivateUserMutation } from '../../store/api/auth-api-slice';
-import { IonPage } from '@ionic/react';
 import Spinner from '../Spinner';
 
-const ActivateUser: VFC = () => {
+const UserActivationContent: VFC = () => {
   const { activateAccountMessage } = useAppSelector((state) => state.app);
 
   const { id } = useParams<{ id: string }>();
@@ -20,7 +19,7 @@ const ActivateUser: VFC = () => {
   if (activateAccountMessage === 'Aktivierung des Mail-Accounts erfolgreich')
     return <Redirect exact to='/login' />;
 
-  return <IonPage>{activateAccountMessage === 'init' && <Spinner />}</IonPage>;
+  return activateAccountMessage === 'init' ? <Spinner /> : null;
 };
 
-export default ActivateUser;
+export default UserActivationContent;

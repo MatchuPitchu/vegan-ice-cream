@@ -1,9 +1,10 @@
 import { VFC } from 'react';
 import type { IceCreamLocation } from '../types/types';
-import { IonCard } from '@ionic/react';
-import CardContent from './Card/CardContent';
+import { useAppSelector } from '../store/hooks';
+import { IonCard, IonItem, IonLabel } from '@ionic/react';
 import CardRatingsAndButtons from './Card/CardRatingsAndButtons';
 import Pricing from './Pricing';
+import ButtonFavoriteLocation from './Comments/ButtonFavoriteLocation';
 
 interface Props {
   location: IceCreamLocation;
@@ -11,15 +12,26 @@ interface Props {
 }
 
 const ListLocation: VFC<Props> = ({ location, number }) => {
+  const { user } = useAppSelector((state) => state.user);
+
   return (
     <IonCard className='card card--list-result'>
-      {location.pricing.length > 0 && (
-        <Pricing pricing={location.pricing} className='pricing-indication--position-relative' />
-      )}
+      <IonItem lines='none'>
+        <IonLabel className='ion-text-wrap'>
+          <div className='card-content__title--list-result'>{location.name}</div>
+          {location.address.city && <div className='address'>{location.address.city}</div>}
+        </IonLabel>
 
-      <CardContent location={location} />
+        {location.pricing.length > 0 && (
+          <Pricing pricing={location.pricing} className='pricing-indication--position-normal' />
+        )}
 
-      <div className='card__favorite-list-number'>{number}</div>
+        {user && <ButtonFavoriteLocation location={location} />}
+      </IonItem>
+
+      <div className='card__favorite-list-number card__favorite-list-number--result-list'>
+        {number}
+      </div>
 
       <CardRatingsAndButtons
         ratingVegan={location.location_rating_vegan_offer}

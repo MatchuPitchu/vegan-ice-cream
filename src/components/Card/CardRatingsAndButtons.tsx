@@ -26,24 +26,24 @@ const CardRatingsAndButtons: VFC<Props> = ({ ratingVegan, ratingQuality, locatio
           <Ratings rating_vegan_offer={ratingVegan} rating_quality={ratingQuality} showNum={true} />
           <div className='button-group'>
             <IonButton
-              className='button--check'
+              className='button--check button--check-low-height'
               fill='clear'
               onClick={() => {
                 selectLocation();
                 dispatch(showActions.setShowLocationInfoModal(true));
               }}
             >
-              <IonIcon slot='end' icon={informationCircleOutline} />
+              <IonIcon slot='end' size='small' icon={informationCircleOutline} />
               Mehr Infos
             </IonButton>
             <IonButton
-              className='button--check'
+              className='button--check button--check-low-height'
               fill='clear'
               onClick={() => selectLocation()}
               routerLink='/bewerten'
               routerDirection='forward'
             >
-              <IonIcon slot='end' icon={starHalfOutline} />
+              <IonIcon slot='end' size='small' icon={starHalfOutline} />
               Bewerten
             </IonButton>
           </div>
@@ -52,14 +52,14 @@ const CardRatingsAndButtons: VFC<Props> = ({ ratingVegan, ratingQuality, locatio
 
       {!ratingQuality && (
         <IonButton
-          className='button--check button--check-large'
+          className='button--check button--check-low-height button--check-large'
           fill='clear'
           expand='block'
           onClick={() => selectLocation()}
           routerLink='/bewerten'
           routerDirection='forward'
         >
-          <IonIcon slot='end' icon={starHalfOutline} />
+          <IonIcon slot='end' size='small' icon={starHalfOutline} />
           Erste Bewertung schreiben
         </IonButton>
       )}

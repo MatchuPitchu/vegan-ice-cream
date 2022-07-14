@@ -23,6 +23,7 @@ import LocationInfoModal from '../components/LocationInfoModal';
 import Spinner from '../components/Spinner';
 import NewLocationSearchForm from './NewLocationSearchForm';
 import GeolocationButton from '../components/GeolocationButton';
+import PopoverContentNotRegistered from './Popover/PopoverContentNotRegistered';
 
 const defaultCenterPosition = {
   lat: 52.524,
@@ -157,186 +158,174 @@ const EntdeckenMap: VFC = () => {
   if (!isLoaded || !locations) return <Spinner />;
 
   return (
-    <IonContent>
-      <div className='containerMap'>
-        <div className='control-left d-flex flex-column'>
-          <IonButton
-            className='zoomIcons'
-            fill='clear'
-            onClick={() => dispatch(mapActions.incrementZoom())}
-          >
-            <IonIcon icon={addCircleOutline} />
-          </IonButton>
-          <IonButton
-            className='zoom-control-out zoomIcons'
-            fill='clear'
-            onClick={() => dispatch(mapActions.decreaseZoom())}
-          >
-            <IonIcon icon={removeCircleOutline} />
-          </IonButton>
-        </div>
-        <div className='d-flex flex-column align-items-end control-right-top'>
-          <IonButton
-            className='add-control'
-            onClick={(event) => {
-              if (user) {
-                dispatch(locationsActions.resetNewLocation());
-                dispatch(appActions.setConfirmMessageNewLocation('')); // remove message in case that user adds new location but never clicks on it
-                dispatch(showActions.setShowSearchNewLocationModal(true));
-              } else {
-                event.persist();
-                setShowPopover({ showPopover: true, event });
-              }
-            }}
-            title='Neue Adresse hinzufügen'
-          >
-            <IonLabel className='me-1'>Neuer Laden</IonLabel>
-            <IonIcon slot='start' icon={add} />
-          </IonButton>
-          <IonPopover
-            cssClass='info-popover'
-            event={showPopover.event}
-            isOpen={showPopover.showPopover}
-            onDidDismiss={() => setShowPopover({ showPopover: false, event: undefined })}
-          >
-            <div className='my-2'>
-              <div>Nur für eingeloggte User</div>
-              <IonButton routerLink='/login' fill='solid' className='click-btn mt-2'>
-                <IonLabel>Login</IonLabel>
-                <IonIcon className='pe-1' icon={logIn} />
-              </IonButton>
-              <IonButton routerLink='/register' fill='solid' className='click-btn'>
-                <IonLabel>Registrieren</IonLabel>
-                <IonIcon className='pe-1' icon={create} />
-              </IonButton>
-            </div>
-          </IonPopover>
-
-          <NewLocationSearchForm />
-
-          <GeolocationButton
-            currentUserPosition={currentUserPosition}
-            handleSetCurrentPosition={handleSetCurrentPosition}
-          />
-
-          <IonButton
-            className='center-control'
-            title='Karte zentrieren: auf eigenen Standort (falls aktiviert), sonst auf Anfangspunkt'
-            onClick={handleCenterMap}
-          >
-            <IonIcon icon={refreshCircle} />
-          </IonButton>
-        </div>
-
-        <GoogleMap
-          mapContainerClassName='map'
-          zoom={zoom}
-          center={center ?? defaultCenterPosition}
-          options={options}
+    <div className='containerMap'>
+      <div className='control-left d-flex flex-column'>
+        <IonButton
+          className='zoomIcons'
+          fill='clear'
+          onClick={() => dispatch(mapActions.incrementZoom())}
         >
-          <MarkerClusterer
-            options={clusterOptions}
-            imageExtension='png'
-            averageCenter={true}
-            zoomOnClick={true}
-          >
-            {(clusterer) =>
-              // @ts-ignore: Unreachable code error
-              locationsMarkers.map(({ id, position, name, street, number }) => (
-                <Marker
-                  key={id}
-                  position={position}
-                  clusterer={clusterer}
-                  icon={{
-                    url: './assets/icons/ice-cream-icon-dark.svg',
-                    scaledSize: new window.google.maps.Size(30, 30),
-                    origin: new window.google.maps.Point(0, 0),
-                    anchor: new window.google.maps.Point(15, 15),
-                  }}
-                  shape={{
-                    coords: [1, 1, 1, 28, 26, 28, 26, 1],
-                    type: 'poly',
-                  }}
-                  title={`${name}, ${street} ${number}`}
-                  cursor='pointer'
-                  onClick={() => {
-                    dispatch(locationsActions.setSelectedLocation(id));
-                    handleOpenLocationInfoModal();
-                  }}
-                  zIndex={1}
-                />
-              ))
+          <IonIcon icon={addCircleOutline} />
+        </IonButton>
+        <IonButton
+          className='zoom-control-out zoomIcons'
+          fill='clear'
+          onClick={() => dispatch(mapActions.decreaseZoom())}
+        >
+          <IonIcon icon={removeCircleOutline} />
+        </IonButton>
+      </div>
+      <div className='d-flex flex-column align-items-end control-right-top'>
+        <IonButton
+          className='add-control'
+          onClick={(event) => {
+            if (user) {
+              dispatch(locationsActions.resetNewLocation());
+              dispatch(appActions.setConfirmMessageNewLocation('')); // remove message in case that user adds new location but never clicks on it
+              dispatch(showActions.setShowSearchNewLocationModal(true));
+            } else {
+              event.persist();
+              setShowPopover({ showPopover: true, event });
             }
-          </MarkerClusterer>
+          }}
+          title='Neue Adresse hinzufügen'
+        >
+          <IonLabel className='me-1'>Neuer Laden</IonLabel>
+          <IonIcon slot='start' icon={add} />
+        </IonButton>
+        <IonPopover
+          cssClass='info-popover'
+          event={showPopover.event}
+          isOpen={showPopover.showPopover}
+          onDidDismiss={() => setShowPopover({ showPopover: false, event: undefined })}
+        >
+          <PopoverContentNotRegistered />
+        </IonPopover>
 
-          {selectedLocation && (
-            // Marker of ice cream location selected in searchbar
-            <Marker
-              position={{
-                lat: selectedLocation.address.geo.lat as number,
-                lng: selectedLocation.address.geo.lng as number,
-              }}
-              icon={{
-                url: './assets/icons/selected-ice-location.svg',
-                scaledSize: new window.google.maps.Size(30, 30),
-                origin: new window.google.maps.Point(0, 0),
-                anchor: new window.google.maps.Point(15, 15),
-              }}
-              title={`${selectedLocation.address.street} ${selectedLocation.address.number} ${selectedLocation.address.zipcode} ${selectedLocation.address.city}`}
-              onClick={handleOpenLocationInfoModal}
-              zIndex={2}
-            />
-          )}
+        <NewLocationSearchForm />
 
-          {currentUserPosition?.lat && currentUserPosition?.lng && (
-            // Current position marker of user
-            <Marker
-              position={{
-                lat: currentUserPosition.lat,
-                lng: currentUserPosition.lng,
-              }}
-              icon={{
-                url: './assets/icons/current-position-marker.svg',
-                scaledSize: new window.google.maps.Size(50, 50),
-              }}
-              onClick={handleShowCurrentUserPosition}
-              zIndex={1}
-            />
-          )}
+        <GeolocationButton
+          currentUserPosition={currentUserPosition}
+          handleSetCurrentPosition={handleSetCurrentPosition}
+        />
 
-          {newLocation && (
-            <>
+        <IonButton
+          className='center-control'
+          title='Karte zentrieren: auf eigenen Standort (falls aktiviert), sonst auf Anfangspunkt'
+          onClick={handleCenterMap}
+        >
+          <IonIcon icon={refreshCircle} />
+        </IonButton>
+      </div>
+
+      <GoogleMap
+        mapContainerClassName='map'
+        zoom={zoom}
+        center={center ?? defaultCenterPosition}
+        options={options}
+      >
+        <MarkerClusterer
+          options={clusterOptions}
+          imageExtension='png'
+          averageCenter={true}
+          zoomOnClick={true}
+        >
+          {(clusterer) =>
+            // @ts-ignore: Unreachable code error
+            locationsMarkers.map(({ id, position, name, street, number }) => (
               <Marker
-                position={{
-                  lat: newLocation.address.geo.lat as number,
-                  lng: newLocation.address.geo.lng as number,
-                }}
+                key={id}
+                position={position}
+                clusterer={clusterer}
                 icon={{
-                  url: './assets/icons/newLocation-marker.svg',
-                  scaledSize: new window.google.maps.Size(40, 40),
+                  url: './assets/icons/ice-cream-icon-dark.svg',
+                  scaledSize: new window.google.maps.Size(30, 30),
                   origin: new window.google.maps.Point(0, 0),
                   anchor: new window.google.maps.Point(15, 15),
                 }}
-                title={`${newLocation.address.street} ${newLocation.address.number} ${newLocation.address.zipcode} ${newLocation.address.city}`}
+                shape={{
+                  coords: [1, 1, 1, 28, 26, 28, 26, 1],
+                  type: 'poly',
+                }}
+                title={`${name}, ${street} ${number}`}
                 cursor='pointer'
                 onClick={() => {
-                  dispatch(appActions.setConfirmMessageNewLocation(''));
-                  dispatch(showActions.setShowAddNewLocationForm(true));
+                  dispatch(locationsActions.setSelectedLocation(id));
+                  handleOpenLocationInfoModal();
                 }}
-                zIndex={3}
+                zIndex={1}
               />
-              <NewLocationForm />
-            </>
-          )}
+            ))
+          }
+        </MarkerClusterer>
 
-          {selectedLocation && <LocationInfoModal selectedLocation={selectedLocation} />}
-        </GoogleMap>
-
-        {confirmMessageNewLocation && (
-          <div className='message-new-location'>{confirmMessageNewLocation}</div>
+        {selectedLocation && (
+          // Marker of ice cream location selected in searchbar
+          <Marker
+            position={{
+              lat: selectedLocation.address.geo.lat as number,
+              lng: selectedLocation.address.geo.lng as number,
+            }}
+            icon={{
+              url: './assets/icons/selected-ice-location.svg',
+              scaledSize: new window.google.maps.Size(30, 30),
+              origin: new window.google.maps.Point(0, 0),
+              anchor: new window.google.maps.Point(15, 15),
+            }}
+            title={`${selectedLocation.address.street} ${selectedLocation.address.number} ${selectedLocation.address.zipcode} ${selectedLocation.address.city}`}
+            onClick={handleOpenLocationInfoModal}
+            zIndex={2}
+          />
         )}
-      </div>
-    </IonContent>
+
+        {currentUserPosition?.lat && currentUserPosition?.lng && (
+          // Current position marker of user
+          <Marker
+            position={{
+              lat: currentUserPosition.lat,
+              lng: currentUserPosition.lng,
+            }}
+            icon={{
+              url: './assets/icons/current-position-marker.svg',
+              scaledSize: new window.google.maps.Size(50, 50),
+            }}
+            onClick={handleShowCurrentUserPosition}
+            zIndex={1}
+          />
+        )}
+
+        {newLocation && (
+          <>
+            <Marker
+              position={{
+                lat: newLocation.address.geo.lat as number,
+                lng: newLocation.address.geo.lng as number,
+              }}
+              icon={{
+                url: './assets/icons/newLocation-marker.svg',
+                scaledSize: new window.google.maps.Size(40, 40),
+                origin: new window.google.maps.Point(0, 0),
+                anchor: new window.google.maps.Point(15, 15),
+              }}
+              title={`${newLocation.address.street} ${newLocation.address.number} ${newLocation.address.zipcode} ${newLocation.address.city}`}
+              cursor='pointer'
+              onClick={() => {
+                dispatch(appActions.setConfirmMessageNewLocation(''));
+                dispatch(showActions.setShowAddNewLocationForm(true));
+              }}
+              zIndex={3}
+            />
+            <NewLocationForm />
+          </>
+        )}
+
+        {selectedLocation && <LocationInfoModal selectedLocation={selectedLocation} />}
+      </GoogleMap>
+
+      {confirmMessageNewLocation && (
+        <div className='message-new-location'>{confirmMessageNewLocation}</div>
+      )}
+    </div>
   );
 };
 
