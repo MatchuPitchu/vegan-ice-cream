@@ -1,6 +1,6 @@
 {
   "name": "eis-mit-stil",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "author": "Michael Flohr",
   "private": true,
   "dependencies": {
@@ -88,6 +88,5 @@
     "@types/react-highlight-words": "^0.16.4",
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7"
-  },
-  "description": "An Ionic project"
+  }
 }
