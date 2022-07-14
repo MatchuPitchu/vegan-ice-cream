@@ -143,6 +143,22 @@ li {
   background-color: var(--ion-background-color-with-opacity);
 }
 
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  margin: 1rem;
+  border: 0.5rem solid var(--ion-color-tertiary);
+  border-top: 0.5rem solid var(--ion-color-primary);
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 /************ Header general ************/
 .toolbar {
   display: flex;
@@ -179,10 +195,24 @@ li {
   border-bottom: 3px solid var(--ion-color-primary);
 }
 
+.info-popover {
+  --box-shadow: var(--ion-box-shadow);
+}
+
+.info-popover__header {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.3rem;
+  background-color: var(--ion-card-header-background);
+}
+
+.info-popover__content {
+  padding: 0.5rem;
+  background-color: var(--ion-card-background);
+}
+
 .info-popover .popover-content {
   font-size: 0.8rem;
   line-height: 1.2;
-  padding: 0.4rem;
   text-align: center;
   background: var(--ion-toolbar-background);
   box-shadow: var(--ion-box-shadow);
@@ -1035,6 +1065,10 @@ mark {
   color: var(--ion-text-color--button);
 }
 
+.button--check-low-height {
+  height: 20px;
+}
+
 .button--check-light {
   color: var(--ion-text-color--button);
   background-color: var(--ion-item-background);
@@ -1077,6 +1111,16 @@ mark {
 
 .button--hover-transparent {
   --background-hover: transparent;
+}
+
+.button--centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon--color-primary {
+  color: var(--ion-color-primary);
 }
 
 .pricing-form__button--check {
@@ -1253,6 +1297,18 @@ mark {
   transform: rotate(15deg);
   line-height: 1.1rem;
   box-shadow: 0px 0px 10px 2px var(--ion-color-primary);
+}
+
+.pricing-indication--position-normal {
+  margin: 0 0.5rem;
+  border-radius: var(--ion-border-radius);
+  border: unset;
+  background-color: unset;
+  color: var(--ion-color-primary);
+  height: unset;
+  width: unset;
+  transform: unset;
+  box-shadow: unset;
 }
 
 .pricing-indication--position-relative {
@@ -1465,11 +1521,11 @@ ion-range::part(knob) {
 
 .card--list-result {
   max-width: 280px;
-  margin: 50px auto;
+  margin: 30px auto;
 }
 
 .card--list-result:first-of-type {
-  margin-top: 90px;
+  margin-top: 50px;
 }
 
 .card__reorder-item {
@@ -1499,7 +1555,20 @@ ion-range::part(knob) {
   z-index: 2;
 }
 
+.card__favorite-list-number--result-list {
+  left: -9px;
+  padding: 2px 5px;
+  border-radius: var(--ion-border-radius);
+}
+
 .card-content__title {
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.card-content__title--list-result {
+  font-size: 0.9rem;
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: 4px;

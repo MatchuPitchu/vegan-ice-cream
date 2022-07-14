@@ -12,26 +12,23 @@ import {
   IonFab,
   IonFabButton,
   IonFabList,
-  IonHeader,
   IonIcon,
-  IonLabel,
-  IonPage,
   IonPopover,
   isPlatform,
 } from '@ionic/react';
 import {
-  create,
   extensionPuzzleSharp,
   giftOutline,
   iceCreamOutline,
-  logIn,
   logoApple,
   logoGooglePlaystore,
   logoPaypal,
   phonePortraitOutline,
 } from 'ionicons/icons';
 import SearchHome from '../components/SearchHome';
-import EntdeckenList from '../components/ListLocations';
+import { ListLocations } from '../components/ListLocations';
+import PopoverContentNotRegistered from '../components/Popover/PopoverContentNotRegistered';
+import PageWrapper from '../components/PageUtils/PageWrapper';
 
 const Home: VFC = () => {
   const { isDarkTheme } = useThemeContext();
@@ -55,7 +52,7 @@ const Home: VFC = () => {
   }, [topLocationsInCity]);
 
   return (
-    <IonPage>
+    <PageWrapper showIonHeader={false} showIonContent={false}>
       <div className={`${show && 'fabOpen'}`}></div>
 
       <IonContent
@@ -117,7 +114,7 @@ const Home: VFC = () => {
           </div>
         </div>
 
-        <EntdeckenList />
+        <ListLocations />
       </IonContent>
 
       <IonPopover
@@ -126,17 +123,7 @@ const Home: VFC = () => {
         isOpen={popoverShow.showPopover}
         onDidDismiss={() => setPopoverShow({ showPopover: false, event: undefined })}
       >
-        <div className='my-2'>
-          <div>Nur für eingeloggte User</div>
-          <IonButton routerLink='/login' fill='solid' className='click-btn mt-2'>
-            <IonLabel>Login</IonLabel>
-            <IonIcon className='pe-1' icon={logIn} />
-          </IonButton>
-          <IonButton routerLink='/register' fill='solid' className='click-btn'>
-            <IonLabel>Registrieren</IonLabel>
-            <IonIcon className='pe-1' icon={create} />
-          </IonButton>
-        </div>
+        <PopoverContentNotRegistered />
       </IonPopover>
 
       <IonFab className='me-2' vertical='bottom' horizontal='end' slot='fixed'>
@@ -200,7 +187,7 @@ const Home: VFC = () => {
             </IonFabList>
           </IonFab>
         ))}
-    </IonPage>
+    </PageWrapper>
   );
 };
 

@@ -22,6 +22,7 @@ import Spinner from '../components/Spinner';
 import LocationInfoModal from '../components/LocationInfoModal';
 import CardContent from '../components/Card/CardContent';
 import CardRatingsAndButtons from '../components/Card/CardRatingsAndButtons';
+import PageWrapper from '../components/PageUtils/PageWrapper';
 
 const Favoriten = () => {
   const dispatch = useAppDispatch();
@@ -72,24 +73,14 @@ const Favoriten = () => {
     dispatch(appActions.setIsLoading(false));
   };
 
-  if (!user || !isAuth) {
-    return <Spinner />;
-  }
-
   return (
-    <IonPage>
-      <IonHeader>
-        <img
-          className='header-image--map'
-          src={`${
-            isDarkTheme
-              ? './assets/header-favoriten-dark.svg'
-              : './assets/header-favoriten-light.svg'
-          }`}
-          alt=''
-        />
-      </IonHeader>
-      <IonContent>
+    <PageWrapper
+      srcHeaderImageLigth='./assets/header-favoriten-light.svg'
+      srcHeaderImageDark='./assets/header-favoriten-dark.svg'
+    >
+      {!isAuth || !user ? (
+        <Spinner />
+      ) : (
         <div className='container-content--center'>
           <IonButton
             className={`my-3 mx-5 button--reorder ${
@@ -139,8 +130,8 @@ const Favoriten = () => {
 
           {selectedLocation && <LocationInfoModal selectedLocation={selectedLocation} />}
         </div>
-      </IonContent>
-    </IonPage>
+      )}
+    </PageWrapper>
   );
 };
 

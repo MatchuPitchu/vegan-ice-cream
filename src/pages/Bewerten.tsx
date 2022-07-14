@@ -12,8 +12,6 @@ import { skipToken } from '@reduxjs/toolkit/dist/query';
 import { useGetOneLocationQuery, useUpdatePricingMutation } from '../store/api/locations-api-slice';
 import { useAddCommentMutation } from '../store/api/comment-api-slice';
 import { useAddFlavorMutation } from '../store/api/flavor-api-slice';
-// Context
-import { useThemeContext } from '../context/ThemeContext';
 import {
   IonButton,
   IonCard,
@@ -47,6 +45,7 @@ import PricingRange from '../components/FormFields/PricingRange';
 import ColorPicker from '../components/FormFields/ColorPicker';
 import DatePicker from '../components/FormFields/DatePicker';
 import TextareaInput from '../components/FormFields/TextareaInput';
+import PageWrapper from '../components/PageUtils/PageWrapper';
 
 interface BewertenFormValues {
   location: string;
@@ -70,8 +69,6 @@ const Bewerten = () => {
   const { isAuth, user } = useAppSelector((state) => state.user);
   const { flavor } = useAppSelector((state) => state.flavor);
   const selectedLocation = useAppSelector(getSelectedLocation);
-
-  const { isDarkTheme } = useThemeContext();
 
   const [showPopoverInfo, setShowPopoverInfo] = useState<PopoverState>({
     showPopover: false,
@@ -251,268 +248,264 @@ const Bewerten = () => {
     </div>
   );
 
-  if (!isAuth && !user)
-    return (
-      <IonPage>
-        <Spinner />
-      </IonPage>
-    );
-
   return (
-    <IonPage>
-      <IonHeader>
-        <img
-          className='header-image--map'
-          src={`${
-            isDarkTheme ? './assets/header-bewerten-dark.svg' : './assets/header-bewerten-light.svg'
-          }`}
-          alt=''
-        />
-      </IonHeader>
+    <PageWrapper
+      srcHeaderImageLigth='./assets/header-bewerten-light.svg'
+      srcHeaderImageDark='./assets/header-bewerten-dark.svg'
+    >
+      {!isAuth || !user ? (
+        <Spinner />
+      ) : (
+        <>
+          {success && successSection}
 
-      <IonContent>
-        {success && successSection}
-
-        {!success && (
-          <section className='container-content mt-3'>
-            <IonItem
-              lines='none'
-              className='item--small item-text--small item--card-background mb-1'
-            >
-              <IonLabel className='ion-text-wrap'>Bewerte 1 Eissorte</IonLabel>
-              <IonIcon
-                className='info-icon'
-                color='primary'
-                slot='end'
-                icon={informationCircle}
-                onClick={(event) => {
-                  event.persist();
-                  setShowPopoverInfo({ showPopover: true, event });
-                }}
-              />
-            </IonItem>
-
-            <IonPopover
-              cssClass='info-popover'
-              event={showPopoverInfo.event}
-              isOpen={showPopoverInfo.showPopover}
-              onDidDismiss={() => setShowPopoverInfo({ showPopover: false, event: undefined })}
-            >
-              Damit eine Bewertung fix zu tippen ist, bezieht sie sich auf 1 Eissorte. Natürlich
-              kannst du auch weitere Bewertungen abgeben.
-            </IonPopover>
-
-            <IonItem lines='none' className='item--small item--card-background'>
-              <IonLabel position='stacked'>
-                Eisladen:{' '}
-                <span className={`${selectedLocation?.name ? 'text--bold' : 'text--light'}`}>
-                  {selectedLocation?.name ?? '... nutze die Suche'}
-                </span>
-              </IonLabel>
-              <IonIcon
-                className='info-icon'
-                color='primary'
-                slot='end'
-                icon={informationCircle}
-                onClick={(event) => {
-                  event.persist();
-                  setShowPopover({ showPopover: true, event });
-                }}
-              />
-            </IonItem>
-
-            <IonPopover
-              cssClass='info-popover'
-              animated={true}
-              event={showPopover.event}
-              isOpen={showPopover.showPopover}
-              onDidDismiss={() => setShowPopover({ showPopover: false, event: undefined })}
-              backdropDismiss={true}
-              translucent={true}
-            >
-              Nichts gefunden? Trage den Eisladen auf der Karte ein.
-            </IonPopover>
-
-            <IonItem lines='none' className='item--card-background pb-2'>
-              <Search cancelSubmit={true} />
-            </IonItem>
-
-            <form className='mt-1' onSubmit={handleSubmit(onSubmit)}>
-              <PricingRange
-                className='item--card-background'
-                name='pricing'
-                control={control}
-                rules={{ min: { value: 0.1, message: 'Wähle einen Preis aus' } }}
-              />
-
-              <SearchFlavors />
-
-              <IonItem lines='inset' className='item--card-background'>
-                <Checkbox
-                  name='type_fruit'
-                  label='Sorbet • Fruchteis'
-                  control={control}
-                  disabled={!!flavor?.name}
-                />
-              </IonItem>
-              <IonItem lines='inset' className='item--card-background'>
-                <Checkbox
-                  name='type_cream'
-                  label='Creme • Milch • Pflanzendrink-Eis'
-                  control={control}
-                  disabled={!!flavor?.name}
-                />
-              </IonItem>
-              <IonItem lines='none' className='item--small item--card-background'>
-                <IonLabel
-                  ref={flavorRef}
-                  className='mb-1'
-                  position='stacked'
-                  color={(errors.colors?.[0] || errors.colors?.[1]) && 'danger'}
-                >
-                  Farbe(n) Eis (1 oder 2)
-                </IonLabel>
+          {!success && (
+            <section className='container-content mt-3'>
+              <IonItem
+                lines='none'
+                className='item--small item-text--small item--card-background mb-1'
+              >
+                <IonLabel className='ion-text-wrap'>Bewerte 1 Eissorte</IonLabel>
                 <IonIcon
-                  className={`info-icon ${isFlavorSelectedFromDatabase && 'info-icon--disabled'}`}
+                  className='info-icon'
                   color='primary'
                   slot='end'
-                  icon={fields.length === 1 ? addCircleSharp : removeCircleSharp}
-                  onClick={() => {
-                    if (!isFlavorSelectedFromDatabase) {
-                      fields.length === 1 ? append({ value: '' }) : remove(1);
-                    }
+                  icon={informationCircle}
+                  onClick={(event) => {
+                    event.persist();
+                    setShowPopoverInfo({ showPopover: true, event });
                   }}
                 />
               </IonItem>
-              <div className={errors.colors?.[0] || errors.colors?.[1] ? '' : 'mb-1'}>
-                {fields.map((field, index) => (
-                  <ColorPicker
-                    key={field.id}
-                    name={`colors.${index}.value` as const}
+
+              <IonPopover
+                cssClass='info-popover'
+                event={showPopoverInfo.event}
+                isOpen={showPopoverInfo.showPopover}
+                onDidDismiss={() => setShowPopoverInfo({ showPopover: false, event: undefined })}
+              >
+                Damit eine Bewertung fix zu tippen ist, bezieht sie sich auf 1 Eissorte. Natürlich
+                kannst du auch weitere Bewertungen abgeben.
+              </IonPopover>
+
+              <IonItem lines='none' className='item--small item--card-background'>
+                <IonLabel position='stacked'>
+                  Eisladen:{' '}
+                  <span className={`${selectedLocation?.name ? 'text--bold' : 'text--light'}`}>
+                    {selectedLocation?.name ?? '... nutze die Suche'}
+                  </span>
+                </IonLabel>
+                <IonIcon
+                  className='info-icon'
+                  color='primary'
+                  slot='end'
+                  icon={informationCircle}
+                  onClick={(event) => {
+                    event.persist();
+                    setShowPopover({ showPopover: true, event });
+                  }}
+                />
+              </IonItem>
+
+              <IonPopover
+                cssClass='info-popover'
+                animated={true}
+                event={showPopover.event}
+                isOpen={showPopover.showPopover}
+                onDidDismiss={() => setShowPopover({ showPopover: false, event: undefined })}
+                backdropDismiss={true}
+                translucent={true}
+              >
+                Nichts gefunden? Trage den Eisladen auf der Karte ein.
+              </IonPopover>
+
+              <IonItem lines='none' className='item--card-background pb-2'>
+                <Search cancelSubmit={true} />
+              </IonItem>
+
+              <form className='mt-1' onSubmit={handleSubmit(onSubmit)}>
+                <PricingRange
+                  className='item--card-background'
+                  name='pricing'
+                  control={control}
+                  rules={{ min: { value: 0.1, message: 'Wähle einen Preis aus' } }}
+                />
+
+                <SearchFlavors />
+
+                <IonItem lines='inset' className='item--card-background'>
+                  <Checkbox
+                    name='type_fruit'
+                    label='Sorbet • Fruchteis'
+                    control={control}
+                    disabled={!!flavor?.name}
+                  />
+                </IonItem>
+                <IonItem lines='inset' className='item--card-background'>
+                  <Checkbox
+                    name='type_cream'
+                    label='Creme • Milch • Pflanzendrink-Eis'
+                    control={control}
+                    disabled={!!flavor?.name}
+                  />
+                </IonItem>
+                <IonItem lines='none' className='item--small item--card-background'>
+                  <IonLabel
+                    ref={flavorRef}
+                    className='mb-1'
+                    position='stacked'
+                    color={(errors.colors?.[0] || errors.colors?.[1]) && 'danger'}
+                  >
+                    Farbe(n) Eis (1 oder 2)
+                  </IonLabel>
+                  <IonIcon
+                    className={`info-icon ${isFlavorSelectedFromDatabase && 'info-icon--disabled'}`}
+                    color='primary'
+                    slot='end'
+                    icon={fields.length === 1 ? addCircleSharp : removeCircleSharp}
+                    onClick={() => {
+                      if (!isFlavorSelectedFromDatabase) {
+                        fields.length === 1 ? append({ value: '' }) : remove(1);
+                      }
+                    }}
+                  />
+                </IonItem>
+                <div className={errors.colors?.[0] || errors.colors?.[1] ? '' : 'mb-1'}>
+                  {fields.map((field, index) => (
+                    <ColorPicker
+                      key={field.id}
+                      name={`colors.${index}.value` as const}
+                      control={control}
+                      rules={{
+                        required: 'Wähle mindestens 1 Farbe aus',
+                        validate: (input) =>
+                          input !== 'transparent' || 'Wähle mindestens 1 Farbe aus',
+                      }}
+                      onSelectColor={handleScrollIntoView}
+                      disabled={isFlavorSelectedFromDatabase}
+                    />
+                  ))}
+                </div>
+
+                {(errors.colors?.[0] || errors.colors?.[1]) && (
+                  <IonItem lines='none' className='item--small item--card-background mb-1'>
+                    <p className='paragraph--error-small'>{errors.colors?.[0].value?.message}</p>
+                  </IonItem>
+                )}
+
+                <IonItem lines='none' className='item--card-background mb-1'>
+                  <TextareaInput
+                    control={control}
+                    name='text'
+                    label='Kommentar'
+                    rules={{ required: 'Was möchtest du über den Eisladen teilen?' }}
+                  >
+                    <p className='text--small-light'>
+                      ... Geschmack, Konsistenz, Waffel, Preis-Leistung, Zusatzleistungen wie vegane
+                      Sahne, Waffeln oder Soßen, Freundlichkeit ...
+                    </p>
+                  </TextareaInput>
+                </IonItem>
+
+                <IonItem lines='none' className='rating--bewerten-page item--card-background mb-1'>
+                  <RatingInput
+                    name='rating_quality'
+                    label='Eis-Erlebnis'
                     control={control}
                     rules={{
-                      required: 'Wähle mindestens 1 Farbe aus',
-                      validate: (input) =>
-                        input !== 'transparent' || 'Wähle mindestens 1 Farbe aus',
+                      required: 'Die Sterne fehlen',
+                      min: {
+                        value: 0.5 * factorToConvertRatingScale,
+                        message: 'Die Sterne fehlen',
+                      },
                     }}
-                    onSelectColor={handleScrollIntoView}
-                    disabled={isFlavorSelectedFromDatabase}
-                  />
-                ))}
-              </div>
-
-              {(errors.colors?.[0] || errors.colors?.[1]) && (
-                <IonItem lines='none' className='item--small item--card-background mb-1'>
-                  <p className='paragraph--error-small'>{errors.colors?.[0].value?.message}</p>
+                    className='react-stars--bewerten-page'
+                  >
+                    <p className='text--small-light'>
+                      ... gewählte Eiskugel, Waffel, dein Eindruck vom Eisladen ...
+                    </p>
+                  </RatingInput>
                 </IonItem>
-              )}
 
-              <IonItem lines='none' className='item--card-background mb-1'>
-                <TextareaInput
-                  control={control}
-                  name='text'
-                  label='Kommentar'
-                  rules={{ required: 'Was möchtest du über den Eisladen teilen?' }}
+                {/* NEU CHECKEN MIT ERROR HANDLUNG UND BACKEND -> SOLL ALS ERGÄNZUNG ZU COMMENT GESPEICHERT WERDEN, NICHT IN FLAVOR */}
+                <IonItem lines='none' className='item--small item--card-background'>
+                  <IonLabel className='mb-1' position='stacked'>
+                    Mein Eis war ...
+                  </IonLabel>
+                </IonItem>
+                <IonItem lines='inset' className='item--card-background'>
+                  <Checkbox
+                    name='bio'
+                    label='bio'
+                    control={control}
+                    onToggleClick={handleChangeToggleGroup}
+                  />
+                </IonItem>
+                <IonItem lines='inset' className='item--card-background'>
+                  <Checkbox
+                    name='vegan'
+                    label='vegan'
+                    control={control}
+                    onToggleClick={handleChangeToggleGroup}
+                  />
+                </IonItem>
+                <IonItem lines='inset' className='item--card-background'>
+                  <Checkbox
+                    name='lactose_free'
+                    label='laktosefrei'
+                    control={control}
+                    onToggleClick={handleChangeToggleGroup}
+                  />
+                </IonItem>
+                <IonItem lines='none' className='item--card-background mb-1'>
+                  <Checkbox
+                    name='not_specified'
+                    label='weiß nicht'
+                    control={control}
+                    onToggleClick={handleChangeToggleGroup}
+                  />
+                </IonItem>
+
+                <IonItem lines='none' className='rating--bewerten-page item--card-background mb-1'>
+                  <RatingInput
+                    name='rating_vegan_offer'
+                    label='Veganes Angebot Eisladen'
+                    control={control}
+                    rules={{
+                      required: 'Die Sterne fehlen',
+                      min: {
+                        value: 0.5 * factorToConvertRatingScale,
+                        message: 'Die Sterne fehlen',
+                      },
+                    }}
+                    className='react-stars--bewerten-page'
+                  >
+                    <p className='text--small-light'>
+                      ... viele vegane Sorten, vegane Waffeln, vegane Sahne, vegane Sauce ...
+                    </p>
+                  </RatingInput>
+                </IonItem>
+
+                <IonItem lines='none' className='item--card-background mb-1'>
+                  <IonLabel position='stacked'>Datum</IonLabel>
+                  <DatePicker name='date' control={control} />
+                </IonItem>
+
+                <IonButton
+                  fill='clear'
+                  className='button--check button--check-large my-3 mx-5'
+                  type='submit'
+                  expand='block'
                 >
-                  <p className='text--small-light'>
-                    ... Geschmack, Konsistenz, Waffel, Preis-Leistung, Zusatzleistungen wie vegane
-                    Sahne, Waffeln oder Soßen, Freundlichkeit ...
-                  </p>
-                </TextareaInput>
-              </IonItem>
-
-              <IonItem lines='none' className='rating--bewerten-page item--card-background mb-1'>
-                <RatingInput
-                  name='rating_quality'
-                  label='Eis-Erlebnis'
-                  control={control}
-                  rules={{
-                    required: 'Die Sterne fehlen',
-                    min: { value: 0.5 * factorToConvertRatingScale, message: 'Die Sterne fehlen' },
-                  }}
-                  className='react-stars--bewerten-page'
-                >
-                  <p className='text--small-light'>
-                    ... gewählte Eiskugel, Waffel, dein Eindruck vom Eisladen ...
-                  </p>
-                </RatingInput>
-              </IonItem>
-
-              {/* NEU CHECKEN MIT ERROR HANDLUNG UND BACKEND -> SOLL ALS ERGÄNZUNG ZU COMMENT GESPEICHERT WERDEN, NICHT IN FLAVOR */}
-              <IonItem lines='none' className='item--small item--card-background'>
-                <IonLabel className='mb-1' position='stacked'>
-                  Mein Eis war ...
-                </IonLabel>
-              </IonItem>
-              <IonItem lines='inset' className='item--card-background'>
-                <Checkbox
-                  name='bio'
-                  label='bio'
-                  control={control}
-                  onToggleClick={handleChangeToggleGroup}
-                />
-              </IonItem>
-              <IonItem lines='inset' className='item--card-background'>
-                <Checkbox
-                  name='vegan'
-                  label='vegan'
-                  control={control}
-                  onToggleClick={handleChangeToggleGroup}
-                />
-              </IonItem>
-              <IonItem lines='inset' className='item--card-background'>
-                <Checkbox
-                  name='lactose_free'
-                  label='laktosefrei'
-                  control={control}
-                  onToggleClick={handleChangeToggleGroup}
-                />
-              </IonItem>
-              <IonItem lines='none' className='item--card-background mb-1'>
-                <Checkbox
-                  name='not_specified'
-                  label='weiß nicht'
-                  control={control}
-                  onToggleClick={handleChangeToggleGroup}
-                />
-              </IonItem>
-
-              <IonItem lines='none' className='rating--bewerten-page item--card-background mb-1'>
-                <RatingInput
-                  name='rating_vegan_offer'
-                  label='Veganes Angebot Eisladen'
-                  control={control}
-                  rules={{
-                    required: 'Die Sterne fehlen',
-                    min: { value: 0.5 * factorToConvertRatingScale, message: 'Die Sterne fehlen' },
-                  }}
-                  className='react-stars--bewerten-page'
-                >
-                  <p className='text--small-light'>
-                    ... viele vegane Sorten, vegane Waffeln, vegane Sahne, vegane Sauce ...
-                  </p>
-                </RatingInput>
-              </IonItem>
-
-              <IonItem lines='none' className='item--card-background mb-1'>
-                <IonLabel position='stacked'>Datum</IonLabel>
-                <DatePicker name='date' control={control} />
-              </IonItem>
-
-              <IonButton
-                fill='clear'
-                className='button--check button--check-large my-3 mx-5'
-                type='submit'
-                expand='block'
-              >
-                <IonIcon className='pe-1' icon={starHalfOutline} />
-                Bewertung abgeben
-              </IonButton>
-            </form>
-          </section>
-        )}
-      </IonContent>
-    </IonPage>
+                  <IonIcon className='pe-1' icon={starHalfOutline} />
+                  Bewertung abgeben
+                </IonButton>
+              </form>
+            </section>
+          )}
+        </>
+      )}
+    </PageWrapper>
   );
 };
 

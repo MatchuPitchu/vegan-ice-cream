@@ -1,15 +1,14 @@
 import { VFC } from 'react';
-// Redux Store
-import { IonPage } from '@ionic/react';
 import Search from '../components/Search';
 import EntdeckenMap from '../components/EntdeckenMap';
+import PageWrapper from '../components/PageUtils/PageWrapper';
 
 const Entdecken: VFC = () => {
   return (
-    <IonPage>
+    <PageWrapper showIonHeader={false}>
       <Search />
       <EntdeckenMap />
-    </IonPage>
+    </PageWrapper>
   );
 };
 
