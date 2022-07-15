@@ -40,7 +40,6 @@ import '@ionic/react/css/display.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './theme/variables.css';
 import './App.css';
-import { RingLoader } from 'react-spinners';
 
 // RTK Query
 // How to use RTK hooks: https://redux-toolkit.js.org/tutorials/rtk-query#create-an-api-service
@@ -58,6 +57,7 @@ const SetNewPassword = lazy(() => import('./pages/Auth/SetNewPassword'));
 const Datenschutz = lazy(() => import('./pages/Datenschutz'));
 const IosDescription = lazy(() => import('./pages/IosDescription'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const Beitragen = lazy(() => import('./pages/Beitragen'));
 
 const App: React.FC = () => {
   const { user } = useAppSelector((state) => state.user);
@@ -95,6 +95,7 @@ const App: React.FC = () => {
               <Route path='/auth/reset-password/user/:id' component={SetNewPassword} exact />
               <Route path='/datenschutz' component={Datenschutz} exact />
               <Route path='/ios' component={IosDescription} exact />
+              <Route path='/beitragen' component={Beitragen} exact />
               <Route component={NotFound} />
             </IonRouterOutlet>
             <IonTabBar slot='bottom'>
