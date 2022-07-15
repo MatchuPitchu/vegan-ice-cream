@@ -16,6 +16,10 @@ const ListLocation: VFC<Props> = ({ location, number }) => {
 
   return (
     <IonCard className='card card--list-result'>
+      <div className='card__favorite-list-number card__favorite-list-number--result-list'>
+        {number}
+      </div>
+
       <IonItem lines='none'>
         <IonLabel className='ion-text-wrap'>
           <div className='card-content__title--list-result'>{location.name}</div>
@@ -28,10 +32,6 @@ const ListLocation: VFC<Props> = ({ location, number }) => {
 
         {user && <ButtonFavoriteLocation location={location} />}
       </IonItem>
-
-      <div className='card__favorite-list-number card__favorite-list-number--result-list'>
-        {number}
-      </div>
 
       <CardRatingsAndButtons
         ratingVegan={location.location_rating_vegan_offer}

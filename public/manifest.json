@@ -74,7 +74,7 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#fce6b3",
+  "theme_color": "#233033",
   "background_color": "#fce6b3",
   "url": "https://eis-mit-stil.netlify.app",
   "manifestUrl": "https://eis-mit-stil.netlify.app/manifest.json",

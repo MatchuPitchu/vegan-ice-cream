@@ -22,7 +22,6 @@ import {
   iceCreamOutline,
   logoApple,
   logoGooglePlaystore,
-  logoPaypal,
   phonePortraitOutline,
 } from 'ionicons/icons';
 import SearchHome from '../components/SearchHome';
@@ -37,7 +36,6 @@ const Home: VFC = () => {
   const { user } = useAppSelector((state) => state.user);
   const { topLocationsInCity } = useAppSelector((state) => state.locations);
 
-  const [show, setShow] = useState(false);
   const [popoverShow, setPopoverShow] = useState<PopoverState>({
     showPopover: false,
     event: undefined,
@@ -53,8 +51,6 @@ const Home: VFC = () => {
 
   return (
     <PageWrapper showIonHeader={false} showIonContent={false}>
-      <div className={`${show && 'fabOpen'}`}></div>
-
       <IonContent
         className='home'
         ref={contentRef}
@@ -126,67 +122,45 @@ const Home: VFC = () => {
         <PopoverContentNotRegistered />
       </IonPopover>
 
-      <IonFab className='me-2' vertical='bottom' horizontal='end' slot='fixed'>
-        <IonFabButton
-          size='small'
-          onClick={() => setShow((prev) => !prev)}
-          activated={show ? true : false}
-        >
-          <IonIcon className='fab-icon' icon={giftOutline} />
+      <IonFab vertical='bottom' horizontal='end' slot='fixed'>
+        <IonFabButton size='small' color='primary' className='logo-btn' translucent={true}>
+          <IonIcon className='fab-icon' icon={phonePortraitOutline} />
         </IonFabButton>
-        <IonFabList color='dark' side='start'>
+        <IonFabList side='start'>
+          {isPlatform('desktop') ||
+            (isPlatform('mobileweb') && (
+              <>
+                <IonFabButton
+                  color='primary'
+                  className='logo-btn'
+                  routerDirection='forward'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  href='https://play.google.com/store/apps/details?id=eismitstil.app'
+                >
+                  <IonIcon icon={logoGooglePlaystore} />
+                </IonFabButton>
+                <IonFabButton
+                  color='primary'
+                  className='logo-btn'
+                  routerDirection='forward'
+                  routerLink='/ios'
+                >
+                  <IonIcon icon={logoApple} />
+                </IonFabButton>
+              </>
+            ))}
+
           <IonFabButton
-            className='donate-btn'
-            href='https://paypal.me/eismitstil'
-            target='_blank'
-            rel='noopener noreferrer'
-            routerDirection='forward'
             color='primary'
-            onClick={() => setShow((prev) => !prev)}
+            className='logo-btn'
+            routerDirection='forward'
+            routerLink='/beitragen'
           >
-            <div className='d-flex flex-column align-items-center mt-3'>
-              <div className='mx-3 mb-2 ion-text-wrap'>
-                <b>Gefällt dir die App?</b>
-              </div>
-              <div className='mx-3 mb-2 ion-text-wrap'>Teile die App mit Freund:innen.</div>
-              <div className='mx-3 mb-2 ion-text-wrap'>
-                Auch bin ich dankbar für jede Unterstützung, um die Betriebskosten decken und die
-                App weiterentwickeln zu können.
-              </div>
-              <IonIcon className='mt-2 donateIcon' icon={logoPaypal} />
-            </div>
+            <IonIcon icon={giftOutline} />
           </IonFabButton>
         </IonFabList>
       </IonFab>
-
-      {isPlatform('desktop') ||
-        (isPlatform('mobileweb') && (
-          <IonFab vertical='bottom' horizontal='start' slot='fixed'>
-            <IonFabButton size='small' color='primary' className='logo-btn'>
-              <IonIcon className='fab-icon' icon={phonePortraitOutline} />
-            </IonFabButton>
-            <IonFabList side='top'>
-              <IonFabButton
-                color='primary'
-                className='logo-btn'
-                routerDirection='forward'
-                target='_blank'
-                rel='noopener noreferrer'
-                href='https://play.google.com/store/apps/details?id=eismitstil.app'
-              >
-                <IonIcon icon={logoGooglePlaystore} />
-              </IonFabButton>
-              <IonFabButton
-                color='primary'
-                className='logo-btn'
-                routerDirection='forward'
-                routerLink='/ios'
-              >
-                <IonIcon icon={logoApple} />
-              </IonFabButton>
-            </IonFabList>
-          </IonFab>
-        ))}
     </PageWrapper>
   );
 };
