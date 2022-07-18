@@ -1389,12 +1389,10 @@ ion-range::part(knob) {
   --knob-size: 17px;
 }
 
-.text--bold {
+.text--result {
   color: var(--ion-text-color);
-  font-size: 1.1rem;
-  font-weight: 600;
-  padding-bottom: 0.2rem;
-  border-bottom: 3px solid var(--ion-color-primary);
+  padding-bottom: 0.1rem;
+  border-bottom: 2px solid var(--ion-color-primary);
   transition: all 0.3s;
 }
 
