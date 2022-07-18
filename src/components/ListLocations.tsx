@@ -10,7 +10,7 @@ export const ListLocations = () => {
   const { locations, locationsSearchResultsList } = useAppSelector((state) => state.locations);
   const selectedLocation = useAppSelector(getSelectedLocation);
 
-  const { searchText } = useAppSelector((state) => state.search);
+  const { searchResultState } = useAppSelector((state) => state.search);
 
   const [endIndexInLocationsList, setEndIndexInLocationsList] = useState(4);
 
@@ -21,29 +21,28 @@ export const ListLocations = () => {
 
   return (
     <>
-      {/* if searchbar is used */}
-      {locationsSearchResultsList.length > 0 &&
-        locationsSearchResultsList.map((location, index) => (
-          <ListLocation key={location._id} location={location} number={index + 1} />
-        ))}
-
       {/* if searchbar empty and so no search results */}
-      {!searchText &&
-        locationsSearchResultsList.length === 0 &&
+      {searchResultState === 'init' &&
         locations
           ?.slice(0, endIndexInLocationsList)
           .map((location, index) => (
             <ListLocation key={location._id} location={location} number={index + 1} />
           ))}
 
-      {/* if searchbar is used, but not results */}
-      {searchText && locationsSearchResultsList.length === 0 && (
+      {/* if searchbar is used */}
+      {searchResultState === 'found' &&
+        locationsSearchResultsList.map((location, index) => (
+          <ListLocation key={location._id} location={location} number={index + 1} />
+        ))}
+
+      {/* if searchbar is used, but NO results */}
+      {searchResultState === 'no-found' && (
         <div className='container-content--center'>
           <IonCard>
             <div className='noTopLocCard'>
               Noch keine Eisläden
               <br />
-              in <span className='highlightSpan'>{searchText}</span> gefunden.
+              zu deiner <span className='highlightSpan'>Suche</span> gefunden.
               <br />
             </div>
           </IonCard>

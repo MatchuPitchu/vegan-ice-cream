@@ -205,8 +205,8 @@ const Bewerten = () => {
       setRefetchLocationId(selectedLocation._id);
 
       // clean values that are needed for form searchbars
-      dispatch(searchActions.setSearchText(''));
-      dispatch(flavorActions.setSearchTermFlavor(''));
+      // dispatch(searchActions.setSearchText(''));
+      // dispatch(flavorActions.setSearchTermFlavor(''));
       dispatch(flavorActions.resetFlavor());
       dispatch(locationsActions.resetSelectedLocation());
 

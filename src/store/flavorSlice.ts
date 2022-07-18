@@ -5,13 +5,11 @@ import { flavorApi } from './api/flavor-api-slice';
 interface FlavorStateSlice {
   flavors: Flavor[];
   flavor: Flavor | null;
-  searchTermFlavor: string;
 }
 
 const initialFlavorState: FlavorStateSlice = {
   flavors: [],
   flavor: null,
-  searchTermFlavor: '',
 };
 
 const flavorSlice = createSlice({
@@ -23,9 +21,6 @@ const flavorSlice = createSlice({
     },
     resetFlavor: (state) => {
       state.flavor = initialFlavorState.flavor;
-    },
-    setSearchTermFlavor: (state, { payload }: PayloadAction<string>) => {
-      state.searchTermFlavor = payload;
     },
   },
   extraReducers: (builder) => {

@@ -7,10 +7,10 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { mapActions } from '../store/mapSlice';
 import { appActions } from '../store/appSlice';
 import { locationsActions } from '../store/locationsSlice';
-import { searchActions } from '../store/searchSlice';
 import Highlighter from 'react-highlight-words';
 import { IonItem, IonList, IonSearchbar } from '@ionic/react';
 import { searchCircleOutline, trash } from 'ionicons/icons';
+import { searchActions } from '../store/searchSlice';
 
 type Props = {
   cancelSubmit?: boolean;
@@ -20,10 +20,15 @@ type Props = {
 const Search: VFC<Props> = ({ cancelSubmit = false, showSuggestions = true }) => {
   const dispatch = useAppDispatch();
   const { locations } = useAppSelector((state) => state.locations);
-  const { searchText } = useAppSelector((state) => state.search);
 
-  const { handleSearchTextChange, suggestions, setSuggestions, searchWords } =
-    useAutocomplete<IceCreamLocation>(locations);
+  const {
+    handleSearchTextChange,
+    suggestions,
+    searchWordsArray,
+    searchText,
+    resetSearch,
+    selectSearchItem,
+  } = useAutocomplete<IceCreamLocation>(locations);
 
   const onSubmit = async (event: any) => {
     event.preventDefault();
@@ -56,21 +61,19 @@ const Search: VFC<Props> = ({ cancelSubmit = false, showSuggestions = true }) =>
       setTimeout(() => dispatch(appActions.resetError()), 5000);
     }
 
-    setSuggestions([]);
     dispatch(locationsActions.resetLocationsSearchResults());
+    resetSearch();
     dispatch(appActions.setIsLoading(false));
-
-    dispatch(searchActions.setSearchText(''));
   };
 
-  const onSearchTextChanged = (searchText: string) => {
-    if (searchText.length < 3) {
+  const onSearchTextChanged = (searchInput: string) => {
+    handleSearchTextChange(searchInput, 4);
+
+    if (searchInput.length < 3) {
       dispatch(locationsActions.resetLocationsSearchResults());
       dispatch(locationsActions.resetSelectedLocation());
-      return;
+      dispatch(searchActions.setSearchResultState({ searchInput: '', resultsLength: 0 }));
     }
-
-    handleSearchTextChange(searchText, 4);
   };
 
   // TODO: 1) Styling wie searchbar flavor oder anders (nutze das auch bei Entdecken)
@@ -89,11 +92,9 @@ const Search: VFC<Props> = ({ cancelSubmit = false, showSuggestions = true }) =>
         clearIcon={trash}
         searchIcon={searchCircleOutline}
         value={searchText}
-        debounce={500}
-        onIonChange={({ detail: { value } }) => {
-          dispatch(searchActions.setSearchText(value ?? ''));
-          onSearchTextChanged(value ?? '');
-        }}
+        debounce={100}
+        onIonChange={({ detail: { value } }) => onSearchTextChanged(value ?? '')}
+        onIonClear={() => resetSearch()}
       />
 
       {suggestions && showSuggestions && (
@@ -104,13 +105,10 @@ const Search: VFC<Props> = ({ cancelSubmit = false, showSuggestions = true }) =>
               key={location._id}
               button
               onClick={() => {
-                dispatch(
-                  searchActions.setSearchText(
-                    `${location.name}, ${location.address.street} ${location.address.number}, ${location.address.city}`
-                  )
+                selectSearchItem(
+                  `${location.name}, ${location.address.street} ${location.address.number}, ${location.address.city}`
                 );
                 dispatch(locationsActions.setSelectedLocation(location._id));
-                setSuggestions([]);
               }}
               lines='full'
             >
@@ -118,7 +116,7 @@ const Search: VFC<Props> = ({ cancelSubmit = false, showSuggestions = true }) =>
                 className='hightlighter-wrapper'
                 activeIndex={-1}
                 highlightClassName='highlight'
-                searchWords={searchWords}
+                searchWords={searchWordsArray}
                 caseSensitive={false}
                 textToHighlight={`${location.name}, ${location.address.street} ${location.address.number} in ${location.address.city}`}
               />

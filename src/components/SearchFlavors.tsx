@@ -20,7 +20,7 @@ import { informationCircle, pencil, trash } from 'ionicons/icons';
 // TODO: Predictions mit Keyboard durchgehen
 const SearchFlavors: VFC = () => {
   const dispatch = useAppDispatch();
-  const { flavor, searchTermFlavor } = useAppSelector((state) => state.flavor);
+  const { flavor } = useAppSelector((state) => state.flavor);
 
   const [showPopover, setShowPopover] = useState<PopoverState>({
     showPopover: false,
@@ -29,10 +29,16 @@ const SearchFlavors: VFC = () => {
 
   const { data: flavors, error, isLoading, isSuccess } = useGetFlavorsQuery();
 
-  const { handleSearchTextChange, suggestions, setSuggestions, searchWords } =
-    useAutocomplete<Flavor>(flavors ?? []);
+  const {
+    handleSearchTextChange,
+    suggestions,
+    searchWordsArray,
+    searchText,
+    selectSearchItem,
+    resetSearch,
+  } = useAutocomplete<Flavor>(flavors ?? []);
 
-  const onSearchTextChanged = (searchText: string) => handleSearchTextChange(searchText, 8);
+  const onSearchTextChanged = (searchInput: string) => handleSearchTextChange(searchInput, 8);
 
   // TODO mit Keyboard Auswahl durchgehen und bestätigen
   return (
@@ -54,7 +60,7 @@ const SearchFlavors: VFC = () => {
       </IonItem>
 
       <IonItem
-        lines={suggestions.length > 0 && searchTermFlavor !== flavor?.name ? 'none' : 'full'}
+        lines={suggestions.length > 0 && searchText !== flavor?.name ? 'none' : 'full'}
         className='item--card-background'
       >
         <IonSearchbar
@@ -66,21 +72,17 @@ const SearchFlavors: VFC = () => {
           showClearButton='always'
           clearIcon={trash}
           searchIcon={pencil}
-          value={searchTermFlavor}
+          value={searchText}
           debounce={100}
-          onIonChange={({ detail: { value } }) => {
-            if (flavor) {
-              dispatch(flavorActions.resetFlavor());
-            }
-            dispatch(flavorActions.setSearchTermFlavor(value ?? ''));
-            onSearchTextChanged(value ?? '');
+          onIonChange={({ detail: { value } }) => onSearchTextChanged(value ?? '')}
+          onIonClear={() => {
+            dispatch(flavorActions.resetFlavor());
+            resetSearch();
           }}
-          onIonClear={() => dispatch(flavorActions.resetFlavor())}
-          onKeyUp={(e) => e.key === 'Enter' && setSuggestions([])}
         />
       </IonItem>
 
-      {suggestions.length > 0 && searchTermFlavor !== flavor?.name && (
+      {suggestions.length > 0 && searchText !== flavor?.name && (
         <IonList className='item--card-background py-0'>
           <div className='info-text item--card-background'>
             ... von anderen Nutzer:innen eingetragen
@@ -92,16 +94,15 @@ const SearchFlavors: VFC = () => {
               lines='full'
               button
               onClick={() => {
+                selectSearchItem(flavor.name);
                 dispatch(flavorActions.setFlavor(flavor));
-                setSuggestions([]);
-                dispatch(flavorActions.setSearchTermFlavor(flavor.name));
               }}
             >
               <Highlighter
                 className='hightlighter-wrapper'
                 activeIndex={-1}
                 highlightClassName='highlight'
-                searchWords={searchWords}
+                searchWords={searchWordsArray}
                 caseSensitive={false}
                 textToHighlight={`${flavor.name} ${flavor.type_fruit ? '• Sorbet' : ''} ${
                   flavor.type_cream ? '• Cremeeis' : ''

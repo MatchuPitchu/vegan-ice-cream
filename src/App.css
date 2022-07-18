@@ -919,20 +919,18 @@ mark {
   color: var(--ion-color-danger-tint);
 }
 
-.map-modal,
-.new-location-modal {
+.modal {
   display: flex;
   justify-content: center;
   align-items: flex-end;
 }
 
-.map-modal .modal-wrapper,
-.new-location-modal .modal-wrapper {
+.modal .modal-wrapper {
   height: 100%;
   width: 100%;
 }
 
-.modalImage {
+.modal__image {
   position: absolute;
   top: 0;
   width: 100%;
@@ -942,10 +940,6 @@ mark {
   opacity: 0.4;
   z-index: -1;
   mask-image: linear-gradient(to top, transparent 0%, black);
-}
-
-.modalOverlay {
-  background: #233033;
 }
 
 .item--card-header-background {
