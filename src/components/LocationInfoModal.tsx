@@ -77,7 +77,7 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
 
   return (
     <IonModal
-      cssClass='map-modal'
+      cssClass='modal'
       isOpen={showLocationInfoModal}
       swipeToClose={true}
       backdropDismiss={true}
@@ -98,68 +98,63 @@ const LocationInfoModal: VFC<Props> = ({ selectedLocation }) => {
       </IonItem>
 
       <IonContent>
-        {/* IonImg uses lazy isLoading */}
-        <IonImg
-          className='modalImage'
+        <img
+          className='modal__image'
           src='./assets/images/ice-cream-chocolate-sm-mae-mu-unsplash.jpg'
+          alt='ice cream cone'
         />
-
-        <div className='background-with-opacity'>
-          <IonItemGroup>
-            <IonItem className='item-transparent item-transparent--large' lines='full'>
-              <IonLabel className='ion-text-wrap'>
-                {selectedLocation?.address && <AddressBlock address={selectedLocation.address} />}
-                {selectedLocation?.location_url && (
-                  <WebsiteBlock url={selectedLocation.location_url} />
-                )}
-              </IonLabel>
-              {selectedLocation.pricing.length > 0 && (
-                <Pricing pricing={selectedLocation.pricing} />
+        <IonItemGroup className='background-with-opacity'>
+          <IonItem className='item-transparent item-transparent--large' lines='full'>
+            <IonLabel className='ion-text-wrap'>
+              {selectedLocation?.address && <AddressBlock address={selectedLocation.address} />}
+              {selectedLocation?.location_url && (
+                <WebsiteBlock url={selectedLocation.location_url} />
               )}
-            </IonItem>
+            </IonLabel>
+            {selectedLocation.pricing.length > 0 && <Pricing pricing={selectedLocation.pricing} />}
+          </IonItem>
 
+          <IonItem
+            button
+            onClick={handleTogglePricingForm}
+            className='item-transparent--small item-text--small'
+            lines='full'
+            detail={false}
+          >
+            <IonLabel>
+              {selectedLocation.pricing.length === 0
+                ? 'Kugelpreis eintragen'
+                : 'Kugelpreis aktualisieren'}
+            </IonLabel>
+            <IonButton fill='clear'>
+              <IonIcon icon={isPricingFormOpen ? removeCircleSharp : addCircleSharp} />
+            </IonButton>
+          </IonItem>
+          {isPricingFormOpen && (
             <IonItem
-              button
-              onClick={handleTogglePricingForm}
               className='item-transparent--small item-text--small'
               lines='full'
               detail={false}
             >
-              <IonLabel>
-                {selectedLocation.pricing.length === 0
-                  ? 'Kugelpreis eintragen'
-                  : 'Kugelpreis aktualisieren'}
-              </IonLabel>
-              <IonButton fill='clear'>
-                <IonIcon icon={isPricingFormOpen ? removeCircleSharp : addCircleSharp} />
-              </IonButton>
+              <PricingForm onFinishUpdatePricing={handleTogglePricingForm} />
             </IonItem>
-            {isPricingFormOpen && (
-              <IonItem
-                className='item-transparent--small item-text--small'
-                lines='full'
-                detail={false}
-              >
-                <PricingForm onFinishUpdatePricing={handleTogglePricingForm} />
-              </IonItem>
-            )}
+          )}
 
-            <IonItem
-              button
-              onClick={handleResetExceptSelectedLocationOnCloseModal}
-              routerLink='/bewerten'
-              routerDirection='forward'
-              className='item-transparent--small item-text--small'
-              lines='full'
-              detail={false}
-            >
-              <IonLabel>Bewerten</IonLabel>
-              <IonButton fill='clear'>
-                <IonIcon icon={starHalfOutline} />
-              </IonButton>
-            </IonItem>
-          </IonItemGroup>
-        </div>
+          <IonItem
+            button
+            onClick={handleResetExceptSelectedLocationOnCloseModal}
+            routerLink='/bewerten'
+            routerDirection='forward'
+            className='item-transparent--small item-text--small'
+            lines='full'
+            detail={false}
+          >
+            <IonLabel>Bewerten</IonLabel>
+            <IonButton fill='clear'>
+              <IonIcon icon={starHalfOutline} />
+            </IonButton>
+          </IonItem>
+        </IonItemGroup>
 
         <IonCard className={`${isPlatform('desktop') ? 'card--ionic' : ''}`}>
           <div style={{ backgroundColor: 'var(--ion-item-background)' }}>

@@ -147,7 +147,7 @@ const NewLocationSearchForm: VFC = () => {
 
   return (
     <IonModal
-      cssClass='new-location-modal'
+      cssClass='modal'
       isOpen={showSearchNewLocationModal}
       swipeToClose={true}
       backdropDismiss={true}

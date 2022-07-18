@@ -73,7 +73,7 @@ const NewLocationForm: VFC = () => {
 
   return (
     <IonModal
-      cssClass='new-location-modal'
+      cssClass='modal'
       isOpen={showAddNewLocationForm}
       swipeToClose={true}
       backdropDismiss={true}
@@ -169,7 +169,6 @@ const NewLocationForm: VFC = () => {
                 name='location_url'
                 label='Website Eisladen'
                 labelPosition='stacked'
-                rules={{ required: 'Bitte ergänze das Land' }}
                 placeholder='http://'
                 inputmode='url'
               />

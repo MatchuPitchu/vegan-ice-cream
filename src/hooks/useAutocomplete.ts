@@ -3,6 +3,7 @@ import type { Flavor, IceCreamLocation } from '../types/types';
 import { isFlavor, isIceCreamLocation, isString } from '../types/typeguards';
 import { useAppDispatch } from '../store/hooks';
 import { locationsActions } from '../store/locationsSlice';
+import { searchActions } from '../store/searchSlice';
 
 // TODO: add onKeyDown functionality + merge with useAutocompleteWithReducer
 export const useAutocomplete = <T extends Flavor | IceCreamLocation | string>(
@@ -11,17 +12,20 @@ export const useAutocomplete = <T extends Flavor | IceCreamLocation | string>(
   const dispatch = useAppDispatch();
 
   const [suggestions, setSuggestions] = useState<T[]>([]);
-  const [searchWords, setSearchWords] = useState<string[]>([]);
+  const [searchWordsArray, setSearchWords] = useState<string[]>([]);
+  const [searchText, setSearchText] = useState<string>('');
   const [filteredSearchResult, setfilteredSearchResult] = useState<T[]>([]);
 
-  const handleSearchTextChange = (value: string, numberOfItemsInFilterResult: number) => {
+  const handleSearchTextChange = (searchInput: string, numberOfItemsInFilterResult: number) => {
+    setSearchText(searchInput);
+
     if (!searchableArray) return;
-    if (value.length < 3) {
+    if (searchInput.length < 3) {
       setSuggestions([]);
       return;
     }
 
-    const searchTerms = value.split(/\s/).filter(Boolean); // create array of search terms, remove all whitespaces
+    const searchTerms = searchInput.split(/\s/).filter(Boolean); // create array of search terms, remove all whitespaces
     const filteredSearchableArray = searchableArray.filter((item) => {
       let text = '';
       if (isIceCreamLocation(item)) {
@@ -49,15 +53,40 @@ export const useAutocomplete = <T extends Flavor | IceCreamLocation | string>(
       );
     }
 
+    dispatch(
+      searchActions.setSearchResultState({
+        searchInput,
+        resultsLength: filteredSearchableArray.length,
+      })
+    );
+
     setSuggestions(filteredSearchableArray.slice(0, numberOfItemsInFilterResult));
     setSearchWords(searchTerms);
+  };
+
+  const resetSearch = () => {
+    setSearchText('');
+    setSuggestions([]);
+    dispatch(
+      searchActions.setSearchResultState({
+        searchInput: '',
+        resultsLength: 0,
+      })
+    );
+  };
+
+  const selectSearchItem = (value: string) => {
+    setSearchText(value);
+    setSuggestions([]);
   };
 
   return {
     handleSearchTextChange,
     suggestions,
-    setSuggestions,
-    searchWords,
+    searchWordsArray,
+    searchText,
+    resetSearch,
     filteredSearchResult,
+    selectSearchItem,
   };
 };
