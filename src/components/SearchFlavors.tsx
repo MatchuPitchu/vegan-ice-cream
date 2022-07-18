@@ -59,10 +59,7 @@ const SearchFlavors: VFC = () => {
         />
       </IonItem>
 
-      <IonItem
-        lines={suggestions.length > 0 && searchText !== flavor?.name ? 'none' : 'full'}
-        className='item--card-background'
-      >
+      <div className='item--card-background'>
         <IonSearchbar
           className='searchbar--flavor'
           type='text'
@@ -80,7 +77,7 @@ const SearchFlavors: VFC = () => {
             resetSearch();
           }}
         />
-      </IonItem>
+      </div>
 
       {suggestions.length > 0 && searchText !== flavor?.name && (
         <IonList className='item--card-background py-0'>

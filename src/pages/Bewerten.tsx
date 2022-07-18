@@ -290,8 +290,8 @@ const Bewerten = () => {
 
               <IonItem lines='none' className='item--small item--card-background'>
                 <IonLabel position='stacked'>
-                  Eisladen:{' '}
-                  <span className={`${selectedLocation?.name ? 'text--bold' : 'text--light'}`}>
+                  Name:{' '}
+                  <span className={`${selectedLocation?.name ? 'text--result' : 'text--light'}`}>
                     {selectedLocation?.name ?? '... nutze die Suche'}
                   </span>
                 </IonLabel>
@@ -319,9 +319,9 @@ const Bewerten = () => {
                 Nichts gefunden? Trage den Eisladen auf der Karte ein.
               </IonPopover>
 
-              <IonItem lines='none' className='item--card-background pb-2'>
+              <div className='item--card-background pb-2'>
                 <Search cancelSubmit={true} />
-              </IonItem>
+              </div>
 
               <form className='mt-1' onSubmit={handleSubmit(onSubmit)}>
                 <PricingRange
