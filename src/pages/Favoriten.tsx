@@ -21,8 +21,9 @@ import { refreshCircleOutline, reorderThreeOutline } from 'ionicons/icons';
 import Spinner from '../components/Spinner';
 import LocationInfoModal from '../components/LocationInfoModal';
 import CardContent from '../components/Card/CardContent';
-import CardRatingsAndButtons from '../components/Card/CardRatingsAndButtons';
+import CardButtons from '../components/Card/CardRatingsAndButtons';
 import PageWrapper from '../components/PageUtils/PageWrapper';
+import Ratings from '../components/Ratings';
 
 const Favoriten = () => {
   const dispatch = useAppDispatch();
@@ -101,10 +102,7 @@ const Favoriten = () => {
 
           <IonReorderGroup disabled={reorderDeactivated} onIonItemReorder={handleReorder}>
             {user.favorite_locations.map((location, index) => (
-              <IonCard
-                key={location._id}
-                className={`card ${isPlatform('desktop') ? 'card--ionic' : ''}`}
-              >
+              <IonCard key={location._id} className='card card--list-favorites'>
                 <div className='card__favorite-list-number'>{index + 1}</div>
 
                 <div
@@ -119,7 +117,17 @@ const Favoriten = () => {
 
                 <CardContent location={location} />
 
-                <CardRatingsAndButtons
+                {location.location_rating_vegan_offer && location.location_rating_quality && (
+                  <div className='px-3'>
+                    <Ratings
+                      rating_vegan_offer={location.location_rating_vegan_offer!}
+                      rating_quality={location.location_rating_quality!}
+                      showNum={true}
+                    />
+                  </div>
+                )}
+
+                <CardButtons
                   ratingVegan={location.location_rating_vegan_offer}
                   ratingQuality={location.location_rating_quality}
                   locationId={location._id}

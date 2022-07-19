@@ -1540,7 +1540,8 @@ ion-range::part(knob) {
   margin: 30px auto;
 }
 
-.card--list-result {
+.card--list-result,
+.card--list-favorites {
   max-width: 280px;
   margin: 30px auto;
 }
@@ -1566,20 +1567,14 @@ ion-range::part(knob) {
 .card__favorite-list-number {
   position: absolute;
   top: -12px;
-  left: -12px;
+  left: -9px;
   font-size: 0.8rem;
   font-weight: bold;
-  padding: 4px 10px;
-  border-radius: var(--ion-border-radius-circle);
+  padding: 2px 5px;
+  border-radius: var(--ion-border-radius);
   background: var(--ion-color-tertiary-tint);
   color: var(--ion-color-dark);
   z-index: 2;
-}
-
-.card__favorite-list-number--result-list {
-  left: -9px;
-  padding: 2px 5px;
-  border-radius: var(--ion-border-radius);
 }
 
 .card-content__title {
