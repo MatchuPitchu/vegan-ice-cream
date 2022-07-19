@@ -19,6 +19,7 @@ import Home from './pages/Home';
 import Entdecken from './pages/Entdecken';
 import Bewerten from './pages/Bewerten';
 import Favoriten from './pages/Favoriten';
+import ModalLocationInfo from './components/ModalLocationInfo';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -120,6 +121,7 @@ const App: React.FC = () => {
               </IonTabButton>
             </IonTabBar>
           </IonTabs>
+          <ModalLocationInfo />
         </IonContent>
       </Suspense>
     </IonApp>

@@ -1,25 +1,12 @@
 import { useState } from 'react';
-import { useThemeContext } from '../context/ThemeContext';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
 import { appActions } from '../store/appSlice';
-import { getSelectedLocation } from '../store/locationsSlice';
 import { ItemReorderEventDetail } from '@ionic/core';
-import {
-  IonContent,
-  IonPage,
-  IonHeader,
-  IonCard,
-  IonIcon,
-  IonButton,
-  isPlatform,
-  IonReorderGroup,
-  IonReorder,
-} from '@ionic/react';
+import { IonCard, IonIcon, IonButton, IonReorderGroup, IonReorder } from '@ionic/react';
 import { refreshCircleOutline, reorderThreeOutline } from 'ionicons/icons';
 import Spinner from '../components/Spinner';
-import LocationInfoModal from '../components/LocationInfoModal';
 import CardContent from '../components/Card/CardContent';
 import CardButtons from '../components/Card/CardRatingsAndButtons';
 import PageWrapper from '../components/PageUtils/PageWrapper';
@@ -28,9 +15,6 @@ import Ratings from '../components/Ratings';
 const Favoriten = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
-  const selectedLocation = useAppSelector(getSelectedLocation);
-
-  const { isDarkTheme } = useThemeContext();
 
   const [reorderDeactivated, setReorderDeactivated] = useState(true);
   const [rearranged, setRearranged] = useState(false);
@@ -135,8 +119,6 @@ const Favoriten = () => {
               </IonCard>
             ))}
           </IonReorderGroup>
-
-          {selectedLocation && <LocationInfoModal selectedLocation={selectedLocation} />}
         </div>
       )}
     </PageWrapper>
