@@ -113,7 +113,7 @@ const Search: VFC<Props> = ({ cancelSubmit = false, showSuggestions = true }) =>
               lines='full'
             >
               <Highlighter
-                className='hightlighter-wrapper'
+                className='highlighter-wrapper'
                 activeIndex={-1}
                 highlightClassName='highlight'
                 searchWords={searchWordsArray}

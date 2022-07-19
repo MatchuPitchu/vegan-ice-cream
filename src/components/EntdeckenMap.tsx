@@ -8,13 +8,11 @@ import { getSelectedLocation, locationsActions } from '../store/locationsSlice';
 import { showActions } from '../store/showSlice';
 // Context
 import { useThemeContext } from '../context/ThemeContext';
-import { IonPopover, IonButton, IonContent, IonIcon, IonLabel } from '@ionic/react';
+import { IonPopover, IonButton, IonIcon, IonLabel } from '@ionic/react';
 import { GoogleMap, Marker, MarkerClusterer, useJsApiLoader } from '@react-google-maps/api';
 import {
-  add,
   addCircleOutline,
-  create,
-  logIn,
+  extensionPuzzleOutline,
   refreshCircle,
   removeCircleOutline,
 } from 'ionicons/icons';
@@ -158,24 +156,16 @@ const EntdeckenMap: VFC = () => {
   if (!isLoaded || !locations) return <Spinner />;
 
   return (
-    <div className='containerMap'>
-      <div className='control-left d-flex flex-column'>
-        <IonButton
-          className='zoomIcons'
-          fill='clear'
-          onClick={() => dispatch(mapActions.incrementZoom())}
-        >
-          <IonIcon icon={addCircleOutline} />
-        </IonButton>
-        <IonButton
-          className='zoom-control-out zoomIcons'
-          fill='clear'
-          onClick={() => dispatch(mapActions.decreaseZoom())}
-        >
-          <IonIcon icon={removeCircleOutline} />
-        </IonButton>
+    <div className='container-map'>
+      <div className='control-left'>
+        <button className='zoom-control' onClick={() => dispatch(mapActions.incrementZoom())}>
+          <IonIcon aria-label='hereinzoomen' size='small' icon={addCircleOutline} />
+        </button>
+        <button className='zoom-control' onClick={() => dispatch(mapActions.decreaseZoom())}>
+          <IonIcon aria-label='herauszoomen' size='small' icon={removeCircleOutline} />
+        </button>
       </div>
-      <div className='d-flex flex-column align-items-end control-right-top'>
+      <div className='control-right-top'>
         <IonButton
           className='add-control'
           onClick={(event) => {
@@ -191,7 +181,7 @@ const EntdeckenMap: VFC = () => {
           title='Neue Adresse hinzufügen'
         >
           <IonLabel className='me-1'>Neuer Laden</IonLabel>
-          <IonIcon slot='start' icon={add} />
+          <IonIcon slot='start' icon={extensionPuzzleOutline} />
         </IonButton>
         <IonPopover
           cssClass='info-popover'

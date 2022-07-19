@@ -96,9 +96,9 @@ const SearchFlavors: VFC = () => {
               }}
             >
               <Highlighter
-                className='hightlighter-wrapper'
+                className='highlighter-wrapper'
                 activeIndex={-1}
-                highlightClassName='highlight'
+                highlightClassName='highlighter-wrapper__highlight'
                 searchWords={searchWordsArray}
                 caseSensitive={false}
                 textToHighlight={`${flavor.name} ${flavor.type_fruit ? '• Sorbet' : ''} ${

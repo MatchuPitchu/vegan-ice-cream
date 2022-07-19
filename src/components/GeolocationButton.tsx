@@ -72,16 +72,16 @@ const GeolocationButton: VFC<Props> = ({ currentUserPosition, handleSetCurrentPo
   const handlePositionSearch = () => (currentUserPosition ? removeWatch() : getPosition());
 
   return (
-    <>
-      <IonButton
-        className='where-control'
-        onClick={handlePositionSearch}
-        title={!currentUserPosition ? 'Eigenen Standort verfolgen' : 'Standortanzeige aus'}
-      >
-        <IonIcon icon={!currentUserPosition ? navigateCircleOutline : navigateCircle} />
-        {currentUserPosition && <IonIcon className='close-center-btn' size='small' icon={close} />}
-      </IonButton>
-    </>
+    <IonButton
+      className='where-control'
+      onClick={handlePositionSearch}
+      title={!currentUserPosition ? 'Eigenen Standort verfolgen' : 'Standortanzeige aus'}
+    >
+      <IonIcon icon={!currentUserPosition ? navigateCircleOutline : navigateCircle} />
+      {currentUserPosition && (
+        <IonIcon className='button--close-center-control' size='small' icon={close} />
+      )}
+    </IonButton>
   );
 };
 
