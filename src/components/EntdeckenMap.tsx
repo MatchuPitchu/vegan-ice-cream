@@ -17,7 +17,6 @@ import {
   removeCircleOutline,
 } from 'ionicons/icons';
 import NewLocationForm from '../components/NewLocationForm';
-import LocationInfoModal from '../components/LocationInfoModal';
 import Spinner from '../components/Spinner';
 import NewLocationSearchForm from './NewLocationSearchForm';
 import GeolocationButton from '../components/GeolocationButton';
@@ -308,8 +307,6 @@ const EntdeckenMap: VFC = () => {
             <NewLocationForm />
           </>
         )}
-
-        {selectedLocation && <LocationInfoModal selectedLocation={selectedLocation} />}
       </GoogleMap>
 
       {confirmMessageNewLocation && (

@@ -1,33 +1,23 @@
 import { VFC } from 'react';
-import type { Flavor, IceCreamLocation } from '../../types/types';
+import type { Flavor } from '../../types/types';
+import { IceCreamCone } from '../IceCreamCone';
 
 interface Props {
-  flavorsList: IceCreamLocation['flavors_listed'];
+  flavorsList: Flavor[] | string[];
 }
 
-const isFullFlavorsList = (flavorsList: string[] | Flavor[]): flavorsList is Flavor[] => {
+const isLoadedFlavorsList = (flavorsList: string[] | Flavor[]): flavorsList is Flavor[] => {
   return (flavorsList as Flavor[])[0].name !== undefined;
 };
 
 const FlavorsList: VFC<Props> = ({ flavorsList }) => {
-  return isFullFlavorsList(flavorsList) ? (
-    <div className='d-flex justify-content-around flex-wrap px-3 py-2'>
+  return isLoadedFlavorsList(flavorsList) ? (
+    <div className='ice-cream-list'>
       {flavorsList.map((flavor) => {
         return (
           <div key={flavor._id}>
-            <div className='iceContainer'>
-              <div
-                className='icecream'
-                style={{
-                  background: `linear-gradient(to bottom, ${flavor.color?.primary}, ${
-                    flavor.color?.secondary ? flavor.color?.secondary : flavor.color?.primary
-                  })`,
-                }}
-              ></div>
-              <div className='icecreamBottom' style={{ background: flavor.color?.primary }}></div>
-              <div className='cone'></div>
-            </div>
-            <div className='labelFlavor'>{flavor.name}</div>
+            <IceCreamCone color={flavor.color} />
+            <div className='ice-cream-list__label'>{flavor.name}</div>
           </div>
         );
       })}

@@ -1,14 +1,11 @@
 import { useState } from 'react';
 // Redux Store
 import { useAppSelector } from '../store/hooks';
-import { getSelectedLocation } from '../store/locationsSlice';
 import { IonCard, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
-import LocationInfoModal from './LocationInfoModal';
 import ListLocation from './ListLocation';
 
 export const ListLocations = () => {
   const { locations, locationsSearchResultsList } = useAppSelector((state) => state.locations);
-  const selectedLocation = useAppSelector(getSelectedLocation);
 
   const { searchResultState } = useAppSelector((state) => state.search);
 
@@ -46,8 +43,6 @@ export const ListLocations = () => {
           </IonCard>
         </div>
       )}
-
-      {selectedLocation && <LocationInfoModal selectedLocation={selectedLocation} />}
 
       {/* Infinite Scroll Ionic React: https://dev.to/daviddalbusco/infinite-scroll-with-ionic-react-3a3i */}
       {locationsSearchResultsList.length === 0 && (
