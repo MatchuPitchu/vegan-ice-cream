@@ -1,10 +1,14 @@
-import { VFC } from 'react';
+import { VFC, useContext } from 'react';
+import { NavContext } from '@ionic/react';
 import type { IceCreamLocation } from '../types/types';
-import { useAppSelector } from '../store/hooks';
-import { IonCard, IonItem, IonLabel } from '@ionic/react';
-import CardRatingsAndButtons from './Card/CardRatingsAndButtons';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { showActions } from '../store/showSlice';
+import { locationsActions } from '../store/locationsSlice';
+import { IonCard, IonIcon, IonItem, IonLabel } from '@ionic/react';
 import Pricing from './Pricing';
 import ButtonFavoriteLocation from './Comments/ButtonFavoriteLocation';
+import Ratings from './Ratings';
+import { informationCircleOutline, mapOutline, starHalfOutline } from 'ionicons/icons';
 
 interface Props {
   location: IceCreamLocation;
@@ -12,7 +16,15 @@ interface Props {
 }
 
 const ListLocation: VFC<Props> = ({ location, number }) => {
+  const { navigate } = useContext(NavContext);
+
+  const dispatch = useAppDispatch();
+
   const { user } = useAppSelector((state) => state.user);
+
+  const selectLocation = () => dispatch(locationsActions.setSelectedLocation(location._id));
+
+  const hasRatings = location.location_rating_vegan_offer && location.location_rating_quality;
 
   return (
     <IonCard className='card card--list-result'>
@@ -33,11 +45,61 @@ const ListLocation: VFC<Props> = ({ location, number }) => {
         {user && <ButtonFavoriteLocation location={location} />}
       </IonItem>
 
-      <CardRatingsAndButtons
-        ratingVegan={location.location_rating_vegan_offer}
-        ratingQuality={location.location_rating_quality}
-        locationId={location._id}
-      />
+      {hasRatings && (
+        <div className='px-3'>
+          <Ratings
+            rating_vegan_offer={location.location_rating_vegan_offer!}
+            rating_quality={location.location_rating_quality!}
+            showNum={true}
+          />
+        </div>
+      )}
+
+      {hasRatings && (
+        <div className='button-group button-group--locations-list'>
+          <button
+            className='button--locations-list'
+            onClick={() => {
+              selectLocation();
+              dispatch(showActions.setShowLocationInfoModal(true));
+            }}
+          >
+            <IonIcon aria-label='Info' size='small' icon={informationCircleOutline} />
+          </button>
+          <button
+            className='button--locations-list'
+            onClick={() => {
+              selectLocation();
+              navigate('/entdecken', 'forward');
+            }}
+          >
+            <IonIcon aria-label='auf Karte zeigen' size='small' icon={mapOutline} />
+          </button>
+          <button
+            className='button--locations-list'
+            onClick={() => {
+              selectLocation();
+              navigate('/bewerten', 'forward');
+            }}
+          >
+            <IonIcon aria-label='Bewerten' size='small' icon={starHalfOutline} />
+          </button>
+        </div>
+      )}
+
+      {!hasRatings && (
+        <div className='button-group button-group--locations-list'>
+          <button
+            className='button--locations-list button--check-large'
+            onClick={() => {
+              selectLocation();
+              navigate('/bewerten', 'forward');
+            }}
+          >
+            Erste Bewertung schreiben
+          </button>
+        </div>
+      )}
     </IonCard>
   );
 };
