@@ -1,8 +1,7 @@
-import { Fragment, useState, VFC } from 'react';
+import { Fragment, useReducer, useState, VFC } from 'react';
 import type { PopoverState } from '../types/types';
 // Redux Store
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { showActions } from '../store/showSlice';
+import { useAppSelector } from '../store/hooks';
 // Context
 import { useThemeContext } from '../context/ThemeContext';
 import {
@@ -34,14 +33,21 @@ import CommentsBlock from './Comments/CommentsBlock';
 import FlavorsList from './Comments/FlavorsList';
 import { hasNameProperty, isString } from '../types/typeguards';
 
+interface Props {
+  onCloseProfil: () => void;
+}
+
 // TODO: Popover Styling
 
-const Profil: VFC = () => {
-  const dispatch = useAppDispatch();
+const Profil: VFC<Props> = ({ onCloseProfil }) => {
   const { isAuth, user } = useAppSelector((state) => state.user);
-  const { showUpdateProfil } = useAppSelector((state) => state.show);
   const { successMessage: successMsg } = useAppSelector((state) => state.app);
   const { locations } = useAppSelector((state) => state.locations);
+
+  const [showUpdateProfil, toggleUpdateProfil] = useReducer(
+    (prevShowUpdateProfil) => !prevShowUpdateProfil,
+    false
+  );
 
   const { isDarkTheme } = useThemeContext();
 
@@ -67,11 +73,7 @@ const Profil: VFC = () => {
         <IonHeader>
           <IonItem color='background-color' lines='none'>
             <IonLabel color='primary'>Profil</IonLabel>
-            <IonButton
-              slot='end'
-              fill='clear'
-              onClick={() => dispatch(showActions.setShowProfil(false))}
-            >
+            <IonButton slot='end' fill='clear' onClick={onCloseProfil}>
               <IonIcon icon={closeCircleOutline} />
             </IonButton>
           </IonItem>
@@ -91,14 +93,19 @@ const Profil: VFC = () => {
                 <IonButton
                   fill='clear'
                   className='button--update ms-auto'
-                  onClick={() => dispatch(showActions.toggleShowUpdateProfil())}
+                  onClick={toggleUpdateProfil}
                 >
                   <IonIcon className='pe-1' icon={refreshCircleOutline} />
                   Update
                 </IonButton>
               </IonItem>
 
-              {showUpdateProfil && <ProfilUpdate />}
+              {showUpdateProfil && (
+                <ProfilUpdate
+                  toggleUpdateProfil={toggleUpdateProfil}
+                  onCloseProfil={onCloseProfil}
+                />
+              )}
 
               {successMsg && (
                 <IonItem className='text--success text-center' lines='full'>

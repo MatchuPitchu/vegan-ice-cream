@@ -16,7 +16,7 @@ export const IceCreamCone = ({ color, size = 100, className }: IconProps) => {
       xmlns='http://www.w3.org/2000/svg'
       version='1.1'
       viewBox='0 0 500 500'
-      enable-background='new 0 0 500 500'
+      enableBackground='new 0 0 500 500'
       focusable='false'
       width={size}
       height={size}

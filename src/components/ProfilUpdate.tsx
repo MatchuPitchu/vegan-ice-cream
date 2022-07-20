@@ -10,6 +10,7 @@ import { useUpdateUserMutation } from '../store/api/user-api-slice';
 import { IonItem, IonLabel, IonButton, IonIcon } from '@ionic/react';
 import { refreshCircleOutline } from 'ionicons/icons';
 import { CustomInput } from './FormFields/CustomInput';
+import { VFC } from 'react';
 
 interface ProfilUpdateForm {
   name: string;
@@ -49,7 +50,12 @@ export type UserUpdateData = {
   repeatPassword?: string;
 };
 
-const ProfilUpdate = () => {
+interface Props {
+  onCloseProfil: () => void;
+  toggleUpdateProfil: () => void;
+}
+
+const ProfilUpdate: VFC<Props> = ({ toggleUpdateProfil, onCloseProfil }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { error } = useAppSelector((state) => state.app);
@@ -128,10 +134,13 @@ const ProfilUpdate = () => {
       dispatch(appActions.setSuccessMessage(successMessage));
       setTimeout(() => dispatch(appActions.setSuccessMessage('')), 10000);
 
-      dispatch(showActions.setShowUpdateProfil(false));
+      toggleUpdateProfil();
 
-      if ((email && email !== user.email) || newPassword === repeatPassword) {
-        dispatch(showActions.setShowProfil(false));
+      if (
+        (email.trim().length > 0 && email !== user.email) ||
+        (newPassword.trim().length > 0 && newPassword === repeatPassword)
+      ) {
+        onCloseProfil();
         dispatch(userActions.logout());
       }
     } else {

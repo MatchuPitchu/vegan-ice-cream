@@ -1,7 +1,7 @@
+import { useReducer } from 'react';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/userSlice';
-import { showActions } from '../store/showSlice';
 // Context
 import { useThemeContext } from '../context/ThemeContext';
 import { useAnimation } from '../hooks/useAnimation';
@@ -31,10 +31,72 @@ import Feedback from './Feedback';
 import About from './About';
 import Profil from './Profil';
 
+enum ModalsActionTypes {
+  OPEN_PROFIL = 'OPEN_PROFIL',
+  CLOSE_PROFIL = 'CLOSE_PROFIL',
+  OPEN_FEEDBACK = 'OPEN_FEEDBACK',
+  CLOSE_FEEDBACK = 'CLOSE_FEEDBACK',
+  OPEN_ABOUT = 'OPEN_ABOUT',
+  CLOSE_ABOUT = 'CLOSE_ABOUT',
+}
+
+interface ModalsAction {
+  type: ModalsActionTypes;
+}
+
+interface ModalState {
+  profil: boolean;
+  feedback: boolean;
+  about: boolean;
+}
+
+const reducerFn = (prevState: ModalState, action: ModalsAction) => {
+  switch (action.type) {
+    case ModalsActionTypes.OPEN_PROFIL:
+      return {
+        ...prevState,
+        profil: true,
+      };
+    case ModalsActionTypes.CLOSE_PROFIL:
+      return {
+        ...prevState,
+        profil: false,
+      };
+    case ModalsActionTypes.OPEN_FEEDBACK:
+      return {
+        ...prevState,
+        feedback: true,
+      };
+    case ModalsActionTypes.CLOSE_FEEDBACK:
+      return {
+        ...prevState,
+        feedback: false,
+      };
+    case ModalsActionTypes.OPEN_ABOUT:
+      return {
+        ...prevState,
+        about: true,
+      };
+    case ModalsActionTypes.CLOSE_ABOUT:
+      return {
+        ...prevState,
+        about: false,
+      };
+    default:
+      return prevState;
+  }
+};
+
 const Menu: React.FC = () => {
   const dispatch = useAppDispatch();
   const { isAuth } = useAppSelector((state) => state.user);
-  const { showProfil, showFeedback, showAbout } = useAppSelector((state) => state.show);
+
+  const [showModal, dispatchModalAction] = useReducer(reducerFn, {
+    profil: false,
+    feedback: false,
+    about: false,
+  });
+
   const { successMessage: successMsg } = useAppSelector((state) => state.app);
 
   const { isDarkTheme } = useThemeContext();
@@ -96,7 +158,7 @@ const Menu: React.FC = () => {
           <IonItem
             className='item--item-background label--menu'
             button
-            onClick={() => dispatch(showActions.setShowProfil(true))}
+            onClick={() => dispatchModalAction({ type: ModalsActionTypes.OPEN_PROFIL })}
             lines='full'
             detail={false}
           >
@@ -107,20 +169,22 @@ const Menu: React.FC = () => {
 
         <IonModal
           cssClass={`${isPlatform('desktop') ? 'menu-modal--desktop' : 'menu-modal'}`}
-          isOpen={showProfil}
+          isOpen={showModal.profil}
           swipeToClose={true}
           backdropDismiss={true}
-          onDidDismiss={() => dispatch(showActions.setShowProfil(false))}
+          onDidDismiss={() => dispatchModalAction({ type: ModalsActionTypes.CLOSE_PROFIL })}
           enterAnimation={enterAnimationFromBottom}
           leaveAnimation={leaveAnimationToBottom}
         >
-          <Profil />
+          <Profil
+            onCloseProfil={() => dispatchModalAction({ type: ModalsActionTypes.CLOSE_PROFIL })}
+          />
         </IonModal>
 
         <IonItem
           className='item--item-background label--menu'
           button
-          onClick={() => dispatch(showActions.setShowFeedback(true))}
+          onClick={() => dispatchModalAction({ type: ModalsActionTypes.OPEN_FEEDBACK })}
           lines='none'
           detail={false}
         >
@@ -129,20 +193,22 @@ const Menu: React.FC = () => {
         </IonItem>
         <IonModal
           cssClass={`${isPlatform('desktop') ? 'menu-modal--desktop' : 'menu-modal'}`}
-          isOpen={showFeedback}
+          isOpen={showModal.feedback}
           swipeToClose={true}
           backdropDismiss={true}
-          onDidDismiss={() => dispatch(showActions.setShowFeedback(false))}
+          onDidDismiss={() => dispatchModalAction({ type: ModalsActionTypes.CLOSE_FEEDBACK })}
           enterAnimation={enterAnimationFromBottom}
           leaveAnimation={leaveAnimationToBottom}
         >
-          <Feedback />
+          <Feedback
+            onCloseFeedback={() => dispatchModalAction({ type: ModalsActionTypes.CLOSE_FEEDBACK })}
+          />
         </IonModal>
 
         <IonItem
           className='item--item-background label--menu'
           button
-          onClick={() => dispatch(showActions.setShowAbout(true))}
+          onClick={() => dispatchModalAction({ type: ModalsActionTypes.OPEN_ABOUT })}
           lines='none'
           detail={false}
         >
@@ -152,14 +218,16 @@ const Menu: React.FC = () => {
 
         <IonModal
           cssClass={`${isPlatform('desktop') ? 'menu-modal--desktop' : 'menu-modal'}`}
-          isOpen={showAbout}
+          isOpen={showModal.about}
           swipeToClose={true}
           backdropDismiss={true}
-          onDidDismiss={() => dispatch(showActions.setShowAbout(false))}
+          onDidDismiss={() => dispatchModalAction({ type: ModalsActionTypes.CLOSE_ABOUT })}
           enterAnimation={enterAnimationFromBottom}
           leaveAnimation={leaveAnimationToBottom}
         >
-          <About />
+          <About
+            onCloseAbout={() => dispatchModalAction({ type: ModalsActionTypes.CLOSE_ABOUT })}
+          />
         </IonModal>
 
         <IonItem
