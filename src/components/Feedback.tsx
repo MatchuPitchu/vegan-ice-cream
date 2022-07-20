@@ -47,7 +47,11 @@ type SendFeedback = {
 const templateID = 'contact-form';
 const serviceID = 'gmail_account';
 
-const Feedback: VFC = () => {
+interface Props {
+  onCloseFeedback: () => void;
+}
+
+const Feedback: VFC<Props> = ({ onCloseFeedback }) => {
   const dispatch = useAppDispatch();
 
   const { control, handleSubmit, reset } = useForm({ defaultValues: defaultFeedbackValues });
@@ -90,7 +94,7 @@ const Feedback: VFC = () => {
     });
 
     reset(defaultFeedbackValues);
-    dispatch(showActions.setShowFeedback(false));
+    onCloseFeedback();
   };
 
   return (
@@ -98,11 +102,7 @@ const Feedback: VFC = () => {
       <IonHeader>
         <IonItem lines='none'>
           <IonLabel color='primary'>Feedback</IonLabel>
-          <IonButton
-            slot='end'
-            fill='clear'
-            onClick={() => dispatch(showActions.setShowFeedback(false))}
-          >
+          <IonButton slot='end' fill='clear' onClick={onCloseFeedback}>
             <IonIcon icon={closeCircleOutline} />
           </IonButton>
         </IonItem>

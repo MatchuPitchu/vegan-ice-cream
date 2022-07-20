@@ -1,7 +1,4 @@
 import { VFC } from 'react';
-// Redux Store
-import { useAppDispatch } from '../store/hooks';
-import { showActions } from '../store/showSlice';
 // Context
 import { useThemeContext } from '../context/ThemeContext';
 import {
@@ -42,8 +39,11 @@ const usedTechStack = [
   { tech: 'Adobe Illustrator', icon: logoIllustrator },
 ];
 
-const About: VFC = () => {
-  const dispatch = useAppDispatch();
+interface Props {
+  onCloseAbout: () => void;
+}
+
+const About: VFC<Props> = ({ onCloseAbout }) => {
   const { isDarkTheme } = useThemeContext();
 
   return (
@@ -51,11 +51,7 @@ const About: VFC = () => {
       <IonHeader>
         <IonItem color='background-color' lines='none'>
           <IonLabel color='primary'>About</IonLabel>
-          <IonButton
-            slot='end'
-            fill='clear'
-            onClick={() => dispatch(showActions.setShowAbout(false))}
-          >
+          <IonButton slot='end' fill='clear' onClick={onCloseAbout}>
             <IonIcon icon={closeCircleOutline} />
           </IonButton>
         </IonItem>
