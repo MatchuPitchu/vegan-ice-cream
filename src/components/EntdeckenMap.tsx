@@ -158,10 +158,10 @@ const EntdeckenMap: VFC = () => {
     <div className='container-map'>
       <div className='control-left'>
         <button className='zoom-control' onClick={() => dispatch(mapActions.incrementZoom())}>
-          <IonIcon aria-label='hereinzoomen' size='small' icon={addCircleOutline} />
+          <IonIcon aria-label='hereinzoomen' icon={addCircleOutline} />
         </button>
         <button className='zoom-control' onClick={() => dispatch(mapActions.decreaseZoom())}>
-          <IonIcon aria-label='herauszoomen' size='small' icon={removeCircleOutline} />
+          <IonIcon aria-label='herauszoomen' icon={removeCircleOutline} />
         </button>
       </div>
       <div className='control-right-top'>

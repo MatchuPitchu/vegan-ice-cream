@@ -1,5 +1,6 @@
 import { VFC } from 'react';
 import type { IceCreamLocation } from '../types/types';
+import { FieldError } from 'react-hook-form';
 import { useAutocomplete } from '../hooks/useAutocomplete';
 import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables-and-functions';
 // Redux Store
@@ -8,16 +9,23 @@ import { mapActions } from '../store/mapSlice';
 import { appActions } from '../store/appSlice';
 import { locationsActions } from '../store/locationsSlice';
 import Highlighter from 'react-highlight-words';
-import { IonItem, IonList, IonSearchbar } from '@ionic/react';
+import { IonItem, IonSearchbar } from '@ionic/react';
 import { searchCircleOutline, trash } from 'ionicons/icons';
 import { searchActions } from '../store/searchSlice';
 
 type Props = {
   cancelSubmit?: boolean;
   showSuggestions?: boolean;
+  error?: FieldError;
+  clearLocationError?: () => void;
 };
 
-const Search: VFC<Props> = ({ cancelSubmit = false, showSuggestions = true }) => {
+const Search: VFC<Props> = ({
+  cancelSubmit = false,
+  showSuggestions = true,
+  error,
+  clearLocationError,
+}) => {
   const dispatch = useAppDispatch();
   const { locations } = useAppSelector((state) => state.locations);
 
@@ -67,7 +75,7 @@ const Search: VFC<Props> = ({ cancelSubmit = false, showSuggestions = true }) =>
   };
 
   const onSearchTextChanged = (searchInput: string) => {
-    handleSearchTextChange(searchInput, 4);
+    handleSearchTextChange(searchInput, 5);
 
     if (searchInput.length < 3) {
       dispatch(locationsActions.resetLocationsSearchResults());
@@ -81,50 +89,60 @@ const Search: VFC<Props> = ({ cancelSubmit = false, showSuggestions = true }) =>
   // TODO: 3) Bootstrap rausschmeißen
 
   return (
-    <form onSubmit={onSubmit}>
-      <IonSearchbar
-        className='searchbar--flavor'
-        type='search'
-        inputMode='search'
-        placeholder='Eisladen oder Stadt suchen'
-        showCancelButton='never'
-        showClearButton='always'
-        clearIcon={trash}
-        searchIcon={searchCircleOutline}
-        value={searchText}
-        debounce={100}
-        onIonChange={({ detail: { value } }) => onSearchTextChanged(value ?? '')}
-        onIonClear={() => resetSearch()}
-      />
+    <>
+      <form onSubmit={onSubmit}>
+        <IonSearchbar
+          className='searchbar--flavor'
+          type='search'
+          inputMode='search'
+          placeholder='Eisladen oder Stadt suchen'
+          showCancelButton='never'
+          showClearButton='always'
+          clearIcon={trash}
+          searchIcon={searchCircleOutline}
+          value={searchText}
+          debounce={100}
+          onIonChange={({ detail: { value } }) => {
+            clearLocationError?.();
+            onSearchTextChanged(value ?? '');
+          }}
+          onIonClear={() => resetSearch()}
+        />
 
-      {suggestions && showSuggestions && (
-        <IonList className='py-0'>
-          {suggestions.map((location) => (
-            <IonItem
-              className='item--small item--card-background'
-              key={location._id}
-              button
-              onClick={() => {
-                selectSearchItem(
-                  `${location.name}, ${location.address.street} ${location.address.number}, ${location.address.city}`
-                );
-                dispatch(locationsActions.setSelectedLocation(location._id));
-              }}
-              lines='full'
-            >
-              <Highlighter
-                className='highlighter-wrapper'
-                activeIndex={-1}
-                highlightClassName='highlight'
-                searchWords={searchWordsArray}
-                caseSensitive={false}
-                textToHighlight={`${location.name}, ${location.address.street} ${location.address.number} in ${location.address.city}`}
-              />
-            </IonItem>
-          ))}
-        </IonList>
+        {suggestions && showSuggestions && (
+          <div>
+            {suggestions.map((location) => (
+              <IonItem
+                className='item--item-background item--smallest'
+                key={location._id}
+                button
+                onClick={() => {
+                  selectSearchItem(
+                    `${location.name}, ${location.address.street} ${location.address.number}, ${location.address.city}`
+                  );
+                  dispatch(locationsActions.setSelectedLocation(location._id));
+                }}
+                lines='full'
+              >
+                <Highlighter
+                  className='highlighter-wrapper'
+                  activeIndex={-1}
+                  highlightClassName='highlighter-wrapper__highlight'
+                  searchWords={searchWordsArray}
+                  caseSensitive={false}
+                  textToHighlight={`${location.name}, ${location.address.street} ${location.address.number}, ${location.address.city}`}
+                />
+              </IonItem>
+            ))}
+          </div>
+        )}
+      </form>
+      {error && (
+        <IonItem lines='none' className='item--smallest item--card-background'>
+          <p className='paragraph--error-small'>{error.message}</p>
+        </IonItem>
       )}
-    </form>
+    </>
   );
 };
 

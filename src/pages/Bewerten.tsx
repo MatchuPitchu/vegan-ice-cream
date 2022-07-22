@@ -7,7 +7,6 @@ import { flavorActions } from '../store/flavorSlice';
 import { appActions } from '../store/appSlice';
 import { userActions } from '../store/userSlice';
 import { getSelectedLocation, locationsActions } from '../store/locationsSlice';
-import { searchActions } from '../store/searchSlice';
 import { skipToken } from '@reduxjs/toolkit/dist/query';
 import { useGetOneLocationQuery, useUpdatePricingMutation } from '../store/api/locations-api-slice';
 import { useAddCommentMutation } from '../store/api/comment-api-slice';
@@ -17,12 +16,9 @@ import {
   IonCard,
   IonCardContent,
   IonCardTitle,
-  IonContent,
-  IonHeader,
   IonIcon,
   IonItem,
   IonLabel,
-  IonPage,
   IonPopover,
 } from '@ionic/react';
 import {
@@ -126,9 +122,11 @@ const Bewerten = () => {
   const {
     control,
     handleSubmit,
+    register,
     reset,
     setValue,
     formState: { errors },
+    clearErrors,
   } = useForm<BewertenFormValues>({
     defaultValues: defaultBewertenValues,
   });
@@ -139,6 +137,15 @@ const Bewerten = () => {
   });
 
   const [isFlavorSelectedFromDatabase, setIsFlavorSelectedFromDatabase] = useState(false);
+
+  useEffect(() => {
+    register('flavorName', {
+      required: 'Trage eine Eissorte ein',
+    });
+    register('location', {
+      required: 'Ohne Eisladen, keine Bewertung',
+    });
+  }, [register]);
 
   // TODO: Labels fett lesbar Sorbet + Cremeeis ...
   // TODO: Validierung mit error message einfügen -> flavorName is required
@@ -260,15 +267,14 @@ const Bewerten = () => {
           {success && successSection}
 
           {!success && (
-            <section className='container-content mt-3'>
+            <section className='container-content'>
               <IonItem
                 lines='none'
                 className='item--small item-text--small item--card-background mb-1'
               >
-                <IonLabel className='ion-text-wrap'>Bewerte 1 Eissorte</IonLabel>
+                <div className='ion-text-wrap bewerten-title'>Bewerte 1 Eissorte</div>
                 <IonIcon
                   className='info-icon'
-                  color='primary'
                   slot='end'
                   icon={informationCircle}
                   onClick={(event) => {
@@ -284,8 +290,10 @@ const Bewerten = () => {
                 isOpen={showPopoverInfo.showPopover}
                 onDidDismiss={() => setShowPopoverInfo({ showPopover: false, event: undefined })}
               >
-                Damit eine Bewertung fix zu tippen ist, bezieht sie sich auf 1 Eissorte. Natürlich
-                kannst du auch weitere Bewertungen abgeben.
+                <div className='info-popover__content'>
+                  Damit eine Bewertung fix zu tippen ist, bezieht sie sich auf 1 Eissorte. Natürlich
+                  kannst du auch weitere Bewertungen abgeben.
+                </div>
               </IonPopover>
 
               <IonItem lines='none' className='item--small item--card-background'>
@@ -297,7 +305,6 @@ const Bewerten = () => {
                 </IonLabel>
                 <IonIcon
                   className='info-icon'
-                  color='primary'
                   slot='end'
                   icon={informationCircle}
                   onClick={(event) => {
@@ -316,11 +323,17 @@ const Bewerten = () => {
                 backdropDismiss={true}
                 translucent={true}
               >
-                Nichts gefunden? Trage den Eisladen auf der Karte ein.
+                <div className='info-popover__content'>
+                  Nichts gefunden? Trage den Eisladen auf der Karte ein.
+                </div>
               </IonPopover>
 
-              <div className='item--card-background pb-2'>
-                <Search cancelSubmit={true} />
+              <div className='item--card-background'>
+                <Search
+                  cancelSubmit={true}
+                  error={errors.location}
+                  clearLocationError={() => clearErrors('location')}
+                />
               </div>
 
               <form className='mt-1' onSubmit={handleSubmit(onSubmit)}>
@@ -331,7 +344,10 @@ const Bewerten = () => {
                   rules={{ min: { value: 0.1, message: 'Wähle einen Preis aus' } }}
                 />
 
-                <SearchFlavors />
+                <SearchFlavors
+                  error={errors.flavorName}
+                  clearFlavorError={() => clearErrors('flavorName')}
+                />
 
                 <IonItem lines='inset' className='item--card-background'>
                   <Checkbox
@@ -360,7 +376,6 @@ const Bewerten = () => {
                   </IonLabel>
                   <IonIcon
                     className={`info-icon ${isFlavorSelectedFromDatabase && 'info-icon--disabled'}`}
-                    color='primary'
                     slot='end'
                     icon={fields.length === 1 ? addCircleSharp : removeCircleSharp}
                     onClick={() => {
@@ -388,7 +403,7 @@ const Bewerten = () => {
                 </div>
 
                 {(errors.colors?.[0] || errors.colors?.[1]) && (
-                  <IonItem lines='none' className='item--small item--card-background mb-1'>
+                  <IonItem lines='none' className='item--smallest item--card-background mb-1'>
                     <p className='paragraph--error-small'>{errors.colors?.[0].value?.message}</p>
                   </IonItem>
                 )}
@@ -427,7 +442,7 @@ const Bewerten = () => {
                   </RatingInput>
                 </IonItem>
 
-                {/* NEU CHECKEN MIT ERROR HANDLUNG UND BACKEND -> SOLL ALS ERGÄNZUNG ZU COMMENT GESPEICHERT WERDEN, NICHT IN FLAVOR */}
+                {/* TODO: Error Message */}
                 <IonItem lines='none' className='item--small item--card-background'>
                   <IonLabel className='mb-1' position='stacked'>
                     Mein Eis war ...
@@ -497,7 +512,7 @@ const Bewerten = () => {
                   type='submit'
                   expand='block'
                 >
-                  <IonIcon className='pe-1' icon={starHalfOutline} />
+                  <IonIcon className='pe-1' size='small' icon={starHalfOutline} />
                   Bewertung abgeben
                 </IonButton>
               </form>

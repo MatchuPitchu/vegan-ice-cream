@@ -142,6 +142,8 @@ li {
 .paragraph--error-small {
   font-size: 0.8rem;
   color: var(--ion-color-danger);
+  margin: 0;
+  padding-bottom: 0.5rem;
 }
 
 .background-with-opacity {
@@ -208,11 +210,12 @@ li {
   font-size: 0.9rem;
   padding: 0.5rem 0.3rem;
   background-color: var(--ion-card-header-background);
+  border-bottom: 1px solid var(--ion-color-primary-transparent);
 }
 
 .info-popover__content {
   padding: 0.5rem;
-  background-color: var(--ion-card-background);
+  background-color: var(--ion-background-color);
 }
 
 .info-popover .popover-content {
@@ -344,14 +347,15 @@ ion-searchbar .searchbar-input-container .searchbar-input {
 
 .info-icon {
   border-radius: var(--ion-border-radius-circle);
-  background-color: var(--ion-background-color);
-  box-shadow: var(--ion-box-shadow);
+  color: var(--ion-color-primary);
   transition: all 0.3s;
 }
 
 .info-icon:hover {
-  fill: var(--ion-color-primary-shade);
+  fill: var(--ion-card-background);
+  background-color: var(--ion-color-primary);
   cursor: pointer;
+  outline: 0;
 }
 
 .info-icon.info-icon--disabled {
@@ -372,12 +376,10 @@ mark {
 
 .highlighter-wrapper {
   font-size: 0.8rem;
-  font-weight: 400;
-  padding: 0 10px;
+  padding: 5px 0;
 }
 
 .highlighter-wrapper__highlight {
-  font-weight: 600;
   background-color: transparent;
   color: var(--ion-color-primary);
 }
@@ -930,6 +932,10 @@ mark {
   background: var(--ion-background-color);
 }
 
+.item--smallest {
+  --min-height: 34px;
+}
+
 .item--small {
   --min-height: 44px;
 }
@@ -1403,6 +1409,11 @@ ion-range::part(knob) {
   --knob-size: 17px;
 }
 
+.bewerten-title {
+  font-size: 1.5rem;
+  color: var(--ion-text-color);
+}
+
 .text--result {
   color: var(--ion-text-color);
   padding-bottom: 0.1rem;
@@ -1454,8 +1465,8 @@ ion-range::part(knob) {
 }
 
 .color-picker__result {
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 1.5rem;
+  height: 1.5rem;
   margin-left: 1rem;
   border-radius: var(--ion-border-radius-circle);
 }

@@ -80,7 +80,7 @@ const HeaderApp = () => {
                   setShowPopoverNumberOfLocations({ showPopover: false, event: undefined })
                 }
               >
-                Eingetragene Eisläden in der App
+                <div className='info-popover__content'>Eingetragene Eisläden in der App</div>
               </IonPopover>
             </div>
           )}
@@ -104,7 +104,7 @@ const HeaderApp = () => {
                 isOpen={showPopover.showPopover}
                 onDidDismiss={() => setShowPopover({ showPopover: false, event: undefined })}
               >
-                Neue Eisläden seit letztem Besuch
+                <div className='info-popover__content'>Neue Eisläden seit letztem Besuch</div>
               </IonPopover>
             </div>
           )}
