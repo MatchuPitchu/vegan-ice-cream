@@ -362,11 +362,14 @@ ion-searchbar .searchbar-input-container .searchbar-input {
   display: none;
 }
 
-.warningIcon:hover {
-  border: 1px solid var(--ion-color-warning);
-  border-radius: var(--ion-border-radius-circle);
-  background-color: var(--ion-background-color);
+.remove-icon {
+  color: var(--ion-color-primary);
   cursor: pointer;
+  transition: all 0.3s;
+}
+
+.remove-icon:hover {
+  color: var(--ion-color-primary-shade);
 }
 
 .mark,
@@ -940,19 +943,23 @@ mark {
   --min-height: 44px;
 }
 
-.item-transparent {
+.item--suggestions {
+  width: 100%;
+}
+
+.item--transparent {
   --background: transparent;
   background: transparent;
 }
 
-.item-transparent--small {
+.item--transparent-small {
   --background: transparent;
   --min-height: 44px;
   display: flex;
   align-items: center;
 }
 
-.item-transparent--large {
+.item--transparent-large {
   --min-height: 90px;
 }
 
@@ -1414,19 +1421,6 @@ ion-range::part(knob) {
   color: var(--ion-text-color);
 }
 
-.text--result {
-  color: var(--ion-text-color);
-  padding-bottom: 0.1rem;
-  border-bottom: 2px solid var(--ion-color-primary);
-  transition: all 0.3s;
-}
-
-.text--light {
-  color: var(--ion-text-over-background);
-  opacity: 0.7;
-  transition: all 0.3s;
-}
-
 .text--small-light {
   font-size: 0.8rem;
   color: var(--ion-text-over-background);
@@ -1449,6 +1443,11 @@ ion-range::part(knob) {
   color: var(--ion-text-over-background);
 }
 
+.input--disabled {
+  color: var(--ion-color-medium);
+  pointer-events: none;
+}
+
 .inputField {
   --placeholder-color: var(--ion-color-medium);
 }
@@ -1456,6 +1455,7 @@ ion-range::part(knob) {
 .flavor-search-preview {
   width: 0.9rem;
   height: 0.9rem;
+  margin-left: 0.5rem;
   border-radius: var(--ion-border-radius-circle);
   box-shadow: var(--ion-box-shadow);
 }

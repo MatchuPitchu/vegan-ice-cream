@@ -16,7 +16,7 @@ export interface Flavor {
   _id: string;
   color: {
     primary: string;
-    secondary: string;
+    secondary?: string;
   };
   name: string;
   type_cream: boolean;

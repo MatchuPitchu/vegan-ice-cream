@@ -318,3 +318,4 @@ export const getSelectedLocation = createSelector(
 
 export const locationsActions = locationsSlice.actions;
 export const locationsSliceReducer = locationsSlice.reducer;
+

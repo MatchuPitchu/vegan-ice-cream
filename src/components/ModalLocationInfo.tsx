@@ -103,7 +103,7 @@ const ModalLocationInfo: VFC = () => {
             alt='ice cream cone'
           />
           <IonItemGroup className='background-with-opacity'>
-            <IonItem className='item-transparent item-transparent--large' lines='full'>
+            <IonItem className='item--transparent item--transparent-large' lines='full'>
               <IonLabel className='ion-text-wrap'>
                 {selectedLocation?.address && <AddressBlock address={selectedLocation.address} />}
                 {selectedLocation?.location_url && (
@@ -118,7 +118,7 @@ const ModalLocationInfo: VFC = () => {
             <IonItem
               button
               onClick={handleTogglePricingForm}
-              className='item-transparent--small item-text--small'
+              className='item--transparent-small item-text--small'
               lines='full'
               detail={false}
             >
@@ -133,7 +133,7 @@ const ModalLocationInfo: VFC = () => {
             </IonItem>
             {isPricingFormOpen && (
               <IonItem
-                className='item-transparent--small item-text--small'
+                className='item--transparent-small item-text--small'
                 lines='full'
                 detail={false}
               >
@@ -146,7 +146,7 @@ const ModalLocationInfo: VFC = () => {
               onClick={handleResetExceptSelectedLocationOnCloseModal}
               routerLink='/bewerten'
               routerDirection='forward'
-              className='item-transparent--small item-text--small'
+              className='item--transparent-small item-text--small'
               lines='full'
               detail={false}
             >
