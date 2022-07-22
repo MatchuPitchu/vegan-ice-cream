@@ -32,8 +32,6 @@ import {
   factorToConvertRatingScale,
   handleChangeFlavorTypeToggleGroup,
 } from '../utils/variables-and-functions';
-import Search from '../components/Search';
-import SearchFlavors from '../components/SearchFlavors';
 import Spinner from '../components/Spinner';
 import RatingInput from '../components/FormFields/RatingInput';
 import Checkbox from '../components/FormFields/Checkbox';
@@ -42,6 +40,8 @@ import ColorPicker from '../components/FormFields/ColorPicker';
 import DatePicker from '../components/FormFields/DatePicker';
 import TextareaInput from '../components/FormFields/TextareaInput';
 import PageWrapper from '../components/PageUtils/PageWrapper';
+import { CustomSearchLocation } from '../components/FormFields/CustomSearchLocation';
+import { CustomSearchFlavor } from '../components/FormFields/CustomSearchFlavor';
 
 interface BewertenFormValues {
   location: string;
@@ -66,11 +66,15 @@ const Bewerten = () => {
   const { flavor } = useAppSelector((state) => state.flavor);
   const selectedLocation = useAppSelector(getSelectedLocation);
 
-  const [showPopoverInfo, setShowPopoverInfo] = useState<PopoverState>({
+  const [showPopoverFormInfo, setShowPopoverFormInfo] = useState<PopoverState>({
     showPopover: false,
     event: undefined,
   });
-  const [showPopover, setShowPopover] = useState<PopoverState>({
+  const [showPopoverLocationSearchInfo, setShowPopoverLocationSearchInfo] = useState<PopoverState>({
+    showPopover: false,
+    event: undefined,
+  });
+  const [showPopoverFlavorSearchInfo, setShowPopoverFlavorSearchInfo] = useState<PopoverState>({
     showPopover: false,
     event: undefined,
   });
@@ -89,6 +93,7 @@ const Bewerten = () => {
     isSuccess: isSuccessFetchUpdatedLocation,
   } = useGetOneLocationQuery(refetchLocationId);
 
+  // TODO: POST Bewerten Form triggers automatically refetch of location with certain id
   useEffect(() => {
     if (isSuccessFetchUpdatedLocation && updatedLocation) {
       dispatch(locationsActions.updateSingleLocation(updatedLocation));
@@ -122,11 +127,9 @@ const Bewerten = () => {
   const {
     control,
     handleSubmit,
-    register,
     reset,
     setValue,
     formState: { errors },
-    clearErrors,
   } = useForm<BewertenFormValues>({
     defaultValues: defaultBewertenValues,
   });
@@ -138,17 +141,6 @@ const Bewerten = () => {
 
   const [isFlavorSelectedFromDatabase, setIsFlavorSelectedFromDatabase] = useState(false);
 
-  useEffect(() => {
-    register('flavorName', {
-      required: 'Trage eine Eissorte ein',
-    });
-    register('location', {
-      required: 'Ohne Eisladen, keine Bewertung',
-    });
-  }, [register]);
-
-  // TODO: Labels fett lesbar Sorbet + Cremeeis ...
-  // TODO: Validierung mit error message einfügen -> flavorName is required
   useEffect(() => {
     if (flavor) {
       setValue('flavorName', flavor.name);
@@ -167,6 +159,12 @@ const Bewerten = () => {
       append({ value: '' });
     }
   }, [flavor, setValue, append, remove]);
+
+  useEffect(() => {
+    if (selectedLocation) {
+      setValue('location', selectedLocation.name);
+    }
+  }, [selectedLocation, setValue]);
 
   const onSubmit: SubmitHandler<BewertenFormValues> = async (data) => {
     if (!user) return;
@@ -193,7 +191,7 @@ const Bewerten = () => {
         type_cream: data.type_cream,
         color: {
           primary: data.colors[0].value,
-          secondary: data.colors[1].value,
+          ...(data.colors?.[1]?.value && { secondary: data.colors[1].value }),
         },
       };
 
@@ -247,7 +245,7 @@ const Bewerten = () => {
               reset(); // Reset React Hook Form
             }}
           >
-            <IonIcon className='pe-1' icon={add} />
+            <IonIcon className='pe-1' size='small' icon={starHalfOutline} />
             Weitere Bewertung
           </IonButton>
         </IonCardContent>
@@ -279,37 +277,7 @@ const Bewerten = () => {
                   icon={informationCircle}
                   onClick={(event) => {
                     event.persist();
-                    setShowPopoverInfo({ showPopover: true, event });
-                  }}
-                />
-              </IonItem>
-
-              <IonPopover
-                cssClass='info-popover'
-                event={showPopoverInfo.event}
-                isOpen={showPopoverInfo.showPopover}
-                onDidDismiss={() => setShowPopoverInfo({ showPopover: false, event: undefined })}
-              >
-                <div className='info-popover__content'>
-                  Damit eine Bewertung fix zu tippen ist, bezieht sie sich auf 1 Eissorte. Natürlich
-                  kannst du auch weitere Bewertungen abgeben.
-                </div>
-              </IonPopover>
-
-              <IonItem lines='none' className='item--small item--card-background'>
-                <IonLabel position='stacked'>
-                  Name:{' '}
-                  <span className={`${selectedLocation?.name ? 'text--result' : 'text--light'}`}>
-                    {selectedLocation?.name ?? '... nutze die Suche'}
-                  </span>
-                </IonLabel>
-                <IonIcon
-                  className='info-icon'
-                  slot='end'
-                  icon={informationCircle}
-                  onClick={(event) => {
-                    event.persist();
-                    setShowPopover({ showPopover: true, event });
+                    setShowPopoverFormInfo({ showPopover: true, event });
                   }}
                 />
               </IonItem>
@@ -317,37 +285,95 @@ const Bewerten = () => {
               <IonPopover
                 cssClass='info-popover'
                 animated={true}
-                event={showPopover.event}
-                isOpen={showPopover.showPopover}
-                onDidDismiss={() => setShowPopover({ showPopover: false, event: undefined })}
-                backdropDismiss={true}
                 translucent={true}
+                event={showPopoverFormInfo.event}
+                isOpen={showPopoverFormInfo.showPopover}
+                onDidDismiss={() =>
+                  setShowPopoverFormInfo({ showPopover: false, event: undefined })
+                }
               >
                 <div className='info-popover__content'>
-                  Nichts gefunden? Trage den Eisladen auf der Karte ein.
+                  Damit eine Bewertung fix zu tippen ist, bezieht sie sich auf 1 Eissorte. Natürlich
+                  kannst du auch weitere Bewertungen abgeben.
                 </div>
               </IonPopover>
 
-              <div className='item--card-background'>
-                <Search
-                  cancelSubmit={true}
-                  error={errors.location}
-                  clearLocationError={() => clearErrors('location')}
-                />
-              </div>
-
               <form className='mt-1' onSubmit={handleSubmit(onSubmit)}>
+                <CustomSearchLocation
+                  control={control}
+                  name='location'
+                  label='Eisladen'
+                  placeholder='Eisladen oder Stadt suchen'
+                  rules={{ required: 'Ohne Eisladen, keine Bewertung' }}
+                >
+                  <IonIcon
+                    className='info-icon'
+                    slot='end'
+                    icon={informationCircle}
+                    onClick={(event) => {
+                      event.persist();
+                      setShowPopoverLocationSearchInfo({ showPopover: true, event });
+                    }}
+                  />
+                </CustomSearchLocation>
+
+                <IonPopover
+                  cssClass='info-popover'
+                  animated={true}
+                  translucent={true}
+                  event={showPopoverLocationSearchInfo.event}
+                  isOpen={showPopoverLocationSearchInfo.showPopover}
+                  onDidDismiss={() =>
+                    setShowPopoverLocationSearchInfo({ showPopover: false, event: undefined })
+                  }
+                  backdropDismiss={true}
+                >
+                  <div className='info-popover__content'>
+                    Nichts gefunden? Trage den Eisladen auf der Karte ein.
+                  </div>
+                </IonPopover>
+
                 <PricingRange
-                  className='item--card-background'
+                  className='item--card-background mt-1'
                   name='pricing'
                   control={control}
                   rules={{ min: { value: 0.1, message: 'Wähle einen Preis aus' } }}
                 />
 
-                <SearchFlavors
-                  error={errors.flavorName}
-                  clearFlavorError={() => clearErrors('flavorName')}
-                />
+                <CustomSearchFlavor
+                  control={control}
+                  name='flavorName'
+                  label='Eissorte'
+                  placeholder='Welche Eissorte willst du bewerten?'
+                  rules={{ required: 'Trage eine Eissorte ein' }}
+                >
+                  <IonIcon
+                    className='info-icon'
+                    color='primary'
+                    slot='end'
+                    icon={informationCircle}
+                    onClick={(event) => {
+                      event.persist();
+                      setShowPopoverFlavorSearchInfo({ showPopover: true, event });
+                    }}
+                  />
+                </CustomSearchFlavor>
+
+                <IonPopover
+                  cssClass='info-popover'
+                  animated={true}
+                  translucent={true}
+                  event={showPopoverFlavorSearchInfo.event}
+                  isOpen={showPopoverFlavorSearchInfo.showPopover}
+                  onDidDismiss={() =>
+                    setShowPopoverFlavorSearchInfo({ showPopover: false, event: undefined })
+                  }
+                  backdropDismiss={true}
+                >
+                  <div className='info-popover__content'>
+                    Wähle aus den bereits verfügbaren Eissorten oder tippe einen neuen Namen ein.
+                  </div>
+                </IonPopover>
 
                 <IonItem lines='inset' className='item--card-background'>
                   <Checkbox

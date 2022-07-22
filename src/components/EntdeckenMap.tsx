@@ -317,3 +317,4 @@ const EntdeckenMap: VFC = () => {
 };
 
 export default EntdeckenMap;
+

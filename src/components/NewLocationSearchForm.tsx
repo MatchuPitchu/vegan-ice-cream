@@ -170,7 +170,7 @@ const NewLocationSearchForm: VFC = () => {
       <IonContent>
         <form className='container-content mt-3' onSubmit={handleSubmit(onSubmit)}>
           <IonCard>
-            <IonItem lines='none' className='item--small item-text--small item-transparent'>
+            <IonItem lines='none' className='item--small item-text--small item--transparent'>
               <IonLabel className='ion-text-wrap'>Welchen Eisladen hast du entdeckt?</IonLabel>
               <IonIcon
                 className='info-icon'
@@ -196,7 +196,7 @@ const NewLocationSearchForm: VFC = () => {
               </div>
             </IonPopover>
 
-            <IonItem className='item-transparent' lines='none'>
+            <IonItem className='item--transparent' lines='none'>
               <Autocomplete
                 className='container-autocomplete'
                 onLoad={handleAutocompleteLoad}
