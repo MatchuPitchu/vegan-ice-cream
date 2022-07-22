@@ -68,7 +68,6 @@ const RatingInput = <TFieldValues extends FieldValues>({
       </IonLabel>
       {children}
       <div className={className}>
-        {/* TODO: Validation does NOT work */}
         <Rating
           ratingValue={value}
           initialValue={initialValue}

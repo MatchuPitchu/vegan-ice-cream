@@ -1,5 +1,4 @@
 import { IonToggle } from '@ionic/react';
-import { useRef } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 
 type ToggleArgument = { name: string; value: boolean };

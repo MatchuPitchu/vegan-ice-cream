@@ -139,7 +139,9 @@ const Profil: VFC<Props> = ({ onCloseProfil }) => {
                   isOpen={popoverCity.showPopover}
                   onDidDismiss={() => setPopoverCity({ showPopover: false, event: undefined })}
                 >
-                  Dieser Ort wird dir immer beim ersten Öffnen der Karte angezeigt.
+                  <div className='info-popover__content'>
+                    Dieser Ort wird dir immer beim ersten Öffnen der Karte angezeigt.
+                  </div>
                 </IonPopover>
               </IonItem>
               <IonItemGroup>
@@ -203,7 +205,7 @@ const Profil: VFC<Props> = ({ onCloseProfil }) => {
                     isOpen={popoverShow.showPopover}
                     onDidDismiss={() => setPopoverShow({ showPopover: false, event: undefined })}
                   >
-                    Angaben aus deinen Bewertungen
+                    <div className='info-popover__content'>Angaben aus deinen Bewertungen</div>
                   </IonPopover>
                 </IonItem>
 

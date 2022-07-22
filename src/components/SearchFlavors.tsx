@@ -1,5 +1,6 @@
 import { useState, VFC } from 'react';
 import type { Flavor, PopoverState } from '../types/types';
+import { FieldError } from 'react-hook-form';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { flavorActions } from '../store/flavorSlice';
@@ -17,8 +18,13 @@ import {
 } from '@ionic/react';
 import { informationCircle, pencil, trash } from 'ionicons/icons';
 
+type Props = {
+  error?: FieldError;
+  clearFlavorError?: () => void;
+};
+
 // TODO: Predictions mit Keyboard durchgehen
-const SearchFlavors: VFC = () => {
+const SearchFlavors: VFC<Props> = ({ error, clearFlavorError }) => {
   const dispatch = useAppDispatch();
   const { flavor } = useAppSelector((state) => state.flavor);
 
@@ -27,7 +33,7 @@ const SearchFlavors: VFC = () => {
     event: undefined,
   });
 
-  const { data: flavors, error, isLoading, isSuccess } = useGetFlavorsQuery();
+  const { data: flavors, error: errorGetFlavors, isLoading, isSuccess } = useGetFlavorsQuery();
 
   const {
     handleSearchTextChange,
@@ -71,7 +77,10 @@ const SearchFlavors: VFC = () => {
           searchIcon={pencil}
           value={searchText}
           debounce={100}
-          onIonChange={({ detail: { value } }) => onSearchTextChanged(value ?? '')}
+          onIonChange={({ detail: { value } }) => {
+            clearFlavorError?.();
+            onSearchTextChanged(value ?? '');
+          }}
           onIonClear={() => {
             dispatch(flavorActions.resetFlavor());
             resetSearch();
@@ -88,8 +97,8 @@ const SearchFlavors: VFC = () => {
             <IonItem
               key={flavor._id}
               className='item--card-background'
-              lines='full'
               button
+              lines='full'
               onClick={() => {
                 selectSearchItem(flavor.name);
                 dispatch(flavorActions.setFlavor(flavor));
@@ -118,6 +127,12 @@ const SearchFlavors: VFC = () => {
         </IonList>
       )}
 
+      {error && (
+        <IonItem lines='none' className='item--smallest item--card-background mb-1'>
+          <p className='paragraph--error-small'>{error.message}</p>
+        </IonItem>
+      )}
+
       <IonPopover
         cssClass='info-popover'
         animated={true}
@@ -127,9 +142,9 @@ const SearchFlavors: VFC = () => {
         onDidDismiss={() => setShowPopover({ showPopover: false, event: undefined })}
         backdropDismiss={true}
       >
-        <IonContent>
+        <div className='info-popover__content'>
           Wähle aus den bereits verfügbaren Eissorten oder tippe einen neuen Namen ein.
-        </IonContent>
+        </div>
       </IonPopover>
     </>
   );

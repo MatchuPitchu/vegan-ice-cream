@@ -190,8 +190,10 @@ const NewLocationSearchForm: VFC = () => {
               isOpen={showPopoverInfo.showPopover}
               onDidDismiss={() => setShowPopoverInfo({ showPopover: false, event: undefined })}
             >
-              Name und Stadt reichen zumeist. Sonst trage die korrekte Adresse ein. Deutschland,
-              Schweiz, Österreich und Liechtenstein sind aktuell verfügbar.
+              <div className='info-popover__content'>
+                Name und Stadt reichen zumeist. Sonst trage die korrekte Adresse ein. Deutschland,
+                Schweiz, Österreich und Liechtenstein sind aktuell verfügbar.
+              </div>
             </IonPopover>
 
             <IonItem className='item-transparent' lines='none'>
