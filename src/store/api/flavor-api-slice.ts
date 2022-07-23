@@ -1,15 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { Flavor } from '../../types/types';
 
-type NewFlavor = {
-  name: string;
-  color: {
-    primary: string;
-    secondary?: string;
-  };
-  type_cream: boolean;
-  type_fruit: boolean;
-};
+type NewFlavor = Omit<Flavor, '_id'>;
 
 // Define a service using a base URL and expected endpoints
 export const flavorApi = createApi({

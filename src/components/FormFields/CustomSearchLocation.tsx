@@ -60,7 +60,7 @@ export const CustomSearchLocation = <TFieldValues extends FieldValues>({
           {label}
         </IonLabel>
         <IonInput
-          className={selectedLocation ? 'input--disabled' : ''}
+          className={`input ${selectedLocation ? 'input--disabled' : ''}`}
           ref={ref}
           name={name}
           value={value}

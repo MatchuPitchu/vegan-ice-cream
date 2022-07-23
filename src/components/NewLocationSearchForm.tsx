@@ -1,5 +1,5 @@
-import { FormEvent, useState, VFC } from 'react';
-import type { IceCreamLocation, PopoverState } from '../types/types';
+import { useState, VFC } from 'react';
+import type { IceCreamLocation } from '../types/types';
 import { GOOGLE_API_URL, GOOGLE_API_URL_CONFIG } from '../utils/variables-and-functions';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -9,22 +9,10 @@ import { locationsActions } from '../store/locationsSlice';
 import { showActions } from '../store/showSlice';
 import { useAnimation } from '../hooks/useAnimation';
 import { Autocomplete } from '@react-google-maps/api';
-import {
-  IonButton,
-  IonCard,
-  IonContent,
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonModal,
-  IonPopover,
-} from '@ionic/react';
-import {
-  checkmarkCircleOutline,
-  closeCircleOutline,
-  informationCircleOutline,
-} from 'ionicons/icons';
+import { IonButton, IonCard, IonContent, IonIcon, IonItem, IonLabel, IonModal } from '@ionic/react';
+import { checkmarkCircleOutline, closeCircleOutline } from 'ionicons/icons';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import Popover from './Popover';
 
 type AutocompleteGoogle = google.maps.places.Autocomplete;
 
@@ -56,11 +44,6 @@ const NewLocationSearchForm: VFC = () => {
   const [googleAutocomplete, setGoogleAutocomplete] = useState<AutocompleteGoogle>();
   const [searchText, setSearchText] = useState('');
   const [locationData, setLocationData] = useState({ name: '', website: '' });
-
-  const [showPopoverInfo, setShowPopoverInfo] = useState<PopoverState>({
-    showPopover: false,
-    event: undefined,
-  });
 
   const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
 
@@ -172,29 +155,13 @@ const NewLocationSearchForm: VFC = () => {
           <IonCard>
             <IonItem lines='none' className='item--small item-text--small item--transparent'>
               <IonLabel className='ion-text-wrap'>Welchen Eisladen hast du entdeckt?</IonLabel>
-              <IonIcon
-                className='info-icon'
-                color='primary'
-                slot='end'
-                icon={informationCircleOutline}
-                onClick={(event) => {
-                  event.persist();
-                  setShowPopoverInfo({ showPopover: true, event });
-                }}
-              />
+              <Popover>
+                <div className='info-popover__content'>
+                  Name und Stadt reichen zumeist. Sonst trage die korrekte Adresse ein. Deutschland,
+                  Schweiz, Österreich und Liechtenstein sind aktuell verfügbar.
+                </div>
+              </Popover>
             </IonItem>
-
-            <IonPopover
-              cssClass='info-popover'
-              event={showPopoverInfo.event}
-              isOpen={showPopoverInfo.showPopover}
-              onDidDismiss={() => setShowPopoverInfo({ showPopover: false, event: undefined })}
-            >
-              <div className='info-popover__content'>
-                Name und Stadt reichen zumeist. Sonst trage die korrekte Adresse ein. Deutschland,
-                Schweiz, Österreich und Liechtenstein sind aktuell verfügbar.
-              </div>
-            </IonPopover>
 
             <IonItem className='item--transparent' lines='none'>
               <Autocomplete

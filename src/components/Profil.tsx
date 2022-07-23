@@ -1,5 +1,4 @@
-import { Fragment, useReducer, useState, VFC } from 'react';
-import type { PopoverState } from '../types/types';
+import { Fragment, useReducer, VFC } from 'react';
 // Redux Store
 import { useAppSelector } from '../store/hooks';
 // Context
@@ -7,7 +6,6 @@ import { useThemeContext } from '../context/ThemeContext';
 import {
   IonButton,
   IonContent,
-  IonPage,
   IonHeader,
   IonCard,
   IonCardTitle,
@@ -15,14 +13,11 @@ import {
   IonLabel,
   IonItem,
   IonItemGroup,
-  IonPopover,
 } from '@ionic/react';
 import {
-  caretDownCircle,
-  caretForwardCircle,
+  caretForwardCircleOutline,
   closeCircleOutline,
   iceCreamOutline,
-  informationCircle,
   mailOutline,
   navigateOutline,
   refreshCircleOutline,
@@ -32,44 +27,28 @@ import Spinner from './Spinner';
 import CommentsBlock from './Comments/CommentsBlock';
 import FlavorsList from './Comments/FlavorsList';
 import { hasNameProperty, isString } from '../types/typeguards';
+import Popover from './Popover';
 
 interface Props {
   onCloseProfil: () => void;
 }
 
-// TODO: Popover Styling
-
 const Profil: VFC<Props> = ({ onCloseProfil }) => {
   const { isAuth, user } = useAppSelector((state) => state.user);
-  const { successMessage: successMsg } = useAppSelector((state) => state.app);
+  const { successMessage } = useAppSelector((state) => state.app);
   const { locations } = useAppSelector((state) => state.locations);
-
-  const [showUpdateProfil, toggleUpdateProfil] = useReducer(
-    (prevShowUpdateProfil) => !prevShowUpdateProfil,
-    false
-  );
 
   const { isDarkTheme } = useThemeContext();
 
-  const [showUserComments, setShowUserComments] = useState(false);
-  const [showFlavors, setShowFlavors] = useState(false);
-
-  const [popoverShow, setPopoverShow] = useState<PopoverState>({
-    showPopover: false,
-    event: undefined,
-  });
-  const [popoverCity, setPopoverCity] = useState<PopoverState>({
-    showPopover: false,
-    event: undefined,
-  });
-
-  const toggleComments = () => setShowUserComments((prev) => !prev);
+  const [showUpdateProfil, toggleUpdateProfil] = useReducer((prevShow) => !prevShow, false);
+  const [showUserComments, toggleComments] = useReducer((prevShow) => !prevShow, false);
+  const [showFlavors, toggleFlavors] = useReducer((prevShow) => !prevShow, false);
 
   if (!isAuth && !user && !locations) return <Spinner />;
 
   return (
     user && (
-      <IonPage>
+      <>
         <IonHeader>
           <IonItem color='background-color' lines='none'>
             <IonLabel color='primary'>Profil</IonLabel>
@@ -107,9 +86,9 @@ const Profil: VFC<Props> = ({ onCloseProfil }) => {
                 />
               )}
 
-              {successMsg && (
+              {successMessage && (
                 <IonItem className='text--success text-center' lines='full'>
-                  {successMsg}
+                  {successMessage}
                 </IonItem>
               )}
 
@@ -122,27 +101,11 @@ const Profil: VFC<Props> = ({ onCloseProfil }) => {
                 <IonLabel>
                   {user?.home_city?.city ? user.home_city.city : 'keinen Ort angegeben'}
                 </IonLabel>
-                <div>
-                  <IonIcon
-                    className='info-icon'
-                    color='primary'
-                    onClick={(event) => {
-                      event.persist();
-                      setPopoverCity({ showPopover: true, event });
-                    }}
-                    icon={informationCircle}
-                  />
-                </div>
-                <IonPopover
-                  cssClass='info-popover'
-                  event={popoverCity.event}
-                  isOpen={popoverCity.showPopover}
-                  onDidDismiss={() => setPopoverCity({ showPopover: false, event: undefined })}
-                >
+                <Popover>
                   <div className='info-popover__content'>
-                    Dieser Ort wird dir immer beim ersten Öffnen der Karte angezeigt.
+                    Dieser Ort wird dir immer beim Öffnen der Karte angezeigt.
                   </div>
-                </IonPopover>
+                </Popover>
               </IonItem>
               <IonItemGroup>
                 <IonItem
@@ -152,7 +115,8 @@ const Profil: VFC<Props> = ({ onCloseProfil }) => {
                   <IonIcon
                     slot='start'
                     color='primary'
-                    icon={showUserComments ? caretDownCircle : caretForwardCircle}
+                    className={showUserComments ? 'icon--rotate90Forward' : 'icon--rotateBack'}
+                    icon={caretForwardCircleOutline}
                     onClick={toggleComments}
                   />
                   <IonLabel>Meine Bewertungen</IonLabel>
@@ -181,32 +145,16 @@ const Profil: VFC<Props> = ({ onCloseProfil }) => {
 
                 <IonItem className='item--card-background' lines='none'>
                   <IonIcon
-                    className={showFlavors ? 'icon--rotate90Forward' : 'icon--rotate90Back'}
+                    className={showFlavors ? 'icon--rotateForward' : 'icon--rotateBack'}
                     slot='start'
                     color='primary'
                     icon={iceCreamOutline}
-                    onClick={() => setShowFlavors((prev) => !prev)}
+                    onClick={toggleFlavors}
                   />
                   <IonLabel>Meine Eissorten</IonLabel>
-                  <div>
-                    <IonIcon
-                      className='info-icon'
-                      color='primary'
-                      onClick={(event) => {
-                        event.persist();
-                        setPopoverShow({ showPopover: true, event });
-                      }}
-                      icon={informationCircle}
-                    />
-                  </div>
-                  <IonPopover
-                    cssClass='info-popover'
-                    event={popoverShow.event}
-                    isOpen={popoverShow.showPopover}
-                    onDidDismiss={() => setPopoverShow({ showPopover: false, event: undefined })}
-                  >
-                    <div className='info-popover__content'>Angaben aus deinen Bewertungen</div>
-                  </IonPopover>
+                  <Popover>
+                    <div className='info-popover__content'>Alle von dir bewerteten Eissorten</div>
+                  </Popover>
                 </IonItem>
 
                 {showFlavors && user.favorite_flavors.length > 0 && (
@@ -216,7 +164,7 @@ const Profil: VFC<Props> = ({ onCloseProfil }) => {
             </IonCard>
           </div>
         </IonContent>
-      </IonPage>
+      </>
     )
   );
 };

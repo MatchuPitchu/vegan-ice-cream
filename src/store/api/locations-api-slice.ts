@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Comment, Flavor, IceCreamLocation } from '../../types/types';
+import type { Comment, Flavor, IceCreamLocation } from '../../types/types';
 import type { CityName } from '../locationsSlice';
 
 // Define a service using a base URL and expected endpoints

@@ -1,4 +1,5 @@
 import { useState, VFC } from 'react';
+import type { Comment } from '../types/types';
 import { isComment, isCommentsList, isString } from '../types/typeguards';
 import { useAnimation } from '../hooks/useAnimation';
 // Redux Store
@@ -46,17 +47,21 @@ const ModalLocationInfo: VFC = () => {
 
   const { enterAnimationFromBottom, leaveAnimationToBottom } = useAnimation();
 
-  let locationId: string | typeof skipToken = skipToken; // skipToken skips the fetching
+  let locationId: string | typeof skipToken = skipToken; // skipToken skips fetching
+  let shouldFetch: boolean = false;
+
   if (selectedLocation) {
-    // if no comments available OR comments already fetched, set locationId to null to skip fetching
-    locationId =
-      selectedLocation.comments_list.length === 0 || isComment(selectedLocation.comments_list[0])
-        ? skipToken
-        : selectedLocation._id;
+    // if comments available or every comment was already fetched, set locationId for data fetching
+    shouldFetch =
+      selectedLocation.comments_list.length > 0 &&
+      (selectedLocation.comments_list as (Comment | string)[]).some(
+        (item: Comment | string) => !isComment(item)
+      );
+
+    locationId = shouldFetch ? selectedLocation._id : skipToken;
   }
 
-  const { isLoading, error, isSuccess } =
-    useGetCommentsAndFlavorsOfSelectedLocationQuery(locationId);
+  const { refetch } = useGetCommentsAndFlavorsOfSelectedLocationQuery(locationId);
 
   const handleResetAllOnCloseModal = () => {
     dispatch(showActions.closeCommentsAndLocationInfoModal());
@@ -71,7 +76,10 @@ const ModalLocationInfo: VFC = () => {
     setIsPricingFormOpen((prev) => !prev);
   };
 
-  const handleToggleShowComments = () => dispatch(showActions.toggleShowComments());
+  const handleToggleShowComments = () => {
+    dispatch(showActions.toggleShowComments());
+    shouldFetch && refetch();
+  };
 
   return (
     selectedLocation && (
@@ -171,9 +179,11 @@ const ModalLocationInfo: VFC = () => {
 
                   <IonItem lines={`${!showComments ? 'inset' : 'none'}`}>
                     <IonIcon
-                      className='me-2'
                       color='primary'
-                      icon={showComments ? caretDownCircleOutline : caretForwardCircleOutline}
+                      className={`me-2 ${
+                        showComments ? 'icon--rotate90Forward' : 'icon--rotateBack'
+                      }`}
+                      icon={caretForwardCircleOutline}
                       onClick={handleToggleShowComments}
                     />
                     <IonLabel>Bewertungen</IonLabel>
@@ -196,7 +206,11 @@ const ModalLocationInfo: VFC = () => {
                     ))}
 
                   <IonItem lines='none'>
-                    <IonIcon className='me-2' color='primary' icon={iceCreamOutline} />
+                    <IonIcon
+                      className='me-2 icon--rotateForward'
+                      color='primary'
+                      icon={iceCreamOutline}
+                    />
                     <IonLabel>Bewertete Eissorten</IonLabel>
                   </IonItem>
 

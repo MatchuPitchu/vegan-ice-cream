@@ -2,17 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Comment } from '../../types/types';
 import { convertIntoNumberFrom0To5 } from '../../utils/variables-and-functions';
 
-type NewComment = Pick<
-  Comment,
-  | 'text'
-  | 'rating_quality'
-  | 'rating_vegan_offer'
-  | 'bio'
-  | 'vegan'
-  | 'lactose_free'
-  | 'not_specified'
-  | 'date'
->;
+type NewComment = Omit<Comment, '_id' | 'user_id' | 'location_id' | 'flavors_referred'>;
 
 // Define a service using a base URL and expected endpoints
 export const commentApi = createApi({
@@ -65,3 +55,4 @@ export const commentApi = createApi({
 });
 
 export const { useAddCommentMutation } = commentApi;
+

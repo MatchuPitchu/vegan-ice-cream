@@ -273,14 +273,19 @@ ion-tab-bar {
   width: 400px;
 }
 
-.icon--rotate90Forward {
-  transform: rotate(90deg);
-  transition: transform 2s;
+.icon--rotateForward {
+  transform: rotate(20deg);
+  transition: transform 0.3s;
 }
 
-.icon--rotate90Back {
+.icon--rotate90Forward {
+  transform: rotate(90deg);
+  transition: transform 0.3s;
+}
+
+.icon--rotateBack {
   transform: rotate(0deg);
-  transition: transform 2s;
+  transition: transform 0.3s;
 }
 
 /************ Feedback Form ************/
@@ -1443,13 +1448,14 @@ ion-range::part(knob) {
   color: var(--ion-text-over-background);
 }
 
+.input {
+  --placeholder-font-weight: 300;
+  --placeholder-color: var(--ion-color-primary);
+}
+
 .input--disabled {
   color: var(--ion-color-medium);
   pointer-events: none;
-}
-
-.inputField {
-  --placeholder-color: var(--ion-color-medium);
 }
 
 .flavor-search-preview {
