@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useForm, SubmitHandler, useFieldArray } from 'react-hook-form';
-import type { PopoverState } from '../types/types';
+import type { Flavor } from '../types/types';
 // Redux Store
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { flavorActions } from '../store/flavorSlice';
@@ -19,15 +19,8 @@ import {
   IonIcon,
   IonItem,
   IonLabel,
-  IonPopover,
 } from '@ionic/react';
-import {
-  add,
-  addCircleSharp,
-  informationCircle,
-  removeCircleSharp,
-  starHalfOutline,
-} from 'ionicons/icons';
+import { addCircleSharp, removeCircleSharp, starHalfOutline } from 'ionicons/icons';
 import {
   factorToConvertRatingScale,
   handleChangeFlavorTypeToggleGroup,
@@ -42,6 +35,7 @@ import TextareaInput from '../components/FormFields/TextareaInput';
 import PageWrapper from '../components/PageUtils/PageWrapper';
 import { CustomSearchLocation } from '../components/FormFields/CustomSearchLocation';
 import { CustomSearchFlavor } from '../components/FormFields/CustomSearchFlavor';
+import Popover from '../components/Popover';
 
 interface BewertenFormValues {
   location: string;
@@ -60,69 +54,53 @@ interface BewertenFormValues {
   date: string;
 }
 
+const defaultBewertenValues: BewertenFormValues = {
+  location: '',
+  pricing: 0,
+  flavorName: '',
+  type_cream: false,
+  type_fruit: false,
+  colors: [
+    {
+      value: '',
+    },
+  ],
+  text: '',
+  rating_quality: 0,
+  bio: false,
+  vegan: false,
+  lactose_free: false,
+  not_specified: false,
+  rating_vegan_offer: 0,
+  date: '',
+};
+
 const Bewerten = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.user);
   const { flavor } = useAppSelector((state) => state.flavor);
   const selectedLocation = useAppSelector(getSelectedLocation);
 
-  const [showPopoverFormInfo, setShowPopoverFormInfo] = useState<PopoverState>({
-    showPopover: false,
-    event: undefined,
-  });
-  const [showPopoverLocationSearchInfo, setShowPopoverLocationSearchInfo] = useState<PopoverState>({
-    showPopover: false,
-    event: undefined,
-  });
-  const [showPopoverFlavorSearchInfo, setShowPopoverFlavorSearchInfo] = useState<PopoverState>({
-    showPopover: false,
-    event: undefined,
-  });
+  const [triggerUpdatePricing] = useUpdatePricingMutation();
+  const [triggerAddComment] = useAddCommentMutation();
+  const [triggerAddFlavor] = useAddFlavorMutation();
 
   const [success, setSuccess] = useState(false);
-  const [refetchLocationId, setRefetchLocationId] = useState<string | typeof skipToken>(skipToken);
+  const [fetchLocationId, setFetchLocationId] = useState<string | typeof skipToken>(skipToken);
 
-  const [triggerUpdatePricing, result1] = useUpdatePricingMutation();
-  const [triggerAddComment, result2] = useAddCommentMutation();
-  const [triggerAddFlavor, result3] = useAddFlavorMutation();
+  const { data: updatedLocation, isSuccess: isSuccessFetchUpdatedLocation } =
+    useGetOneLocationQuery(fetchLocationId);
 
-  const {
-    data: updatedLocation,
-    error: errorFetchUpdatedLocation,
-    isLoading: isLoadingFetchUpdatedLocation,
-    isSuccess: isSuccessFetchUpdatedLocation,
-  } = useGetOneLocationQuery(refetchLocationId);
-
-  // TODO: POST Bewerten Form triggers automatically refetch of location with certain id
   useEffect(() => {
-    if (isSuccessFetchUpdatedLocation && updatedLocation) {
+    if (isSuccessFetchUpdatedLocation) {
       dispatch(locationsActions.updateSingleLocation(updatedLocation));
-      setRefetchLocationId(skipToken);
+      setFetchLocationId(skipToken);
     }
   }, [isSuccessFetchUpdatedLocation, updatedLocation, dispatch]);
 
-  const flavorRef = useRef<HTMLIonLabelElement>(null);
+  const [isFlavorSelected, setIsFlavorSelected] = useState(false);
 
-  const defaultBewertenValues: BewertenFormValues = {
-    location: '',
-    pricing: 0,
-    flavorName: '',
-    type_cream: false,
-    type_fruit: false,
-    colors: [
-      {
-        value: '',
-      },
-    ],
-    text: '',
-    rating_quality: 0,
-    bio: false,
-    vegan: false,
-    lactose_free: false,
-    not_specified: false,
-    rating_vegan_offer: 0,
-    date: '',
-  };
+  const flavorRef = useRef<HTMLIonLabelElement>(null);
 
   const {
     control,
@@ -139,31 +117,8 @@ const Bewerten = () => {
     name: 'colors',
   });
 
-  const [isFlavorSelectedFromDatabase, setIsFlavorSelectedFromDatabase] = useState(false);
-
   useEffect(() => {
-    if (flavor) {
-      setValue('flavorName', flavor.name);
-      setValue('type_fruit', flavor.type_fruit);
-      setValue('type_cream', flavor.type_cream);
-      remove([0, 1]);
-      append({ value: flavor.color.primary });
-      flavor.color.secondary && append({ value: flavor.color.secondary });
-      setIsFlavorSelectedFromDatabase(true);
-    } else {
-      setIsFlavorSelectedFromDatabase(false);
-      setValue('flavorName', '');
-      setValue('type_fruit', false);
-      setValue('type_cream', false);
-      remove([0, 1]);
-      append({ value: '' });
-    }
-  }, [flavor, setValue, append, remove]);
-
-  useEffect(() => {
-    if (selectedLocation) {
-      setValue('location', selectedLocation.name);
-    }
+    if (selectedLocation) setValue('location', selectedLocation.name);
   }, [selectedLocation, setValue]);
 
   const onSubmit: SubmitHandler<BewertenFormValues> = async (data) => {
@@ -207,13 +162,9 @@ const Bewerten = () => {
       );
 
       // replace data of updated loc in locations array
-      setRefetchLocationId(selectedLocation._id);
-
-      // clean values that are needed for form searchbars
-      // dispatch(searchActions.setSearchText(''));
-      // dispatch(flavorActions.setSearchTermFlavor(''));
+      setFetchLocationId(selectedLocation._id);
+      // clean flavor for next comment
       dispatch(flavorActions.resetFlavor());
-      dispatch(locationsActions.resetSelectedLocation());
 
       // delay is needed, otherwise memory leak if state updates on unmounted component
       setTimeout(() => setSuccess(true), 500);
@@ -223,6 +174,31 @@ const Bewerten = () => {
     }
 
     dispatch(appActions.setIsLoading(false));
+  };
+
+  const handleSelectFlavor = (flavorSelect: Flavor) => {
+    const { name, type_fruit, type_cream, color } = flavorSelect;
+
+    setValue('flavorName', name);
+    setValue('type_fruit', type_fruit);
+    setValue('type_cream', type_cream);
+    remove([0, 1]);
+    append({ value: color.primary });
+    color.secondary && append({ value: color.secondary });
+
+    setIsFlavorSelected(true);
+    dispatch(flavorActions.setFlavor(flavorSelect));
+  };
+
+  const handleRemoveSelectFlavor = () => {
+    setValue('flavorName', '');
+    setValue('type_fruit', false);
+    setValue('type_cream', false);
+    remove([0, 1]);
+    append({ value: '' });
+
+    setIsFlavorSelected(false);
+    dispatch(flavorActions.resetFlavor());
   };
 
   const handleChangeToggleGroup = ({ name, value }: { name: string; value: boolean }) => {
@@ -271,32 +247,13 @@ const Bewerten = () => {
                 className='item--small item-text--small item--card-background mb-1'
               >
                 <div className='ion-text-wrap bewerten-title'>Bewerte 1 Eissorte</div>
-                <IonIcon
-                  className='info-icon'
-                  slot='end'
-                  icon={informationCircle}
-                  onClick={(event) => {
-                    event.persist();
-                    setShowPopoverFormInfo({ showPopover: true, event });
-                  }}
-                />
+                <Popover>
+                  <div className='info-popover__content'>
+                    Damit eine Bewertung fix zu tippen ist, bezieht sie sich auf 1 Eissorte.
+                    Natürlich kannst du auch weitere Bewertungen abgeben.
+                  </div>
+                </Popover>
               </IonItem>
-
-              <IonPopover
-                cssClass='info-popover'
-                animated={true}
-                translucent={true}
-                event={showPopoverFormInfo.event}
-                isOpen={showPopoverFormInfo.showPopover}
-                onDidDismiss={() =>
-                  setShowPopoverFormInfo({ showPopover: false, event: undefined })
-                }
-              >
-                <div className='info-popover__content'>
-                  Damit eine Bewertung fix zu tippen ist, bezieht sie sich auf 1 Eissorte. Natürlich
-                  kannst du auch weitere Bewertungen abgeben.
-                </div>
-              </IonPopover>
 
               <form className='mt-1' onSubmit={handleSubmit(onSubmit)}>
                 <CustomSearchLocation
@@ -306,32 +263,12 @@ const Bewerten = () => {
                   placeholder='Eisladen oder Stadt suchen'
                   rules={{ required: 'Ohne Eisladen, keine Bewertung' }}
                 >
-                  <IonIcon
-                    className='info-icon'
-                    slot='end'
-                    icon={informationCircle}
-                    onClick={(event) => {
-                      event.persist();
-                      setShowPopoverLocationSearchInfo({ showPopover: true, event });
-                    }}
-                  />
+                  <Popover>
+                    <div className='info-popover__content'>
+                      Nichts gefunden? Trage den Eisladen auf der Karte ein.
+                    </div>
+                  </Popover>
                 </CustomSearchLocation>
-
-                <IonPopover
-                  cssClass='info-popover'
-                  animated={true}
-                  translucent={true}
-                  event={showPopoverLocationSearchInfo.event}
-                  isOpen={showPopoverLocationSearchInfo.showPopover}
-                  onDidDismiss={() =>
-                    setShowPopoverLocationSearchInfo({ showPopover: false, event: undefined })
-                  }
-                  backdropDismiss={true}
-                >
-                  <div className='info-popover__content'>
-                    Nichts gefunden? Trage den Eisladen auf der Karte ein.
-                  </div>
-                </IonPopover>
 
                 <PricingRange
                   className='item--card-background mt-1'
@@ -344,36 +281,17 @@ const Bewerten = () => {
                   control={control}
                   name='flavorName'
                   label='Eissorte'
-                  placeholder='Welche Eissorte willst du bewerten?'
+                  placeholder='Eissorte suchen oder eintippen'
                   rules={{ required: 'Trage eine Eissorte ein' }}
+                  onFlavorSelected={handleSelectFlavor}
+                  onFlavorRemoveSelected={handleRemoveSelectFlavor}
                 >
-                  <IonIcon
-                    className='info-icon'
-                    color='primary'
-                    slot='end'
-                    icon={informationCircle}
-                    onClick={(event) => {
-                      event.persist();
-                      setShowPopoverFlavorSearchInfo({ showPopover: true, event });
-                    }}
-                  />
+                  <Popover>
+                    <div className='info-popover__content'>
+                      Wähle aus den bereits verfügbaren Eissorten oder tippe einen neuen Namen ein.
+                    </div>
+                  </Popover>
                 </CustomSearchFlavor>
-
-                <IonPopover
-                  cssClass='info-popover'
-                  animated={true}
-                  translucent={true}
-                  event={showPopoverFlavorSearchInfo.event}
-                  isOpen={showPopoverFlavorSearchInfo.showPopover}
-                  onDidDismiss={() =>
-                    setShowPopoverFlavorSearchInfo({ showPopover: false, event: undefined })
-                  }
-                  backdropDismiss={true}
-                >
-                  <div className='info-popover__content'>
-                    Wähle aus den bereits verfügbaren Eissorten oder tippe einen neuen Namen ein.
-                  </div>
-                </IonPopover>
 
                 <IonItem lines='inset' className='item--card-background'>
                   <Checkbox
@@ -401,11 +319,11 @@ const Bewerten = () => {
                     Farbe(n) Eis (1 oder 2)
                   </IonLabel>
                   <IonIcon
-                    className={`info-icon ${isFlavorSelectedFromDatabase && 'info-icon--disabled'}`}
+                    className={`info-icon ${isFlavorSelected && 'info-icon--disabled'}`}
                     slot='end'
                     icon={fields.length === 1 ? addCircleSharp : removeCircleSharp}
                     onClick={() => {
-                      if (!isFlavorSelectedFromDatabase) {
+                      if (!isFlavorSelected) {
                         fields.length === 1 ? append({ value: '' }) : remove(1);
                       }
                     }}
@@ -423,7 +341,7 @@ const Bewerten = () => {
                           input !== 'transparent' || 'Wähle mindestens 1 Farbe aus',
                       }}
                       onSelectColor={handleScrollIntoView}
-                      disabled={isFlavorSelectedFromDatabase}
+                      disabled={isFlavorSelected}
                     />
                   ))}
                 </div>

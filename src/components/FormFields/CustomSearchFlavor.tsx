@@ -1,13 +1,12 @@
 import { KeyboardEvent, ReactNode } from 'react';
 import type { Flavor } from '../../types/types';
+import { useAutocomplete } from '../../hooks/useAutocomplete';
 // Redux
 import { useGetFlavorsQuery } from '../../store/api/flavor-api-slice';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { flavorActions } from '../../store/flavorSlice';
-import { IonButton, IonIcon, IonInput, IonItem, IonLabel, IonList } from '@ionic/react';
+import { useAppSelector } from '../../store/hooks';
+import { IonIcon, IonInput, IonItem, IonLabel, IonList } from '@ionic/react';
 import Highlighter from 'react-highlight-words';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
-import { useAutocomplete } from '../../hooks/useAutocomplete';
 import { trashOutline } from 'ionicons/icons';
 
 type SearchProps = {
@@ -15,6 +14,8 @@ type SearchProps = {
   labelPosition?: 'stacked' | 'floating';
   type?: 'text' | 'number' | 'password';
   placeholder?: string;
+  onFlavorSelected: (flavor: Flavor) => void;
+  onFlavorRemoveSelected: () => void;
   onKeyDown?: (event: KeyboardEvent<HTMLIonInputElement>) => void;
   children?: ReactNode;
 };
@@ -31,6 +32,8 @@ export const CustomSearchFlavor = <TFieldValues extends FieldValues>({
   rules,
   type = 'text',
   placeholder,
+  onFlavorSelected,
+  onFlavorRemoveSelected,
   onKeyDown,
   children,
 }: ReactHookFormProps<TFieldValues>) => {
@@ -42,8 +45,6 @@ export const CustomSearchFlavor = <TFieldValues extends FieldValues>({
     name,
     rules,
   });
-
-  const dispatch = useAppDispatch();
 
   const { flavor } = useAppSelector((state) => state.flavor);
 
@@ -62,7 +63,7 @@ export const CustomSearchFlavor = <TFieldValues extends FieldValues>({
           {label}
         </IonLabel>
         <IonInput
-          className={flavor ? 'input--disabled' : ''}
+          className={`input ${flavor ? 'input--disabled' : ''}`}
           ref={ref}
           name={name}
           value={value}
@@ -77,7 +78,7 @@ export const CustomSearchFlavor = <TFieldValues extends FieldValues>({
         />
         {(flavor || value) && (
           <IonIcon
-            onClick={() => dispatch(flavorActions.resetFlavor())}
+            onClick={() => onFlavorRemoveSelected()}
             className='remove-icon'
             slot='end'
             icon={trashOutline}
@@ -97,7 +98,7 @@ export const CustomSearchFlavor = <TFieldValues extends FieldValues>({
               lines='full'
               onClick={() => {
                 selectSearchItem(flavor.name);
-                dispatch(flavorActions.setFlavor(flavor));
+                onFlavorSelected(flavor);
               }}
             >
               <Highlighter

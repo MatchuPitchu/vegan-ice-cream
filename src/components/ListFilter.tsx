@@ -5,9 +5,7 @@ import { locationsActions } from '../store/locationsSlice';
 import { SortType } from '../store/locationsSlice';
 // Context
 import { IonList, IonItem, IonLabel, IonIcon, IonRadioGroup, IonRadio } from '@ionic/react';
-import { caretDownCircleOutline, caretForwardCircleOutline } from 'ionicons/icons';
-
-// TODO: Filter CITY + STORE entfernen oder neu konzipieren
+import { caretForwardCircleOutline } from 'ionicons/icons';
 
 const ListFilter = () => {
   const dispatch = useAppDispatch();
@@ -34,7 +32,8 @@ const ListFilter = () => {
         <div>Sortieren</div>
         <IonIcon
           size='small'
-          icon={!showFilter ? caretForwardCircleOutline : caretDownCircleOutline}
+          className={showFilter ? 'icon--rotate90Forward' : 'icon--rotateBack'}
+          icon={caretForwardCircleOutline}
         />
       </div>
 
