@@ -6,9 +6,7 @@ import { locationsActions } from '../store/locationsSlice';
 import { searchActions } from '../store/searchSlice';
 
 // TODO: add onKeyDown functionality + merge with useAutocompleteWithReducer
-export const useAutocomplete = <T extends Flavor | IceCreamLocation | string>(
-  searchableArray: T[]
-) => {
+export const useAutocomplete = <T extends Flavor | IceCreamLocation | string>(searchableArray: T[]) => {
   const dispatch = useAppDispatch();
 
   const [suggestions, setSuggestions] = useState<T[]>([]);
@@ -40,17 +38,13 @@ export const useAutocomplete = <T extends Flavor | IceCreamLocation | string>(
         text = item;
       }
 
-      return searchTerms.every((searchTerm) =>
-        text.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      return searchTerms.every((searchTerm) => text.toLowerCase().includes(searchTerm.toLowerCase()));
     });
 
     setfilteredSearchResult(filteredSearchableArray);
 
     if (filteredSearchableArray[0] && isIceCreamLocation(filteredSearchableArray[0])) {
-      dispatch(
-        locationsActions.setLocationsSearchResults(filteredSearchableArray as IceCreamLocation[])
-      );
+      dispatch(locationsActions.setLocationsSearchResults(filteredSearchableArray as IceCreamLocation[]));
     }
 
     dispatch(
@@ -64,15 +58,19 @@ export const useAutocomplete = <T extends Flavor | IceCreamLocation | string>(
     setSearchWords(searchTerms);
   };
 
-  const resetSearch = () => {
-    setSearchText('');
-    setSuggestions([]);
-    dispatch(
-      searchActions.setSearchResultState({
-        searchInput: '',
-        resultsLength: 0,
-      })
-    );
+  const resetSearch = (resetType: 'home' | 'map') => {
+    if (resetType === 'map') {
+      setSuggestions([]);
+    }
+
+    if (resetType === 'home') {
+      dispatch(
+        searchActions.setSearchResultState({
+          searchInput: '',
+          resultsLength: 0,
+        })
+      );
+    }
   };
 
   const selectSearchItem = (value: string) => {
