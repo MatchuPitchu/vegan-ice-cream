@@ -36,9 +36,8 @@ export const ListLocations = () => {
       {searchResultState === 'no-found' && (
         <div className='container-content--center'>
           <IonCard className='card--no-search-result mt-4'>
-            <div>Noch keine Eisläden</div>
             <div>
-              zu deiner <span className='text--highlighted'>Suche</span> gefunden.
+              Noch <span className='text--highlighted'>keine Eisläden</span> gefunden
             </div>
           </IonCard>
         </div>

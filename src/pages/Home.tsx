@@ -6,16 +6,7 @@ import { locationsActions } from '../store/locationsSlice';
 import { showActions } from '../store/showSlice';
 // Context
 import { useThemeContext } from '../context/ThemeContext';
-import {
-  IonButton,
-  IonContent,
-  IonFab,
-  IonFabButton,
-  IonFabList,
-  IonIcon,
-  IonPopover,
-  isPlatform,
-} from '@ionic/react';
+import { IonButton, IonContent, IonFab, IonFabButton, IonFabList, IonIcon, IonPopover, isPlatform } from '@ionic/react';
 import {
   extensionPuzzleSharp,
   giftOutline,
@@ -24,10 +15,11 @@ import {
   logoGooglePlaystore,
   phonePortraitOutline,
 } from 'ionicons/icons';
-import SearchHome from '../components/SearchHome';
 import { ListLocations } from '../components/ListLocations';
 import PopoverContentNotRegistered from '../components/Popover/PopoverContentNotRegistered';
 import PageWrapper from '../components/PageUtils/PageWrapper';
+import SearchHome from '../components/Search/SearchHome';
+import ListFilter from '../components/ListFilter';
 
 const Home: VFC = () => {
   const { isDarkTheme } = useThemeContext();
@@ -103,10 +95,13 @@ const Home: VFC = () => {
             </IonButton>
           </div>
 
-          <SearchHome />
-
           <div className='header-app__overlay'>
             <IonIcon className='header-app__ice-cream-icon' icon={iceCreamOutline} />
+          </div>
+
+          <div className='container-content container-content--search-home'>
+            <SearchHome />
+            <ListFilter />
           </div>
         </div>
 
@@ -140,23 +135,13 @@ const Home: VFC = () => {
                 >
                   <IonIcon icon={logoGooglePlaystore} />
                 </IonFabButton>
-                <IonFabButton
-                  color='primary'
-                  className='logo-btn'
-                  routerDirection='forward'
-                  routerLink='/ios'
-                >
+                <IonFabButton color='primary' className='logo-btn' routerDirection='forward' routerLink='/ios'>
                   <IonIcon icon={logoApple} />
                 </IonFabButton>
               </>
             ))}
 
-          <IonFabButton
-            color='primary'
-            className='logo-btn'
-            routerDirection='forward'
-            routerLink='/beitragen'
-          >
+          <IonFabButton color='primary' className='logo-btn' routerDirection='forward' routerLink='/beitragen'>
             <IonIcon icon={giftOutline} />
           </IonFabButton>
         </IonFabList>

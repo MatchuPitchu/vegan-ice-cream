@@ -1,6 +1,6 @@
 {
   "name": "eis-mit-stil",
-  "version": "2.0.10",
+  "version": "2.0.11",
   "author": "Michael Flohr",
   "private": true,
   "dependencies": {
@@ -16,11 +16,10 @@
     "@react-google-maps/marker-clusterer": "^2.11.8",
     "@reduxjs/toolkit": "^1.8.1",
     "bootstrap": "^5.0.0-beta3",
-    "caniuse-lite": "^1.0.30001320",
+    "caniuse-lite": "^1.0.30001427",
     "cordova-plugin-geolocation": "^4.1.0",
     "ionicons": "^5.4.0",
     "react": "^17.0.1",
-    "react-bootstrap": "^1.5.2",
     "react-color": "^2.19.3",
     "react-dom": "^17.0.1",
     "react-google-autocomplete": "^2.1.2",
