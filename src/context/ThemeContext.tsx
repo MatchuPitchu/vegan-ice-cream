@@ -1,13 +1,14 @@
 import { useState, useEffect, createContext, useContext, FC } from 'react';
 import { mapDark, mapLight } from '../utils/mapStyles';
 
+type Theme = 'dark' | 'light';
+type MapStyles = typeof mapDark | typeof mapLight;
+
 interface ThemeContextInterface {
   isDarkTheme: boolean;
   handleTheme: () => void;
-  mapStyles: typeof mapDark | typeof mapLight;
+  mapStyles: MapStyles;
 }
-
-type Theme = 'dark' | 'light';
 
 export const ThemeContext = createContext({} as ThemeContextInterface);
 
@@ -19,7 +20,7 @@ export const useThemeContext = () => {
 
 const ThemeContextProvider: FC = ({ children }) => {
   const [colorTheme, setColorTheme] = useState<Theme>('dark');
-  const [mapStyles, setMapStyles] = useState<typeof mapDark | typeof mapLight>(mapDark);
+  const [mapStyles, setMapStyles] = useState<MapStyles>(mapDark);
 
   const updateTheme = (theme: Theme) => {
     document.body.setAttribute('color-theme', theme);
@@ -27,12 +28,10 @@ const ThemeContextProvider: FC = ({ children }) => {
     setColorTheme(theme);
   };
 
-  // THEME INITIALIZATION
+  // initialize theme
   useEffect(() => {
     const theme = localStorage.getItem('color-theme');
-    if (theme === 'dark') {
-      updateTheme(theme);
-    } else if (theme === 'light') {
+    if (theme === 'dark' || theme === 'light') {
       updateTheme(theme);
     }
   }, []);

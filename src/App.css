@@ -1202,6 +1202,7 @@ mark {
   font-size: 0.8rem;
   color: var(--ion-color-secondary);
   padding-bottom: 6px;
+  cursor: pointer;
 }
 
 .filter__item {
@@ -1490,13 +1491,7 @@ ion-range::part(knob) {
 .circle-picker > span:first-child > div {
   border-radius: 0;
   background-color: #b53134;
-  background-image: repeating-linear-gradient(
-    135deg,
-    transparent,
-    transparent 3px,
-    #fff 3px,
-    #fff 6px
-  );
+  background-image: repeating-linear-gradient(135deg, transparent, transparent 3px, #fff 3px, #fff 6px);
 }
 
 .textField {
